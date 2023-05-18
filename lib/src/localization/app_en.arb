@@ -1,0 +1,6 @@
+{
+  "appTitle": "syncvault",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
