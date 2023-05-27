@@ -49,7 +49,7 @@ final class OneDrive implements CloudService {
         "response_type": "code",
         "redirect_uri": callbackUrlScheme,
         "response_mode": "query",
-        "scope": "offline_access files.readwrite.all",
+        "scope": "offline_access files.readwrite.all user.read",
         "state": "12345",
       },
     );
@@ -84,20 +84,39 @@ final class OneDrive implements CloudService {
         "client_id": clientId,
         "code": code,
         "grant_type": "authorization_code",
-        "scope": "offline_access files.readwrite.all",
+        "scope": "offline_access files.readwrite.all user.read",
         "redirect_uri": callbackUrlScheme,
       },
       options: options,
     );
 
+    final accessToken = response.data!["access_token"];
+    final user = await getUserInfo(accessToken);
     final model = AuthProviderModel(
-      accessToken: response.data!["access_token"],
+      accessToken: accessToken,
       refreshToken: response.data!["refresh_token"],
       expiresIn: response.data!["expires_in"],
       provider: AuthProvider.oneDrive,
+      email: user["mail"],
+      name: user["displayName"],
     );
+    print(user.toString());
 
     return model;
+  }
+
+  Future<Map<String, dynamic>> getUserInfo(String accessToken) async {
+    final authOptions = Options(headers: {
+      "Authorization": "Bearer $accessToken",
+    });
+    // print(accessToken);
+    final uri = Uri.https(apiUrl, '/beta/me');
+    final response = await dio.getUri<Map<String, dynamic>>(
+      uri,
+      options: authOptions,
+    );
+
+    return response.data!;
   }
 
   @override

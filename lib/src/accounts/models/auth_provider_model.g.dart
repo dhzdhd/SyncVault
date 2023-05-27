@@ -12,6 +12,8 @@ _$_AuthProviderModel _$$_AuthProviderModelFromJson(Map<String, dynamic> json) =>
       refreshToken: json['refreshToken'] as String,
       expiresIn: json['expiresIn'] as int,
       provider: $enumDecode(_$AuthProviderEnumMap, json['provider']),
+      name: json['name'] as String,
+      email: json['email'] as String,
     );
 
 Map<String, dynamic> _$$_AuthProviderModelToJson(
@@ -21,6 +23,8 @@ Map<String, dynamic> _$$_AuthProviderModelToJson(
       'refreshToken': instance.refreshToken,
       'expiresIn': instance.expiresIn,
       'provider': _$AuthProviderEnumMap[instance.provider]!,
+      'name': instance.name,
+      'email': instance.email,
     };
 
 const _$AuthProviderEnumMap = {

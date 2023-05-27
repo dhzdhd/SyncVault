@@ -43,7 +43,7 @@ class AccountView extends ConsumerWidget {
                           style: const TextStyle(fontSize: 25),
                         ),
                         Text(
-                          '...',
+                          e.email,
                           style: const TextStyle(fontSize: 20),
                         ),
                       ],

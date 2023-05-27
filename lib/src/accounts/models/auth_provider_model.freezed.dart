@@ -24,6 +24,8 @@ mixin _$AuthProviderModel {
   String get refreshToken => throw _privateConstructorUsedError;
   int get expiresIn => throw _privateConstructorUsedError;
   AuthProvider get provider => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +43,9 @@ abstract class $AuthProviderModelCopyWith<$Res> {
       {String accessToken,
       String refreshToken,
       int expiresIn,
-      AuthProvider provider});
+      AuthProvider provider,
+      String name,
+      String email});
 }
 
 /// @nodoc
@@ -61,6 +65,8 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
     Object? refreshToken = null,
     Object? expiresIn = null,
     Object? provider = null,
+    Object? name = null,
+    Object? email = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -79,6 +85,14 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
               as AuthProvider,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -95,7 +109,9 @@ abstract class _$$_AuthProviderModelCopyWith<$Res>
       {String accessToken,
       String refreshToken,
       int expiresIn,
-      AuthProvider provider});
+      AuthProvider provider,
+      String name,
+      String email});
 }
 
 /// @nodoc
@@ -113,6 +129,8 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
     Object? refreshToken = null,
     Object? expiresIn = null,
     Object? provider = null,
+    Object? name = null,
+    Object? email = null,
   }) {
     return _then(_$_AuthProviderModel(
       accessToken: null == accessToken
@@ -131,6 +149,14 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
               as AuthProvider,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -144,7 +170,9 @@ class _$_AuthProviderModel
       {required this.accessToken,
       required this.refreshToken,
       required this.expiresIn,
-      required this.provider});
+      required this.provider,
+      required this.name,
+      required this.email});
 
   factory _$_AuthProviderModel.fromJson(Map<String, dynamic> json) =>
       _$$_AuthProviderModelFromJson(json);
@@ -157,10 +185,14 @@ class _$_AuthProviderModel
   final int expiresIn;
   @override
   final AuthProvider provider;
+  @override
+  final String name;
+  @override
+  final String email;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider)';
+    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider, name: $name, email: $email)';
   }
 
   @override
@@ -171,7 +203,9 @@ class _$_AuthProviderModel
       ..add(DiagnosticsProperty('accessToken', accessToken))
       ..add(DiagnosticsProperty('refreshToken', refreshToken))
       ..add(DiagnosticsProperty('expiresIn', expiresIn))
-      ..add(DiagnosticsProperty('provider', provider));
+      ..add(DiagnosticsProperty('provider', provider))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('email', email));
   }
 
   @override
@@ -186,13 +220,15 @@ class _$_AuthProviderModel
             (identical(other.expiresIn, expiresIn) ||
                 other.expiresIn == expiresIn) &&
             (identical(other.provider, provider) ||
-                other.provider == provider));
+                other.provider == provider) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.email, email) || other.email == email));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, accessToken, refreshToken, expiresIn, provider);
+  int get hashCode => Object.hash(
+      runtimeType, accessToken, refreshToken, expiresIn, provider, name, email);
 
   @JsonKey(ignore: true)
   @override
@@ -214,7 +250,9 @@ abstract class _AuthProviderModel implements AuthProviderModel {
       {required final String accessToken,
       required final String refreshToken,
       required final int expiresIn,
-      required final AuthProvider provider}) = _$_AuthProviderModel;
+      required final AuthProvider provider,
+      required final String name,
+      required final String email}) = _$_AuthProviderModel;
 
   factory _AuthProviderModel.fromJson(Map<String, dynamic> json) =
       _$_AuthProviderModel.fromJson;
@@ -227,6 +265,10 @@ abstract class _AuthProviderModel implements AuthProviderModel {
   int get expiresIn;
   @override
   AuthProvider get provider;
+  @override
+  String get name;
+  @override
+  String get email;
   @override
   @JsonKey(ignore: true)
   _$$_AuthProviderModelCopyWith<_$_AuthProviderModel> get copyWith =>

@@ -9,12 +9,13 @@ part 'auth_provider_model.g.dart';
 
 @freezed
 class AuthProviderModel with _$AuthProviderModel {
-  const factory AuthProviderModel({
-    required String accessToken,
-    required String refreshToken,
-    required int expiresIn,
-    required AuthProvider provider,
-  }) = _AuthProviderModel;
+  const factory AuthProviderModel(
+      {required String accessToken,
+      required String refreshToken,
+      required int expiresIn,
+      required AuthProvider provider,
+      required String name,
+      required String email}) = _AuthProviderModel;
 
   factory AuthProviderModel.fromJson(Map<String, Object?> json) =>
       _$AuthProviderModelFromJson(json);
