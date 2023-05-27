@@ -99,8 +99,17 @@ final class OneDrive implements CloudService {
       provider: AuthProvider.oneDrive,
       email: user["mail"],
       name: user["displayName"],
+      createdAt: DateTime.now().toIso8601String(),
     );
     print(user.toString());
+
+    return model;
+  }
+
+  Future<AuthProviderModel> refresh(AuthProviderModel model) async {
+    final prev = DateTime.parse(model.createdAt);
+    final now = DateTime.now();
+    final diff = prev.add(Duration(seconds: model.expiresIn)).compareTo(now);
 
     return model;
   }

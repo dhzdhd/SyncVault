@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/services/cloud_base.dart';
@@ -13,7 +16,13 @@ final authProvider =
 });
 
 class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
-  AuthProviderNotifier() : super([]);
+  AuthProviderNotifier()
+      : super(
+          (jsonDecode(Hive.box('vault').get('accounts', defaultValue: []))
+                  as List<dynamic>)
+              .map((e) => AuthProviderModel.fromJson(e))
+              .toList(),
+        );
 
   Future<void> signIn(AuthProvider provider) async {
     final result = switch (provider) {
@@ -23,5 +32,9 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     print(result.toJson().toString());
 
     state = [...state, result];
+    Hive.box('vault').put(
+      'accounts',
+      jsonEncode(state.map((e) => e.toJson()).toList()),
+    );
   }
 }

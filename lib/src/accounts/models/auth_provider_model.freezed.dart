@@ -26,6 +26,7 @@ mixin _$AuthProviderModel {
   AuthProvider get provider => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
+  String get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,7 +46,8 @@ abstract class $AuthProviderModelCopyWith<$Res> {
       int expiresIn,
       AuthProvider provider,
       String name,
-      String email});
+      String email,
+      String createdAt});
 }
 
 /// @nodoc
@@ -67,6 +69,7 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
     Object? provider = null,
     Object? name = null,
     Object? email = null,
+    Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -93,6 +96,10 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -111,7 +118,8 @@ abstract class _$$_AuthProviderModelCopyWith<$Res>
       int expiresIn,
       AuthProvider provider,
       String name,
-      String email});
+      String email,
+      String createdAt});
 }
 
 /// @nodoc
@@ -131,6 +139,7 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
     Object? provider = null,
     Object? name = null,
     Object? email = null,
+    Object? createdAt = null,
   }) {
     return _then(_$_AuthProviderModel(
       accessToken: null == accessToken
@@ -157,6 +166,10 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -172,7 +185,8 @@ class _$_AuthProviderModel
       required this.expiresIn,
       required this.provider,
       required this.name,
-      required this.email});
+      required this.email,
+      required this.createdAt});
 
   factory _$_AuthProviderModel.fromJson(Map<String, dynamic> json) =>
       _$$_AuthProviderModelFromJson(json);
@@ -189,10 +203,12 @@ class _$_AuthProviderModel
   final String name;
   @override
   final String email;
+  @override
+  final String createdAt;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider, name: $name, email: $email)';
+    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider, name: $name, email: $email, createdAt: $createdAt)';
   }
 
   @override
@@ -205,7 +221,8 @@ class _$_AuthProviderModel
       ..add(DiagnosticsProperty('expiresIn', expiresIn))
       ..add(DiagnosticsProperty('provider', provider))
       ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('email', email));
+      ..add(DiagnosticsProperty('email', email))
+      ..add(DiagnosticsProperty('createdAt', createdAt));
   }
 
   @override
@@ -222,13 +239,15 @@ class _$_AuthProviderModel
             (identical(other.provider, provider) ||
                 other.provider == provider) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.email, email) || other.email == email));
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, accessToken, refreshToken, expiresIn, provider, name, email);
+  int get hashCode => Object.hash(runtimeType, accessToken, refreshToken,
+      expiresIn, provider, name, email, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -252,7 +271,8 @@ abstract class _AuthProviderModel implements AuthProviderModel {
       required final int expiresIn,
       required final AuthProvider provider,
       required final String name,
-      required final String email}) = _$_AuthProviderModel;
+      required final String email,
+      required final String createdAt}) = _$_AuthProviderModel;
 
   factory _AuthProviderModel.fromJson(Map<String, dynamic> json) =
       _$_AuthProviderModel.fromJson;
@@ -269,6 +289,8 @@ abstract class _AuthProviderModel implements AuthProviderModel {
   String get name;
   @override
   String get email;
+  @override
+  String get createdAt;
   @override
   @JsonKey(ignore: true)
   _$$_AuthProviderModelCopyWith<_$_AuthProviderModel> get copyWith =>

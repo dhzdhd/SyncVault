@@ -14,6 +14,7 @@ _$_AuthProviderModel _$$_AuthProviderModelFromJson(Map<String, dynamic> json) =>
       provider: $enumDecode(_$AuthProviderEnumMap, json['provider']),
       name: json['name'] as String,
       email: json['email'] as String,
+      createdAt: json['createdAt'] as String,
     );
 
 Map<String, dynamic> _$$_AuthProviderModelToJson(
@@ -25,6 +26,7 @@ Map<String, dynamic> _$$_AuthProviderModelToJson(
       'provider': _$AuthProviderEnumMap[instance.provider]!,
       'name': instance.name,
       'email': instance.email,
+      'createdAt': instance.createdAt,
     };
 
 const _$AuthProviderEnumMap = {

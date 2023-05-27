@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'src/app.dart';
@@ -9,6 +10,9 @@ void main() async {
   final settingsController = SettingsController(SettingsService());
 
   await settingsController.loadSettings();
+
+  await Hive.initFlutter();
+  await Hive.openBox('vault');
 
   runApp(
     ProviderScope(
