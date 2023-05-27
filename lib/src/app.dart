@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:syncvault/src/accounts/views/account_view.dart';
 
-import 'sample_feature/sample_item_list_view.dart';
+import 'home/views/home_view.dart';
 import 'settings/controllers/settings_controller.dart';
 import 'settings/views/settings_view.dart';
 
@@ -43,8 +44,9 @@ class MyApp extends StatelessWidget {
                 return switch (routeSettings.name) {
                   SettingsView.routeName =>
                     SettingsView(controller: settingsController),
-                  SampleItemListView.routeName => const SampleItemListView(),
-                  _ => const SampleItemListView()
+                  HomeView.routeName => const HomeView(),
+                  AccountView.routeName => const AccountView(),
+                  _ => const HomeView()
                 };
               },
             );

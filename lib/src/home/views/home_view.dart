@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/src/cloud/services/cloud_base.dart';
 
-import '../settings/views/settings_view.dart';
+import '../../settings/views/settings_view.dart';
 
-class SampleItemListView extends StatelessWidget {
-  const SampleItemListView({
+class HomeView extends StatelessWidget {
+  const HomeView({
     super.key,
   });
 
@@ -14,12 +15,18 @@ class SampleItemListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sample Items'),
+        title: const Text('Sync Vault'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.restorablePushNamed(context, SettingsView.routeName);
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.restorablePushNamed(context, AccountView.routeName);
             },
           ),
         ],
@@ -28,7 +35,7 @@ class SampleItemListView extends StatelessWidget {
         child: ElevatedButton(
           child: Text('Click'),
           onPressed: () async {
-            await OneDrive().signIn("", "");
+            await OneDrive().signIn();
           },
         ),
       ),
