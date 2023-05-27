@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
@@ -35,16 +36,28 @@ class AccountView extends ConsumerWidget {
                 (e) => Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          e.provider.name.capitalize(),
-                          style: const TextStyle(fontSize: 25),
+                        SvgPicture.asset(
+                          'assets/logos/onedrive.svg',
+                          width: 70,
                         ),
-                        Text(
-                          e.email,
-                          style: const TextStyle(fontSize: 20),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 32.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                e.name.capitalize(),
+                                style: const TextStyle(fontSize: 25),
+                              ),
+                              Text(
+                                e.email,
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
