@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 
 part 'auth_provider_model.freezed.dart';
 part 'auth_provider_model.g.dart';
@@ -9,9 +10,10 @@ part 'auth_provider_model.g.dart';
 @freezed
 class AuthProviderModel with _$AuthProviderModel {
   const factory AuthProviderModel({
-    required String firstName,
-    required String lastName,
-    required int age,
+    required String accessToken,
+    required String refreshToken,
+    required int expiresIn,
+    required AuthProvider provider,
   }) = _AuthProviderModel;
 
   factory AuthProviderModel.fromJson(Map<String, Object?> json) =>

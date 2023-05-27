@@ -20,9 +20,10 @@ AuthProviderModel _$AuthProviderModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AuthProviderModel {
-  String get firstName => throw _privateConstructorUsedError;
-  String get lastName => throw _privateConstructorUsedError;
-  int get age => throw _privateConstructorUsedError;
+  String get accessToken => throw _privateConstructorUsedError;
+  String get refreshToken => throw _privateConstructorUsedError;
+  int get expiresIn => throw _privateConstructorUsedError;
+  AuthProvider get provider => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +37,11 @@ abstract class $AuthProviderModelCopyWith<$Res> {
           AuthProviderModel value, $Res Function(AuthProviderModel) then) =
       _$AuthProviderModelCopyWithImpl<$Res, AuthProviderModel>;
   @useResult
-  $Res call({String firstName, String lastName, int age});
+  $Res call(
+      {String accessToken,
+      String refreshToken,
+      int expiresIn,
+      AuthProvider provider});
 }
 
 /// @nodoc
@@ -52,23 +57,28 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? firstName = null,
-    Object? lastName = null,
-    Object? age = null,
+    Object? accessToken = null,
+    Object? refreshToken = null,
+    Object? expiresIn = null,
+    Object? provider = null,
   }) {
     return _then(_value.copyWith(
-      firstName: null == firstName
-          ? _value.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
+      accessToken: null == accessToken
+          ? _value.accessToken
+          : accessToken // ignore: cast_nullable_to_non_nullable
               as String,
-      lastName: null == lastName
-          ? _value.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
+      refreshToken: null == refreshToken
+          ? _value.refreshToken
+          : refreshToken // ignore: cast_nullable_to_non_nullable
               as String,
-      age: null == age
-          ? _value.age
-          : age // ignore: cast_nullable_to_non_nullable
+      expiresIn: null == expiresIn
+          ? _value.expiresIn
+          : expiresIn // ignore: cast_nullable_to_non_nullable
               as int,
+      provider: null == provider
+          ? _value.provider
+          : provider // ignore: cast_nullable_to_non_nullable
+              as AuthProvider,
     ) as $Val);
   }
 }
@@ -81,7 +91,11 @@ abstract class _$$_AuthProviderModelCopyWith<$Res>
       __$$_AuthProviderModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String firstName, String lastName, int age});
+  $Res call(
+      {String accessToken,
+      String refreshToken,
+      int expiresIn,
+      AuthProvider provider});
 }
 
 /// @nodoc
@@ -95,23 +109,28 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? firstName = null,
-    Object? lastName = null,
-    Object? age = null,
+    Object? accessToken = null,
+    Object? refreshToken = null,
+    Object? expiresIn = null,
+    Object? provider = null,
   }) {
     return _then(_$_AuthProviderModel(
-      firstName: null == firstName
-          ? _value.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
+      accessToken: null == accessToken
+          ? _value.accessToken
+          : accessToken // ignore: cast_nullable_to_non_nullable
               as String,
-      lastName: null == lastName
-          ? _value.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
+      refreshToken: null == refreshToken
+          ? _value.refreshToken
+          : refreshToken // ignore: cast_nullable_to_non_nullable
               as String,
-      age: null == age
-          ? _value.age
-          : age // ignore: cast_nullable_to_non_nullable
+      expiresIn: null == expiresIn
+          ? _value.expiresIn
+          : expiresIn // ignore: cast_nullable_to_non_nullable
               as int,
+      provider: null == provider
+          ? _value.provider
+          : provider // ignore: cast_nullable_to_non_nullable
+              as AuthProvider,
     ));
   }
 }
@@ -122,21 +141,26 @@ class _$_AuthProviderModel
     with DiagnosticableTreeMixin
     implements _AuthProviderModel {
   const _$_AuthProviderModel(
-      {required this.firstName, required this.lastName, required this.age});
+      {required this.accessToken,
+      required this.refreshToken,
+      required this.expiresIn,
+      required this.provider});
 
   factory _$_AuthProviderModel.fromJson(Map<String, dynamic> json) =>
       _$$_AuthProviderModelFromJson(json);
 
   @override
-  final String firstName;
+  final String accessToken;
   @override
-  final String lastName;
+  final String refreshToken;
   @override
-  final int age;
+  final int expiresIn;
+  @override
+  final AuthProvider provider;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AuthProviderModel(firstName: $firstName, lastName: $lastName, age: $age)';
+    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider)';
   }
 
   @override
@@ -144,9 +168,10 @@ class _$_AuthProviderModel
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'AuthProviderModel'))
-      ..add(DiagnosticsProperty('firstName', firstName))
-      ..add(DiagnosticsProperty('lastName', lastName))
-      ..add(DiagnosticsProperty('age', age));
+      ..add(DiagnosticsProperty('accessToken', accessToken))
+      ..add(DiagnosticsProperty('refreshToken', refreshToken))
+      ..add(DiagnosticsProperty('expiresIn', expiresIn))
+      ..add(DiagnosticsProperty('provider', provider));
   }
 
   @override
@@ -154,16 +179,20 @@ class _$_AuthProviderModel
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_AuthProviderModel &&
-            (identical(other.firstName, firstName) ||
-                other.firstName == firstName) &&
-            (identical(other.lastName, lastName) ||
-                other.lastName == lastName) &&
-            (identical(other.age, age) || other.age == age));
+            (identical(other.accessToken, accessToken) ||
+                other.accessToken == accessToken) &&
+            (identical(other.refreshToken, refreshToken) ||
+                other.refreshToken == refreshToken) &&
+            (identical(other.expiresIn, expiresIn) ||
+                other.expiresIn == expiresIn) &&
+            (identical(other.provider, provider) ||
+                other.provider == provider));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, firstName, lastName, age);
+  int get hashCode =>
+      Object.hash(runtimeType, accessToken, refreshToken, expiresIn, provider);
 
   @JsonKey(ignore: true)
   @override
@@ -182,19 +211,22 @@ class _$_AuthProviderModel
 
 abstract class _AuthProviderModel implements AuthProviderModel {
   const factory _AuthProviderModel(
-      {required final String firstName,
-      required final String lastName,
-      required final int age}) = _$_AuthProviderModel;
+      {required final String accessToken,
+      required final String refreshToken,
+      required final int expiresIn,
+      required final AuthProvider provider}) = _$_AuthProviderModel;
 
   factory _AuthProviderModel.fromJson(Map<String, dynamic> json) =
       _$_AuthProviderModel.fromJson;
 
   @override
-  String get firstName;
+  String get accessToken;
   @override
-  String get lastName;
+  String get refreshToken;
   @override
-  int get age;
+  int get expiresIn;
+  @override
+  AuthProvider get provider;
   @override
   @JsonKey(ignore: true)
   _$$_AuthProviderModelCopyWith<_$_AuthProviderModel> get copyWith =>

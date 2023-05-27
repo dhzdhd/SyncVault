@@ -1,19 +1,22 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 
 final dio = Dio();
 
 abstract interface class CloudService {
-  Future<void> signIn();
+  Future<AuthProviderModel> signIn();
   Future<void> signOut();
-  Future<void> test();
+  Future<void> test(AuthProviderModel model);
 }
 
 final class GoogleDrive implements CloudService {
   @override
-  Future<void> signIn() async {
+  Future<AuthProviderModel> signIn() async {
     throw UnimplementedError();
   }
 
@@ -23,7 +26,7 @@ final class GoogleDrive implements CloudService {
   }
 
   @override
-  Future<void> test() {
+  Future<void> test(AuthProviderModel model) {
     throw UnimplementedError();
   }
 }
@@ -35,10 +38,9 @@ final class OneDrive implements CloudService {
       : 'http://localhost:8006';
   static const apiUrl = "graph.microsoft.com";
   static const authUrl = "login.microsoftonline.com";
-  late final String accessToken;
 
   @override
-  Future<void> signIn() async {
+  Future<AuthProviderModel> signIn() async {
     final codeUri = Uri.https(
       authUrl,
       "/common/oauth2/v2.0/authorize",
@@ -73,37 +75,35 @@ final class OneDrive implements CloudService {
       '/common/oauth2/v2.0/token',
     );
 
-    try {
-      final options = Options(
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      );
-      final response = await dio.postUri<Map<String, dynamic>>(
-        tokenUri,
-        data: {
-          "client_id": clientId,
-          "code": code,
-          "grant_type": "authorization_code",
-          "scope": "offline_access files.readwrite.all",
-          "redirect_uri": callbackUrlScheme,
-        },
-        options: options,
-      );
+    final options = Options(
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    );
+    final response = await dio.postUri<Map<String, dynamic>>(
+      tokenUri,
+      data: {
+        "client_id": clientId,
+        "code": code,
+        "grant_type": "authorization_code",
+        "scope": "offline_access files.readwrite.all",
+        "redirect_uri": callbackUrlScheme,
+      },
+      options: options,
+    );
 
-      accessToken = response.data!["access_token"];
-      print(accessToken);
-      final refreshToken = response.data!["refresh_token"];
-      final expiresIn = response.data!["expires_in"];
+    final model = AuthProviderModel(
+      accessToken: response.data!["access_token"],
+      refreshToken: response.data!["refresh_token"],
+      expiresIn: response.data!["expires_in"],
+      provider: AuthProvider.oneDrive,
+    );
 
-      test();
-    } catch (e) {
-      print(e.toString());
-    }
+    return model;
   }
 
   @override
-  Future<void> test() async {
+  Future<void> test(AuthProviderModel model) async {
     final authOptions = Options(headers: {
-      "Authorization": "Bearer $accessToken",
+      "Authorization": "Bearer ${model.accessToken}",
     });
 
     final uri = Uri.https(apiUrl, '/beta/drive');

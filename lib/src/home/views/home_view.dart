@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
-import 'package:syncvault/src/cloud/services/cloud_base.dart';
+import 'package:syncvault/src/accounts/services/cloud_base.dart';
 
 import '../../settings/views/settings_view.dart';
 
