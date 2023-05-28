@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
-import 'package:syncvault/src/accounts/services/cloud_base.dart';
+import 'package:syncvault/src/accounts/services/auth_service.dart';
 
 import '../../settings/views/settings_view.dart';
 
@@ -35,7 +35,7 @@ class HomeView extends StatelessWidget {
         child: ElevatedButton(
           child: Text('Click'),
           onPressed: () async {
-            await OneDrive().signIn();
+            await OneDriveAuth().signIn();
           },
         ),
       ),

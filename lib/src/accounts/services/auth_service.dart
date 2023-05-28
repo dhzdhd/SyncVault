@@ -8,7 +8,7 @@ import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 
 final dio = Dio();
 
-abstract interface class CloudService {
+abstract interface class AuthService {
   Future<AuthProviderModel> signIn();
   Future<void> signOut();
   Future<AuthProviderModel> refresh(AuthProviderModel model);
@@ -16,7 +16,12 @@ abstract interface class CloudService {
   Future<void> test(AuthProviderModel model);
 }
 
-final class GoogleDrive implements CloudService {
+final class GoogleDriveAuth implements AuthService {
+  static const clientId =
+      "844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q.apps.googleusercontent.com";
+  static const desktopClientId =
+      "844110357681-e5lgbc8050i87ruvvdlfu5th74urg44s.apps.googleusercontent.com";
+
   @override
   Future<AuthProviderModel> signIn() async {
     throw UnimplementedError();
@@ -43,7 +48,7 @@ final class GoogleDrive implements CloudService {
   }
 }
 
-final class OneDrive implements CloudService {
+final class OneDriveAuth implements AuthService {
   static const clientId = "591486db-4bcc-46b7-ad21-45a6c59cfa26";
   static final callbackUrlScheme = Platform.isAndroid
       ? "msauth://com.example.syncvault/mf%2BaFV5Ps1q90nV2hXuUBpjGfXo%3D"

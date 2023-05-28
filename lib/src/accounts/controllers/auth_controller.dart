@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
-import 'package:syncvault/src/accounts/services/cloud_base.dart';
+import 'package:syncvault/src/accounts/services/auth_service.dart';
 
 enum AuthProvider {
   oneDrive,
@@ -26,8 +26,8 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
 
   Future<void> signIn(AuthProvider provider) async {
     final result = switch (provider) {
-      AuthProvider.oneDrive => await OneDrive().signIn(),
-      AuthProvider.googleDrive => await GoogleDrive().signIn(),
+      AuthProvider.oneDrive => await OneDriveAuth().signIn(),
+      AuthProvider.googleDrive => await GoogleDriveAuth().signIn(),
     };
     print(result.toJson().toString());
 
