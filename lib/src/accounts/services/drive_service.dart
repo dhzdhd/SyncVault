@@ -20,6 +20,8 @@ class OneDrive implements DriveService {
 
   @override
   Future getDriveInfo(AuthProviderModel model) async {
+    // Implement in AuthService as it's related to the account
+    // Many-Many, consider having another model relating accounts, drives
     final uri = Uri.https(apiHost, basePath);
     final response = await dio.getUri(uri);
 
