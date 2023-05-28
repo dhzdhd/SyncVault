@@ -53,13 +53,13 @@ final class OneDriveAuth implements AuthService {
   static final callbackUrlScheme = Platform.isAndroid
       ? "msauth://com.example.syncvault/mf%2BaFV5Ps1q90nV2hXuUBpjGfXo%3D"
       : 'http://localhost:8006';
-  static const apiUrl = "graph.microsoft.com";
-  static const authUrl = "login.microsoftonline.com";
+  static const apiHost = "graph.microsoft.com";
+  static const authHost = "login.microsoftonline.com";
 
   @override
   Future<AuthProviderModel> signIn() async {
     final codeUri = Uri.https(
-      authUrl,
+      authHost,
       "/common/oauth2/v2.0/authorize",
       {
         "client_id": clientId,
@@ -88,7 +88,7 @@ final class OneDriveAuth implements AuthService {
 
     final code = Uri.parse(result).queryParameters['code'];
     final tokenUri = Uri.https(
-      authUrl,
+      authHost,
       '/common/oauth2/v2.0/token',
     );
 
@@ -133,7 +133,7 @@ final class OneDriveAuth implements AuthService {
       final options = Options(
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
       );
-      final uri = Uri.https(authUrl, '/common/oauth2/v2.0/token');
+      final uri = Uri.https(authHost, '/common/oauth2/v2.0/token');
       final response = await dio.postUri<Map<String, dynamic>>(
         uri,
         data: {
@@ -163,7 +163,7 @@ final class OneDriveAuth implements AuthService {
       "Authorization": "Bearer $accessToken",
     });
     // print(accessToken);
-    final uri = Uri.https(apiUrl, '/beta/me');
+    final uri = Uri.https(apiHost, '/beta/me');
     final response = await dio.getUri<Map<String, dynamic>>(
       uri,
       options: authOptions,
@@ -178,7 +178,7 @@ final class OneDriveAuth implements AuthService {
       "Authorization": "Bearer ${model.accessToken}",
     });
 
-    final uri = Uri.https(apiUrl, '/beta/drive');
+    final uri = Uri.https(apiHost, '/beta/drive');
     print(uri.toString());
     final response = await dio.getUri<Map<String, dynamic>>(
       uri,

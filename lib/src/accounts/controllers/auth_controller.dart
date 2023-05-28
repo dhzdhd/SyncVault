@@ -37,4 +37,15 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
       jsonEncode(state.map((e) => e.toJson()).toList()),
     );
   }
+
+  Future<void> refresh(AuthProviderModel model) async {
+    final result = switch (model.provider) {
+      AuthProvider.oneDrive => await OneDriveAuth().refresh(model),
+      AuthProvider.googleDrive => await GoogleDriveAuth().refresh(model),
+    };
+
+    var newState = state;
+    newState.removeWhere((e) => e == model);
+    state = [...newState, result];
+  }
 }
