@@ -11,6 +11,8 @@ final dio = Dio();
 abstract interface class CloudService {
   Future<AuthProviderModel> signIn();
   Future<void> signOut();
+  Future<AuthProviderModel> refresh(AuthProviderModel model);
+  Future<Map<String, dynamic>> getUserInfo(String accessToken);
   Future<void> test(AuthProviderModel model);
 }
 
@@ -22,6 +24,16 @@ final class GoogleDrive implements CloudService {
 
   @override
   Future<void> signOut() async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<AuthProviderModel> refresh(AuthProviderModel model) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, dynamic>> getUserInfo(String accessToken) {
     throw UnimplementedError();
   }
 
@@ -106,14 +118,41 @@ final class OneDrive implements CloudService {
     return model;
   }
 
+  @override
   Future<AuthProviderModel> refresh(AuthProviderModel model) async {
     final prev = DateTime.parse(model.createdAt);
     final now = DateTime.now();
     final diff = prev.add(Duration(seconds: model.expiresIn)).compareTo(now);
 
-    return model;
+    if (diff <= 0) {
+      final options = Options(
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      );
+      final uri = Uri.https(authUrl, '/common/oauth2/v2.0/token');
+      final response = await dio.postUri<Map<String, dynamic>>(
+        uri,
+        data: {
+          "client_id": clientId,
+          "grant_type": "refresh_token",
+          "scope": "offline_access files.readwrite.all user.read",
+          "refresh_token": model.refreshToken,
+        },
+        options: options,
+      );
+
+      print(response.data!["access_token"]);
+
+      return model.copyWith(
+        accessToken: response.data!["access_token"],
+        expiresIn: response.data!["expires_in"],
+        refreshToken: response.data!["refresh_token"],
+      );
+    } else {
+      return model;
+    }
   }
 
+  @override
   Future<Map<String, dynamic>> getUserInfo(String accessToken) async {
     final authOptions = Options(headers: {
       "Authorization": "Bearer $accessToken",
