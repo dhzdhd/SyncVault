@@ -68,7 +68,7 @@ class AccountView extends ConsumerWidget {
                               height: 75,
                               child: Center(
                                 child: Text(
-                                  '${(e.usedStorage / e.remainingStorage).toStringAsFixed(2)} %\nused',
+                                  '${(e.usedStorage / e.remainingStorage * 100).toStringAsFixed(2)} %\nused',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
