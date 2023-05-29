@@ -16,13 +16,18 @@ final authProvider =
 });
 
 class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
-  AuthProviderNotifier()
-      : super(
-          (jsonDecode(Hive.box('vault').get('accounts', defaultValue: []))
-                  as List<dynamic>)
-              .map((e) => AuthProviderModel.fromJson(e))
-              .toList(),
-        );
+  AuthProviderNotifier() : super(init());
+
+  static List<AuthProviderModel> init() {
+    final List<dynamic> raw =
+        jsonDecode(Hive.box('vault').get('accounts', defaultValue: '[]'));
+
+    try {
+      return raw.map((e) => AuthProviderModel.fromJson(e)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
 
   Future<void> signIn(AuthProvider provider) async {
     final result = switch (provider) {
@@ -47,5 +52,9 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     var newState = state;
     newState.removeWhere((e) => e == model);
     state = [...newState, result];
+  }
+
+  Future<void> signOut(AuthProviderModel model) async {
+    state = state.where((element) => element != model).toList();
   }
 }

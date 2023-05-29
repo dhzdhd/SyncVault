@@ -10,9 +10,9 @@ final dio = Dio();
 
 abstract interface class AuthService {
   Future<AuthProviderModel> signIn();
-  Future<void> signOut();
   Future<AuthProviderModel> refresh(AuthProviderModel model);
   Future<Map<String, dynamic>> getUserInfo(String accessToken);
+  Future<dynamic> getDriveInfo(String accessToken);
   Future<void> test(AuthProviderModel model);
 }
 
@@ -28,17 +28,17 @@ final class GoogleDriveAuth implements AuthService {
   }
 
   @override
-  Future<void> signOut() async {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<AuthProviderModel> refresh(AuthProviderModel model) {
     throw UnimplementedError();
   }
 
   @override
   Future<Map<String, dynamic>> getUserInfo(String accessToken) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future getDriveInfo(String accessToken) {
     throw UnimplementedError();
   }
 
@@ -109,6 +109,9 @@ final class OneDriveAuth implements AuthService {
 
     final accessToken = response.data!["access_token"];
     final user = await getUserInfo(accessToken);
+    final drive = await getDriveInfo(accessToken);
+    print(drive);
+
     final model = AuthProviderModel(
       accessToken: accessToken,
       refreshToken: response.data!["refresh_token"],
@@ -162,8 +165,23 @@ final class OneDriveAuth implements AuthService {
     final authOptions = Options(headers: {
       "Authorization": "Bearer $accessToken",
     });
-    // print(accessToken);
+
     final uri = Uri.https(apiHost, '/beta/me');
+    final response = await dio.getUri<Map<String, dynamic>>(
+      uri,
+      options: authOptions,
+    );
+
+    return response.data!;
+  }
+
+  @override
+  Future<Map<String, dynamic>> getDriveInfo(String accessToken) async {
+    final authOptions = Options(headers: {
+      "Authorization": "Bearer $accessToken",
+    });
+
+    final uri = Uri.https(apiHost, '/beta/me/drive');
     final response = await dio.getUri<Map<String, dynamic>>(
       uri,
       options: authOptions,
@@ -185,10 +203,5 @@ final class OneDriveAuth implements AuthService {
       options: authOptions,
     );
     print(response.data);
-  }
-
-  @override
-  Future<void> signOut() async {
-    throw UnimplementedError();
   }
 }
