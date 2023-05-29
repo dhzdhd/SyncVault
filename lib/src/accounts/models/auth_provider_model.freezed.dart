@@ -27,6 +27,8 @@ mixin _$AuthProviderModel {
   String get name => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
+  int get remainingStorage => throw _privateConstructorUsedError;
+  int get usedStorage => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,7 +49,9 @@ abstract class $AuthProviderModelCopyWith<$Res> {
       AuthProvider provider,
       String name,
       String email,
-      String createdAt});
+      String createdAt,
+      int remainingStorage,
+      int usedStorage});
 }
 
 /// @nodoc
@@ -70,6 +74,8 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
     Object? name = null,
     Object? email = null,
     Object? createdAt = null,
+    Object? remainingStorage = null,
+    Object? usedStorage = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -100,6 +106,14 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
+      remainingStorage: null == remainingStorage
+          ? _value.remainingStorage
+          : remainingStorage // ignore: cast_nullable_to_non_nullable
+              as int,
+      usedStorage: null == usedStorage
+          ? _value.usedStorage
+          : usedStorage // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -119,7 +133,9 @@ abstract class _$$_AuthProviderModelCopyWith<$Res>
       AuthProvider provider,
       String name,
       String email,
-      String createdAt});
+      String createdAt,
+      int remainingStorage,
+      int usedStorage});
 }
 
 /// @nodoc
@@ -140,6 +156,8 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
     Object? name = null,
     Object? email = null,
     Object? createdAt = null,
+    Object? remainingStorage = null,
+    Object? usedStorage = null,
   }) {
     return _then(_$_AuthProviderModel(
       accessToken: null == accessToken
@@ -170,6 +188,14 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
+      remainingStorage: null == remainingStorage
+          ? _value.remainingStorage
+          : remainingStorage // ignore: cast_nullable_to_non_nullable
+              as int,
+      usedStorage: null == usedStorage
+          ? _value.usedStorage
+          : usedStorage // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -186,7 +212,9 @@ class _$_AuthProviderModel
       required this.provider,
       required this.name,
       required this.email,
-      required this.createdAt});
+      required this.createdAt,
+      required this.remainingStorage,
+      required this.usedStorage});
 
   factory _$_AuthProviderModel.fromJson(Map<String, dynamic> json) =>
       _$$_AuthProviderModelFromJson(json);
@@ -205,10 +233,14 @@ class _$_AuthProviderModel
   final String email;
   @override
   final String createdAt;
+  @override
+  final int remainingStorage;
+  @override
+  final int usedStorage;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider, name: $name, email: $email, createdAt: $createdAt)';
+    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider, name: $name, email: $email, createdAt: $createdAt, remainingStorage: $remainingStorage, usedStorage: $usedStorage)';
   }
 
   @override
@@ -222,7 +254,9 @@ class _$_AuthProviderModel
       ..add(DiagnosticsProperty('provider', provider))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('email', email))
-      ..add(DiagnosticsProperty('createdAt', createdAt));
+      ..add(DiagnosticsProperty('createdAt', createdAt))
+      ..add(DiagnosticsProperty('remainingStorage', remainingStorage))
+      ..add(DiagnosticsProperty('usedStorage', usedStorage));
   }
 
   @override
@@ -241,13 +275,26 @@ class _$_AuthProviderModel
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.remainingStorage, remainingStorage) ||
+                other.remainingStorage == remainingStorage) &&
+            (identical(other.usedStorage, usedStorage) ||
+                other.usedStorage == usedStorage));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, accessToken, refreshToken,
-      expiresIn, provider, name, email, createdAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      accessToken,
+      refreshToken,
+      expiresIn,
+      provider,
+      name,
+      email,
+      createdAt,
+      remainingStorage,
+      usedStorage);
 
   @JsonKey(ignore: true)
   @override
@@ -272,7 +319,9 @@ abstract class _AuthProviderModel implements AuthProviderModel {
       required final AuthProvider provider,
       required final String name,
       required final String email,
-      required final String createdAt}) = _$_AuthProviderModel;
+      required final String createdAt,
+      required final int remainingStorage,
+      required final int usedStorage}) = _$_AuthProviderModel;
 
   factory _AuthProviderModel.fromJson(Map<String, dynamic> json) =
       _$_AuthProviderModel.fromJson;
@@ -291,6 +340,10 @@ abstract class _AuthProviderModel implements AuthProviderModel {
   String get email;
   @override
   String get createdAt;
+  @override
+  int get remainingStorage;
+  @override
+  int get usedStorage;
   @override
   @JsonKey(ignore: true)
   _$$_AuthProviderModelCopyWith<_$_AuthProviderModel> get copyWith =>

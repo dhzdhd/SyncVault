@@ -14,6 +14,8 @@ class AccountView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authInfo = ref.watch(authProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Accounts'),
@@ -30,8 +32,7 @@ class AccountView extends ConsumerWidget {
       body: Center(
         child: ListView(
           padding: const EdgeInsets.all(16),
-          children: ref
-              .watch(authProvider)
+          children: authInfo
               .map(
                 (e) => Card(
                   child: Padding(
@@ -59,6 +60,32 @@ class AccountView extends ConsumerWidget {
                             ],
                           ),
                         ),
+                        const Spacer(),
+                        Stack(
+                          children: [
+                            SizedBox(
+                              width: 75,
+                              height: 75,
+                              child: Center(
+                                child: Text(
+                                  '${(e.usedStorage / e.remainingStorage).toStringAsFixed(2)} %\nused',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 75,
+                              height: 75,
+                              child: CircularProgressIndicator(
+                                value: e.usedStorage / e.remainingStorage,
+                                backgroundColor: Colors.deepPurple,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),

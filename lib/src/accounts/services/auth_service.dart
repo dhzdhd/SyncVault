@@ -110,7 +110,6 @@ final class OneDriveAuth implements AuthService {
     final accessToken = response.data!["access_token"];
     final user = await getUserInfo(accessToken);
     final drive = await getDriveInfo(accessToken);
-    print(drive);
 
     final model = AuthProviderModel(
       accessToken: accessToken,
@@ -120,6 +119,8 @@ final class OneDriveAuth implements AuthService {
       email: user["mail"],
       name: user["displayName"],
       createdAt: DateTime.now().toIso8601String(),
+      remainingStorage: drive["quota"]["remaining"],
+      usedStorage: drive["quota"]["used"],
     );
     print(user.toString());
 
