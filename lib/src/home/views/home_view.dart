@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
+import 'package:syncvault/helpers.dart';
+import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 
 import '../../settings/views/settings_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends ConsumerWidget {
   const HomeView({
     super.key,
   });
@@ -12,7 +16,9 @@ class HomeView extends StatelessWidget {
   static const routeName = '/';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final folderInfo = ref.watch(folderProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sync Vault'),
@@ -31,12 +37,49 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await showDialog(
+            context: context,
+            builder: (context) => const NewFolderDialogWidget(),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       body: Center(
-        child: ElevatedButton(
-          child: Text('Click'),
-          onPressed: () async {
-            await OneDriveAuth().signIn();
-          },
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: folderInfo
+              .map(
+                (e) => Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 32.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                e.localPath.capitalize(),
+                                style: const TextStyle(fontSize: 25),
+                              ),
+                              Text(
+                                e.localPath,
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
         ),
       ),
     );

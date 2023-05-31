@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'drive_model.dart';
+part of 'folder_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,35 +14,34 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-DriveModel _$DriveModelFromJson(Map<String, dynamic> json) {
-  return _DriveModel.fromJson(json);
+FolderModel _$FolderModelFromJson(Map<String, dynamic> json) {
+  return _FolderModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$DriveModel {
-// Can change to pointer to authProvider to remove redundancy
+mixin _$FolderModel {
   List<AuthProviderModel> get models => throw _privateConstructorUsedError;
   String get localPath => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DriveModelCopyWith<DriveModel> get copyWith =>
+  $FolderModelCopyWith<FolderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DriveModelCopyWith<$Res> {
-  factory $DriveModelCopyWith(
-          DriveModel value, $Res Function(DriveModel) then) =
-      _$DriveModelCopyWithImpl<$Res, DriveModel>;
+abstract class $FolderModelCopyWith<$Res> {
+  factory $FolderModelCopyWith(
+          FolderModel value, $Res Function(FolderModel) then) =
+      _$FolderModelCopyWithImpl<$Res, FolderModel>;
   @useResult
   $Res call({List<AuthProviderModel> models, String localPath});
 }
 
 /// @nodoc
-class _$DriveModelCopyWithImpl<$Res, $Val extends DriveModel>
-    implements $DriveModelCopyWith<$Res> {
-  _$DriveModelCopyWithImpl(this._value, this._then);
+class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
+    implements $FolderModelCopyWith<$Res> {
+  _$FolderModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -69,22 +68,22 @@ class _$DriveModelCopyWithImpl<$Res, $Val extends DriveModel>
 }
 
 /// @nodoc
-abstract class _$$_DriveModelCopyWith<$Res>
-    implements $DriveModelCopyWith<$Res> {
-  factory _$$_DriveModelCopyWith(
-          _$_DriveModel value, $Res Function(_$_DriveModel) then) =
-      __$$_DriveModelCopyWithImpl<$Res>;
+abstract class _$$_FolderModelCopyWith<$Res>
+    implements $FolderModelCopyWith<$Res> {
+  factory _$$_FolderModelCopyWith(
+          _$_FolderModel value, $Res Function(_$_FolderModel) then) =
+      __$$_FolderModelCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<AuthProviderModel> models, String localPath});
 }
 
 /// @nodoc
-class __$$_DriveModelCopyWithImpl<$Res>
-    extends _$DriveModelCopyWithImpl<$Res, _$_DriveModel>
-    implements _$$_DriveModelCopyWith<$Res> {
-  __$$_DriveModelCopyWithImpl(
-      _$_DriveModel _value, $Res Function(_$_DriveModel) _then)
+class __$$_FolderModelCopyWithImpl<$Res>
+    extends _$FolderModelCopyWithImpl<$Res, _$_FolderModel>
+    implements _$$_FolderModelCopyWith<$Res> {
+  __$$_FolderModelCopyWithImpl(
+      _$_FolderModel _value, $Res Function(_$_FolderModel) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -93,7 +92,7 @@ class __$$_DriveModelCopyWithImpl<$Res>
     Object? models = null,
     Object? localPath = null,
   }) {
-    return _then(_$_DriveModel(
+    return _then(_$_FolderModel(
       models: null == models
           ? _value._models
           : models // ignore: cast_nullable_to_non_nullable
@@ -108,17 +107,15 @@ class __$$_DriveModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DriveModel with DiagnosticableTreeMixin implements _DriveModel {
-  const _$_DriveModel(
+class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
+  const _$_FolderModel(
       {required final List<AuthProviderModel> models, required this.localPath})
       : _models = models;
 
-  factory _$_DriveModel.fromJson(Map<String, dynamic> json) =>
-      _$$_DriveModelFromJson(json);
+  factory _$_FolderModel.fromJson(Map<String, dynamic> json) =>
+      _$$_FolderModelFromJson(json);
 
-// Can change to pointer to authProvider to remove redundancy
   final List<AuthProviderModel> _models;
-// Can change to pointer to authProvider to remove redundancy
   @override
   List<AuthProviderModel> get models {
     if (_models is EqualUnmodifiableListView) return _models;
@@ -131,14 +128,14 @@ class _$_DriveModel with DiagnosticableTreeMixin implements _DriveModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'DriveModel(models: $models, localPath: $localPath)';
+    return 'FolderModel(models: $models, localPath: $localPath)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'DriveModel'))
+      ..add(DiagnosticsProperty('type', 'FolderModel'))
       ..add(DiagnosticsProperty('models', models))
       ..add(DiagnosticsProperty('localPath', localPath));
   }
@@ -147,7 +144,7 @@ class _$_DriveModel with DiagnosticableTreeMixin implements _DriveModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DriveModel &&
+            other is _$_FolderModel &&
             const DeepCollectionEquality().equals(other._models, _models) &&
             (identical(other.localPath, localPath) ||
                 other.localPath == localPath));
@@ -161,31 +158,31 @@ class _$_DriveModel with DiagnosticableTreeMixin implements _DriveModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DriveModelCopyWith<_$_DriveModel> get copyWith =>
-      __$$_DriveModelCopyWithImpl<_$_DriveModel>(this, _$identity);
+  _$$_FolderModelCopyWith<_$_FolderModel> get copyWith =>
+      __$$_FolderModelCopyWithImpl<_$_FolderModel>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DriveModelToJson(
+    return _$$_FolderModelToJson(
       this,
     );
   }
 }
 
-abstract class _DriveModel implements DriveModel {
-  const factory _DriveModel(
+abstract class _FolderModel implements FolderModel {
+  const factory _FolderModel(
       {required final List<AuthProviderModel> models,
-      required final String localPath}) = _$_DriveModel;
+      required final String localPath}) = _$_FolderModel;
 
-  factory _DriveModel.fromJson(Map<String, dynamic> json) =
-      _$_DriveModel.fromJson;
+  factory _FolderModel.fromJson(Map<String, dynamic> json) =
+      _$_FolderModel.fromJson;
 
-  @override // Can change to pointer to authProvider to remove redundancy
+  @override
   List<AuthProviderModel> get models;
   @override
   String get localPath;
   @override
   @JsonKey(ignore: true)
-  _$$_DriveModelCopyWith<_$_DriveModel> get copyWith =>
+  _$$_FolderModelCopyWith<_$_FolderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
