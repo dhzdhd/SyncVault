@@ -1,5 +1,7 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
@@ -10,43 +12,48 @@ class NewFolderDialogWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedProvider = useState<AuthProviderModel?>(null);
-    final selectedFolder = useState<String?>(null);
+    final selectedProvider = useState<Option<AuthProviderModel>>(const None());
+    final selectedFolder = useState<Option<String>>(const None());
     final driveInfo = ref.watch(authProvider);
 
     return SimpleDialog(
       title: const Text('Sync a new folder'),
       contentPadding: const EdgeInsets.all(24),
       children: [
-        DropdownButton<AuthProviderModel>(
+        DropdownButton<AuthProviderModel?>(
           items: driveInfo
               .map((e) => DropdownMenuItem(
                     value: e,
                     child: Text(e.email),
                   ))
               .toList(),
-          value: selectedProvider.value,
+          value: selectedProvider.value.toNullable(),
           isExpanded: true,
+          hint: const Text('Enter provider account'),
           onChanged: (AuthProviderModel? e) {
-            selectedProvider.value = e;
+            selectedProvider.value = e.toOption();
           },
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
-          child: Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text(
-                    'Folder',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.left,
-                  ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  selectedFolder.value.toNullable() ?? 'Not selected yet',
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.left,
                 ),
-              ],
-            ),
+              ),
+              TextButton(
+                child: const Icon(Icons.folder),
+                onPressed: () async {
+                  final result = await FilePicker.platform.getDirectoryPath();
+                  selectedFolder.value = result.toOption();
+                },
+              ),
+            ],
           ),
         ),
         Padding(
