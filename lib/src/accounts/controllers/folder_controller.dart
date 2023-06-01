@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 
 final folderProvider =
@@ -24,4 +25,9 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
   }
 
   Future<void> getFolderStatus(FolderModel model) async {}
+
+  void append(AuthProviderModel model, String folderPath) {
+    final folder = FolderModel(model: model, localPath: folderPath);
+    state = [...state, folder];
+  }
 }

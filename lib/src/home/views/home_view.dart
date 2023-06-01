@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
-import 'package:syncvault/src/accounts/services/auth_service.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 
@@ -38,6 +37,7 @@ class HomeView extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Sync new folder',
         onPressed: () async {
           await showDialog(
             context: context,

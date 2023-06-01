@@ -5,7 +5,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
-import 'package:syncvault/helpers.dart';
 
 class NewFolderDialogWidget extends HookConsumerWidget {
   const NewFolderDialogWidget({Key? key}) : super(key: key);

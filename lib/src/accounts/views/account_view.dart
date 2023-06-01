@@ -21,6 +21,7 @@ class AccountView extends ConsumerWidget {
         title: const Text('Accounts'),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Register new provider',
         onPressed: () async {
           await showDialog(
             context: context,

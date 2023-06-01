@@ -1,11 +1,11 @@
 // import 'package:excode/src/home/widgets/snackbar.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 // import 'package:fpdart/fpdart.dart';
 
 extension StringExtension on String {
   String capitalize() {
-    if (this.isNotEmpty) {
-      return '${this[0].toUpperCase()}${this.substring(1)}';
+    if (isNotEmpty) {
+      return '${this[0].toUpperCase()}${substring(1)}';
     }
     return '';
   }
