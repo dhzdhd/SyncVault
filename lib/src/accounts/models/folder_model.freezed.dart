@@ -21,7 +21,8 @@ FolderModel _$FolderModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$FolderModel {
   AuthProviderModel get model => throw _privateConstructorUsedError;
-  String get localPath => throw _privateConstructorUsedError;
+  String get folderPath => throw _privateConstructorUsedError;
+  String get folderName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,7 @@ abstract class $FolderModelCopyWith<$Res> {
           FolderModel value, $Res Function(FolderModel) then) =
       _$FolderModelCopyWithImpl<$Res, FolderModel>;
   @useResult
-  $Res call({AuthProviderModel model, String localPath});
+  $Res call({AuthProviderModel model, String folderPath, String folderName});
 
   $AuthProviderModelCopyWith<$Res> get model;
 }
@@ -54,16 +55,21 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
   @override
   $Res call({
     Object? model = null,
-    Object? localPath = null,
+    Object? folderPath = null,
+    Object? folderName = null,
   }) {
     return _then(_value.copyWith(
       model: null == model
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
               as AuthProviderModel,
-      localPath: null == localPath
-          ? _value.localPath
-          : localPath // ignore: cast_nullable_to_non_nullable
+      folderPath: null == folderPath
+          ? _value.folderPath
+          : folderPath // ignore: cast_nullable_to_non_nullable
+              as String,
+      folderName: null == folderName
+          ? _value.folderName
+          : folderName // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -85,7 +91,7 @@ abstract class _$$_FolderModelCopyWith<$Res>
       __$$_FolderModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({AuthProviderModel model, String localPath});
+  $Res call({AuthProviderModel model, String folderPath, String folderName});
 
   @override
   $AuthProviderModelCopyWith<$Res> get model;
@@ -103,16 +109,21 @@ class __$$_FolderModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? model = null,
-    Object? localPath = null,
+    Object? folderPath = null,
+    Object? folderName = null,
   }) {
     return _then(_$_FolderModel(
       model: null == model
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
               as AuthProviderModel,
-      localPath: null == localPath
-          ? _value.localPath
-          : localPath // ignore: cast_nullable_to_non_nullable
+      folderPath: null == folderPath
+          ? _value.folderPath
+          : folderPath // ignore: cast_nullable_to_non_nullable
+              as String,
+      folderName: null == folderName
+          ? _value.folderName
+          : folderName // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -121,7 +132,10 @@ class __$$_FolderModelCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
-  const _$_FolderModel({required this.model, required this.localPath});
+  const _$_FolderModel(
+      {required this.model,
+      required this.folderPath,
+      required this.folderName});
 
   factory _$_FolderModel.fromJson(Map<String, dynamic> json) =>
       _$$_FolderModelFromJson(json);
@@ -129,11 +143,13 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
   @override
   final AuthProviderModel model;
   @override
-  final String localPath;
+  final String folderPath;
+  @override
+  final String folderName;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(model: $model, localPath: $localPath)';
+    return 'FolderModel(model: $model, folderPath: $folderPath, folderName: $folderName)';
   }
 
   @override
@@ -142,7 +158,8 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
     properties
       ..add(DiagnosticsProperty('type', 'FolderModel'))
       ..add(DiagnosticsProperty('model', model))
-      ..add(DiagnosticsProperty('localPath', localPath));
+      ..add(DiagnosticsProperty('folderPath', folderPath))
+      ..add(DiagnosticsProperty('folderName', folderName));
   }
 
   @override
@@ -151,13 +168,15 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
         (other.runtimeType == runtimeType &&
             other is _$_FolderModel &&
             (identical(other.model, model) || other.model == model) &&
-            (identical(other.localPath, localPath) ||
-                other.localPath == localPath));
+            (identical(other.folderPath, folderPath) ||
+                other.folderPath == folderPath) &&
+            (identical(other.folderName, folderName) ||
+                other.folderName == folderName));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, model, localPath);
+  int get hashCode => Object.hash(runtimeType, model, folderPath, folderName);
 
   @JsonKey(ignore: true)
   @override
@@ -176,7 +195,8 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
 abstract class _FolderModel implements FolderModel {
   const factory _FolderModel(
       {required final AuthProviderModel model,
-      required final String localPath}) = _$_FolderModel;
+      required final String folderPath,
+      required final String folderName}) = _$_FolderModel;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
       _$_FolderModel.fromJson;
@@ -184,7 +204,9 @@ abstract class _FolderModel implements FolderModel {
   @override
   AuthProviderModel get model;
   @override
-  String get localPath;
+  String get folderPath;
+  @override
+  String get folderName;
   @override
   @JsonKey(ignore: true)
   _$$_FolderModelCopyWith<_$_FolderModel> get copyWith =>

@@ -7,13 +7,32 @@ import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
-import 'package:syncvault/src/home/components/snackbar_widget.dart';
 
-class NewFolderDialogWidget extends HookConsumerWidget {
+class NewFolderDialogWidget extends StatefulHookConsumerWidget {
   const NewFolderDialogWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NewFolderDialogWidget> createState() =>
+      _NewFolderDialogWidgetState();
+}
+
+class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final selectedProvider = useState<Option<AuthProviderModel>>(const None());
     final selectedFolder = useState<Option<String>>(const None());
     final driveInfo = ref.watch(authProvider);
@@ -22,19 +41,29 @@ class NewFolderDialogWidget extends HookConsumerWidget {
       title: const Text('Sync a new folder'),
       contentPadding: const EdgeInsets.all(24),
       children: [
-        DropdownButton<AuthProviderModel?>(
-          items: driveInfo
-              .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e.email),
-                  ))
-              .toList(),
-          value: selectedProvider.value.toNullable(),
-          isExpanded: true,
-          hint: const Text('Enter provider account'),
-          onChanged: (AuthProviderModel? e) {
-            selectedProvider.value = e.toOption();
-          },
+        TextField(
+          controller: _controller,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Name of folder',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: DropdownButton<AuthProviderModel?>(
+            items: driveInfo
+                .map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.email),
+                    ))
+                .toList(),
+            value: selectedProvider.value.toNullable(),
+            isExpanded: true,
+            hint: const Text('Enter provider account'),
+            onChanged: (AuthProviderModel? e) {
+              selectedProvider.value = e.toOption();
+            },
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
@@ -70,12 +99,14 @@ class NewFolderDialogWidget extends HookConsumerWidget {
           child: ElevatedButton(
             child: const Text('Submit'),
             onPressed: () async {
-              final Option<(AuthProviderModel, String)> content =
+              final Option<(AuthProviderModel, String, String)> content =
                   selectedProvider.value.match(
                 () => none(),
                 (t) => selectedFolder.value.match(
                   () => none(),
-                  (r) => some((t, r)),
+                  (r) => _controller.text != ''
+                      ? some((t, r, _controller.text))
+                      : none(),
                 ),
               );
 
@@ -84,7 +115,7 @@ class NewFolderDialogWidget extends HookConsumerWidget {
                   'One or both of the fields are not filled',
                 ),
                 (t) {
-                  ref.watch(folderProvider.notifier).create(t.$1, t.$2);
+                  ref.watch(folderProvider.notifier).create(t.$1, t.$2, t.$3);
                   context.showSuccessSnackBar(
                     content: 'Successfully linked folder',
                     action: none(),

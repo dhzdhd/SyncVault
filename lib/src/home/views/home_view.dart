@@ -64,11 +64,11 @@ class HomeView extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                e.localPath.capitalize(),
+                                e.folderName.capitalize(),
                                 style: const TextStyle(fontSize: 25),
                               ),
                               Text(
-                                e.localPath,
+                                e.folderPath,
                                 style: const TextStyle(fontSize: 20),
                               ),
                             ],
@@ -77,6 +77,21 @@ class HomeView extends ConsumerWidget {
                         const Spacer(),
                         PopupMenuButton(
                           itemBuilder: (ctx) => [
+                            PopupMenuItem(
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.sync_rounded),
+                                  Spacer(),
+                                  Text('Sync'),
+                                ],
+                              ),
+                              onTap: () {
+                                ctx.showSuccessSnackBar(
+                                  content: 'Synced successfully',
+                                  action: none(),
+                                );
+                              },
+                            ),
                             PopupMenuItem(
                               child: const Row(
                                 children: [

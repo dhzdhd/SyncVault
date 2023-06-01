@@ -9,11 +9,13 @@ part of 'folder_model.dart';
 _$_FolderModel _$$_FolderModelFromJson(Map<String, dynamic> json) =>
     _$_FolderModel(
       model: AuthProviderModel.fromJson(json['model'] as Map<String, dynamic>),
-      localPath: json['localPath'] as String,
+      folderPath: json['folderPath'] as String,
+      folderName: json['folderName'] as String,
     );
 
 Map<String, dynamic> _$$_FolderModelToJson(_$_FolderModel instance) =>
     <String, dynamic>{
       'model': instance.model,
-      'localPath': instance.localPath,
+      'folderPath': instance.folderPath,
+      'folderName': instance.folderName,
     };
