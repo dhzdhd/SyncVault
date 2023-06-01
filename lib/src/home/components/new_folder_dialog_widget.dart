@@ -40,14 +40,21 @@ class NewFolderDialogWidget extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(
-                  selectedFolder.value.toNullable() ?? 'Not selected yet',
-                  style: Theme.of(context).textTheme.titleMedium,
-                  textAlign: TextAlign.left,
+                child: Tooltip(
+                  message:
+                      selectedFolder.value.toNullable() ?? 'Not selected yet',
+                  child: Text(
+                    selectedFolder.value.toNullable() ?? 'Not selected yet',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
                 ),
               ),
-              TextButton(
-                child: const Icon(Icons.folder),
+              IconButton(
+                icon: const Icon(Icons.folder),
+                tooltip: 'Get directory',
                 onPressed: () async {
                   final result = await FilePicker.platform.getDirectoryPath();
                   selectedFolder.value = result.toOption();

@@ -10,7 +10,7 @@ part 'folder_model.g.dart';
 @freezed
 class FolderModel with _$FolderModel {
   const factory FolderModel({
-    required List<AuthProviderModel> models,
+    required AuthProviderModel model,
     required String localPath,
   }) = _FolderModel;
 
