@@ -1,6 +1,6 @@
-// import 'package:excode/src/home/widgets/snackbar.dart';
-// import 'package:flutter/material.dart';
-// import 'package:fpdart/fpdart.dart';
+import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:syncvault/src/home/components/snackbar_widget.dart';
 
 extension StringExtension on String {
   String capitalize() {
@@ -11,20 +11,20 @@ extension StringExtension on String {
   }
 }
 
-// extension ShowSnackBar on BuildContext {
-//   void showSuccessSnackBar(
-//       {required String content, required Option<SnackBarAction> action}) {
-//     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
-//       content: content,
-//       state: SnackBarState.success,
-//       action: action.toNullable(),
-//     ));
-//   }
+extension ShowSnackBar on BuildContext {
+  void showSuccessSnackBar(
+      {required String content, required Option<SnackBarAction> action}) {
+    ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
+      content: content,
+      state: SnackBarState.success,
+      action: action.toNullable(),
+    ));
+  }
 
-//   void showErrorSnackBar(String content) {
-//     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
-//       content: content,
-//       state: SnackBarState.error,
-//     ));
-//   }
-// }
+  void showErrorSnackBar(String content) {
+    ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
+      content: content,
+      state: SnackBarState.error,
+    ));
+  }
+}

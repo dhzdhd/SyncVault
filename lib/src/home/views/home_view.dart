@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
@@ -74,6 +75,26 @@ class HomeView extends ConsumerWidget {
                           ),
                         ),
                         const Spacer(),
+                        PopupMenuButton(
+                          itemBuilder: (ctx) => [
+                            PopupMenuItem(
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.delete),
+                                  Spacer(),
+                                  Text('Delete'),
+                                ],
+                              ),
+                              onTap: () {
+                                ref.watch(folderProvider.notifier).delete(e);
+                                ctx.showSuccessSnackBar(
+                                  content: 'Deleted folder',
+                                  action: none(),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

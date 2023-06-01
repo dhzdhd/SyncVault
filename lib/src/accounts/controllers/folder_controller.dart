@@ -26,8 +26,12 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
 
   Future<void> getFolderStatus(FolderModel model) async {}
 
-  void append(AuthProviderModel model, String folderPath) {
+  void create(AuthProviderModel model, String folderPath) {
     final folder = FolderModel(model: model, localPath: folderPath);
     state = [...state, folder];
+  }
+
+  void delete(FolderModel model) {
+    state = state.where((element) => element != model).toList();
   }
 }

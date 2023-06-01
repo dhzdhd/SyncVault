@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
+import 'package:syncvault/src/home/components/snackbar_widget.dart';
 
 class NewFolderDialogWidget extends HookConsumerWidget {
   const NewFolderDialogWidget({Key? key}) : super(key: key);
@@ -65,10 +68,32 @@ class NewFolderDialogWidget extends HookConsumerWidget {
         Padding(
           padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
           child: ElevatedButton(
+            child: const Text('Submit'),
             onPressed: () async {
+              final Option<(AuthProviderModel, String)> content =
+                  selectedProvider.value.match(
+                () => none(),
+                (t) => selectedFolder.value.match(
+                  () => none(),
+                  (r) => some((t, r)),
+                ),
+              );
+
+              content.match(
+                () => context.showErrorSnackBar(
+                  'One or both of the fields are not filled',
+                ),
+                (t) {
+                  ref.watch(folderProvider.notifier).create(t.$1, t.$2);
+                  context.showSuccessSnackBar(
+                    content: 'Successfully linked folder',
+                    action: none(),
+                  );
+                },
+              );
+
               if (context.mounted) Navigator.of(context).pop();
             },
-            child: const Text('Submit'),
           ),
         )
       ],
