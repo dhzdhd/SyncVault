@@ -11,14 +11,14 @@ class NewFolderDialogWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedProvider = useState<AuthProviderModel?>(null);
+    final selectedFolder = useState<String?>(null);
     final driveInfo = ref.watch(authProvider);
 
     return SimpleDialog(
       title: const Text('Sync a new folder'),
-      contentPadding: const EdgeInsets.all(16),
+      contentPadding: const EdgeInsets.all(24),
       children: [
         DropdownButton<AuthProviderModel>(
-          padding: const EdgeInsets.only(left: 32, right: 32),
           items: driveInfo
               .map((e) => DropdownMenuItem(
                     value: e,
@@ -30,6 +30,24 @@ class NewFolderDialogWidget extends HookConsumerWidget {
           onChanged: (AuthProviderModel? e) {
             selectedProvider.value = e;
           },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Card(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    'Folder',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 32, left: 32, right: 32),

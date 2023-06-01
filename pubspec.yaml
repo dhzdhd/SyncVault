@@ -11,6 +11,7 @@ environment:
 
 dependencies:
   dio: ^5.1.2
+  file_picker: ^5.3.1
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.6
@@ -18,11 +19,13 @@ dependencies:
     sdk: flutter
   flutter_svg: ^2.0.6
   flutter_web_auth_2: ^2.1.4
+  fpdart: ^0.6.0
   freezed_annotation: ^2.2.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   hooks_riverpod: ^2.3.6
   json_annotation: ^4.8.1
+  watcher: ^1.1.0
 
 dev_dependencies:
   flutter_test:

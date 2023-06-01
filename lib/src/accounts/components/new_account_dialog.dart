@@ -13,10 +13,9 @@ class NewAccountDialogWidget extends HookConsumerWidget {
 
     return SimpleDialog(
       title: const Text('Register a new drive account'),
-      contentPadding: const EdgeInsets.all(16),
+      contentPadding: const EdgeInsets.all(24),
       children: [
         DropdownButton<AuthProvider>(
-          padding: const EdgeInsets.only(left: 32, right: 32),
           items: AuthProvider.values
               .map((e) => DropdownMenuItem(
                     value: e,
