@@ -40,7 +40,8 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
 
     await ref.watch(authProvider.notifier).refresh(model);
     // Errors out because refreshed token is not updated in folderModel
-    // Consider making a pointer & perhaps make authModel mutable
+    // Consider pointing to authProvider through some id like email??
+    // Perhaps make authModel mutable
     final id = await OneDrive().createFolder(folderModel);
     print(id);
 
