@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:system_tray/system_tray.dart';
-import 'package:window_manager/window_manager.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
@@ -24,7 +23,10 @@ void main() async {
 
     final menu = Menu();
     await menu.buildFrom([
-      MenuItemLabel(label: 'Show', onClicked: (menuItem) => appWindow.show())
+      MenuItemLabel(
+        label: 'Show app',
+        onClicked: (menuItem) => appWindow.show(),
+      )
     ]);
 
     await systemTray.setContextMenu(menu);

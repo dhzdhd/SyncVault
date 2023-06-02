@@ -49,6 +49,7 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
       AuthProvider.googleDrive => await GoogleDriveAuth().refresh(model),
     };
 
+    // Use where
     var newState = state;
     newState.removeWhere((e) => e == model);
     state = [...newState, result];

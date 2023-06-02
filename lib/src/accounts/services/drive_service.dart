@@ -19,7 +19,18 @@ class OneDrive implements DriveService {
   static const basePath = "/beta/me/drive";
 
   @override
-  Future<void> createFolder(FolderModel model) {
-    throw UnimplementedError();
+  Future<String> createFolder(FolderModel model) async {
+    final uri = Uri.https(apiHost, '$basePath/root/children');
+    final authOptions = Options(headers: {
+      "Authorization": "Bearer ${model.model.accessToken}",
+    });
+
+    final response = await dio.postUri<Map<String, dynamic>>(
+      uri,
+      options: authOptions,
+      data: {"name": 'syncvault-${model.folderName}'},
+    );
+
+    return response.data!["id"];
   }
 }

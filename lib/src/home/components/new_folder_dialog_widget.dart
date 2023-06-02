@@ -114,12 +114,16 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                 () => context.showErrorSnackBar(
                   'One or both of the fields are not filled',
                 ),
-                (t) {
-                  ref.watch(folderProvider.notifier).create(t.$1, t.$2, t.$3);
-                  context.showSuccessSnackBar(
-                    content: 'Successfully linked folder',
-                    action: none(),
-                  );
+                (t) async {
+                  await ref
+                      .watch(folderProvider.notifier)
+                      .create(t.$1, t.$2, t.$3);
+                  if (context.mounted) {
+                    context.showSuccessSnackBar(
+                      content: 'Successfully linked folder',
+                      action: none(),
+                    );
+                  }
                 },
               );
 

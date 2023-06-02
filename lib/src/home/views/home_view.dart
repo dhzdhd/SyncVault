@@ -8,7 +8,6 @@ import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 import 'package:system_tray/system_tray.dart';
-import 'package:window_manager/window_manager.dart';
 
 import '../../settings/views/settings_view.dart';
 

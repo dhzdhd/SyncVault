@@ -9,10 +9,11 @@ part 'folder_model.g.dart';
 
 @freezed
 class FolderModel with _$FolderModel {
-  const factory FolderModel(
-      {required AuthProviderModel model,
-      required String folderPath,
-      required String folderName}) = _FolderModel;
+  const factory FolderModel({
+    required AuthProviderModel model, // Consider pointing to model than copying
+    required String folderPath,
+    required String folderName,
+  }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>
       _$FolderModelFromJson(json);
