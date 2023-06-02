@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -5,6 +7,8 @@ import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
+import 'package:system_tray/system_tray.dart';
+import 'package:window_manager/window_manager.dart';
 
 import '../../settings/views/settings_view.dart';
 
@@ -23,17 +27,30 @@ class HomeView extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Sync Vault'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.restorablePushNamed(context, SettingsView.routeName);
-            },
-          ),
+          if (Platform.isWindows)
+            IconButton(
+              icon: const Icon(Icons.arrow_downward),
+              tooltip: 'Hide to system tray',
+              onPressed: () async {
+                await AppWindow().hide();
+              },
+            ),
           IconButton(
             icon: const Icon(Icons.account_circle),
+            tooltip: 'Navigate to accounts',
             onPressed: () {
               Navigator.restorablePushNamed(context, AccountView.routeName);
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              icon: const Icon(Icons.settings),
+              tooltip: 'Navigate to settings',
+              onPressed: () {
+                Navigator.restorablePushNamed(context, SettingsView.routeName);
+              },
+            ),
           ),
         ],
       ),
