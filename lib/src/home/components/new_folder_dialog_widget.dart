@@ -104,7 +104,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                 () => none(),
                 (t) => selectedFolder.value.match(() => none(), (r) {
                   final folderName = 'syncvault-${_controller.text}';
-                  if (_controller.text != '' &&
+                  if (_controller.text.trim().isNotEmpty &&
                       !ref
                           .read(folderProvider)
                           .any((element) => element.folderName == folderName)) {

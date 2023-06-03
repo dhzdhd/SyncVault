@@ -80,7 +80,7 @@ class HomeView extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                e.folderName.capitalize(),
+                                e.folderName.substring(10).capitalize(),
                                 style: const TextStyle(fontSize: 25),
                               ),
                               Text(
