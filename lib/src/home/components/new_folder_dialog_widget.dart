@@ -102,12 +102,17 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               final Option<(AuthProviderModel, String, String)> content =
                   selectedProvider.value.match(
                 () => none(),
-                (t) => selectedFolder.value.match(
-                  () => none(),
-                  (r) => _controller.text != ''
-                      ? some((t, r, _controller.text))
-                      : none(),
-                ),
+                (t) => selectedFolder.value.match(() => none(), (r) {
+                  final folderName = 'syncvault-${_controller.text}';
+                  if (_controller.text != '' &&
+                      !ref
+                          .read(folderProvider)
+                          .any((element) => element.folderName == folderName)) {
+                    return some((t, r, folderName));
+                  } else {
+                    return none();
+                  }
+                }),
               );
 
               content.match(

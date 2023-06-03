@@ -43,9 +43,9 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
       folderName: folderName,
     );
 
-    await ref.watch(authProvider.notifier).refresh(authModel);
+    await ref.read(authProvider.notifier).refresh(authModel);
     final newAuthModel = ref
-        .watch(authProvider)
+        .read(authProvider)
         .where((element) => element.email == authModel.email)
         .first;
 
