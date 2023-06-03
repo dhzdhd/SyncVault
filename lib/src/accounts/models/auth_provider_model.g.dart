@@ -11,7 +11,7 @@ _$_AuthProviderModel _$$_AuthProviderModelFromJson(Map<String, dynamic> json) =>
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
       expiresIn: json['expiresIn'] as int,
-      provider: $enumDecode(_$AuthProviderEnumMap, json['provider']),
+      provider: $enumDecode(_$AuthProviderTypeEnumMap, json['provider']),
       name: json['name'] as String,
       email: json['email'] as String,
       createdAt: json['createdAt'] as String,
@@ -25,7 +25,7 @@ Map<String, dynamic> _$$_AuthProviderModelToJson(
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,
       'expiresIn': instance.expiresIn,
-      'provider': _$AuthProviderEnumMap[instance.provider]!,
+      'provider': _$AuthProviderTypeEnumMap[instance.provider]!,
       'name': instance.name,
       'email': instance.email,
       'createdAt': instance.createdAt,
@@ -33,7 +33,7 @@ Map<String, dynamic> _$$_AuthProviderModelToJson(
       'usedStorage': instance.usedStorage,
     };
 
-const _$AuthProviderEnumMap = {
-  AuthProvider.oneDrive: 'oneDrive',
-  AuthProvider.googleDrive: 'googleDrive',
+const _$AuthProviderTypeEnumMap = {
+  AuthProviderType.oneDrive: 'oneDrive',
+  AuthProviderType.googleDrive: 'googleDrive',
 };

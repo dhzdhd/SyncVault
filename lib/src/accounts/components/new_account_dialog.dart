@@ -9,14 +9,14 @@ class NewAccountDialogWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedProvider = useState(AuthProvider.oneDrive);
+    final selectedProvider = useState(AuthProviderType.oneDrive);
 
     return SimpleDialog(
       title: const Text('Register a new drive account'),
       contentPadding: const EdgeInsets.all(24),
       children: [
-        DropdownButton<AuthProvider>(
-          items: AuthProvider.values
+        DropdownButton<AuthProviderType>(
+          items: AuthProviderType.values
               .map((e) => DropdownMenuItem(
                     value: e,
                     child: Text(e.name.capitalize()),
@@ -24,7 +24,7 @@ class NewAccountDialogWidget extends HookConsumerWidget {
               .toList(),
           value: selectedProvider.value,
           isExpanded: true,
-          onChanged: (AuthProvider? e) {
+          onChanged: (AuthProviderType? e) {
             selectedProvider.value = e!;
           },
         ),

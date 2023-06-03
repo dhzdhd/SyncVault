@@ -23,7 +23,7 @@ mixin _$AuthProviderModel {
   String get accessToken => throw _privateConstructorUsedError;
   String get refreshToken => throw _privateConstructorUsedError;
   int get expiresIn => throw _privateConstructorUsedError;
-  AuthProvider get provider => throw _privateConstructorUsedError;
+  AuthProviderType get provider => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
@@ -46,7 +46,7 @@ abstract class $AuthProviderModelCopyWith<$Res> {
       {String accessToken,
       String refreshToken,
       int expiresIn,
-      AuthProvider provider,
+      AuthProviderType provider,
       String name,
       String email,
       String createdAt,
@@ -93,7 +93,7 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
-              as AuthProvider,
+              as AuthProviderType,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -130,7 +130,7 @@ abstract class _$$_AuthProviderModelCopyWith<$Res>
       {String accessToken,
       String refreshToken,
       int expiresIn,
-      AuthProvider provider,
+      AuthProviderType provider,
       String name,
       String email,
       String createdAt,
@@ -175,7 +175,7 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
-              as AuthProvider,
+              as AuthProviderType,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -226,7 +226,7 @@ class _$_AuthProviderModel
   @override
   final int expiresIn;
   @override
-  final AuthProvider provider;
+  final AuthProviderType provider;
   @override
   final String name;
   @override
@@ -316,7 +316,7 @@ abstract class _AuthProviderModel implements AuthProviderModel {
       {required final String accessToken,
       required final String refreshToken,
       required final int expiresIn,
-      required final AuthProvider provider,
+      required final AuthProviderType provider,
       required final String name,
       required final String email,
       required final String createdAt,
@@ -333,7 +333,7 @@ abstract class _AuthProviderModel implements AuthProviderModel {
   @override
   int get expiresIn;
   @override
-  AuthProvider get provider;
+  AuthProviderType get provider;
   @override
   String get name;
   @override

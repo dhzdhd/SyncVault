@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
 
-enum AuthProvider {
+enum AuthProviderType {
   oneDrive,
   googleDrive,
 }
@@ -29,10 +29,10 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     }
   }
 
-  Future<void> signIn(AuthProvider provider) async {
+  Future<void> signIn(AuthProviderType provider) async {
     final result = switch (provider) {
-      AuthProvider.oneDrive => await OneDriveAuth().signIn(),
-      AuthProvider.googleDrive => await GoogleDriveAuth().signIn(),
+      AuthProviderType.oneDrive => await OneDriveAuth().signIn(),
+      AuthProviderType.googleDrive => await GoogleDriveAuth().signIn(),
     };
     print(result.toJson().toString());
 
@@ -45,8 +45,8 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
 
   Future<void> refresh(AuthProviderModel model) async {
     final result = switch (model.provider) {
-      AuthProvider.oneDrive => await OneDriveAuth().refresh(model),
-      AuthProvider.googleDrive => await GoogleDriveAuth().refresh(model),
+      AuthProviderType.oneDrive => await OneDriveAuth().refresh(model),
+      AuthProviderType.googleDrive => await GoogleDriveAuth().refresh(model),
     };
 
     // Use where

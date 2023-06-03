@@ -115,7 +115,7 @@ final class OneDriveAuth implements AuthService {
       accessToken: accessToken,
       refreshToken: response.data!["refresh_token"],
       expiresIn: response.data!["expires_in"],
-      provider: AuthProvider.oneDrive,
+      provider: AuthProviderType.oneDrive,
       email: user["mail"],
       name: user["displayName"],
       createdAt: DateTime.now().toIso8601String(),

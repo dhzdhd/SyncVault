@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fpdart/fpdart.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
@@ -30,26 +31,34 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
 
   Future<void> getFolderStatus(FolderModel model) async {}
 
-  Future<void> create(
-      AuthProviderModel model, String folderPath, String folderName) async {
+  Future<Either<String, String>> create(
+    AuthProviderModel authModel,
+    String folderPath,
+    String folderName,
+  ) async {
     final folderModel = FolderModel(
-      model: model,
+      email: authModel.email,
+      provider: authModel.provider,
       folderPath: folderPath,
       folderName: folderName,
     );
 
-    await ref.watch(authProvider.notifier).refresh(model);
-    // Errors out because refreshed token is not updated in folderModel
-    // Consider pointing to authProvider through some id like email??
-    // Perhaps make authModel mutable
-    final id = await OneDrive().createFolder(folderModel);
-    print(id);
+    await ref.watch(authProvider.notifier).refresh(authModel);
+    final newAuthModel = ref
+        .watch(authProvider)
+        .where((element) => element.email == authModel.email)
+        .first;
 
-    state = [...state, folderModel];
-    Hive.box('vault').put(
-      'folders',
-      jsonEncode(state.map((e) => e.toJson()).toList()),
-    );
+    // Perhaps make authModel mutable
+    final id = await OneDrive().createFolder(folderModel, newAuthModel).run();
+    return id.bind((r) {
+      state = [...state, folderModel];
+      Hive.box('vault').put(
+        'folders',
+        jsonEncode(state.map((e) => e.toJson()).toList()),
+      );
+      return Right(r);
+    });
   }
 
   void delete(FolderModel model) {

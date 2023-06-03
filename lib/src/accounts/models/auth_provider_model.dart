@@ -13,7 +13,7 @@ class AuthProviderModel with _$AuthProviderModel {
     required String accessToken,
     required String refreshToken,
     required int expiresIn,
-    required AuthProvider provider,
+    required AuthProviderType provider,
     required String name,
     required String email,
     required String createdAt,
