@@ -24,6 +24,7 @@ mixin _$FolderModel {
   AuthProviderType get provider => throw _privateConstructorUsedError;
   String get folderPath => throw _privateConstructorUsedError;
   String get folderName => throw _privateConstructorUsedError;
+  String get folderId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +42,8 @@ abstract class $FolderModelCopyWith<$Res> {
       {String email,
       AuthProviderType provider,
       String folderPath,
-      String folderName});
+      String folderName,
+      String folderId});
 }
 
 /// @nodoc
@@ -61,6 +63,7 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
     Object? provider = null,
     Object? folderPath = null,
     Object? folderName = null,
+    Object? folderId = null,
   }) {
     return _then(_value.copyWith(
       email: null == email
@@ -79,6 +82,10 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
           ? _value.folderName
           : folderName // ignore: cast_nullable_to_non_nullable
               as String,
+      folderId: null == folderId
+          ? _value.folderId
+          : folderId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -95,7 +102,8 @@ abstract class _$$_FolderModelCopyWith<$Res>
       {String email,
       AuthProviderType provider,
       String folderPath,
-      String folderName});
+      String folderName,
+      String folderId});
 }
 
 /// @nodoc
@@ -113,6 +121,7 @@ class __$$_FolderModelCopyWithImpl<$Res>
     Object? provider = null,
     Object? folderPath = null,
     Object? folderName = null,
+    Object? folderId = null,
   }) {
     return _then(_$_FolderModel(
       email: null == email
@@ -131,6 +140,10 @@ class __$$_FolderModelCopyWithImpl<$Res>
           ? _value.folderName
           : folderName // ignore: cast_nullable_to_non_nullable
               as String,
+      folderId: null == folderId
+          ? _value.folderId
+          : folderId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -142,7 +155,8 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
       {required this.email,
       required this.provider,
       required this.folderPath,
-      required this.folderName});
+      required this.folderName,
+      required this.folderId});
 
   factory _$_FolderModel.fromJson(Map<String, dynamic> json) =>
       _$$_FolderModelFromJson(json);
@@ -155,10 +169,12 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
   final String folderPath;
   @override
   final String folderName;
+  @override
+  final String folderId;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(email: $email, provider: $provider, folderPath: $folderPath, folderName: $folderName)';
+    return 'FolderModel(email: $email, provider: $provider, folderPath: $folderPath, folderName: $folderName, folderId: $folderId)';
   }
 
   @override
@@ -169,7 +185,8 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
       ..add(DiagnosticsProperty('email', email))
       ..add(DiagnosticsProperty('provider', provider))
       ..add(DiagnosticsProperty('folderPath', folderPath))
-      ..add(DiagnosticsProperty('folderName', folderName));
+      ..add(DiagnosticsProperty('folderName', folderName))
+      ..add(DiagnosticsProperty('folderId', folderId));
   }
 
   @override
@@ -183,13 +200,15 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
             (identical(other.folderPath, folderPath) ||
                 other.folderPath == folderPath) &&
             (identical(other.folderName, folderName) ||
-                other.folderName == folderName));
+                other.folderName == folderName) &&
+            (identical(other.folderId, folderId) ||
+                other.folderId == folderId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, email, provider, folderPath, folderName);
+  int get hashCode => Object.hash(
+      runtimeType, email, provider, folderPath, folderName, folderId);
 
   @JsonKey(ignore: true)
   @override
@@ -210,7 +229,8 @@ abstract class _FolderModel implements FolderModel {
       {required final String email,
       required final AuthProviderType provider,
       required final String folderPath,
-      required final String folderName}) = _$_FolderModel;
+      required final String folderName,
+      required final String folderId}) = _$_FolderModel;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
       _$_FolderModel.fromJson;
@@ -223,6 +243,8 @@ abstract class _FolderModel implements FolderModel {
   String get folderPath;
   @override
   String get folderName;
+  @override
+  String get folderId;
   @override
   @JsonKey(ignore: true)
   _$$_FolderModelCopyWith<_$_FolderModel> get copyWith =>

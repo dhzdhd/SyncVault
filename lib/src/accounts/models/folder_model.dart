@@ -14,6 +14,7 @@ class FolderModel with _$FolderModel {
     required AuthProviderType provider,
     required String folderPath,
     required String folderName,
+    required String folderId,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>

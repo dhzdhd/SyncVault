@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fpdart/fpdart.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
@@ -29,18 +30,22 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     }
   }
 
-  Future<void> signIn(AuthProviderType provider) async {
+  Future<Either<String, String>> signIn(AuthProviderType provider) async {
     final result = switch (provider) {
       AuthProviderType.oneDrive => await OneDriveAuth().signIn(),
       AuthProviderType.googleDrive => await GoogleDriveAuth().signIn(),
     };
-    print(result.toJson().toString());
 
-    state = [...state, result];
-    Hive.box('vault').put(
-      'accounts',
-      jsonEncode(state.map((e) => e.toJson()).toList()),
-    );
+    return result.map((model) {
+      print(model.toJson().toString());
+      state = [...state, model];
+      Hive.box('vault').put(
+        'accounts',
+        jsonEncode(state.map((e) => e.toJson()).toList()),
+      );
+
+      return 'Success';
+    });
   }
 
   Future<void> refresh(AuthProviderModel model) async {

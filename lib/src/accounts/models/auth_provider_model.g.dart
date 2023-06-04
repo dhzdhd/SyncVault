@@ -17,6 +17,7 @@ _$_AuthProviderModel _$$_AuthProviderModelFromJson(Map<String, dynamic> json) =>
       createdAt: json['createdAt'] as String,
       remainingStorage: json['remainingStorage'] as int,
       usedStorage: json['usedStorage'] as int,
+      folderId: json['folderId'] as String,
     );
 
 Map<String, dynamic> _$$_AuthProviderModelToJson(
@@ -31,6 +32,7 @@ Map<String, dynamic> _$$_AuthProviderModelToJson(
       'createdAt': instance.createdAt,
       'remainingStorage': instance.remainingStorage,
       'usedStorage': instance.usedStorage,
+      'folderId': instance.folderId,
     };
 
 const _$AuthProviderTypeEnumMap = {

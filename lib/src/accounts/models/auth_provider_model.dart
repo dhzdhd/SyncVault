@@ -19,6 +19,7 @@ class AuthProviderModel with _$AuthProviderModel {
     required String createdAt,
     required int remainingStorage,
     required int usedStorage,
+    required String folderId,
   }) = _AuthProviderModel;
 
   factory AuthProviderModel.fromJson(Map<String, Object?> json) =>

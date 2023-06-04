@@ -12,6 +12,7 @@ _$_FolderModel _$$_FolderModelFromJson(Map<String, dynamic> json) =>
       provider: $enumDecode(_$AuthProviderTypeEnumMap, json['provider']),
       folderPath: json['folderPath'] as String,
       folderName: json['folderName'] as String,
+      folderId: json['folderId'] as String,
     );
 
 Map<String, dynamic> _$$_FolderModelToJson(_$_FolderModel instance) =>
@@ -20,6 +21,7 @@ Map<String, dynamic> _$$_FolderModelToJson(_$_FolderModel instance) =>
       'provider': _$AuthProviderTypeEnumMap[instance.provider]!,
       'folderPath': instance.folderPath,
       'folderName': instance.folderName,
+      'folderId': instance.folderId,
     };
 
 const _$AuthProviderTypeEnumMap = {

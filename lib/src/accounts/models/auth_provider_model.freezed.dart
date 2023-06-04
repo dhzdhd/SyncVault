@@ -29,6 +29,7 @@ mixin _$AuthProviderModel {
   String get createdAt => throw _privateConstructorUsedError;
   int get remainingStorage => throw _privateConstructorUsedError;
   int get usedStorage => throw _privateConstructorUsedError;
+  String get folderId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,7 +52,8 @@ abstract class $AuthProviderModelCopyWith<$Res> {
       String email,
       String createdAt,
       int remainingStorage,
-      int usedStorage});
+      int usedStorage,
+      String folderId});
 }
 
 /// @nodoc
@@ -76,6 +78,7 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
     Object? createdAt = null,
     Object? remainingStorage = null,
     Object? usedStorage = null,
+    Object? folderId = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -114,6 +117,10 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
           ? _value.usedStorage
           : usedStorage // ignore: cast_nullable_to_non_nullable
               as int,
+      folderId: null == folderId
+          ? _value.folderId
+          : folderId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -135,7 +142,8 @@ abstract class _$$_AuthProviderModelCopyWith<$Res>
       String email,
       String createdAt,
       int remainingStorage,
-      int usedStorage});
+      int usedStorage,
+      String folderId});
 }
 
 /// @nodoc
@@ -158,6 +166,7 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? remainingStorage = null,
     Object? usedStorage = null,
+    Object? folderId = null,
   }) {
     return _then(_$_AuthProviderModel(
       accessToken: null == accessToken
@@ -196,6 +205,10 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
           ? _value.usedStorage
           : usedStorage // ignore: cast_nullable_to_non_nullable
               as int,
+      folderId: null == folderId
+          ? _value.folderId
+          : folderId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -214,7 +227,8 @@ class _$_AuthProviderModel
       required this.email,
       required this.createdAt,
       required this.remainingStorage,
-      required this.usedStorage});
+      required this.usedStorage,
+      required this.folderId});
 
   factory _$_AuthProviderModel.fromJson(Map<String, dynamic> json) =>
       _$$_AuthProviderModelFromJson(json);
@@ -237,10 +251,12 @@ class _$_AuthProviderModel
   final int remainingStorage;
   @override
   final int usedStorage;
+  @override
+  final String folderId;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider, name: $name, email: $email, createdAt: $createdAt, remainingStorage: $remainingStorage, usedStorage: $usedStorage)';
+    return 'AuthProviderModel(accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, provider: $provider, name: $name, email: $email, createdAt: $createdAt, remainingStorage: $remainingStorage, usedStorage: $usedStorage, folderId: $folderId)';
   }
 
   @override
@@ -256,7 +272,8 @@ class _$_AuthProviderModel
       ..add(DiagnosticsProperty('email', email))
       ..add(DiagnosticsProperty('createdAt', createdAt))
       ..add(DiagnosticsProperty('remainingStorage', remainingStorage))
-      ..add(DiagnosticsProperty('usedStorage', usedStorage));
+      ..add(DiagnosticsProperty('usedStorage', usedStorage))
+      ..add(DiagnosticsProperty('folderId', folderId));
   }
 
   @override
@@ -279,7 +296,9 @@ class _$_AuthProviderModel
             (identical(other.remainingStorage, remainingStorage) ||
                 other.remainingStorage == remainingStorage) &&
             (identical(other.usedStorage, usedStorage) ||
-                other.usedStorage == usedStorage));
+                other.usedStorage == usedStorage) &&
+            (identical(other.folderId, folderId) ||
+                other.folderId == folderId));
   }
 
   @JsonKey(ignore: true)
@@ -294,7 +313,8 @@ class _$_AuthProviderModel
       email,
       createdAt,
       remainingStorage,
-      usedStorage);
+      usedStorage,
+      folderId);
 
   @JsonKey(ignore: true)
   @override
@@ -321,7 +341,8 @@ abstract class _AuthProviderModel implements AuthProviderModel {
       required final String email,
       required final String createdAt,
       required final int remainingStorage,
-      required final int usedStorage}) = _$_AuthProviderModel;
+      required final int usedStorage,
+      required final String folderId}) = _$_AuthProviderModel;
 
   factory _AuthProviderModel.fromJson(Map<String, dynamic> json) =
       _$_AuthProviderModel.fromJson;
@@ -344,6 +365,8 @@ abstract class _AuthProviderModel implements AuthProviderModel {
   int get remainingStorage;
   @override
   int get usedStorage;
+  @override
+  String get folderId;
   @override
   @JsonKey(ignore: true)
   _$$_AuthProviderModelCopyWith<_$_AuthProviderModel> get copyWith =>

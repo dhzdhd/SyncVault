@@ -36,13 +36,6 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
     String folderPath,
     String folderName,
   ) async {
-    final folderModel = FolderModel(
-      email: authModel.email,
-      provider: authModel.provider,
-      folderPath: folderPath,
-      folderName: folderName,
-    );
-
     await ref.read(authProvider.notifier).refresh(authModel);
     final newAuthModel = ref
         .read(authProvider)
@@ -50,20 +43,32 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
         .first;
 
     // Perhaps make authModel mutable
-    final id = await OneDrive().createFolder(folderModel, newAuthModel).run();
-    return id.bind((r) {
+    final idResult = await OneDrive()
+        .createFolder(
+          folderName: some(folderName),
+          accessToken: newAuthModel.accessToken,
+          folderId: some(newAuthModel.folderId),
+        )
+        .run();
+    return idResult.bind((id) {
+      final folderModel = FolderModel(
+        email: authModel.email,
+        provider: authModel.provider,
+        folderPath: folderPath,
+        folderName: folderName,
+        folderId: id,
+      );
+
       state = [...state, folderModel];
       Hive.box('vault').put(
         'folders',
         jsonEncode(state.map((e) => e.toJson()).toList()),
       );
-      return Right(r);
+      return right('Success');
     });
   }
 
   void delete(FolderModel model) {
-
-
     state = state.where((element) => element != model).toList();
     Hive.box('vault').put(
       'folders',

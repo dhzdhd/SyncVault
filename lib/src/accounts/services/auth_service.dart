@@ -3,13 +3,15 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
+import 'package:syncvault/src/accounts/services/drive_service.dart';
 
 final dio = Dio();
 
 abstract interface class AuthService {
-  Future<AuthProviderModel> signIn();
+  Future<Either<String, AuthProviderModel>> signIn();
   Future<AuthProviderModel> refresh(AuthProviderModel model);
   Future<Map<String, dynamic>> getUserInfo(String accessToken);
   Future<dynamic> getDriveInfo(String accessToken);
@@ -23,7 +25,7 @@ final class GoogleDriveAuth implements AuthService {
       "844110357681-e5lgbc8050i87ruvvdlfu5th74urg44s.apps.googleusercontent.com";
 
   @override
-  Future<AuthProviderModel> signIn() async {
+  Future<Either<String, AuthProviderModel>> signIn() async {
     throw UnimplementedError();
   }
 
@@ -57,7 +59,7 @@ final class OneDriveAuth implements AuthService {
   static const authHost = "login.microsoftonline.com";
 
   @override
-  Future<AuthProviderModel> signIn() async {
+  Future<Either<String, AuthProviderModel>> signIn() async {
     final codeUri = Uri.https(
       authHost,
       "/common/oauth2/v2.0/authorize",
@@ -111,20 +113,28 @@ final class OneDriveAuth implements AuthService {
     final user = await getUserInfo(accessToken);
     final drive = await getDriveInfo(accessToken);
 
-    final model = AuthProviderModel(
-      accessToken: accessToken,
-      refreshToken: response.data!["refresh_token"],
-      expiresIn: response.data!["expires_in"],
-      provider: AuthProviderType.oneDrive,
-      email: user["mail"],
-      name: user["displayName"],
-      createdAt: DateTime.now().toIso8601String(),
-      remainingStorage: drive["quota"]["remaining"],
-      usedStorage: drive["quota"]["used"],
-    );
-    print(user.toString());
+    final folderIdResult = await OneDrive()
+        .createFolder(
+          folderName: none(),
+          accessToken: accessToken,
+          folderId: none(),
+        )
+        .run();
 
-    return model;
+    return folderIdResult.map(
+      (id) => AuthProviderModel(
+        accessToken: accessToken,
+        refreshToken: response.data!["refresh_token"],
+        expiresIn: response.data!["expires_in"],
+        provider: AuthProviderType.oneDrive,
+        email: user["mail"],
+        name: user["displayName"],
+        createdAt: DateTime.now().toIso8601String(),
+        remainingStorage: drive["quota"]["remaining"],
+        usedStorage: drive["quota"]["used"],
+        folderId: id,
+      ),
+    );
   }
 
   @override

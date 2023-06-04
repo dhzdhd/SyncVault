@@ -109,7 +109,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              e.folderName.substring(10).capitalize(),
+                              e.folderName.capitalize(),
                               style: const TextStyle(fontSize: 25),
                             ),
                             Text(
