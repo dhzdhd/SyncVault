@@ -8,10 +8,11 @@ import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 import 'package:system_tray/system_tray.dart';
+import 'package:watcher/watcher.dart';
 
 import '../../settings/views/settings_view.dart';
 
-class HomeView extends ConsumerWidget {
+class HomeView extends ConsumerStatefulWidget {
   const HomeView({
     super.key,
   });
@@ -19,7 +20,37 @@ class HomeView extends ConsumerWidget {
   static const routeName = '/';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends ConsumerState<HomeView> {
+  late final List<DirectoryWatcher> _watchers;
+
+  @override
+  void initState() {
+    super.initState();
+    _watchers = ref
+        .read(folderProvider)
+        .map((e) => DirectoryWatcher(e.folderPath))
+        .toList();
+    for (final i in _watchers) {
+      i.events.listen((event) {
+        print(event);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (DirectoryWatcher i in _watchers) {
+      i.events.drain();
+    }
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final folderInfo = ref.watch(folderProvider);
 
     return Scaffold(
