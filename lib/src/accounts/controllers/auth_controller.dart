@@ -55,7 +55,7 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     state = [...newState, result];
   }
 
-  Future<void> signOut(AuthProviderModel model) async {
+  void signOut(AuthProviderModel model) async {
     state = state.where((element) => element != model).toList();
   }
 }

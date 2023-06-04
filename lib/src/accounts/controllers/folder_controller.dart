@@ -62,6 +62,8 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
   }
 
   void delete(FolderModel model) {
+
+
     state = state.where((element) => element != model).toList();
     Hive.box('vault').put(
       'folders',

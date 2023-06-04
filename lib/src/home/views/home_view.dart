@@ -74,21 +74,18 @@ class HomeView extends ConsumerWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 32.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                e.folderName.substring(10).capitalize(),
-                                style: const TextStyle(fontSize: 25),
-                              ),
-                              Text(
-                                e.folderPath,
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                            ],
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              e.folderName.substring(10).capitalize(),
+                              style: const TextStyle(fontSize: 25),
+                            ),
+                            Text(
+                              e.folderPath,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ],
                         ),
                         const Spacer(),
                         PopupMenuButton(

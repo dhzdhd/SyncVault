@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 
 class AccountView extends ConsumerWidget {
   const AccountView({
@@ -86,6 +87,50 @@ class AccountView extends ConsumerWidget {
                               ),
                             ),
                           ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              if (ref.read(folderProvider).any(
+                                    (element) => element.email == e.email,
+                                  )) {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) {
+                                    return AlertDialog(
+                                      title: const Text('Confirm deletion'),
+                                      content: const Text(
+                                        'The account contains dependent folders. Are you sure you want to sign out?\n This will delete all dependent folders from the app but not from the drive.',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          child: const Text('Cancel'),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                        ),
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                Theme.of(context).primaryColor,
+                                            foregroundColor:
+                                                Theme.of(context).cardColor,
+                                          ),
+                                          child: const Text('Confirm'),
+                                          onPressed: () => ref
+                                              .watch(authProvider.notifier)
+                                              .signOut(e),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                ref.watch(authProvider.notifier).signOut(e);
+                              }
+                            },
+                          ),
                         )
                       ],
                     ),
