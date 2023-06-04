@@ -112,8 +112,7 @@ class AccountView extends ConsumerWidget {
                                         ),
                                         TextButton(
                                           style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                Theme.of(context).primaryColor,
+                                            backgroundColor: Colors.deepPurple,
                                             foregroundColor:
                                                 Theme.of(context).cardColor,
                                           ),
