@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:watcher/watcher.dart';
@@ -101,9 +102,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
         child: const Icon(Icons.add),
       ),
       body: Center(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: folderInfo
+        child: ListView(padding: const EdgeInsets.all(16), children: [
+          ...folderInfo
               .mapWithIndex(
                 (e, index) => Card(
                   child: Padding(
@@ -194,7 +194,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 ),
               )
               .toList(),
-        ),
+          ExpandableCardWidget(
+            leading: Text('iefei'),
+            trailing: Text('efhe'),
+          ),
+        ]),
       ),
     );
   }
