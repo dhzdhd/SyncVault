@@ -82,7 +82,7 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
         .where((element) => element.email == folderModel.email)
         .first;
 
-    return await OneDrive().upload(folderModel, authModel).run();
+    return await OneDrive().upload(folderModel, authModel, none()).run();
   }
 
   void delete(FolderModel model) {

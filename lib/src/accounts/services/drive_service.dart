@@ -62,6 +62,7 @@ class OneDrive implements DriveService {
   TaskEither<String, String> upload(
     FolderModel folderModel,
     AuthProviderModel authModel,
+    Option<String> filePath,
   ) {
     final authOptions = Options(headers: {
       "Authorization": "Bearer ${authModel.accessToken}",
@@ -69,7 +70,10 @@ class OneDrive implements DriveService {
     });
 
     final folder = Directory(folderModel.folderPath);
-    final files = folder.listSync(recursive: true, followLinks: false);
+    final files = filePath.match(
+      () => folder.listSync(recursive: true, followLinks: false),
+      (t) => [t],
+    );
 
     final Map<String, String> idMap = {folder.path: folderModel.folderId};
 

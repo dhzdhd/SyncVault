@@ -53,11 +53,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final folderInfo = ref.watch(folderProvider);
-    var progressVisibleList = List.generate(
+    final progressVisibleList = useState(List.generate(
       folderInfo.length,
-      (i) => false,
+      (index) => false,
       growable: true,
-    );
+    ));
 
     return Scaffold(
       appBar: AppBar(
@@ -128,7 +128,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                         Padding(
                           padding: const EdgeInsets.only(right: 16.0),
                           child: Visibility(
-                            visible: progressVisibleList[index],
+                            visible: progressVisibleList.value[index],
                             child: const CircularProgressIndicator(
                               backgroundColor: Colors.deepPurple,
                             ),
@@ -145,15 +145,19 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 ],
                               ),
                               onTap: () async {
-                                setState(() {
-                                  progressVisibleList[index] = true;
-                                });
+                                progressVisibleList.value = [
+                                  ...progressVisibleList.value
+                                    ..removeAt(index)
+                                    ..insert(index, true)
+                                ];
                                 final result = await ref
                                     .watch(folderProvider.notifier)
                                     .upload(e);
-                                setState(() {
-                                  progressVisibleList[index] = false;
-                                });
+                                progressVisibleList.value = [
+                                  ...progressVisibleList.value
+                                    ..removeAt(index)
+                                    ..insert(index, false)
+                                ];
 
                                 if (context.mounted) {
                                   result.match(
