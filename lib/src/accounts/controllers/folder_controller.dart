@@ -68,6 +68,23 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
     });
   }
 
+  Future<Either<String, String>> upload(FolderModel folderModel) async {
+    // Improvise
+    final oldAuthModel = ref
+        .read(authProvider)
+        .where((element) => element.email == folderModel.email)
+        .first;
+
+    await ref.read(authProvider.notifier).refresh(oldAuthModel);
+
+    final authModel = ref
+        .read(authProvider)
+        .where((element) => element.email == folderModel.email)
+        .first;
+
+    return await OneDrive().upload(folderModel, authModel).run();
+  }
+
   void delete(FolderModel model) {
     state = state.where((element) => element != model).toList();
     Hive.box('vault').put(

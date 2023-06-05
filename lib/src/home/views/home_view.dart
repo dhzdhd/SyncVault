@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
@@ -12,7 +13,7 @@ import 'package:watcher/watcher.dart';
 
 import '../../settings/views/settings_view.dart';
 
-class HomeView extends ConsumerStatefulWidget {
+class HomeView extends StatefulHookConsumerWidget {
   const HomeView({
     super.key,
   });
@@ -52,6 +53,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final folderInfo = ref.watch(folderProvider);
+    var progressVisibleList = List.generate(
+      folderInfo.length,
+      (i) => false,
+      growable: true,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -98,8 +104,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: folderInfo
-              .map(
-                (e) => Card(
+              .mapWithIndex(
+                (e, index) => Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -119,6 +125,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           ],
                         ),
                         const Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Visibility(
+                            visible: progressVisibleList[index],
+                            child: const CircularProgressIndicator(
+                              backgroundColor: Colors.deepPurple,
+                            ),
+                          ),
+                        ),
                         PopupMenuButton(
                           itemBuilder: (ctx) => [
                             PopupMenuItem(
@@ -129,11 +144,26 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   Text('Sync'),
                                 ],
                               ),
-                              onTap: () {
-                                ctx.showSuccessSnackBar(
-                                  content: 'Synced successfully',
-                                  action: none(),
-                                );
+                              onTap: () async {
+                                setState(() {
+                                  progressVisibleList[index] = true;
+                                });
+                                final result = await ref
+                                    .watch(folderProvider.notifier)
+                                    .upload(e);
+                                setState(() {
+                                  progressVisibleList[index] = false;
+                                });
+
+                                if (context.mounted) {
+                                  result.match(
+                                    (l) => ctx.showErrorSnackBar(l),
+                                    (r) => ctx.showSuccessSnackBar(
+                                      content: r,
+                                      action: none(),
+                                    ),
+                                  );
+                                }
                               },
                             ),
                             PopupMenuItem(
