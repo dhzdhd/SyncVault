@@ -75,9 +75,6 @@ class OneDrive implements DriveService {
       (t) => [File(t)],
     );
 
-    print(files);
-    print(folder);
-
     final Map<String, String> idMap = {folder.path: folderModel.folderId};
 
     return TaskEither.tryCatch(
