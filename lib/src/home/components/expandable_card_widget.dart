@@ -3,19 +3,21 @@ import 'package:flutter/material.dart';
 class ExpandableCardWidget extends StatefulWidget {
   const ExpandableCardWidget({
     Key? key,
-    required this.leading,
+    required this.title,
     required this.trailing,
+    required this.child,
   }) : super(key: key);
 
-  final Widget leading;
+  final String title;
   final Widget trailing;
+  final Widget child;
 
   @override
   State<ExpandableCardWidget> createState() => _ExpandableCardWidgetState();
 }
 
 class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
-  bool show = false;
+  bool _show = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,10 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
         padding: const EdgeInsets.all(4.0),
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
+          splashFactory: InkSplash.splashFactory,
           onTap: () {
             setState(() {
-              show = !show;
+              _show = !_show;
             });
           },
           child: Ink(
@@ -46,15 +49,30 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    widget.leading,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const Spacer(),
+                        widget.trailing,
+                        AnimatedRotation(
+                          turns: _show ? 0.25 : 0,
+                          duration: const Duration(milliseconds: 200),
+                          child: const Icon(Icons.keyboard_arrow_right),
+                        ),
+                      ],
+                    ),
                     Visibility(
-                      visible: show,
-                      child: AnimatedOpacity(
-                        opacity: show ? 1 : 0,
-                        duration: const Duration(milliseconds: 200),
-                        child: TextButton(
-                          onPressed: () {},
-                          child: widget.trailing,
+                      visible: _show,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: AnimatedOpacity(
+                          opacity: _show ? 1 : 0,
+                          duration: const Duration(milliseconds: 200),
+                          child: widget.child,
                         ),
                       ),
                     ),

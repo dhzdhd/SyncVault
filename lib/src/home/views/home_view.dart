@@ -102,103 +102,105 @@ class _HomeViewState extends ConsumerState<HomeView> {
         child: const Icon(Icons.add),
       ),
       body: Center(
-        child: ListView(padding: const EdgeInsets.all(16), children: [
-          ...folderInfo
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: folderInfo
               .mapWithIndex(
-                (e, index) => Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              e.folderName.capitalize(),
-                              style: const TextStyle(fontSize: 25),
-                            ),
-                            Text(
-                              e.folderPath,
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ],
+                (e, index) => ExpandableCardWidget(
+                  title: e.folderName.capitalize(),
+                  trailing: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Visibility(
+                      visible: progressVisibleList.value[index],
+                      child: const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          backgroundColor: Colors.deepPurple,
                         ),
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Visibility(
-                            visible: progressVisibleList.value[index],
-                            child: const CircularProgressIndicator(
-                              backgroundColor: Colors.deepPurple,
-                            ),
-                          ),
-                        ),
-                        PopupMenuButton(
-                          itemBuilder: (ctx) => [
-                            PopupMenuItem(
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.sync_rounded),
-                                  Spacer(),
-                                  Text('Sync'),
-                                ],
-                              ),
-                              onTap: () async {
-                                progressVisibleList.value = [
-                                  ...progressVisibleList.value
-                                    ..removeAt(index)
-                                    ..insert(index, true)
-                                ];
-                                final result = await ref
-                                    .watch(folderProvider.notifier)
-                                    .upload(e);
-                                progressVisibleList.value = [
-                                  ...progressVisibleList.value
-                                    ..removeAt(index)
-                                    ..insert(index, false)
-                                ];
-
-                                if (context.mounted) {
-                                  result.match(
-                                    (l) => ctx.showErrorSnackBar(l),
-                                    (r) => ctx.showSuccessSnackBar(
-                                      content: r,
-                                      action: none(),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                            PopupMenuItem(
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.delete),
-                                  Spacer(),
-                                  Text('Delete'),
-                                ],
-                              ),
-                              onTap: () {
-                                ref.watch(folderProvider.notifier).delete(e);
-                                ctx.showSuccessSnackBar(
-                                  content: 'Deleted folder',
-                                  action: none(),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          e.folderPath,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Flexible(
+                              child: SizedBox(
+                                width: 50,
+                                child: TextButton(
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.sync_rounded),
+                                    ],
+                                  ),
+                                  onPressed: () async {
+                                    progressVisibleList.value = [
+                                      ...progressVisibleList.value
+                                        ..removeAt(index)
+                                        ..insert(index, true)
+                                    ];
+                                    final result = await ref
+                                        .watch(folderProvider.notifier)
+                                        .upload(e);
+                                    progressVisibleList.value = [
+                                      ...progressVisibleList.value
+                                        ..removeAt(index)
+                                        ..insert(index, false)
+                                    ];
+
+                                    if (context.mounted) {
+                                      result.match(
+                                        (l) => context.showErrorSnackBar(l),
+                                        (r) => context.showSuccessSnackBar(
+                                          content: r,
+                                          action: none(),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: SizedBox(
+                                width: 50,
+                                child: TextButton(
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.delete),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    ref
+                                        .watch(folderProvider.notifier)
+                                        .delete(e);
+                                    context.showSuccessSnackBar(
+                                      content: 'Deleted folder',
+                                      action: none(),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
               .toList(),
-          ExpandableCardWidget(
-            leading: Text('iefei'),
-            trailing: Text('efhe'),
-          ),
-        ]),
+        ),
       ),
     );
   }
