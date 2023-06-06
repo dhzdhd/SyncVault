@@ -20,3 +20,4 @@ For currently known issues, check the [GitHub issues tab](https://github.com/dhz
 - Light theme is broken in the home route (folder route).
 - Supports file uploads of upto 60MB per file only
 - Does not check drive size while uploading
+- Does not check for invalid file names
