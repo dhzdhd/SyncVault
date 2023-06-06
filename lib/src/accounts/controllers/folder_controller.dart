@@ -68,7 +68,10 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
     });
   }
 
-  Future<Either<String, String>> upload(FolderModel folderModel) async {
+  Future<Either<String, String>> upload(
+    FolderModel folderModel,
+    Option<String> filePath,
+  ) async {
     // Improvise
     final oldAuthModel = ref
         .read(authProvider)
@@ -82,7 +85,7 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
         .where((element) => element.email == folderModel.email)
         .first;
 
-    return await OneDrive().upload(folderModel, authModel, none()).run();
+    return await OneDrive().upload(folderModel, authModel, filePath).run();
   }
 
   void delete(FolderModel model) {

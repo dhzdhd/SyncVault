@@ -72,8 +72,11 @@ class OneDrive implements DriveService {
     final folder = Directory(folderModel.folderPath);
     final files = filePath.match(
       () => folder.listSync(recursive: true, followLinks: false),
-      (t) => [t],
+      (t) => [File(t)],
     );
+
+    print(files);
+    print(folder);
 
     final Map<String, String> idMap = {folder.path: folderModel.folderId};
 

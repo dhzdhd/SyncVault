@@ -31,13 +31,24 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     super.initState();
-    _watchers = ref
-        .read(folderProvider)
-        .map((e) => DirectoryWatcher(e.folderPath))
-        .toList();
-    for (final i in _watchers) {
-      i.events.listen((event) {
-        print(event);
+    final provider = ref.read(folderProvider);
+
+    _watchers = provider.map((e) => DirectoryWatcher(e.folderPath)).toList();
+
+    for (int i = 0; i < _watchers.length; i++) {
+      _watchers[i].events.listen((event) async {
+        switch (event.type) {
+          case ChangeType.ADD || ChangeType.MODIFY:
+            {
+              print(event);
+              final result = await ref.watch(folderProvider.notifier).upload(
+                    provider[i],
+                    some(event.path),
+                  );
+
+              result.match((l) => print(l), (r) => print(r));
+            }
+        }
       });
     }
   }
@@ -151,7 +162,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     ];
                                     final result = await ref
                                         .watch(folderProvider.notifier)
-                                        .upload(e);
+                                        .upload(e, none());
                                     progressVisibleList.value = [
                                       ...progressVisibleList.value
                                         ..removeAt(index)
