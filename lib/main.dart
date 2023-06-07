@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:system_tray/system_tray.dart';
 
 import 'src/app.dart';
@@ -48,9 +49,16 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('vault');
 
-  runApp(
-    ProviderScope(
-      child: MyApp(settingsController: settingsController),
+  await SentryFlutter.init(
+    (options) {
+      options.dsn =
+          'https://6f9773aae01846168e9cd2b1e62adde3@o4504764245344256.ingest.sentry.io/4505318015696896';
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(
+      ProviderScope(
+        child: MyApp(settingsController: settingsController),
+      ),
     ),
   );
 }
