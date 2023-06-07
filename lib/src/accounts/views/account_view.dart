@@ -135,13 +135,7 @@ class AccountView extends ConsumerWidget {
                                               onPressed: () =>
                                                   Navigator.of(context).pop(),
                                             ),
-                                            TextButton(
-                                              style: TextButton.styleFrom(
-                                                backgroundColor:
-                                                    Colors.deepPurple,
-                                                foregroundColor:
-                                                    Theme.of(context).cardColor,
-                                              ),
+                                            ElevatedButton(
                                               child: const Text('Confirm'),
                                               onPressed: () => ref
                                                   .watch(authProvider.notifier)
