@@ -49,16 +49,19 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('vault');
 
-  await SentryFlutter.init(
-    (options) {
-      options.dsn =
-          'https://6f9773aae01846168e9cd2b1e62adde3@o4504764245344256.ingest.sentry.io/4505318015696896';
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(
-      ProviderScope(
-        child: MyApp(settingsController: settingsController),
+  final settings = SettingsNotifier.init();
+  if (settings.isSentryEnabled) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn =
+            'https://6f9773aae01846168e9cd2b1e62adde3@o4504764245344256.ingest.sentry.io/4505318015696896';
+        options.tracesSampleRate = 1.0;
+      },
+      appRunner: () => runApp(
+        ProviderScope(child: MyApp(settingsController: settingsController)),
       ),
-    ),
-  );
+    );
+  } else {
+    runApp(ProviderScope(child: MyApp(settingsController: settingsController)));
+  }
 }
