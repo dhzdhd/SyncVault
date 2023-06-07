@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
+import 'package:syncvault/src/settings/controllers/theme_controller.dart';
 
 import 'home/views/home_view.dart';
 import 'settings/controllers/settings_controller.dart';
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
           ],
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
-          theme: ThemeData(useMaterial3: true),
-          darkTheme: ThemeData.dark(useMaterial3: true),
+          theme: lightTheme,
+          darkTheme: darkTheme,
           themeMode: settingsController.themeMode,
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(

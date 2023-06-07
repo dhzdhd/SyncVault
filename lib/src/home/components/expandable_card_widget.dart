@@ -23,14 +23,14 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
   Widget build(BuildContext context) {
     return AnimatedSize(
       duration: const Duration(milliseconds: 200),
-      reverseDuration: const Duration(milliseconds: 1000),
+      // reverseDuration: const Duration(milliseconds: 1000),
       alignment: Alignment.topCenter,
       curve: Curves.easeInOut,
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
-          splashFactory: InkSplash.splashFactory,
+          splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           onTap: () {
             setState(() {
               _show = !_show;
@@ -39,11 +39,11 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
           child: Ink(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: const Color.fromARGB(255, 37, 35, 42),
+              color: Theme.of(context).cardTheme.color,
             ),
             child: Card(
               margin: const EdgeInsets.all(0),
-              color: Colors.transparent,
+              // color: Colors.transparent,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
