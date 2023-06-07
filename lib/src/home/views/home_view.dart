@@ -105,6 +105,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Sync new folder',
         onPressed: () async {
+          progressVisibleList.value = [...progressVisibleList.value, false];
           await showDialog(
             context: context,
             builder: (context) => const NewFolderDialogWidget(),
@@ -126,9 +127,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       child: const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.deepPurple,
-                        ),
+                        child: CircularProgressIndicator(),
                       ),
                     ),
                   ),
@@ -192,6 +191,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     ],
                                   ),
                                   onPressed: () {
+                                    progressVisibleList.value = [
+                                      ...progressVisibleList.value
+                                        ..removeAt(
+                                          folderInfo.indexOf(e),
+                                        )
+                                    ];
+
                                     ref
                                         .watch(folderProvider.notifier)
                                         .delete(e);
