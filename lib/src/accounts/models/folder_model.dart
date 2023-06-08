@@ -15,6 +15,8 @@ class FolderModel with _$FolderModel {
     required String folderPath,
     required String folderName,
     required String folderId,
+    required bool isAutoSync,
+    required bool isDeletionEnabled,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>

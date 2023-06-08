@@ -32,9 +32,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     super.initState();
-    final provider = ref.read(folderProvider);
+    final folders = ref
+        .read(folderProvider)
+        .where((element) => element.isAutoSync)
+        .toList();
 
-    _watchers = provider.map((e) => DirectoryWatcher(e.folderPath)).toList();
+    _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
 
     for (int i = 0; i < _watchers.length; i++) {
       _watchers[i].events.listen((event) async {
@@ -43,7 +46,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             {
               print(event);
               final result = await ref.watch(folderProvider.notifier).upload(
-                    provider[i],
+                    folders[i],
                     some(event.path),
                   );
 
@@ -137,84 +140,143 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       ),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     children: [
-                      Flexible(
-                        child: Text(
-                          e.folderPath,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ),
-                      Expanded(
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).dialogBackgroundColor,
+                            borderRadius: BorderRadius.circular(10)),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
-                              child: SizedBox(
-                                width: 50,
-                                child: TextButton(
-                                  child: const Row(
-                                    children: [
-                                      Icon(Icons.sync_rounded),
-                                    ],
-                                  ),
-                                  onPressed: () async {
-                                    progressVisibleList.value = [
-                                      ...progressVisibleList.value
-                                        ..removeAt(index)
-                                        ..insert(index, true)
-                                    ];
-                                    final result = await ref
-                                        .watch(folderProvider.notifier)
-                                        .upload(e, none());
-                                    progressVisibleList.value = [
-                                      ...progressVisibleList.value
-                                        ..removeAt(index)
-                                        ..insert(index, false)
-                                    ];
-
-                                    if (context.mounted) {
-                                      result.match(
-                                        (l) => context.showErrorSnackBar(l),
-                                        (r) => context.showSuccessSnackBar(
-                                          content: r,
-                                          action: none(),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
+                              child: Text(
+                                e.folderPath,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
-                            Flexible(
-                              child: SizedBox(
-                                width: 50,
-                                child: TextButton(
-                                  child: const Row(
-                                    children: [
-                                      Icon(Icons.delete),
-                                    ],
-                                  ),
-                                  onPressed: () {
-                                    progressVisibleList.value = [
-                                      ...progressVisibleList.value
-                                        ..removeAt(
-                                          folderInfo.indexOf(e),
-                                        )
-                                    ];
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Flexible(
+                                    child: SizedBox(
+                                      width: 50,
+                                      child: TextButton(
+                                        child: const Icon(Icons.sync_rounded),
+                                        onPressed: () async {
+                                          progressVisibleList.value = [
+                                            ...progressVisibleList.value
+                                              ..removeAt(index)
+                                              ..insert(index, true)
+                                          ];
+                                          final result = await ref
+                                              .watch(folderProvider.notifier)
+                                              .upload(e, none());
+                                          progressVisibleList.value = [
+                                            ...progressVisibleList.value
+                                              ..removeAt(index)
+                                              ..insert(index, false)
+                                          ];
 
+                                          if (context.mounted) {
+                                            result.match(
+                                              (l) =>
+                                                  context.showErrorSnackBar(l),
+                                              (r) =>
+                                                  context.showSuccessSnackBar(
+                                                content: r,
+                                                action: none(),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: SizedBox(
+                                      width: 50,
+                                      child: TextButton(
+                                        child: const Icon(Icons.delete),
+                                        onPressed: () {
+                                          progressVisibleList.value = [
+                                            ...progressVisibleList.value
+                                              ..removeAt(
+                                                folderInfo.indexOf(e),
+                                              )
+                                          ];
+
+                                          ref
+                                              .watch(folderProvider.notifier)
+                                              .delete(e);
+                                          context.showSuccessSnackBar(
+                                            content: 'Deleted folder',
+                                            action: none(),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Auto sync',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            // Spacer(),
+                            SizedBox(
+                              // width: 10,
+                              height: 30,
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Switch(
+                                  value: e.isAutoSync,
+                                  onChanged: (val) => {
                                     ref
                                         .watch(folderProvider.notifier)
-                                        .delete(e);
-                                    context.showSuccessSnackBar(
-                                      content: 'Deleted folder',
-                                      action: none(),
-                                    );
+                                        .toggleAutoSync(e)
                                   },
                                 ),
                               ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Delete on sync',
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
+                            // Spacer(),
+                            SizedBox(
+                              // width: 10,
+                              height: 30,
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Switch(
+                                  value: e.isDeletionEnabled,
+                                  onChanged: (val) => {
+                                    ref
+                                        .watch(folderProvider.notifier)
+                                        .toggleDeletionOnSync(e)
+                                  },
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),

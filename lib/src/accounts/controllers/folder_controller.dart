@@ -29,7 +29,37 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
     }
   }
 
-  Future<void> getFolderStatus(FolderModel model) async {}
+  void toggleAutoSync(FolderModel model) {
+    final index = state.indexOf(model);
+    state = [
+      ...state
+        ..remove(model)
+        ..insert(
+          index,
+          model.copyWith(isAutoSync: !model.isAutoSync),
+        )
+    ];
+    Hive.box('vault').put(
+      'folders',
+      jsonEncode(state.map((e) => e.toJson()).toList()),
+    );
+  }
+
+  void toggleDeletionOnSync(FolderModel model) {
+    final index = state.indexOf(model);
+    state = [
+      ...state
+        ..remove(model)
+        ..insert(
+          index,
+          model.copyWith(isDeletionEnabled: !model.isDeletionEnabled),
+        )
+    ];
+    Hive.box('vault').put(
+      'folders',
+      jsonEncode(state.map((e) => e.toJson()).toList()),
+    );
+  }
 
   Future<Either<String, String>> create(
     AuthProviderModel authModel,
@@ -57,6 +87,8 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
         folderPath: folderPath,
         folderName: folderName,
         folderId: id,
+        isAutoSync: true,
+        isDeletionEnabled: false,
       );
 
       state = [...state, folderModel];
