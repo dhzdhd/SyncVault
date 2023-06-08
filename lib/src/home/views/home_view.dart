@@ -144,84 +144,88 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                            color: Theme.of(context).dialogBackgroundColor,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                e.folderPath,
-                                style: Theme.of(context).textTheme.bodyLarge,
+                          color: Theme.of(context).dialogBackgroundColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  e.folderPath,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Flexible(
-                                    child: SizedBox(
-                                      width: 50,
-                                      child: TextButton(
-                                        child: const Icon(Icons.sync_rounded),
-                                        onPressed: () async {
-                                          progressVisibleList.value = [
-                                            ...progressVisibleList.value
-                                              ..removeAt(index)
-                                              ..insert(index, true)
-                                          ];
-                                          final result = await ref
-                                              .watch(folderProvider.notifier)
-                                              .upload(e, none());
-                                          progressVisibleList.value = [
-                                            ...progressVisibleList.value
-                                              ..removeAt(index)
-                                              ..insert(index, false)
-                                          ];
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Flexible(
+                                      child: SizedBox(
+                                        width: 50,
+                                        child: TextButton(
+                                          child: const Icon(Icons.sync_rounded),
+                                          onPressed: () async {
+                                            progressVisibleList.value = [
+                                              ...progressVisibleList.value
+                                                ..removeAt(index)
+                                                ..insert(index, true)
+                                            ];
+                                            final result = await ref
+                                                .watch(folderProvider.notifier)
+                                                .upload(e, none());
+                                            progressVisibleList.value = [
+                                              ...progressVisibleList.value
+                                                ..removeAt(index)
+                                                ..insert(index, false)
+                                            ];
 
-                                          if (context.mounted) {
-                                            result.match(
-                                              (l) =>
-                                                  context.showErrorSnackBar(l),
-                                              (r) =>
-                                                  context.showSuccessSnackBar(
-                                                content: r,
-                                                action: none(),
-                                              ),
+                                            if (context.mounted) {
+                                              result.match(
+                                                (l) => context
+                                                    .showErrorSnackBar(l),
+                                                (r) =>
+                                                    context.showSuccessSnackBar(
+                                                  content: r,
+                                                  action: none(),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: SizedBox(
+                                        width: 50,
+                                        child: TextButton(
+                                          child: const Icon(Icons.delete),
+                                          onPressed: () {
+                                            progressVisibleList.value = [
+                                              ...progressVisibleList.value
+                                                ..removeAt(
+                                                  folderInfo.indexOf(e),
+                                                )
+                                            ];
+
+                                            ref
+                                                .watch(folderProvider.notifier)
+                                                .delete(e);
+                                            context.showSuccessSnackBar(
+                                              content: 'Deleted folder',
+                                              action: none(),
                                             );
-                                          }
-                                        },
+                                          },
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Flexible(
-                                    child: SizedBox(
-                                      width: 50,
-                                      child: TextButton(
-                                        child: const Icon(Icons.delete),
-                                        onPressed: () {
-                                          progressVisibleList.value = [
-                                            ...progressVisibleList.value
-                                              ..removeAt(
-                                                folderInfo.indexOf(e),
-                                              )
-                                          ];
-
-                                          ref
-                                              .watch(folderProvider.notifier)
-                                              .delete(e);
-                                          context.showSuccessSnackBar(
-                                            content: 'Deleted folder',
-                                            action: none(),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -241,10 +245,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 fit: BoxFit.fill,
                                 child: Switch(
                                   value: e.isAutoSync,
-                                  onChanged: (val) => {
+                                  onChanged: (val) {
                                     ref
                                         .watch(folderProvider.notifier)
-                                        .toggleAutoSync(e)
+                                        .toggleAutoSync(e);
+                                    context.showWarningSnackBar(
+                                      'Restart app to see changes',
+                                    );
                                   },
                                 ),
                               ),

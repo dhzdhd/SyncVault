@@ -27,4 +27,11 @@ extension ShowSnackBar on BuildContext {
       state: SnackBarState.error,
     ));
   }
+
+  void showWarningSnackBar(String content) {
+    ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
+      content: content,
+      state: SnackBarState.warning,
+    ));
+  }
 }

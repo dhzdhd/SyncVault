@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 enum SnackBarState {
   success,
   error,
+  warning,
 }
 
 SnackBar snackBarWidget({
@@ -20,8 +21,11 @@ SnackBar snackBarWidget({
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
     behavior: SnackBarBehavior.floating,
-    backgroundColor:
-        state == SnackBarState.success ? Colors.greenAccent : Colors.redAccent,
+    backgroundColor: state == SnackBarState.success
+        ? Colors.greenAccent
+        : state == SnackBarState.error
+            ? Colors.redAccent
+            : Colors.amberAccent,
     action: action,
   );
 }
