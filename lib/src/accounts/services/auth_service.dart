@@ -18,14 +18,69 @@ abstract interface class AuthService {
   Future<void> test(AuthProviderModel model);
 }
 
-final class GoogleDriveAuth implements AuthService {
-  static const clientId =
-      "844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q.apps.googleusercontent.com";
-  static const desktopClientId =
-      "844110357681-e5lgbc8050i87ruvvdlfu5th74urg44s.apps.googleusercontent.com";
+final class DropBoxAuth implements AuthService {
+  static const clientId = "ma42r73plfcdnrf";
+  static final callbackUrlScheme = Platform.isAndroid
+      ? 'https://www.dropbox.com/1/oauth2/redirect_receiver'
+      : 'http://localhost:8006';
+  static const apiHost = "api.dropboxapi.com";
+  static const authHost = "www.dropbox.com";
 
   @override
   Future<Either<String, AuthProviderModel>> signIn() async {
+    final codeUri = Uri.https(
+      authHost,
+      "/oauth2/authorize",
+      {
+        "client_id": clientId,
+        "response_type": "code",
+        "redirect_uri": callbackUrlScheme,
+        "scope": "openid files.content.read files.content.write profile",
+        "state": "12345",
+        "token_access_type": "offline",
+      },
+    );
+
+    late final String result;
+    if (Platform.isAndroid) {
+      result = await FlutterWebAuth2.authenticate(
+        url: codeUri.toString(),
+        callbackUrlScheme: 'msauth',
+        preferEphemeral: true,
+      );
+    } else {
+      result = await FlutterWebAuth2WindowsPlugin().authenticate(
+        url: codeUri.toString(),
+        callbackUrlScheme: callbackUrlScheme,
+        preferEphemeral: true,
+      );
+    }
+
+    final code = Uri.parse(result).queryParameters['code'];
+    final tokenUri = Uri.https(
+      authHost,
+      '/oauth2/token',
+    );
+
+    final options = Options(
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    );
+    final response = await dio.postUri<Map<String, dynamic>>(
+      tokenUri,
+      data: {
+        "client_id": clientId,
+        "client_secret": "",
+        "code": code,
+        "grant_type": "authorization_code",
+        "scope": "openid files.content.read files.content.write profile",
+        "redirect_uri": callbackUrlScheme,
+      },
+      options: options,
+    );
+
+    final accessToken = response.data!["access_token"];
+    print(accessToken);
+
     throw UnimplementedError();
   }
 

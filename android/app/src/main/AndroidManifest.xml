@@ -34,6 +34,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="msauth" android:host="com.example.syncvault"/>
+                <data android:scheme="https" android:host="com.example.syncvault"/>
             </intent-filter>
         </activity>
 

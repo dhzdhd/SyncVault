@@ -13,15 +13,32 @@ abstract interface class DriveService {
     required String accessToken,
     required Option<String> folderId,
   });
+  TaskEither<String, String> upload(
+    FolderModel folderModel,
+    AuthProviderModel authModel,
+    Option<String> filePath,
+  );
+  TaskEither<String, String> delete({required FolderModel folderModel});
 }
 
-class GoogleDrive implements DriveService {
+class DropBox implements DriveService {
   @override
   TaskEither<String, String> createFolder({
     required Option<String> folderName,
     required String accessToken,
     required Option<String> folderId,
   }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  TaskEither<String, String> upload(FolderModel folderModel,
+      AuthProviderModel authModel, Option<String> filePath) {
+    throw UnimplementedError();
+  }
+
+  @override
+  TaskEither<String, String> delete({required FolderModel folderModel}) {
     throw UnimplementedError();
   }
 }
@@ -141,5 +158,10 @@ class OneDrive implements DriveService {
       },
       (error, stackTrace) => error.toString(),
     );
+  }
+
+  @override
+  TaskEither<String, String> delete({required FolderModel folderModel}) {
+    throw UnimplementedError();
   }
 }

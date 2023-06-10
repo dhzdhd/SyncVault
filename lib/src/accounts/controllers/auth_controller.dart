@@ -8,7 +8,7 @@ import 'package:syncvault/src/accounts/services/auth_service.dart';
 
 enum AuthProviderType {
   oneDrive,
-  googleDrive,
+  dropBox,
 }
 
 final authProvider =
@@ -33,7 +33,7 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
   Future<Either<String, String>> signIn(AuthProviderType provider) async {
     final result = switch (provider) {
       AuthProviderType.oneDrive => await OneDriveAuth().signIn(),
-      AuthProviderType.googleDrive => await GoogleDriveAuth().signIn(),
+      AuthProviderType.dropBox => await DropBoxAuth().signIn(),
     };
 
     return result.map((model) {
@@ -51,7 +51,7 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
   Future<void> refresh(AuthProviderModel model) async {
     final result = switch (model.provider) {
       AuthProviderType.oneDrive => await OneDriveAuth().refresh(model),
-      AuthProviderType.googleDrive => await GoogleDriveAuth().refresh(model),
+      AuthProviderType.dropBox => await DropBoxAuth().refresh(model),
     };
 
     // Use where
