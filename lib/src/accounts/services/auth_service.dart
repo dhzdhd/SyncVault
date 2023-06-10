@@ -14,8 +14,7 @@ abstract interface class AuthService {
   Future<Either<String, AuthProviderModel>> signIn();
   Future<AuthProviderModel> refresh(AuthProviderModel model);
   Future<Map<String, dynamic>> getUserInfo(String accessToken);
-  Future<dynamic> getDriveInfo(String accessToken);
-  Future<void> test(AuthProviderModel model);
+  Future<Map<String, dynamic>> getDriveInfo(String accessToken);
 }
 
 final class DropBoxAuth implements AuthService {
@@ -35,7 +34,7 @@ final class DropBoxAuth implements AuthService {
         "client_id": clientId,
         "response_type": "code",
         "redirect_uri": callbackUrlScheme,
-        "scope": "openid files.content.read files.content.write profile",
+        "scope": "files.content.read files.content.write account_info.read",
         "state": "12345",
         "token_access_type": "offline",
       },
@@ -72,16 +71,39 @@ final class DropBoxAuth implements AuthService {
         "client_secret": "",
         "code": code,
         "grant_type": "authorization_code",
-        "scope": "openid files.content.read files.content.write profile",
         "redirect_uri": callbackUrlScheme,
       },
       options: options,
     );
 
     final accessToken = response.data!["access_token"];
-    print(accessToken);
+    final user = await getUserInfo(accessToken);
+    final drive = await getDriveInfo(accessToken);
+    final remainingStorage =
+        (drive["allocation"]["allocated"] as int) - (drive["used"] as int);
 
-    throw UnimplementedError();
+    final folderIdResult = await DropBox()
+        .createFolder(
+          folderName: none(),
+          accessToken: accessToken,
+          folderId: none(),
+        )
+        .run();
+
+    return folderIdResult.map(
+      (id) => AuthProviderModel(
+        accessToken: accessToken,
+        refreshToken: response.data!["refresh_token"],
+        expiresIn: response.data!["expires_in"],
+        provider: AuthProviderType.dropBox,
+        email: user["email"],
+        name: user["name"]["display_name"],
+        createdAt: DateTime.now().toIso8601String(),
+        remainingStorage: remainingStorage,
+        usedStorage: drive["used"],
+        folderId: id,
+      ),
+    );
   }
 
   @override
@@ -90,18 +112,33 @@ final class DropBoxAuth implements AuthService {
   }
 
   @override
-  Future<Map<String, dynamic>> getUserInfo(String accessToken) {
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> getUserInfo(String accessToken) async {
+    final authOptions = Options(headers: {
+      "Authorization": "Bearer $accessToken",
+    });
+
+    final uri = Uri.https(apiHost, '/2/users/get_current_account');
+    final response = await dio.postUri<Map<String, dynamic>>(
+      uri,
+      options: authOptions,
+    );
+
+    return response.data!;
   }
 
   @override
-  Future getDriveInfo(String accessToken) {
-    throw UnimplementedError();
-  }
+  Future<Map<String, dynamic>> getDriveInfo(String accessToken) async {
+    final authOptions = Options(headers: {
+      "Authorization": "Bearer $accessToken",
+    });
 
-  @override
-  Future<void> test(AuthProviderModel model) {
-    throw UnimplementedError();
+    final uri = Uri.https(apiHost, '/2/users/get_space_usage');
+    final response = await dio.postUri<Map<String, dynamic>>(
+      uri,
+      options: authOptions,
+    );
+
+    return response.data!;
   }
 }
 
@@ -254,20 +291,5 @@ final class OneDriveAuth implements AuthService {
     );
 
     return response.data!;
-  }
-
-  @override
-  Future<void> test(AuthProviderModel model) async {
-    final authOptions = Options(headers: {
-      "Authorization": "Bearer ${model.accessToken}",
-    });
-
-    final uri = Uri.https(apiHost, '/beta/drive');
-    print(uri.toString());
-    final response = await dio.getUri<Map<String, dynamic>>(
-      uri,
-      options: authOptions,
-    );
-    print(response.data);
   }
 }

@@ -22,13 +22,38 @@ abstract interface class DriveService {
 }
 
 class DropBox implements DriveService {
+  static const apiHost = "api.dropbox.com";
+  static const basePath = "/2/files";
+
   @override
   TaskEither<String, String> createFolder({
     required Option<String> folderName,
     required String accessToken,
     required Option<String> folderId,
   }) {
-    throw UnimplementedError();
+    final uri = Uri.https(apiHost, '$basePath/create_folder_v2');
+    final authOptions = Options(headers: {
+      "Authorization": "Bearer $accessToken",
+      "Content-Type": "application/json"
+    });
+
+    return TaskEither.tryCatch(
+      () async {
+        final response = await dio.postUri<Map<String, dynamic>>(
+          uri,
+          options: authOptions,
+          data: {
+            "autorename": true,
+            "path": folderName.match(
+              () => '/SyncVault',
+              (t) => '/SyncVault/$t',
+            ),
+          },
+        );
+        return response.data!["metadata"]["id"];
+      },
+      (error, stackTrace) => error.toString(),
+    );
   }
 
   @override
