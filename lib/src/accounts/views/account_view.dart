@@ -47,7 +47,9 @@ class AccountView extends ConsumerWidget {
                         Row(
                           children: [
                             SvgPicture.asset(
-                              'assets/logos/onedrive.svg',
+                              e.provider == AuthProviderType.oneDrive
+                                  ? 'assets/logos/onedrive.svg'
+                                  : 'assets/logos/dropbox.svg',
                               width: MediaQuery.of(context).size.width < 500
                                   ? 50
                                   : 70,
