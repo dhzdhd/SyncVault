@@ -102,6 +102,10 @@ class AccountView extends ConsumerWidget {
                                 ],
                               ),
                               onTap: () async {
+                                await ref
+                                    .watch(authProvider.notifier)
+                                    .refresh(e);
+                                // ! Call refresh and drive info in new provider method
                                 final model = switch (e.provider) {
                                   AuthProviderType.oneDrive =>
                                     await OneDriveAuth()
@@ -111,12 +115,17 @@ class AccountView extends ConsumerWidget {
                                         .getDriveInfo(e.accessToken),
                                 };
 
-                                await Future.delayed(
-                                  Duration.zero,
-                                  () => showDialog(
-                                    context: context,
-                                    builder: (ctx) => DriveInfoDialogWidget(
-                                      model: model,
+                                model.match(
+                                  (l) => ctx.showErrorSnackBar(
+                                    'Error fetching drive information',
+                                  ),
+                                  (r) async => await Future.delayed(
+                                    Duration.zero,
+                                    () => showDialog(
+                                      context: context,
+                                      builder: (ctx) => DriveInfoDialogWidget(
+                                        model: r,
+                                      ),
                                     ),
                                   ),
                                 );

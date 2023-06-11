@@ -139,7 +139,13 @@ final class DropBoxAuth implements AuthService {
       options: authOptions,
     );
 
-    return response.data!;
+    return Either.tryCatch(
+      () => FolderInfoModel(
+          remainingStorage: (response.data!['allocation']['allocated'] as int) -
+              (response.data!['used'] as int),
+          usedStorage: response.data!['used']),
+      (o, s) => o.toString(),
+    );
   }
 }
 
@@ -222,8 +228,6 @@ final class OneDriveAuth implements AuthService {
         email: user['mail'],
         name: user['displayName'],
         createdAt: DateTime.now().toIso8601String(),
-        // remainingStorage: drive['quota']['remaining'],
-        // usedStorage: drive['quota']['used'],
         folderId: id,
       ),
     );
@@ -250,8 +254,6 @@ final class OneDriveAuth implements AuthService {
         },
         options: options,
       );
-
-      // print(response.data!["access_token"]);
 
       return model.copyWith(
         accessToken: response.data!['access_token'],
@@ -291,6 +293,11 @@ final class OneDriveAuth implements AuthService {
       options: authOptions,
     );
 
-    return response.data!;
+    return Either.tryCatch(
+      () => FolderInfoModel(
+          remainingStorage: response.data!['quota']['remaining'],
+          usedStorage: response.data!['quota']['used']),
+      (o, s) => o.toString(),
+    );
   }
 }

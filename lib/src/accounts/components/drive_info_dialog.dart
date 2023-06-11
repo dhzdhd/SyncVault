@@ -14,30 +14,39 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
       title: const Text('Drive info'),
       contentPadding: const EdgeInsets.all(24),
       children: [
-        Stack(
-          children: [
-            SizedBox(
-              width: 75,
-              height: 75,
-              child: Center(
-                child: Text(
-                  '${(model.usedStorage / model.remainingStorage * 100).toStringAsFixed(2)} %\nused',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
+        Center(
+          child: Stack(
+            children: [
+              SizedBox(
+                width: 75,
+                height: 75,
+                child: Center(
+                  child: Text(
+                    '${(model.usedStorage / model.remainingStorage * 100).toStringAsFixed(2)} %\nused',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 75,
-              height: 75,
-              child: CircularProgressIndicator(
-                value: model.usedStorage / model.remainingStorage,
+              SizedBox(
+                width: 75,
+                height: 75,
+                child: CircularProgressIndicator(
+                  value: model.usedStorage / model.remainingStorage,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        // ! Use cards to display
+        Text(
+          'Used - ${(model.usedStorage / (1000 * 1000)).toStringAsFixed(0)} MB',
+        ),
+        Text(
+          'Remaining - ${(model.remainingStorage / (1000 * 1000)).toStringAsFixed(0)} MB',
+        )
       ],
     );
   }
