@@ -15,8 +15,6 @@ _$_AuthProviderModel _$$_AuthProviderModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String,
       createdAt: json['createdAt'] as String,
-      remainingStorage: json['remainingStorage'] as int,
-      usedStorage: json['usedStorage'] as int,
       folderId: json['folderId'] as String,
     );
 
@@ -30,12 +28,10 @@ Map<String, dynamic> _$$_AuthProviderModelToJson(
       'name': instance.name,
       'email': instance.email,
       'createdAt': instance.createdAt,
-      'remainingStorage': instance.remainingStorage,
-      'usedStorage': instance.usedStorage,
       'folderId': instance.folderId,
     };
 
 const _$AuthProviderTypeEnumMap = {
   AuthProviderType.oneDrive: 'oneDrive',
-  AuthProviderType.dropBox: 'googleDrive',
+  AuthProviderType.dropBox: 'dropBox',
 };

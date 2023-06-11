@@ -6,6 +6,7 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
+import 'package:syncvault/src/accounts/models/folder_info_model.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
 
 final dio = Dio();
@@ -14,7 +15,7 @@ abstract interface class AuthService {
   Future<Either<String, AuthProviderModel>> signIn();
   Future<AuthProviderModel> refresh(AuthProviderModel model);
   Future<Map<String, dynamic>> getUserInfo(String accessToken);
-  Future<Map<String, dynamic>> getDriveInfo(String accessToken);
+  Future<Either<String, FolderInfoModel>> getDriveInfo(String accessToken);
 }
 
 final class DropBoxAuth implements AuthService {
@@ -78,9 +79,8 @@ final class DropBoxAuth implements AuthService {
 
     final accessToken = response.data!['access_token'];
     final user = await getUserInfo(accessToken);
-    final drive = await getDriveInfo(accessToken);
-    final remainingStorage =
-        (drive['allocation']['allocated'] as int) - (drive['used'] as int);
+    // final remainingStorage =
+    //     (drive['allocation']['allocated'] as int) - (drive['used'] as int);
 
     final folderIdResult = await DropBox()
         .createFolder(
@@ -99,8 +99,8 @@ final class DropBoxAuth implements AuthService {
         email: user['email'],
         name: user['name']['display_name'],
         createdAt: DateTime.now().toIso8601String(),
-        remainingStorage: remainingStorage,
-        usedStorage: drive['used'],
+        // remainingStorage: remainingStorage,
+        // usedStorage: drive['used'],
         folderId: id,
       ),
     );
@@ -127,7 +127,8 @@ final class DropBoxAuth implements AuthService {
   }
 
   @override
-  Future<Map<String, dynamic>> getDriveInfo(String accessToken) async {
+  Future<Either<String, FolderInfoModel>> getDriveInfo(
+      String accessToken) async {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
@@ -203,7 +204,6 @@ final class OneDriveAuth implements AuthService {
 
     final accessToken = response.data!['access_token'];
     final user = await getUserInfo(accessToken);
-    final drive = await getDriveInfo(accessToken);
 
     final folderIdResult = await OneDrive()
         .createFolder(
@@ -222,8 +222,8 @@ final class OneDriveAuth implements AuthService {
         email: user['mail'],
         name: user['displayName'],
         createdAt: DateTime.now().toIso8601String(),
-        remainingStorage: drive['quota']['remaining'],
-        usedStorage: drive['quota']['used'],
+        // remainingStorage: drive['quota']['remaining'],
+        // usedStorage: drive['quota']['used'],
         folderId: id,
       ),
     );
@@ -279,7 +279,8 @@ final class OneDriveAuth implements AuthService {
   }
 
   @override
-  Future<Map<String, dynamic>> getDriveInfo(String accessToken) async {
+  Future<Either<String, FolderInfoModel>> getDriveInfo(
+      String accessToken) async {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });

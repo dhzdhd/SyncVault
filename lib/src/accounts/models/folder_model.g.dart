@@ -30,5 +30,5 @@ Map<String, dynamic> _$$_FolderModelToJson(_$_FolderModel instance) =>
 
 const _$AuthProviderTypeEnumMap = {
   AuthProviderType.oneDrive: 'oneDrive',
-  AuthProviderType.dropBox: 'googleDrive',
+  AuthProviderType.dropBox: 'dropBox',
 };

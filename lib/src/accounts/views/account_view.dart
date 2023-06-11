@@ -6,6 +6,8 @@ import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/services/auth_service.dart';
+import 'package:syncvault/src/accounts/services/drive_service.dart';
 
 class AccountView extends ConsumerWidget {
   const AccountView({
@@ -100,12 +102,21 @@ class AccountView extends ConsumerWidget {
                                 ],
                               ),
                               onTap: () async {
+                                final model = switch (e.provider) {
+                                  AuthProviderType.oneDrive =>
+                                    await OneDriveAuth()
+                                        .getDriveInfo(e.accessToken),
+                                  AuthProviderType.dropBox =>
+                                    await DropBoxAuth()
+                                        .getDriveInfo(e.accessToken),
+                                };
+
                                 await Future.delayed(
                                   Duration.zero,
                                   () => showDialog(
                                     context: context,
                                     builder: (ctx) => DriveInfoDialogWidget(
-                                      model: e,
+                                      model: model,
                                     ),
                                   ),
                                 );
