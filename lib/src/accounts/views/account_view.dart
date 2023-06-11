@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
@@ -88,74 +89,71 @@ class AccountView extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        // const Spacer(),
-                        // Stack(
-                        //   children: [
-                        //     SizedBox(
-                        //       width: 75,
-                        //       height: 75,
-                        //       child: Center(
-                        //         child: Text(
-                        //           '${(e.usedStorage / e.remainingStorage * 100).toStringAsFixed(2)} %\nused',
-                        //           textAlign: TextAlign.center,
-                        //           style: const TextStyle(
-                        //             fontWeight: FontWeight.w500,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     SizedBox(
-                        //       width: 75,
-                        //       height: 75,
-                        //       child: CircularProgressIndicator(
-                        //         value: e.usedStorage / e.remainingStorage,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 0.0),
-                              child: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  if (ref.read(folderProvider).any(
-                                        (element) => element.email == e.email,
-                                      )) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (ctx) {
-                                        return AlertDialog(
-                                          title: const Text('Confirm deletion'),
-                                          content: const Text(
-                                            'The account contains dependent folders. Are you sure you want to sign out?\n This will delete all dependent folders from the app but not from the drive.',
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              child: const Text('Cancel'),
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                            ),
-                                            ElevatedButton(
-                                              child: const Text('Confirm'),
-                                              onPressed: () => ref
-                                                  .watch(authProvider.notifier)
-                                                  .signOut(e),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  } else {
-                                    ref.watch(authProvider.notifier).signOut(e);
-                                  }
-                                },
+                        PopupMenuButton(
+                          itemBuilder: (ctx) => [
+                            PopupMenuItem(
+                              child: const Row(
+                                children: [
+                                  Text('Info'),
+                                  Spacer(),
+                                  Icon(Icons.info_outline),
+                                ],
                               ),
+                              onTap: () async {
+                                await Future.delayed(
+                                  Duration.zero,
+                                  () => showDialog(
+                                    context: context,
+                                    builder: (ctx) => DriveInfoDialogWidget(
+                                      model: e,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            PopupMenuItem(
+                              child: const Row(
+                                children: [
+                                  Text('Delete'),
+                                  Spacer(),
+                                  Icon(Icons.delete),
+                                ],
+                              ),
+                              onTap: () {
+                                if (ref.read(folderProvider).any(
+                                      (element) => element.email == e.email,
+                                    )) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx) {
+                                      return AlertDialog(
+                                        title: const Text('Confirm deletion'),
+                                        content: const Text(
+                                          'The account contains dependent folders. Are you sure you want to sign out?\n This will delete all dependent folders from the app but not from the drive.',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text('Cancel'),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                          ),
+                                          ElevatedButton(
+                                            child: const Text('Confirm'),
+                                            onPressed: () => ref
+                                                .watch(authProvider.notifier)
+                                                .signOut(e),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  ref.watch(authProvider.notifier).signOut(e);
+                                }
+                              },
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
