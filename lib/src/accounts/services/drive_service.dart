@@ -22,8 +22,8 @@ abstract interface class DriveService {
 }
 
 class DropBox implements DriveService {
-  static const apiHost = "api.dropbox.com";
-  static const basePath = "/2/files";
+  static const apiHost = 'api.dropbox.com';
+  static const basePath = '/2/files';
 
   @override
   TaskEither<String, String> createFolder({
@@ -33,8 +33,8 @@ class DropBox implements DriveService {
   }) {
     final uri = Uri.https(apiHost, '$basePath/create_folder_v2');
     final authOptions = Options(headers: {
-      "Authorization": "Bearer $accessToken",
-      "Content-Type": "application/json"
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json'
     });
 
     return TaskEither.tryCatch(
@@ -43,14 +43,14 @@ class DropBox implements DriveService {
           uri,
           options: authOptions,
           data: {
-            "autorename": true,
-            "path": folderName.match(
+            'autorename': true,
+            'path': folderName.match(
               () => '/SyncVault',
               (t) => '/SyncVault/$t',
             ),
           },
         );
-        return response.data!["metadata"]["id"];
+        return response.data!['metadata']['id'];
       },
       (error, stackTrace) => error.toString(),
     );
@@ -69,8 +69,8 @@ class DropBox implements DriveService {
 }
 
 class OneDrive implements DriveService {
-  static const apiHost = "graph.microsoft.com";
-  static const basePath = "/beta/me/drive";
+  static const apiHost = 'graph.microsoft.com';
+  static const basePath = '/beta/me/drive';
 
   @override
   TaskEither<String, String> createFolder({
@@ -81,8 +81,8 @@ class OneDrive implements DriveService {
     final subPath = folderId.match(() => 'root', (t) => 'items/$t');
     final uri = Uri.https(apiHost, '$basePath/$subPath/children');
     final authOptions = Options(headers: {
-      "Authorization": "Bearer $accessToken",
-      "Content-Type": "application/json"
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json'
     });
 
     return TaskEither.tryCatch(
@@ -91,11 +91,11 @@ class OneDrive implements DriveService {
           uri,
           options: authOptions,
           data: {
-            "name": folderName.match(() => 'SyncVault', (t) => t),
-            "folder": {"childCount": 0}
+            'name': folderName.match(() => 'SyncVault', (t) => t),
+            'folder': {'childCount': 0}
           },
         );
-        return response.data!["id"];
+        return response.data!['id'];
       },
       (error, stackTrace) => error.toString(),
     );
@@ -107,8 +107,8 @@ class OneDrive implements DriveService {
     Option<String> filePath,
   ) {
     final authOptions = Options(headers: {
-      "Authorization": "Bearer ${authModel.accessToken}",
-      "Content-Type": "application/json"
+      'Authorization': 'Bearer ${authModel.accessToken}',
+      'Content-Type': 'application/json'
     });
 
     final folder = Directory(folderModel.folderPath);
@@ -159,7 +159,7 @@ class OneDrive implements DriveService {
               uri,
               options: authOptions,
               data: {
-                'item': {"@microsoft.graph.conflictBehavior": "replace"},
+                'item': {'@microsoft.graph.conflictBehavior': 'replace'},
               },
             );
 

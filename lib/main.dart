@@ -33,7 +33,7 @@ void main() async {
     await systemTray.setContextMenu(menu);
 
     systemTray.registerSystemTrayEventHandler((eventName) {
-      debugPrint("eventName: $eventName");
+      debugPrint('eventName: $eventName');
       if (eventName == kSystemTrayEventClick) {
         Platform.isWindows ? appWindow.show() : systemTray.popUpContextMenu();
       } else if (eventName == kSystemTrayEventRightClick) {

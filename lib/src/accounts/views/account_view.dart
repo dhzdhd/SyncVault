@@ -88,7 +88,6 @@ class AccountView extends ConsumerWidget {
                             ),
                           ],
                         ),
-
                         // const Spacer(),
                         // Stack(
                         //   children: [
@@ -110,7 +109,6 @@ class AccountView extends ConsumerWidget {
                         //       height: 75,
                         //       child: CircularProgressIndicator(
                         //         value: e.usedStorage / e.remainingStorage,
-                        //         backgroundColor: Colors.deepPurple,
                         //       ),
                         //     ),
                         //   ],
