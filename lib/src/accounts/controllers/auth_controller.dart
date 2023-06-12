@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
+import 'package:syncvault/src/accounts/models/folder_info_model.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
 
 enum AuthProviderType {
@@ -62,5 +63,21 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
 
   void signOut(AuthProviderModel model) async {
     state = state.where((element) => element != model).toList();
+    Hive.box('vault').put(
+      'accounts',
+      jsonEncode(state.map((e) => e.toJson()).toList()),
+    );
+  }
+
+  Future<Either<String, FolderInfoModel>> getDriveInfo(
+      AuthProviderModel authModel) async {
+    await refresh(authModel);
+
+    return switch (authModel.provider) {
+      AuthProviderType.oneDrive =>
+        (await OneDriveAuth().getDriveInfo(authModel.accessToken)).run(),
+      AuthProviderType.dropBox =>
+        (await DropBoxAuth().getDriveInfo(authModel.accessToken)).run(),
+    };
   }
 }

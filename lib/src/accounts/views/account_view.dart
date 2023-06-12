@@ -7,7 +7,6 @@ import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
-import 'package:syncvault/src/accounts/services/drive_service.dart';
 
 class AccountView extends ConsumerWidget {
   const AccountView({
@@ -102,20 +101,10 @@ class AccountView extends ConsumerWidget {
                                 ],
                               ),
                               onTap: () async {
-                                await ref
+                                final info = await ref
                                     .watch(authProvider.notifier)
-                                    .refresh(e);
-                                // ! Call refresh and drive info in new provider method
-                                final model = switch (e.provider) {
-                                  AuthProviderType.oneDrive =>
-                                    await OneDriveAuth()
-                                        .getDriveInfo(e.accessToken),
-                                  AuthProviderType.dropBox =>
-                                    await DropBoxAuth()
-                                        .getDriveInfo(e.accessToken),
-                                };
-
-                                model.match(
+                                    .getDriveInfo(e);
+                                info.match(
                                   (l) => ctx.showErrorSnackBar(
                                     'Error fetching drive information',
                                   ),

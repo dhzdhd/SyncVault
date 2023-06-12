@@ -15,7 +15,7 @@ abstract interface class AuthService {
   Future<Either<String, AuthProviderModel>> signIn();
   Future<AuthProviderModel> refresh(AuthProviderModel model);
   Future<Map<String, dynamic>> getUserInfo(String accessToken);
-  Future<Either<String, FolderInfoModel>> getDriveInfo(String accessToken);
+  Future<TaskEither<String, FolderInfoModel>> getDriveInfo(String accessToken);
 }
 
 final class DropBoxAuth implements AuthService {
@@ -79,8 +79,6 @@ final class DropBoxAuth implements AuthService {
 
     final accessToken = response.data!['access_token'];
     final user = await getUserInfo(accessToken);
-    // final remainingStorage =
-    //     (drive['allocation']['allocated'] as int) - (drive['used'] as int);
 
     final folderIdResult = await DropBox()
         .createFolder(
@@ -99,16 +97,41 @@ final class DropBoxAuth implements AuthService {
         email: user['email'],
         name: user['name']['display_name'],
         createdAt: DateTime.now().toIso8601String(),
-        // remainingStorage: remainingStorage,
-        // usedStorage: drive['used'],
         folderId: id,
       ),
     );
   }
 
   @override
-  Future<AuthProviderModel> refresh(AuthProviderModel model) {
-    throw UnimplementedError();
+  Future<AuthProviderModel> refresh(AuthProviderModel model) async {
+    final prev = DateTime.parse(model.createdAt);
+    final now = DateTime.now();
+    final diff = prev.add(Duration(seconds: model.expiresIn)).compareTo(now);
+
+    if (diff <= 0) {
+      final options = Options(
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      );
+      final uri = Uri.https(authHost, '/oauth2/token');
+      final response = await dio.postUri<Map<String, dynamic>>(
+        uri,
+        data: {
+          'client_id': clientId,
+          'client_secret': '',
+          'grant_type': 'refresh_token',
+          'redirect_uri': callbackUrlScheme,
+          'refresh_token': model.refreshToken,
+        },
+        options: options,
+      );
+
+      return model.copyWith(
+        accessToken: response.data!['access_token'],
+        expiresIn: response.data!['expires_in'],
+      );
+    } else {
+      return model;
+    }
   }
 
   @override
@@ -127,23 +150,27 @@ final class DropBoxAuth implements AuthService {
   }
 
   @override
-  Future<Either<String, FolderInfoModel>> getDriveInfo(
+  Future<TaskEither<String, FolderInfoModel>> getDriveInfo(
       String accessToken) async {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
 
     final uri = Uri.https(apiHost, '/2/users/get_space_usage');
-    final response = await dio.postUri<Map<String, dynamic>>(
-      uri,
-      options: authOptions,
-    );
 
-    return Either.tryCatch(
-      () => FolderInfoModel(
+    return TaskEither.tryCatch(
+      () async {
+        final response = await dio.postUri<Map<String, dynamic>>(
+          uri,
+          options: authOptions,
+        );
+
+        return FolderInfoModel(
           remainingStorage: (response.data!['allocation']['allocated'] as int) -
               (response.data!['used'] as int),
-          usedStorage: response.data!['used']),
+          usedStorage: response.data!['used'],
+        );
+      },
       (o, s) => o.toString(),
     );
   }
@@ -281,22 +308,27 @@ final class OneDriveAuth implements AuthService {
   }
 
   @override
-  Future<Either<String, FolderInfoModel>> getDriveInfo(
-      String accessToken) async {
+  Future<TaskEither<String, FolderInfoModel>> getDriveInfo(
+    String accessToken,
+  ) async {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
 
     final uri = Uri.https(apiHost, '/beta/me/drive');
-    final response = await dio.getUri<Map<String, dynamic>>(
-      uri,
-      options: authOptions,
-    );
 
-    return Either.tryCatch(
-      () => FolderInfoModel(
+    return TaskEither.tryCatch(
+      () async {
+        final response = await dio.getUri<Map<String, dynamic>>(
+          uri,
+          options: authOptions,
+        );
+
+        return FolderInfoModel(
           remainingStorage: response.data!['quota']['remaining'],
-          usedStorage: response.data!['quota']['used']),
+          usedStorage: response.data!['quota']['used'],
+        );
+      },
       (o, s) => o.toString(),
     );
   }
