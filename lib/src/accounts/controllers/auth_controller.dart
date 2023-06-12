@@ -75,9 +75,9 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
 
     return switch (authModel.provider) {
       AuthProviderType.oneDrive =>
-        (await OneDriveAuth().getDriveInfo(authModel.accessToken)).run(),
+        await OneDriveAuth().getDriveInfo(authModel.accessToken).run(),
       AuthProviderType.dropBox =>
-        (await DropBoxAuth().getDriveInfo(authModel.accessToken)).run(),
+        await DropBoxAuth().getDriveInfo(authModel.accessToken).run(),
     };
   }
 }

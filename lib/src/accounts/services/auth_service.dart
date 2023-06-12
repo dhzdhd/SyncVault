@@ -15,7 +15,7 @@ abstract interface class AuthService {
   Future<Either<String, AuthProviderModel>> signIn();
   Future<AuthProviderModel> refresh(AuthProviderModel model);
   Future<Map<String, dynamic>> getUserInfo(String accessToken);
-  Future<TaskEither<String, FolderInfoModel>> getDriveInfo(String accessToken);
+  TaskEither<String, FolderInfoModel> getDriveInfo(String accessToken);
 }
 
 final class DropBoxAuth implements AuthService {
@@ -150,8 +150,7 @@ final class DropBoxAuth implements AuthService {
   }
 
   @override
-  Future<TaskEither<String, FolderInfoModel>> getDriveInfo(
-      String accessToken) async {
+  TaskEither<String, FolderInfoModel> getDriveInfo(String accessToken) {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
@@ -308,9 +307,9 @@ final class OneDriveAuth implements AuthService {
   }
 
   @override
-  Future<TaskEither<String, FolderInfoModel>> getDriveInfo(
+  TaskEither<String, FolderInfoModel> getDriveInfo(
     String accessToken,
-  ) async {
+  ) {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });

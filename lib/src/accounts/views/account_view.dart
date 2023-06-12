@@ -106,7 +106,7 @@ class AccountView extends ConsumerWidget {
                                     .getDriveInfo(e);
                                 info.match(
                                   (l) => ctx.showErrorSnackBar(
-                                    'Error fetching drive information',
+                                    l,
                                   ),
                                   (r) async => await Future.delayed(
                                     Duration.zero,
