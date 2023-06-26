@@ -12,6 +12,7 @@ import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 import 'package:syncvault/src/settings/controllers/settings_controller.dart';
 import 'package:system_tray/system_tray.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:watcher/watcher.dart';
 
 import '../../settings/views/settings_view.dart';
@@ -162,12 +163,27 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 child: Text(
                                   e.folderPath,
                                   style: Theme.of(context).textTheme.bodyLarge,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
+                                    Flexible(
+                                      child: SizedBox(
+                                        width: 50,
+                                        child: TextButton(
+                                          child: const Icon(Icons.open_in_new),
+                                          onPressed: () async {
+                                            await launchUrl(
+                                              Uri.file(e.folderPath),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                     Flexible(
                                       child: SizedBox(
                                         width: 50,
