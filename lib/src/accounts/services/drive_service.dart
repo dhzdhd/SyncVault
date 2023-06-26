@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
@@ -18,7 +19,11 @@ abstract interface class DriveService {
     AuthProviderModel authModel,
     Option<String> filePath,
   );
-  TaskEither<String, String> delete({required FolderModel folderModel});
+  TaskEither<String, String> delete({
+    required FolderModel folderModel,
+    required AuthProviderModel authModel,
+    required String folderId,
+  });
 }
 
 class DropBox implements DriveService {
@@ -63,7 +68,10 @@ class DropBox implements DriveService {
   }
 
   @override
-  TaskEither<String, String> delete({required FolderModel folderModel}) {
+  TaskEither<String, String> delete(
+      {required FolderModel folderModel,
+      required AuthProviderModel authModel,
+      required String folderId}) {
     throw UnimplementedError();
   }
 }
@@ -101,6 +109,7 @@ class OneDrive implements DriveService {
     );
   }
 
+  @override
   TaskEither<String, String> upload(
     FolderModel folderModel,
     AuthProviderModel authModel,
@@ -116,6 +125,8 @@ class OneDrive implements DriveService {
       () => folder.listSync(recursive: true, followLinks: false),
       (t) => [File(t)],
     );
+
+    debugPrint(files.toString());
 
     final Map<String, String> idMap = {folder.path: folderModel.folderId};
 
@@ -155,6 +166,8 @@ class OneDrive implements DriveService {
               '$basePath/items/${idMap[parentFolderDir.path]}:/$fileName:/createUploadSession',
             );
 
+            print(uri.toString());
+
             final response = await dio.postUri<Map<String, dynamic>>(
               uri,
               options: authOptions,
@@ -186,7 +199,29 @@ class OneDrive implements DriveService {
   }
 
   @override
-  TaskEither<String, String> delete({required FolderModel folderModel}) {
-    throw UnimplementedError();
+  TaskEither<String, String> delete({
+    required FolderModel folderModel,
+    required AuthProviderModel authModel,
+    required String folderId,
+  }) {
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer ${authModel.accessToken}',
+      'Content-Type': 'application/json'
+    });
+    final subPath = 'items/$folderId';
+    final uri = Uri.https(apiHost, '$basePath/$subPath/children');
+
+    return TaskEither.tryCatch(
+      () async {
+        await dio.deleteUri(uri, options: authOptions);
+        return 'Success';
+      },
+      (error, stackTrace) {
+        if (error is DioError) {
+          debugPrint(error.response.toString());
+        }
+        return 'Failure';
+      },
+    );
   }
 }

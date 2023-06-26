@@ -10,6 +10,7 @@ import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
+import 'package:syncvault/src/settings/controllers/settings_controller.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:watcher/watcher.dart';
 
@@ -36,6 +37,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         .read(folderProvider)
         .where((element) => element.isAutoSync)
         .toList();
+    final settings = ref.read(settingsProvider);
 
     _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
 
@@ -51,6 +53,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   );
 
               result.match((l) => print(l), (r) => print(r));
+            }
+          case ChangeType.REMOVE when folders[i].isDeletionEnabled:
+            {
+              print(event);
             }
         }
       });

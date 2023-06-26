@@ -265,21 +265,30 @@ final class OneDriveAuth implements AuthService {
     final now = DateTime.now();
     final diff = prev.add(Duration(seconds: model.expiresIn)).compareTo(now);
 
+    print(model);
+
     if (diff <= 0) {
       final options = Options(
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       );
       final uri = Uri.https(authHost, '/common/oauth2/v2.0/token');
-      final response = await dio.postUri<Map<String, dynamic>>(
-        uri,
-        data: {
-          'client_id': clientId,
-          'grant_type': 'refresh_token',
-          'scope': 'offline_access files.readwrite.all user.read',
-          'refresh_token': model.refreshToken,
-        },
-        options: options,
-      );
+      print(uri.toString());
+
+      late final response;
+      try {
+        response = await dio.postUri<Map<String, dynamic>>(
+          uri,
+          data: {
+            'client_id': clientId,
+            'grant_type': 'refresh_token',
+            'scope': 'offline_access files.readwrite.all user.read',
+            'refresh_token': model.refreshToken,
+          },
+          options: options,
+        );
+      } on DioError catch (e) {
+        print(e.response);
+      }
 
       return model.copyWith(
         accessToken: response.data!['access_token'],
