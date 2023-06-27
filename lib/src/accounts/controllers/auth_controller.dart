@@ -39,7 +39,6 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     }
         .map(
       (model) {
-        print(model.toJson().toString());
         state = [...state, model];
         Hive.box('vault').put(
           'accounts',

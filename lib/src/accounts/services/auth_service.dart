@@ -15,7 +15,7 @@ final dio = Dio();
 abstract interface class AuthService {
   TaskEither<AppError, AuthProviderModel> signIn();
   TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model);
-  Future<Map<String, dynamic>> getUserInfo(String accessToken);
+  TaskEither<AppError, Map<String, dynamic>> getUserInfo(String accessToken);
   TaskEither<String, FolderInfoModel> getDriveInfo(String accessToken);
 }
 
@@ -78,7 +78,10 @@ final class DropBoxAuth implements AuthService {
       );
 
       final accessToken = response.data!['access_token'];
-      final user = await getUserInfo(accessToken);
+      final user = (await getUserInfo(accessToken).run()).match(
+        (l) => throw l,
+        (r) => r,
+      );
 
       final folderIdResult = await DropBox()
           .createFolder(
@@ -153,18 +156,29 @@ final class DropBoxAuth implements AuthService {
   }
 
   @override
-  Future<Map<String, dynamic>> getUserInfo(String accessToken) async {
+  TaskEither<AppError, Map<String, dynamic>> getUserInfo(String accessToken) {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
 
-    final uri = Uri.https(apiHost, '/2/users/get_current_account');
-    final response = await dio.postUri<Map<String, dynamic>>(
-      uri,
-      options: authOptions,
-    );
+    return TaskEither.tryCatch(() async {
+      final uri = Uri.https(apiHost, '/2/users/get_current_account');
+      final response = await dio.postUri<Map<String, dynamic>>(
+        uri,
+        options: authOptions,
+      );
 
-    return response.data!;
+      return response.data!;
+    }, (error, stackTrace) {
+      if (error is DioError) {
+        return HttpError(
+          message: error.response.toString(),
+          stackTrace: error.stackTrace.toString(),
+        );
+      } else {
+        return GeneralError(message: error.toString(), stackTrace: '');
+      }
+    });
   }
 
   @override
@@ -252,7 +266,10 @@ final class OneDriveAuth implements AuthService {
       );
 
       final accessToken = response.data!['access_token'];
-      final user = await getUserInfo(accessToken);
+      final user = (await getUserInfo(accessToken).run()).match(
+        (l) => throw l,
+        (r) => r,
+      );
 
       final folderIdResult = await OneDrive()
           .createFolder(
@@ -296,7 +313,6 @@ final class OneDriveAuth implements AuthService {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         );
         final uri = Uri.https(authHost, '/common/oauth2/v2.0/token');
-        print(uri.toString());
 
         final response = await dio.postUri<Map<String, dynamic>>(
           uri,
@@ -329,18 +345,29 @@ final class OneDriveAuth implements AuthService {
   }
 
   @override
-  Future<Map<String, dynamic>> getUserInfo(String accessToken) async {
+  TaskEither<AppError, Map<String, dynamic>> getUserInfo(String accessToken) {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
 
-    final uri = Uri.https(apiHost, '/beta/me');
-    final response = await dio.getUri<Map<String, dynamic>>(
-      uri,
-      options: authOptions,
-    );
+    return TaskEither.tryCatch(() async {
+      final uri = Uri.https(apiHost, '/beta/me');
+      final response = await dio.getUri<Map<String, dynamic>>(
+        uri,
+        options: authOptions,
+      );
 
-    return response.data!;
+      return response.data!;
+    }, (error, stackTrace) {
+      if (error is DioError) {
+        return HttpError(
+          message: error.response.toString(),
+          stackTrace: error.stackTrace.toString(),
+        );
+      } else {
+        return GeneralError(message: error.toString(), stackTrace: '');
+      }
+    });
   }
 
   @override
