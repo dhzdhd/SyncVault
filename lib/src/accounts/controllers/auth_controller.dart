@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_info_model.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
+import 'package:syncvault/src/home/models/error_model.dart';
 
 enum AuthProviderType {
   oneDrive,
@@ -49,16 +50,17 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     });
   }
 
-  Future<void> refresh(AuthProviderModel model) async {
-    final result = switch (model.provider) {
-      AuthProviderType.oneDrive => await OneDriveAuth().refresh(model),
-      AuthProviderType.dropBox => await DropBoxAuth().refresh(model),
-    };
-
-    // Use where
-    var newState = state;
-    newState.removeWhere((e) => e == model);
-    state = [...newState, result];
+  TaskEither<AppError, ()> refresh(AuthProviderModel model) {
+    return switch (model.provider) {
+      AuthProviderType.oneDrive => OneDriveAuth().refresh(model),
+      AuthProviderType.dropBox => DropBoxAuth().refresh(model),
+    }
+        .map(
+      (r) {
+        state = [...state.where((e) => e != model), r];
+        return ();
+      },
+    );
   }
 
   void signOut(AuthProviderModel model) async {
@@ -70,8 +72,9 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
   }
 
   Future<Either<String, FolderInfoModel>> getDriveInfo(
-      AuthProviderModel authModel) async {
-    await refresh(authModel);
+    AuthProviderModel authModel,
+  ) async {
+    await refresh(authModel).run();
 
     return switch (authModel.provider) {
       AuthProviderType.oneDrive =>

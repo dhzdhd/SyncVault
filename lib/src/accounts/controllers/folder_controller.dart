@@ -66,7 +66,7 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
     String folderPath,
     String folderName,
   ) async {
-    await ref.read(authProvider.notifier).refresh(authModel);
+    await ref.read(authProvider.notifier).refresh(authModel).run();
     final newAuthModel = ref
         .read(authProvider)
         .where((element) => element.email == authModel.email)
@@ -110,7 +110,7 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
         .where((element) => element.email == folderModel.email)
         .first;
 
-    await ref.read(authProvider.notifier).refresh(oldAuthModel);
+    await ref.read(authProvider.notifier).refresh(oldAuthModel).run();
 
     final authModel = ref
         .read(authProvider)

@@ -8,12 +8,13 @@ import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_info_model.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
+import 'package:syncvault/src/home/models/error_model.dart';
 
 final dio = Dio();
 
 abstract interface class AuthService {
   Future<Either<String, AuthProviderModel>> signIn();
-  Future<AuthProviderModel> refresh(AuthProviderModel model);
+  TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model);
   Future<Map<String, dynamic>> getUserInfo(String accessToken);
   TaskEither<String, FolderInfoModel> getDriveInfo(String accessToken);
 }
@@ -103,35 +104,45 @@ final class DropBoxAuth implements AuthService {
   }
 
   @override
-  Future<AuthProviderModel> refresh(AuthProviderModel model) async {
+  TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model) {
     final prev = DateTime.parse(model.createdAt);
     final now = DateTime.now();
     final diff = prev.add(Duration(seconds: model.expiresIn)).compareTo(now);
 
-    if (diff <= 0) {
-      final options = Options(
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      );
-      final uri = Uri.https(authHost, '/oauth2/token');
-      final response = await dio.postUri<Map<String, dynamic>>(
-        uri,
-        data: {
-          'client_id': clientId,
-          'client_secret': '',
-          'grant_type': 'refresh_token',
-          'redirect_uri': callbackUrlScheme,
-          'refresh_token': model.refreshToken,
-        },
-        options: options,
-      );
+    return TaskEither.tryCatch(() async {
+      if (diff <= 0) {
+        final options = Options(
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        );
+        final uri = Uri.https(authHost, '/oauth2/token');
+        final response = await dio.postUri<Map<String, dynamic>>(
+          uri,
+          data: {
+            'client_id': clientId,
+            'client_secret': '',
+            'grant_type': 'refresh_token',
+            'redirect_uri': callbackUrlScheme,
+            'refresh_token': model.refreshToken,
+          },
+          options: options,
+        );
 
-      return model.copyWith(
-        accessToken: response.data!['access_token'],
-        expiresIn: response.data!['expires_in'],
-      );
-    } else {
-      return model;
-    }
+        return model.copyWith(
+          accessToken: response.data!['access_token'],
+          expiresIn: response.data!['expires_in'],
+        );
+      } else {
+        return model;
+      }
+    }, (error, stackTrace) {
+      if (error is DioError) {
+        return HttpError(
+          message: error.response.toString(),
+          stackTrace: error.stackTrace.toString(),
+        );
+      }
+      return GeneralError(message: '', stackTrace: error.toString());
+    });
   }
 
   @override
@@ -260,23 +271,20 @@ final class OneDriveAuth implements AuthService {
   }
 
   @override
-  Future<AuthProviderModel> refresh(AuthProviderModel model) async {
+  TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model) {
     final prev = DateTime.parse(model.createdAt);
     final now = DateTime.now();
     final diff = prev.add(Duration(seconds: model.expiresIn)).compareTo(now);
 
-    print(model);
+    return TaskEither.tryCatch(() async {
+      if (diff <= 0) {
+        final options = Options(
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        );
+        final uri = Uri.https(authHost, '/common/oauth2/v2.0/token');
+        print(uri.toString());
 
-    if (diff <= 0) {
-      final options = Options(
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      );
-      final uri = Uri.https(authHost, '/common/oauth2/v2.0/token');
-      print(uri.toString());
-
-      late final response;
-      try {
-        response = await dio.postUri<Map<String, dynamic>>(
+        final response = await dio.postUri<Map<String, dynamic>>(
           uri,
           data: {
             'client_id': clientId,
@@ -286,18 +294,24 @@ final class OneDriveAuth implements AuthService {
           },
           options: options,
         );
-      } on DioError catch (e) {
-        print(e.response);
-      }
 
-      return model.copyWith(
-        accessToken: response.data!['access_token'],
-        expiresIn: response.data!['expires_in'],
-        refreshToken: response.data!['refresh_token'],
-      );
-    } else {
-      return model;
-    }
+        return model.copyWith(
+          accessToken: response.data!['access_token'],
+          expiresIn: response.data!['expires_in'],
+          refreshToken: response.data!['refresh_token'],
+        );
+      } else {
+        return model;
+      }
+    }, (error, stackTrace) {
+      if (error is DioError) {
+        return HttpError(
+          message: error.response.toString(),
+          stackTrace: error.stackTrace.toString(),
+        );
+      }
+      return GeneralError(message: '', stackTrace: error.toString());
+    });
   }
 
   @override
