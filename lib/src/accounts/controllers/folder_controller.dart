@@ -7,6 +7,7 @@ import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
+import 'package:syncvault/errors.dart';
 
 final folderProvider =
     StateNotifierProvider<FolderNotifier, List<FolderModel>>((ref) {
@@ -61,7 +62,7 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
     );
   }
 
-  Future<Either<String, String>> create(
+  Future<Either<AppError, String>> create(
     AuthProviderModel authModel,
     String folderPath,
     String folderName,
@@ -100,7 +101,7 @@ class FolderNotifier extends StateNotifier<List<FolderModel>> {
     });
   }
 
-  Future<Either<String, String>> upload(
+  Future<Either<AppError, String>> upload(
     FolderModel folderModel,
     Option<String> filePath,
   ) async {

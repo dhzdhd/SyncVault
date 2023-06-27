@@ -5,21 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/errors.dart';
 
 final dio = Dio();
 
 abstract interface class DriveService {
-  TaskEither<String, String> createFolder({
+  TaskEither<AppError, String> createFolder({
     required Option<String> folderName,
     required String accessToken,
     required Option<String> folderId,
   });
-  TaskEither<String, String> upload(
+  TaskEither<AppError, String> upload(
     FolderModel folderModel,
     AuthProviderModel authModel,
     Option<String> filePath,
   );
-  TaskEither<String, String> delete({
+  TaskEither<AppError, String> delete({
     required FolderModel folderModel,
     required AuthProviderModel authModel,
     required String folderId,
@@ -31,7 +32,7 @@ class DropBox implements DriveService {
   static const basePath = '/2/files';
 
   @override
-  TaskEither<String, String> createFolder({
+  TaskEither<AppError, String> createFolder({
     required Option<String> folderName,
     required String accessToken,
     required Option<String> folderId,
@@ -57,18 +58,20 @@ class DropBox implements DriveService {
         );
         return response.data!['metadata']['id'];
       },
-      (error, stackTrace) => error.toString(),
+      (error, stackTrace) {
+        return (error as Exception).segregate();
+      },
     );
   }
 
   @override
-  TaskEither<String, String> upload(FolderModel folderModel,
+  TaskEither<AppError, String> upload(FolderModel folderModel,
       AuthProviderModel authModel, Option<String> filePath) {
     throw UnimplementedError();
   }
 
   @override
-  TaskEither<String, String> delete(
+  TaskEither<AppError, String> delete(
       {required FolderModel folderModel,
       required AuthProviderModel authModel,
       required String folderId}) {
@@ -81,7 +84,7 @@ class OneDrive implements DriveService {
   static const basePath = '/beta/me/drive';
 
   @override
-  TaskEither<String, String> createFolder({
+  TaskEither<AppError, String> createFolder({
     required Option<String> folderName,
     required String accessToken,
     required Option<String> folderId,
@@ -105,12 +108,14 @@ class OneDrive implements DriveService {
         );
         return response.data!['id'];
       },
-      (error, stackTrace) => error.toString(),
+      (error, stackTrace) {
+        return (error as Exception).segregate();
+      },
     );
   }
 
   @override
-  TaskEither<String, String> upload(
+  TaskEither<AppError, String> upload(
     FolderModel folderModel,
     AuthProviderModel authModel,
     Option<String> filePath,
@@ -155,7 +160,7 @@ class OneDrive implements DriveService {
                 ).run();
 
                 result.match(
-                  (l) => throw StateError(l),
+                  (l) => throw l,
                   (r) => idMap[i.path] = r,
                 );
               }
@@ -194,12 +199,14 @@ class OneDrive implements DriveService {
 
         return 'Success';
       },
-      (error, stackTrace) => error.toString(),
+      (error, stackTrace) {
+        return (error as Exception).segregate();
+      },
     );
   }
 
   @override
-  TaskEither<String, String> delete({
+  TaskEither<AppError, String> delete({
     required FolderModel folderModel,
     required AuthProviderModel authModel,
     required String folderId,
@@ -217,10 +224,7 @@ class OneDrive implements DriveService {
         return 'Success';
       },
       (error, stackTrace) {
-        if (error is DioError) {
-          debugPrint(error.response.toString());
-        }
-        return 'Failure';
+        return (error as Exception).segregate();
       },
     );
   }

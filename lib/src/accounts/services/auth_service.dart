@@ -8,7 +8,7 @@ import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_info_model.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
-import 'package:syncvault/src/home/models/error_model.dart';
+import 'package:syncvault/errors.dart';
 
 final dio = Dio();
 
@@ -105,11 +105,7 @@ final class DropBoxAuth implements AuthService {
         ),
       );
     }, (error, stackTrace) {
-      if (error is AppError) {
-        return error;
-      } else {
-        return GeneralError(message: error.toString(), stackTrace: '');
-      }
+      return (error as Exception).segregate();
     });
   }
 
@@ -145,13 +141,7 @@ final class DropBoxAuth implements AuthService {
         return model;
       }
     }, (error, stackTrace) {
-      if (error is DioError) {
-        return HttpError(
-          message: error.response.toString(),
-          stackTrace: error.stackTrace.toString(),
-        );
-      }
-      return GeneralError(message: '', stackTrace: error.toString());
+      return (error as Exception).segregate();
     });
   }
 
@@ -170,14 +160,7 @@ final class DropBoxAuth implements AuthService {
 
       return response.data!;
     }, (error, stackTrace) {
-      if (error is DioError) {
-        return HttpError(
-          message: error.response.toString(),
-          stackTrace: error.stackTrace.toString(),
-        );
-      } else {
-        return GeneralError(message: error.toString(), stackTrace: '');
-      }
+      return (error as Exception).segregate();
     });
   }
 
@@ -293,11 +276,7 @@ final class OneDriveAuth implements AuthService {
         ),
       );
     }, (error, stackTrace) {
-      if (error is AppError) {
-        return error;
-      } else {
-        return GeneralError(message: error.toString(), stackTrace: '');
-      }
+      return (error as Exception).segregate();
     });
   }
 
@@ -334,13 +313,7 @@ final class OneDriveAuth implements AuthService {
         return model;
       }
     }, (error, stackTrace) {
-      if (error is DioError) {
-        return HttpError(
-          message: error.response.toString(),
-          stackTrace: error.stackTrace.toString(),
-        );
-      }
-      return GeneralError(message: '', stackTrace: error.toString());
+      return (error as Exception).segregate();
     });
   }
 
@@ -359,14 +332,7 @@ final class OneDriveAuth implements AuthService {
 
       return response.data!;
     }, (error, stackTrace) {
-      if (error is DioError) {
-        return HttpError(
-          message: error.response.toString(),
-          stackTrace: error.stackTrace.toString(),
-        );
-      } else {
-        return GeneralError(message: error.toString(), stackTrace: '');
-      }
+      return (error as Exception).segregate();
     });
   }
 

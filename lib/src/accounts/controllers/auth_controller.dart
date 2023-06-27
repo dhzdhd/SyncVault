@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_info_model.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
-import 'package:syncvault/src/home/models/error_model.dart';
+import 'package:syncvault/errors.dart';
 
 enum AuthProviderType {
   oneDrive,

@@ -206,8 +206,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
                                             if (context.mounted) {
                                               result.match(
-                                                (l) => context
-                                                    .showErrorSnackBar(l),
+                                                (l) =>
+                                                    context.showErrorSnackBar(
+                                                        l.message),
                                                 (r) =>
                                                     context.showSuccessSnackBar(
                                                   content: r,
