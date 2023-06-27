@@ -13,7 +13,7 @@ import 'package:syncvault/src/home/models/error_model.dart';
 final dio = Dio();
 
 abstract interface class AuthService {
-  Future<Either<String, AuthProviderModel>> signIn();
+  TaskEither<AppError, AuthProviderModel> signIn();
   TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model);
   Future<Map<String, dynamic>> getUserInfo(String accessToken);
   TaskEither<String, FolderInfoModel> getDriveInfo(String accessToken);
@@ -28,7 +28,7 @@ final class DropBoxAuth implements AuthService {
   static const authHost = 'www.dropbox.com';
 
   @override
-  Future<Either<String, AuthProviderModel>> signIn() async {
+  TaskEither<AppError, AuthProviderModel> signIn() {
     final codeUri = Uri.https(
       authHost,
       '/oauth2/authorize',
@@ -42,63 +42,72 @@ final class DropBoxAuth implements AuthService {
       },
     );
 
-    final result = switch (Platform.isAndroid) {
-      true => await FlutterWebAuth2.authenticate(
-          url: codeUri.toString(),
-          callbackUrlScheme: 'https',
-          preferEphemeral: true,
-        ),
-      false => await FlutterWebAuth2WindowsPlugin().authenticate(
-          url: codeUri.toString(),
-          callbackUrlScheme: callbackUrlScheme,
-          preferEphemeral: true,
-        ),
-    };
+    return TaskEither.tryCatch(() async {
+      final result = switch (Platform.isAndroid) {
+        true => await FlutterWebAuth2.authenticate(
+            url: codeUri.toString(),
+            callbackUrlScheme: 'https',
+            preferEphemeral: true,
+          ),
+        false => await FlutterWebAuth2WindowsPlugin().authenticate(
+            url: codeUri.toString(),
+            callbackUrlScheme: callbackUrlScheme,
+            preferEphemeral: true,
+          ),
+      };
 
-    final code = Uri.parse(result).queryParameters['code'];
-    final tokenUri = Uri.https(
-      authHost,
-      '/oauth2/token',
-    );
+      final code = Uri.parse(result).queryParameters['code'];
+      final tokenUri = Uri.https(
+        authHost,
+        '/oauth2/token',
+      );
 
-    final options = Options(
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    );
-    final response = await dio.postUri<Map<String, dynamic>>(
-      tokenUri,
-      data: {
-        'client_id': clientId,
-        'client_secret': '',
-        'code': code,
-        'grant_type': 'authorization_code',
-        'redirect_uri': callbackUrlScheme,
-      },
-      options: options,
-    );
+      final options = Options(
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      );
+      final response = await dio.postUri<Map<String, dynamic>>(
+        tokenUri,
+        data: {
+          'client_id': clientId,
+          'client_secret': '',
+          'code': code,
+          'grant_type': 'authorization_code',
+          'redirect_uri': callbackUrlScheme,
+        },
+        options: options,
+      );
 
-    final accessToken = response.data!['access_token'];
-    final user = await getUserInfo(accessToken);
+      final accessToken = response.data!['access_token'];
+      final user = await getUserInfo(accessToken);
 
-    final folderIdResult = await DropBox()
-        .createFolder(
-          folderName: none(),
+      final folderIdResult = await DropBox()
+          .createFolder(
+            folderName: none(),
+            accessToken: accessToken,
+            folderId: none(),
+          )
+          .run();
+
+      return folderIdResult.match(
+        (e) => throw e,
+        (id) => AuthProviderModel(
           accessToken: accessToken,
-          folderId: none(),
-        )
-        .run();
-
-    return folderIdResult.map(
-      (id) => AuthProviderModel(
-        accessToken: accessToken,
-        refreshToken: response.data!['refresh_token'],
-        expiresIn: response.data!['expires_in'],
-        provider: AuthProviderType.dropBox,
-        email: user['email'],
-        name: user['name']['display_name'],
-        createdAt: DateTime.now().toIso8601String(),
-        folderId: id,
-      ),
-    );
+          refreshToken: response.data!['refresh_token'],
+          expiresIn: response.data!['expires_in'],
+          provider: AuthProviderType.dropBox,
+          email: user['email'],
+          name: user['name']['display_name'],
+          createdAt: DateTime.now().toIso8601String(),
+          folderId: id,
+        ),
+      );
+    }, (error, stackTrace) {
+      if (error is AppError) {
+        return error;
+      } else {
+        return GeneralError(message: error.toString(), stackTrace: '');
+      }
+    });
   }
 
   @override
@@ -193,7 +202,7 @@ final class OneDriveAuth implements AuthService {
   static const authHost = 'login.microsoftonline.com';
 
   @override
-  Future<Either<String, AuthProviderModel>> signIn() async {
+  TaskEither<AppError, AuthProviderModel> signIn() {
     final codeUri = Uri.https(
       authHost,
       '/common/oauth2/v2.0/authorize',
@@ -207,63 +216,72 @@ final class OneDriveAuth implements AuthService {
       },
     );
 
-    final result = switch (Platform.isAndroid) {
-      true => await FlutterWebAuth2.authenticate(
-          url: codeUri.toString(),
-          callbackUrlScheme: 'msauth',
-          preferEphemeral: true,
-        ),
-      false => await FlutterWebAuth2WindowsPlugin().authenticate(
-          url: codeUri.toString(),
-          callbackUrlScheme: callbackUrlScheme,
-          preferEphemeral: true,
-        )
-    };
+    return TaskEither.tryCatch(() async {
+      final result = switch (Platform.isAndroid) {
+        true => await FlutterWebAuth2.authenticate(
+            url: codeUri.toString(),
+            callbackUrlScheme: 'msauth',
+            preferEphemeral: true,
+          ),
+        false => await FlutterWebAuth2WindowsPlugin().authenticate(
+            url: codeUri.toString(),
+            callbackUrlScheme: callbackUrlScheme,
+            preferEphemeral: true,
+          )
+      };
 
-    final code = Uri.parse(result).queryParameters['code'];
-    final tokenUri = Uri.https(
-      authHost,
-      '/common/oauth2/v2.0/token',
-    );
+      final code = Uri.parse(result).queryParameters['code'];
+      final tokenUri = Uri.https(
+        authHost,
+        '/common/oauth2/v2.0/token',
+      );
 
-    final options = Options(
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    );
-    final response = await dio.postUri<Map<String, dynamic>>(
-      tokenUri,
-      data: {
-        'client_id': clientId,
-        'code': code,
-        'grant_type': 'authorization_code',
-        'scope': 'offline_access files.readwrite.all user.read',
-        'redirect_uri': callbackUrlScheme,
-      },
-      options: options,
-    );
+      final options = Options(
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      );
+      final response = await dio.postUri<Map<String, dynamic>>(
+        tokenUri,
+        data: {
+          'client_id': clientId,
+          'code': code,
+          'grant_type': 'authorization_code',
+          'scope': 'offline_access files.readwrite.all user.read',
+          'redirect_uri': callbackUrlScheme,
+        },
+        options: options,
+      );
 
-    final accessToken = response.data!['access_token'];
-    final user = await getUserInfo(accessToken);
+      final accessToken = response.data!['access_token'];
+      final user = await getUserInfo(accessToken);
 
-    final folderIdResult = await OneDrive()
-        .createFolder(
-          folderName: none(),
+      final folderIdResult = await OneDrive()
+          .createFolder(
+            folderName: none(),
+            accessToken: accessToken,
+            folderId: none(),
+          )
+          .run();
+
+      return folderIdResult.match(
+        (e) => throw e,
+        (id) => AuthProviderModel(
           accessToken: accessToken,
-          folderId: none(),
-        )
-        .run();
-
-    return folderIdResult.map(
-      (id) => AuthProviderModel(
-        accessToken: accessToken,
-        refreshToken: response.data!['refresh_token'],
-        expiresIn: response.data!['expires_in'],
-        provider: AuthProviderType.oneDrive,
-        email: user['mail'],
-        name: user['displayName'],
-        createdAt: DateTime.now().toIso8601String(),
-        folderId: id,
-      ),
-    );
+          refreshToken: response.data!['refresh_token'],
+          expiresIn: response.data!['expires_in'],
+          provider: AuthProviderType.oneDrive,
+          email: user['mail'],
+          name: user['displayName'],
+          createdAt: DateTime.now().toIso8601String(),
+          folderId: id,
+        ),
+      );
+    }, (error, stackTrace) {
+      if (error is AppError) {
+        return error;
+      } else {
+        return GeneralError(message: error.toString(), stackTrace: '');
+      }
+    });
   }
 
   @override

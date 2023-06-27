@@ -32,22 +32,23 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     }
   }
 
-  Future<Either<String, String>> signIn(AuthProviderType provider) async {
-    final result = switch (provider) {
-      AuthProviderType.oneDrive => await OneDriveAuth().signIn(),
-      AuthProviderType.dropBox => await DropBoxAuth().signIn(),
-    };
+  TaskEither<AppError, ()> signIn(AuthProviderType provider) {
+    return switch (provider) {
+      AuthProviderType.oneDrive => OneDriveAuth().signIn(),
+      AuthProviderType.dropBox => DropBoxAuth().signIn(),
+    }
+        .map(
+      (model) {
+        print(model.toJson().toString());
+        state = [...state, model];
+        Hive.box('vault').put(
+          'accounts',
+          jsonEncode(state.map((e) => e.toJson()).toList()),
+        );
 
-    return result.map((model) {
-      print(model.toJson().toString());
-      state = [...state, model];
-      Hive.box('vault').put(
-        'accounts',
-        jsonEncode(state.map((e) => e.toJson()).toList()),
-      );
-
-      return 'Success';
-    });
+        return ();
+      },
+    );
   }
 
   TaskEither<AppError, ()> refresh(AuthProviderModel model) {

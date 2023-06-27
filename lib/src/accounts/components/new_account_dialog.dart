@@ -32,9 +32,11 @@ class NewAccountDialogWidget extends HookConsumerWidget {
           padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
           child: ElevatedButton(
             onPressed: () async {
-              await ref
+              final res = await ref
                   .watch(authProvider.notifier)
-                  .signIn(selectedProvider.value);
+                  .signIn(selectedProvider.value)
+                  .run();
+              res.match((l) => print(l.message), (r) => null);
               if (context.mounted) Navigator.of(context).pop();
             },
             child: const Text('Submit'),
