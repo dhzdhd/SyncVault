@@ -42,20 +42,18 @@ final class DropBoxAuth implements AuthService {
       },
     );
 
-    late final String result;
-    if (Platform.isAndroid) {
-      result = await FlutterWebAuth2.authenticate(
-        url: codeUri.toString(),
-        callbackUrlScheme: 'https',
-        preferEphemeral: true,
-      );
-    } else {
-      result = await FlutterWebAuth2WindowsPlugin().authenticate(
-        url: codeUri.toString(),
-        callbackUrlScheme: callbackUrlScheme,
-        preferEphemeral: true,
-      );
-    }
+    final result = switch (Platform.isAndroid) {
+      true => await FlutterWebAuth2.authenticate(
+          url: codeUri.toString(),
+          callbackUrlScheme: 'https',
+          preferEphemeral: true,
+        ),
+      false => await FlutterWebAuth2WindowsPlugin().authenticate(
+          url: codeUri.toString(),
+          callbackUrlScheme: callbackUrlScheme,
+          preferEphemeral: true,
+        ),
+    };
 
     final code = Uri.parse(result).queryParameters['code'];
     final tokenUri = Uri.https(
@@ -209,20 +207,18 @@ final class OneDriveAuth implements AuthService {
       },
     );
 
-    late final String result;
-    if (Platform.isAndroid) {
-      result = await FlutterWebAuth2.authenticate(
-        url: codeUri.toString(),
-        callbackUrlScheme: 'msauth',
-        preferEphemeral: true,
-      );
-    } else {
-      result = await FlutterWebAuth2WindowsPlugin().authenticate(
-        url: codeUri.toString(),
-        callbackUrlScheme: callbackUrlScheme,
-        preferEphemeral: true,
-      );
-    }
+    final result = switch (Platform.isAndroid) {
+      true => await FlutterWebAuth2.authenticate(
+          url: codeUri.toString(),
+          callbackUrlScheme: 'msauth',
+          preferEphemeral: true,
+        ),
+      false => await FlutterWebAuth2WindowsPlugin().authenticate(
+          url: codeUri.toString(),
+          callbackUrlScheme: callbackUrlScheme,
+          preferEphemeral: true,
+        )
+    };
 
     final code = Uri.parse(result).queryParameters['code'];
     final tokenUri = Uri.https(
