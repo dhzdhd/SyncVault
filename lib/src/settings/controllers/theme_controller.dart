@@ -72,11 +72,11 @@ final lightTheme = ThemeData(
   brightness: Brightness.light,
   useMaterial3: true,
   colorScheme: lightColorScheme,
-  textTheme: TextTheme(),
+  textTheme: const TextTheme(),
 );
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
   useMaterial3: true,
   colorScheme: darkColorScheme,
-  textTheme: TextTheme(),
+  textTheme: const TextTheme(),
 );

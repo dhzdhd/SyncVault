@@ -36,7 +36,7 @@ class NewAccountDialogWidget extends HookConsumerWidget {
                   .watch(authProvider.notifier)
                   .signIn(selectedProvider.value)
                   .run();
-              res.match((l) => print(l.message), (r) => null);
+              res.match((l) => debugPrint(l.message), (r) => null);
               if (context.mounted) Navigator.of(context).pop();
             },
             child: const Text('Submit'),

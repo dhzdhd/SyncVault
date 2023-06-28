@@ -52,7 +52,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
       for (int i = 0; i < _watchers.length; i++) {
         _watchers[i].events.listen((event) async {
-          print(event);
+          debugPrint(event.toString());
           switch (event.type) {
             case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
               {
@@ -61,7 +61,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       some(event.path),
                     );
 
-                result.match((l) => print(l), (r) => print(r));
+                result.match(
+                    (l) => debugPrint(l.message), (r) => debugPrint(r));
               }
             case ChangeType.REMOVE when folders[i].isDeletionEnabled:
               {
