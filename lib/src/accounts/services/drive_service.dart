@@ -171,8 +171,6 @@ class OneDrive implements DriveService {
               '$basePath/items/${idMap[parentFolderDir.path]}:/$fileName:/createUploadSession',
             );
 
-            print(uri.toString());
-
             final response = await dio.postUri<Map<String, dynamic>>(
               uri,
               options: authOptions,
@@ -183,6 +181,11 @@ class OneDrive implements DriveService {
 
             final uploadUri = Uri.parse(response.data!['uploadUrl']);
             final bytes = await file.readAsBytes();
+
+            if (bytes.isEmpty) {
+              // Throws Content-Range not found if file is empty
+              continue;
+            }
 
             await dio.putUri(
               uploadUri,

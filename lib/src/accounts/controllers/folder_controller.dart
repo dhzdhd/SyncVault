@@ -8,11 +8,11 @@ import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
 import 'package:syncvault/errors.dart';
+import 'package:watcher/watcher.dart';
 
-final folderProvider =
-    StateNotifierProvider<FolderNotifier, List<FolderModel>>((ref) {
-  return FolderNotifier(ref);
-});
+final folderProvider = StateNotifierProvider<FolderNotifier, List<FolderModel>>(
+  (ref) => FolderNotifier(ref),
+);
 
 class FolderNotifier extends StateNotifier<List<FolderModel>> {
   FolderNotifier(this.ref) : super(init());

@@ -33,35 +33,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   void initState() {
-    super.initState();
-    final folders = ref
-        .read(folderProvider)
-        .where((element) => element.isAutoSync)
-        .toList();
-    final settings = ref.read(settingsProvider);
-
+    final folders = ref.read(folderProvider).toList();
     _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
-
-    for (int i = 0; i < _watchers.length; i++) {
-      _watchers[i].events.listen((event) async {
-        switch (event.type) {
-          case ChangeType.ADD || ChangeType.MODIFY:
-            {
-              print(event);
-              final result = await ref.watch(folderProvider.notifier).upload(
-                    folders[i],
-                    some(event.path),
-                  );
-
-              result.match((l) => print(l), (r) => print(r));
-            }
-          case ChangeType.REMOVE when folders[i].isDeletionEnabled:
-            {
-              print(event);
-            }
-        }
-      });
-    }
+    super.initState();
   }
 
   @override
@@ -69,12 +43,38 @@ class _HomeViewState extends ConsumerState<HomeView> {
     for (DirectoryWatcher i in _watchers) {
       i.events.drain();
     }
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    useEffect(() {
+      final folders = ref.watch(folderProvider).toList();
+
+      for (int i = 0; i < _watchers.length; i++) {
+        _watchers[i].events.listen((event) async {
+          print(event);
+          switch (event.type) {
+            case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
+              {
+                final result = await ref.read(folderProvider.notifier).upload(
+                      folders[i],
+                      some(event.path),
+                    );
+
+                result.match((l) => print(l), (r) => print(r));
+              }
+            case ChangeType.REMOVE when folders[i].isDeletionEnabled:
+              {
+                ref.read(folderProvider.notifier).delete(folders[i]);
+              }
+          }
+        });
+      }
+
+      return null;
+    }, []);
+
     final folderInfo = ref.watch(folderProvider);
     final progressVisibleList = useState(List.generate(
       folderInfo.length,
@@ -272,9 +272,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     ref
                                         .watch(folderProvider.notifier)
                                         .toggleAutoSync(e);
-                                    context.showWarningSnackBar(
-                                      'Restart app to see changes',
-                                    );
                                   },
                                 ),
                               ),
