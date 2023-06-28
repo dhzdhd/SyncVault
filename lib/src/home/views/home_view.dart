@@ -10,7 +10,6 @@ import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
-import 'package:syncvault/src/settings/controllers/settings_controller.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watcher/watcher.dart';
@@ -73,7 +72,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       }
 
       return null;
-    }, []);
+    }, [ref.watch(folderProvider)]);
 
     final folderInfo = ref.watch(folderProvider);
     final progressVisibleList = useState(List.generate(

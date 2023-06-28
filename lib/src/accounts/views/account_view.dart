@@ -6,7 +6,6 @@ import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
-import 'package:syncvault/src/accounts/services/auth_service.dart';
 
 class AccountView extends ConsumerWidget {
   const AccountView({
