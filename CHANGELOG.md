@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
+## 0.2.0 | 28-06-2023 (Prerelease)
+
+### Additions
+
+- Added optional Sentry app monitoring (disabled by default).
+- Added `Auto sync` & `Delete on sync` switches per folder.
+- Added DropBox (currently unusable).
+
+### Fixes / Improvements
+
+- Added tooltips to buttons and text for better accessibility.
+- Added `Open folder` button per folder to open the path in the file explorer (currently only works on Windows).
+- Redesigned drive usage percentage indicator (currently does not work).
+- Added support for non media file types in Android.
+
+### Deletions
+
+- Removed GoogleDrive support due to infeasiblity in complying to registered developer rules.
+
 ## 0.1.1 | 07-06-2023 (Prerelease hotfix)
 
 ### Fixes / Improvements

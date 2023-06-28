@@ -83,7 +83,7 @@ jobs:
         #// if: startsWith(github.ref, 'refs/tags/')
         with:
           name: SyncVault
-          tag_name: v0.1.1
+          tag_name: v0.2.0
           prerelease: true
           generate_release_notes: true
           files: |
