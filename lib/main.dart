@@ -1,14 +1,44 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/services/auth_service.dart';
+import 'package:syncvault/src/accounts/services/drive_service.dart';
 import 'package:system_tray/system_tray.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
 import 'src/settings/services/settings_service.dart';
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    await Hive.initFlutter();
+    await Hive.openBox('vault');
+
+    final authInfo = AuthProviderNotifier.init();
+    final folderInfo = FolderNotifier.init();
+
+    for (final i in folderInfo) {
+      if (i.isAutoSync) {
+        final authProvider =
+            authInfo.where((element) => element.email == i.email).first;
+        final res = await OneDriveAuth().refresh(authProvider).run();
+        res.bindFuture((r) async {
+          return await OneDrive().upload(i, r, none()).run();
+        }).match((l) => print(l.message), (r) => print(r));
+      }
+    }
+
+    return Future.value(true);
+  });
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +70,15 @@ void main() async {
         Platform.isWindows ? systemTray.popUpContextMenu() : appWindow.show();
       }
     });
+  } else {
+    Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    Workmanager().registerPeriodicTask(
+      'task-sync',
+      'syncData',
+      frequency: const Duration(minutes: 15), // Minimum possible duration :(
+      initialDelay: const Duration(seconds: 10),
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+    );
   }
 
   final settingsController = SettingsController(SettingsService());

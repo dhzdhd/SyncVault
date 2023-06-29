@@ -30,6 +30,7 @@ dependencies:
   window_manager: ^0.3.4
   sentry_flutter: ^7.7.0
   url_launcher: ^6.1.11
+  workmanager: ^0.5.1
 
 dev_dependencies:
   flutter_test:
