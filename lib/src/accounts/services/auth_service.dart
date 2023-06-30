@@ -16,7 +16,7 @@ abstract interface class AuthService {
   TaskEither<AppError, AuthProviderModel> signIn();
   TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model);
   TaskEither<AppError, Map<String, dynamic>> getUserInfo(String accessToken);
-  TaskEither<String, FolderInfoModel> getDriveInfo(String accessToken);
+  TaskEither<AppError, FolderInfoModel> getDriveInfo(String accessToken);
 }
 
 final class DropBoxAuth implements AuthService {
@@ -165,7 +165,7 @@ final class DropBoxAuth implements AuthService {
   }
 
   @override
-  TaskEither<String, FolderInfoModel> getDriveInfo(String accessToken) {
+  TaskEither<AppError, FolderInfoModel> getDriveInfo(String accessToken) {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
@@ -185,7 +185,7 @@ final class DropBoxAuth implements AuthService {
           usedStorage: response.data!['used'],
         );
       },
-      (o, s) => o.toString(),
+      (error, stackTrace) => (error as Exception).segregate(),
     );
   }
 }
@@ -337,7 +337,7 @@ final class OneDriveAuth implements AuthService {
   }
 
   @override
-  TaskEither<String, FolderInfoModel> getDriveInfo(
+  TaskEither<AppError, FolderInfoModel> getDriveInfo(
     String accessToken,
   ) {
     final authOptions = Options(headers: {
@@ -358,7 +358,7 @@ final class OneDriveAuth implements AuthService {
           usedStorage: response.data!['quota']['used'],
         );
       },
-      (o, s) => o.toString(),
+      (error, stackTrace) => (error as Exception).segregate(),
     );
   }
 }

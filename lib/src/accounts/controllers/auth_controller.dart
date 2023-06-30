@@ -51,6 +51,7 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
   }
 
   TaskEither<AppError, ()> refresh(AuthProviderModel model) {
+    // ! Return the model instead of unit
     return switch (model.provider) {
       AuthProviderType.oneDrive => OneDriveAuth().refresh(model),
       AuthProviderType.dropBox => DropBoxAuth().refresh(model),
@@ -71,10 +72,12 @@ class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
     );
   }
 
-  Future<Either<String, FolderInfoModel>> getDriveInfo(
-    AuthProviderModel authModel,
+  Future<Either<AppError, FolderInfoModel>> getDriveInfo(
+    AuthProviderModel model,
   ) async {
-    await refresh(authModel).run();
+    await refresh(model).run();
+    final authModel =
+        state.where((element) => element.email == model.email).first;
 
     return switch (authModel.provider) {
       AuthProviderType.oneDrive =>

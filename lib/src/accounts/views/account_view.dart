@@ -105,7 +105,7 @@ class AccountView extends ConsumerWidget {
                                     .getDriveInfo(e);
                                 info.match(
                                   (l) => ctx.showErrorSnackBar(
-                                    l,
+                                    l.message,
                                   ),
                                   (r) async => await Future.delayed(
                                     Duration.zero,
