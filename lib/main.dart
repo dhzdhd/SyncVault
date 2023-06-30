@@ -30,9 +30,10 @@ void callbackDispatcher() {
         final authProvider =
             authInfo.where((element) => element.email == i.email).first;
         final res = await OneDriveAuth().refresh(authProvider).run();
-        res.bindFuture((r) async {
+        final a = await res.bindFuture((r) async {
           return await OneDrive().upload(i, r, none()).run();
-        }).match((l) => print(l.message), (r) => print(r));
+        }).run();
+        a.match((l) => debugPrint(l.message), (r) => debugPrint(r));
       }
     }
 
@@ -71,12 +72,12 @@ void main() async {
       }
     });
   } else {
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     Workmanager().registerPeriodicTask(
       'task-sync',
       'syncData',
       frequency: const Duration(minutes: 15), // Minimum possible duration :(
-      initialDelay: const Duration(seconds: 10),
+      initialDelay: const Duration(seconds: 5),
       existingWorkPolicy: ExistingWorkPolicy.replace,
     );
   }
