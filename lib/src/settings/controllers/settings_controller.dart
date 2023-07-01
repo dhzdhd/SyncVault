@@ -14,9 +14,7 @@ part 'settings_controller.g.dart';
 class Settings extends _$Settings {
   @override
   SettingsModel build() {
-    final a = init();
-    print(a);
-    return a;
+    return init();
   }
 
   static SettingsModel init() {

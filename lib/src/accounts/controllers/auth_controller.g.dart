@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'settings_controller.dart';
+part of 'auth_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$settingsHash() => r'91bd9d0e6b0b6287b065f7eecb765d381c01764c';
+String _$authHash() => r'8886ec9392f68fcd91b031554c52205a44563ee0';
 
-/// See also [Settings].
-@ProviderFor(Settings)
-final settingsProvider =
-    AutoDisposeNotifierProvider<Settings, SettingsModel>.internal(
-  Settings.new,
-  name: r'settingsProvider',
+/// See also [Auth].
+@ProviderFor(Auth)
+final authProvider =
+    AutoDisposeNotifierProvider<Auth, List<AuthProviderModel>>.internal(
+  Auth.new,
+  name: r'authProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$settingsHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$authHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$Settings = AutoDisposeNotifier<SettingsModel>;
+typedef _$Auth = AutoDisposeNotifier<List<AuthProviderModel>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

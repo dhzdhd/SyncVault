@@ -22,8 +22,8 @@ void callbackDispatcher() {
     await Hive.initFlutter();
     await Hive.openBox('vault');
 
-    final authInfo = AuthProviderNotifier.init();
-    final folderInfo = FolderNotifier.init();
+    final authInfo = Auth.init();
+    final folderInfo = Folder.init();
 
     for (final i in folderInfo) {
       if (i.isAutoSync) {

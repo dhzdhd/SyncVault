@@ -2,21 +2,21 @@ import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:hive/hive.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
 import 'package:syncvault/errors.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final folderProvider = StateNotifierProvider<FolderNotifier, List<FolderModel>>(
-  (ref) => FolderNotifier(ref),
-);
+part 'folder_controller.g.dart';
 
-class FolderNotifier extends StateNotifier<List<FolderModel>> {
-  FolderNotifier(this.ref) : super(init());
-
-  late final StateNotifierProviderRef<FolderNotifier, List<FolderModel>> ref;
+@riverpod
+class Folder extends _$Folder {
+  @override
+  List<FolderModel> build() {
+    return init();
+  }
 
   static List<FolderModel> init() {
     final List<dynamic> raw =

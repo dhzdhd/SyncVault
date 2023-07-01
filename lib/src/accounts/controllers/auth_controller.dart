@@ -2,24 +2,25 @@ import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:hive/hive.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_info_model.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
 import 'package:syncvault/errors.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_controller.g.dart';
 
 enum AuthProviderType {
   oneDrive,
   dropBox,
 }
 
-final authProvider =
-    StateNotifierProvider<AuthProviderNotifier, List<AuthProviderModel>>((ref) {
-  return AuthProviderNotifier();
-});
-
-class AuthProviderNotifier extends StateNotifier<List<AuthProviderModel>> {
-  AuthProviderNotifier() : super(init());
+@riverpod
+class Auth extends _$Auth {
+  @override
+  List<AuthProviderModel> build() {
+    return init();
+  }
 
   static List<AuthProviderModel> init() {
     final List<dynamic> raw =
