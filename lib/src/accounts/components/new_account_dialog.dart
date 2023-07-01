@@ -33,7 +33,7 @@ class NewAccountDialogWidget extends HookConsumerWidget {
           child: ElevatedButton(
             onPressed: () async {
               final res = await ref
-                  .watch(authProvider.notifier)
+                  .read(authProvider.notifier)
                   .signIn(selectedProvider.value)
                   .run();
               res.match((l) => debugPrint(l.message), (r) => null);

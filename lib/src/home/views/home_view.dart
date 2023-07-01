@@ -196,7 +196,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                 ..insert(index, true)
                                             ];
                                             final result = await ref
-                                                .watch(folderProvider.notifier)
+                                                .read(folderProvider.notifier)
                                                 .upload(e, none());
                                             progressVisibleList.value = [
                                               ...progressVisibleList.value

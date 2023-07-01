@@ -101,7 +101,7 @@ class AccountView extends ConsumerWidget {
                               ),
                               onTap: () async {
                                 final info = await ref
-                                    .watch(authProvider.notifier)
+                                    .read(authProvider.notifier)
                                     .getDriveInfo(e);
                                 info.match(
                                   (l) => ctx.showErrorSnackBar(

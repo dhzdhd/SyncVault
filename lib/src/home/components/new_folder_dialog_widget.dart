@@ -121,7 +121,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                 ),
                 (t) async {
                   final result = await ref
-                      .watch(folderProvider.notifier)
+                      .read(folderProvider.notifier)
                       .create(t.$1, t.$2, t.$3);
                   if (context.mounted) {
                     result.match(
