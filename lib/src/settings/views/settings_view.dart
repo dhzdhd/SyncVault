@@ -35,23 +35,24 @@ class SettingsView extends ConsumerWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     SizedBox(
-                      width: 150,
-                      child: DropdownButton<ThemeMode>(
-                        value: controller.themeMode,
-                        onChanged: controller.updateThemeMode,
-                        isExpanded: true,
-                        items: const [
-                          DropdownMenuItem(
+                      // width: 200,
+                      child: DropdownMenu<ThemeMode>(
+                        width: 160,
+                        enableSearch: false,
+                        initialSelection: controller.themeMode,
+                        onSelected: controller.updateThemeMode,
+                        dropdownMenuEntries: const [
+                          DropdownMenuEntry(
                             value: ThemeMode.system,
-                            child: Text('System Theme'),
+                            label: 'System Theme',
                           ),
-                          DropdownMenuItem(
+                          DropdownMenuEntry(
                             value: ThemeMode.light,
-                            child: Text('Light Theme'),
+                            label: 'Light Theme',
                           ),
-                          DropdownMenuItem(
+                          DropdownMenuEntry(
                             value: ThemeMode.dark,
-                            child: Text('Dark Theme'),
+                            label: 'Dark Theme',
                           )
                         ],
                       ),

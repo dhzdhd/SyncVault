@@ -171,19 +171,21 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Flexible(
-                                      child: SizedBox(
-                                        width: 50,
-                                        child: TextButton(
-                                          child: const Icon(Icons.open_in_new),
-                                          onPressed: () async {
-                                            await launchUrl(
-                                              Uri.file(e.folderPath),
-                                            );
-                                          },
+                                    if (Platform.isWindows)
+                                      Flexible(
+                                        child: SizedBox(
+                                          width: 50,
+                                          child: TextButton(
+                                            child:
+                                                const Icon(Icons.open_in_new),
+                                            onPressed: () async {
+                                              await launchUrl(
+                                                Uri.file(e.folderPath),
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
-                                    ),
                                     Flexible(
                                       child: SizedBox(
                                         width: 50,
