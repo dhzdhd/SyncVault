@@ -14,7 +14,6 @@ class SettingsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
-    final settingsNotifier = ref.watch(settingsProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -76,7 +75,9 @@ class SettingsView extends ConsumerWidget {
                         Switch(
                           value: settings.isSentryEnabled,
                           onChanged: (val) {
-                            settingsNotifier.setSentry(none());
+                            ref
+                                .read(settingsProvider.notifier)
+                                .setSentry(none());
                           },
                         )
                       ],

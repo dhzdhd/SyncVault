@@ -3,20 +3,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hive/hive.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../services/settings_service.dart';
 
-final settingsProvider =
-    StateNotifierProvider<SettingsNotifier, SettingsModel>((ref) {
-  return SettingsNotifier(ref);
-});
+part 'settings_controller.g.dart';
 
-class SettingsNotifier extends StateNotifier<SettingsModel> {
-  SettingsNotifier(this.ref) : super(init());
-
-  late final StateNotifierProviderRef<SettingsNotifier, SettingsModel> ref;
+@riverpod
+class Settings extends _$Settings {
+  @override
+  SettingsModel build() {
+    final a = init();
+    print(a);
+    return a;
+  }
 
   static SettingsModel init() {
     final Map<String, dynamic> raw = jsonDecode(
@@ -40,6 +41,7 @@ class SettingsNotifier extends StateNotifier<SettingsModel> {
         (t) => t,
       ),
     );
+    Hive.box('vault').put('settings', jsonEncode(state.toJson()));
   }
 }
 

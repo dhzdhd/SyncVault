@@ -89,7 +89,7 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('vault');
 
-  final settings = SettingsNotifier.init();
+  final settings = Settings.init();
   if (settings.isSentryEnabled) {
     await SentryFlutter.init(
       (options) {
