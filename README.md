@@ -8,4 +8,4 @@ Linux support is also planned.
 
 ## Status
 
-Currently in development, expect a pre-release build soon.
+Currently in development, expect a release build in the coming months.
