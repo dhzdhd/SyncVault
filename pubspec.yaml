@@ -32,6 +32,7 @@ dependencies:
   url_launcher: ^6.1.11
   workmanager: ^0.5.1
   riverpod_annotation: ^2.1.1
+  permission_handler: ^10.4.3
 
 dev_dependencies:
   flutter_test:

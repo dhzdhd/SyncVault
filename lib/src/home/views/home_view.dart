@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
@@ -120,6 +121,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             context.showErrorSnackBar('No accounts registered yet');
             return;
           }
+          print(await openAppSettings());
 
           progressVisibleList.value = [...progressVisibleList.value, false];
           await showDialog(

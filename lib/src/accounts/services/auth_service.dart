@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -17,6 +18,117 @@ abstract interface class AuthService {
   TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model);
   TaskEither<AppError, Map<String, dynamic>> getUserInfo(String accessToken);
   TaskEither<AppError, FolderInfoModel> getDriveInfo(String accessToken);
+}
+
+final class GoogleDriveAuth implements AuthService {
+  static const clientId =
+      '844110357681-uf9kcigbrju05jhebrr58388b3ij299d.apps.googleusercontent.com';
+  static const callbackUrlScheme = 'http://localhost:8006';
+  static const authHost = 'accounts.google.com';
+  static const apiHost = 'www.googleapis.com';
+
+  @override
+  TaskEither<AppError, AuthProviderModel> signIn() {
+    final codeUri = Uri.https(
+      authHost,
+      '/o/oauth2/v2/auth',
+      {
+        'client_id': clientId,
+        'response_type': 'code',
+        'redirect_uri': callbackUrlScheme,
+        'scope':
+            'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+        'state': '12345',
+        'token_access_type': 'offline',
+      },
+    );
+
+    return TaskEither.tryCatch(() async {
+      final result = switch (Platform.isAndroid) {
+        true => await FlutterWebAuth2.authenticate(
+            url: codeUri.toString(),
+            callbackUrlScheme: callbackUrlScheme,
+            preferEphemeral: true,
+          ),
+        false => await FlutterWebAuth2WindowsPlugin().authenticate(
+            url: codeUri.toString(),
+            callbackUrlScheme: callbackUrlScheme,
+            preferEphemeral: true,
+          ),
+      };
+
+      final code = Uri.parse(result).queryParameters['code'];
+
+      final tokenUri = Uri.https(
+        apiHost,
+        '/oauth2/v4/token',
+      );
+
+      final options = Options(
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      );
+      final response = await dio.postUri<Map<String, dynamic>>(
+        tokenUri,
+        data: {
+          'client_id': clientId,
+          'client_secret': '',
+          'code': code,
+          'grant_type': 'authorization_code',
+          'redirect_uri': callbackUrlScheme,
+        },
+        options: options,
+      );
+
+      final accessToken = response.data!['access_token'];
+      print(accessToken);
+      throw UnimplementedError();
+      final user = (await getUserInfo(accessToken).run()).match(
+        (l) => throw l,
+        (r) => r,
+      );
+
+      final folderIdResult = await DropBox()
+          .createFolder(
+            folderName: none(),
+            accessToken: accessToken,
+            folderId: none(),
+          )
+          .run();
+
+      return folderIdResult.match(
+        (e) => throw e,
+        (id) => AuthProviderModel(
+          accessToken: accessToken,
+          refreshToken: response.data!['refresh_token'],
+          expiresIn: response.data!['expires_in'],
+          provider: AuthProviderType.dropBox,
+          email: user['email'],
+          name: user['name']['display_name'],
+          createdAt: DateTime.now().toIso8601String(),
+          folderId: id,
+        ),
+      );
+    }, (error, stackTrace) {
+      print((error as Exception).segregate().message);
+      throw UnimplementedError();
+      return (error as Exception).segregate();
+    });
+  }
+
+  @override
+  TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model) {
+    throw UnimplementedError();
+  }
+
+  @override
+  TaskEither<AppError, Map<String, dynamic>> getUserInfo(String accessToken) {
+    throw UnimplementedError();
+  }
+
+  @override
+  TaskEither<AppError, FolderInfoModel> getDriveInfo(String accessToken) {
+    throw UnimplementedError();
+  }
 }
 
 final class DropBoxAuth implements AuthService {

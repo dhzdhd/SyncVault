@@ -6,6 +6,7 @@
 
 #include "generated_plugin_registrant.h"
 
+#include <permission_handler_windows/permission_handler_windows_plugin.h>
 #include <screen_retriever/screen_retriever_plugin.h>
 #include <sentry_flutter/sentry_flutter_plugin.h>
 #include <system_tray/system_tray_plugin.h>
@@ -14,6 +15,8 @@
 #include <window_to_front/window_to_front_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
+  PermissionHandlerWindowsPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("PermissionHandlerWindowsPlugin"));
   ScreenRetrieverPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("ScreenRetrieverPlugin"));
   SentryFlutterPluginRegisterWithRegistrar(

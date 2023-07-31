@@ -148,7 +148,7 @@ class AccountView extends ConsumerWidget {
                                           ElevatedButton(
                                             child: const Text('Confirm'),
                                             onPressed: () => ref
-                                                .watch(authProvider.notifier)
+                                                .read(authProvider.notifier)
                                                 .signOut(e),
                                           ),
                                         ],

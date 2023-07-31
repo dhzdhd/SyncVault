@@ -13,6 +13,7 @@ part 'auth_controller.g.dart';
 enum AuthProviderType {
   oneDrive,
   dropBox,
+  googleDrive,
 }
 
 @riverpod
@@ -37,6 +38,7 @@ class Auth extends _$Auth {
     return switch (provider) {
       AuthProviderType.oneDrive => OneDriveAuth().signIn(),
       AuthProviderType.dropBox => DropBoxAuth().signIn(),
+      AuthProviderType.googleDrive => GoogleDriveAuth().signIn(),
     }
         .map(
       (model) {
@@ -55,6 +57,7 @@ class Auth extends _$Auth {
     return switch (model.provider) {
       AuthProviderType.oneDrive => OneDriveAuth().refresh(model),
       AuthProviderType.dropBox => DropBoxAuth().refresh(model),
+      AuthProviderType.googleDrive => GoogleDriveAuth().refresh(model),
     }
         .map(
       (r) {
@@ -82,6 +85,8 @@ class Auth extends _$Auth {
           await OneDriveAuth().getDriveInfo(a.accessToken).run(),
         AuthProviderType.dropBox =>
           await DropBoxAuth().getDriveInfo(a.accessToken).run(),
+        AuthProviderType.googleDrive =>
+          await GoogleDriveAuth().getDriveInfo(a.accessToken).run(),
       };
     }).run();
   }
