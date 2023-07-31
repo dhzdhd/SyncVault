@@ -13,6 +13,7 @@ Linux support is also planned.
   - Google Drive
 - Android
   - OneDrive
+  - Google Drive
 
 ## Status
 

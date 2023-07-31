@@ -21,9 +21,12 @@ abstract interface class AuthService {
 }
 
 final class GoogleDriveAuth implements AuthService {
-  static const clientId =
-      '844110357681-uf9kcigbrju05jhebrr58388b3ij299d.apps.googleusercontent.com';
-  static const callbackUrlScheme = 'http://localhost:8006';
+  static final clientId = Platform.isAndroid
+      ? '844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q.apps.googleusercontent.com'
+      : '844110357681-uf9kcigbrju05jhebrr58388b3ij299d.apps.googleusercontent.com';
+  static final callbackUrlScheme = Platform.isAndroid
+      ? 'com.googleusercontent.apps.844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q'
+      : 'http://localhost:8006';
   static const authHost = 'accounts.google.com';
   static const apiHost = 'www.googleapis.com';
 
@@ -35,7 +38,8 @@ final class GoogleDriveAuth implements AuthService {
       {
         'client_id': clientId,
         'response_type': 'code',
-        'redirect_uri': callbackUrlScheme,
+        'redirect_uri':
+            Platform.isAndroid ? '$callbackUrlScheme:/' : callbackUrlScheme,
         'scope':
             'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
         'state': '12345',
@@ -58,6 +62,7 @@ final class GoogleDriveAuth implements AuthService {
       };
 
       final code = Uri.parse(result).queryParameters['code'];
+      print(code);
 
       final tokenUri = Uri.https(
         apiHost,
@@ -71,16 +76,18 @@ final class GoogleDriveAuth implements AuthService {
         tokenUri,
         data: {
           'client_id': clientId,
-          'client_secret': '',
+          'client_secret': Platform.isAndroid ? '' : '',
           'code': code,
           'grant_type': 'authorization_code',
-          'redirect_uri': callbackUrlScheme,
+          'redirect_uri':
+              Platform.isAndroid ? '$callbackUrlScheme:/' : callbackUrlScheme,
         },
         options: options,
       );
 
       final accessToken = response.data!['access_token'];
       print(accessToken);
+
       throw UnimplementedError();
       final user = (await getUserInfo(accessToken).run()).match(
         (l) => throw l,

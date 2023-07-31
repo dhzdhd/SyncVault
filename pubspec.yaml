@@ -33,6 +33,7 @@ dependencies:
   workmanager: ^0.5.1
   riverpod_annotation: ^2.1.1
   permission_handler: ^10.4.3
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
