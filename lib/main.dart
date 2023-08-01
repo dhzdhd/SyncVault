@@ -11,6 +11,7 @@ import 'package:syncvault/src/accounts/services/auth_service.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
@@ -21,6 +22,8 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
     await Hive.openBox('vault');
+
+    await dotenv.load();
 
     final authInfo = Auth.init();
     final folderInfo = Folder.init();

@@ -1,5 +1,5 @@
-import 'dart:ffi';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:dio/dio.dart';
 
@@ -28,6 +28,7 @@ final class GoogleDriveAuth implements AuthService {
       ? 'com.googleusercontent.apps.844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q'
       : 'http://localhost:8006';
   static const authHost = 'accounts.google.com';
+  static final clientSecret = dotenv.env['GDRIVE_SECRET']!;
   static const apiHost = 'www.googleapis.com';
 
   @override
@@ -153,6 +154,7 @@ final class GoogleDriveAuth implements AuthService {
 
 final class DropBoxAuth implements AuthService {
   static const clientId = 'ma42r73plfcdnrf';
+  static final clientSecret = dotenv.env['DROPBOX_SECRET']!;
   static final callbackUrlScheme = Platform.isAndroid
       ? 'https://www.dropbox.com/1/oauth2/redirect_receiver'
       : 'http://localhost:8006';
