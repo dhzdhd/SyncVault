@@ -22,6 +22,10 @@ jobs:
         with:
           channel: "stable"
 
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+
       - name: Build Android apps
         run: |
           flutter pub get
@@ -47,6 +51,10 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Build Windows
         run: |

@@ -62,7 +62,6 @@ final class GoogleDriveAuth implements AuthService {
       };
 
       final code = Uri.parse(result).queryParameters['code'];
-      print(code);
 
       final tokenUri = Uri.https(
         apiHost,
