@@ -86,13 +86,13 @@ final class GoogleDriveAuth implements AuthService {
       );
 
       final accessToken = response.data!['access_token'];
-      print(accessToken);
 
-      throw UnimplementedError();
       final user = (await getUserInfo(accessToken).run()).match(
         (l) => throw l,
         (r) => r,
       );
+      print(user);
+      throw UnimplementedError();
 
       final folderIdResult = await DropBox()
           .createFolder(
@@ -129,7 +129,21 @@ final class GoogleDriveAuth implements AuthService {
 
   @override
   TaskEither<AppError, Map<String, dynamic>> getUserInfo(String accessToken) {
-    throw UnimplementedError();
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer $accessToken',
+    });
+
+    return TaskEither.tryCatch(() async {
+      final uri = Uri.https(apiHost, '/oauth2/v1/userinfo?alt=json');
+      final response = await dio.postUri<Map<String, dynamic>>(
+        uri,
+        options: authOptions,
+      );
+
+      return response.data!;
+    }, (error, stackTrace) {
+      return (error as Exception).segregate();
+    });
   }
 
   @override

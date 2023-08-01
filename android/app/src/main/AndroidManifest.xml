@@ -36,13 +36,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="msauth" android:host="com.example.syncvault"/>
-                <!-- <data android:scheme="com.googleusercontent.apps.844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q"/> -->
             </intent-filter>
             <intent-filter android:label="flutter_web_auth_2">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- <data android:scheme="msauth" android:host="com.example.syncvault"/> -->
                 <data android:scheme="com.googleusercontent.apps.844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q"/>
             </intent-filter>
         </activity>
