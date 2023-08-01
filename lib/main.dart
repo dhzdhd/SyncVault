@@ -23,8 +23,6 @@ void callbackDispatcher() {
     await Hive.initFlutter();
     await Hive.openBox('vault');
 
-    await dotenv.load();
-
     final authInfo = Auth.init();
     final folderInfo = Folder.init();
 
@@ -46,6 +44,8 @@ void callbackDispatcher() {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load();
 
   if (Platform.isWindows) {
     final appWindow = AppWindow();

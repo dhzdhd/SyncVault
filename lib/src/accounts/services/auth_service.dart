@@ -47,6 +47,7 @@ final class GoogleDriveAuth implements AuthService {
         'token_access_type': 'offline',
       },
     );
+    print(clientSecret);
 
     return TaskEither.tryCatch(() async {
       final result = switch (Platform.isAndroid) {
@@ -76,9 +77,9 @@ final class GoogleDriveAuth implements AuthService {
         tokenUri,
         data: {
           'client_id': clientId,
-          'client_secret': Platform.isAndroid ? '' : '',
           'code': code,
           'grant_type': 'authorization_code',
+          if (Platform.isWindows) 'client_secret': clientSecret,
           'redirect_uri':
               Platform.isAndroid ? '$callbackUrlScheme:/' : callbackUrlScheme,
         },
@@ -203,7 +204,7 @@ final class DropBoxAuth implements AuthService {
         tokenUri,
         data: {
           'client_id': clientId,
-          'client_secret': '',
+          'client_secret': clientSecret,
           'code': code,
           'grant_type': 'authorization_code',
           'redirect_uri': callbackUrlScheme,
@@ -259,7 +260,7 @@ final class DropBoxAuth implements AuthService {
           uri,
           data: {
             'client_id': clientId,
-            'client_secret': '',
+            'client_secret': clientSecret,
             'grant_type': 'refresh_token',
             'redirect_uri': callbackUrlScheme,
             'refresh_token': model.refreshToken,
