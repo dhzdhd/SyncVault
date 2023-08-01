@@ -50,9 +50,14 @@ class AccountView extends ConsumerWidget {
                             Tooltip(
                               message: e.provider.name.capitalize(),
                               child: SvgPicture.asset(
-                                e.provider == AuthProviderType.oneDrive
-                                    ? 'assets/logos/onedrive.svg'
-                                    : 'assets/logos/dropbox.svg',
+                                switch (e.provider) {
+                                  AuthProviderType.oneDrive =>
+                                    'assets/logos/onedrive.svg',
+                                  AuthProviderType.dropBox =>
+                                    'assets/logos/dropbox.svg',
+                                  AuthProviderType.googleDrive =>
+                                    'assets/logos/gdrive.svg'
+                                },
                                 width: MediaQuery.of(context).size.width < 500
                                     ? 50
                                     : 70,
