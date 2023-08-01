@@ -121,13 +121,18 @@ class _HomeViewState extends ConsumerState<HomeView> {
             context.showErrorSnackBar('No accounts registered yet');
             return;
           }
-          print(await openAppSettings());
+
+          // if (Platform.isAndroid) {
+          //   print(await openAppSettings());
+          // }
 
           progressVisibleList.value = [...progressVisibleList.value, false];
-          await showDialog(
-            context: context,
-            builder: (context) => const NewFolderDialogWidget(),
-          );
+          if (context.mounted) {
+            await showDialog(
+              context: context,
+              builder: (context) => const NewFolderDialogWidget(),
+            );
+          }
         },
         child: const Icon(Icons.add),
       ),
