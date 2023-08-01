@@ -40,15 +40,24 @@ class Auth extends _$Auth {
       AuthProviderType.dropBox => DropBoxAuth().signIn(),
       AuthProviderType.googleDrive => GoogleDriveAuth().signIn(),
     }
-        .map(
+        .chainEither(
       (model) {
+        if (state.any((element) =>
+            (element.provider == model.provider) &&
+            (element.email == model.email))) {
+          return Left(GeneralError(
+            message: 'The provider already exists',
+            stackTrace: '',
+          ));
+        }
+
         state = [...state, model];
         Hive.box('vault').put(
           'accounts',
           jsonEncode(state.map((e) => e.toJson()).toList()),
         );
 
-        return ();
+        return const Right(());
       },
     );
   }
