@@ -47,7 +47,6 @@ final class GoogleDriveAuth implements AuthService {
         'token_access_type': 'offline',
       },
     );
-    print(clientSecret);
 
     return TaskEither.tryCatch(() async {
       final result = switch (Platform.isAndroid) {

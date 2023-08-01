@@ -27,6 +27,32 @@ abstract interface class DriveService {
   });
 }
 
+class GoogleDrive implements DriveService {
+  static const apiHost = 'www.googleapis.com';
+
+  @override
+  TaskEither<AppError, String> createFolder(
+      {required Option<String> folderName,
+      required String accessToken,
+      required Option<String> folderId}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  TaskEither<AppError, String> upload(FolderModel folderModel,
+      AuthProviderModel authModel, Option<String> filePath) {
+    throw UnimplementedError();
+  }
+
+  @override
+  TaskEither<AppError, String> delete(
+      {required FolderModel folderModel,
+      required AuthProviderModel authModel,
+      required String folderId}) {
+    throw UnimplementedError();
+  }
+}
+
 class DropBox implements DriveService {
   static const apiHost = 'api.dropbox.com';
   static const basePath = '/2/files';
