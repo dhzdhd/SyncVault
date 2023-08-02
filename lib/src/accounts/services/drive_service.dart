@@ -50,14 +50,12 @@ class GoogleDrive implements DriveService {
           data: {
             'mimeType': 'application/vnd.google-apps.folder',
             'name': folderName.match(
-              () => '/SyncVault',
-              (t) => '/SyncVault/$t',
+              () => 'SyncVault',
+              (t) => 'SyncVault/$t', // ! Does not work in google
             ),
           },
         );
-        print(response.data);
-        throw UnimplementedError();
-        return response.data!['metadata']['id'];
+        return response.data!['id'];
       },
       (error, stackTrace) {
         return (error as Exception).segregate();

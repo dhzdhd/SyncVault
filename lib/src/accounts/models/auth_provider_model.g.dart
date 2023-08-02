@@ -34,4 +34,5 @@ Map<String, dynamic> _$$_AuthProviderModelToJson(
 const _$AuthProviderTypeEnumMap = {
   AuthProviderType.oneDrive: 'oneDrive',
   AuthProviderType.dropBox: 'dropBox',
+  AuthProviderType.googleDrive: 'googleDrive',
 };
