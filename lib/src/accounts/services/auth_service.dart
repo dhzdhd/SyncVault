@@ -92,9 +92,8 @@ final class GoogleDriveAuth implements AuthService {
         (r) => r,
       );
       print(user);
-      throw UnimplementedError();
 
-      final folderIdResult = await DropBox()
+      final folderIdResult = await GoogleDrive()
           .createFolder(
             folderName: none(),
             accessToken: accessToken,
@@ -102,6 +101,7 @@ final class GoogleDriveAuth implements AuthService {
           )
           .run();
 
+      throw UnimplementedError();
       return folderIdResult.match(
         (e) => throw e,
         (id) => AuthProviderModel(
@@ -134,7 +134,8 @@ final class GoogleDriveAuth implements AuthService {
     });
 
     return TaskEither.tryCatch(() async {
-      final uri = Uri.https(apiHost, '/oauth2/v1/userinfo?alt=json');
+      final uri = Uri.https(apiHost, '/userinfo/v2/me');
+      print(uri.toString());
       final response = await dio.postUri<Map<String, dynamic>>(
         uri,
         options: authOptions,

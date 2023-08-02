@@ -29,13 +29,40 @@ abstract interface class DriveService {
 
 class GoogleDrive implements DriveService {
   static const apiHost = 'www.googleapis.com';
+  static const basePath = '/drive/v3';
 
   @override
   TaskEither<AppError, String> createFolder(
       {required Option<String> folderName,
       required String accessToken,
       required Option<String> folderId}) {
-    throw UnimplementedError();
+    final uri = Uri.https(apiHost, '$basePath/files');
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json'
+    });
+
+    return TaskEither.tryCatch(
+      () async {
+        final response = await dio.postUri<Map<String, dynamic>>(
+          uri,
+          options: authOptions,
+          data: {
+            'mimeType': 'application/vnd.google-apps.folder',
+            'name': folderName.match(
+              () => '/SyncVault',
+              (t) => '/SyncVault/$t',
+            ),
+          },
+        );
+        print(response.data);
+        throw UnimplementedError();
+        return response.data!['metadata']['id'];
+      },
+      (error, stackTrace) {
+        return (error as Exception).segregate();
+      },
+    );
   }
 
   @override
