@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -25,7 +26,10 @@ abstract interface class DriveService {
     required AuthProviderModel authModel,
     required String folderId,
   });
-  TaskEither<AppError, String> getAllFiles({required String accessToken});
+  TaskEither<AppError, List<Map<String, dynamic>>> getAllFiles({
+    required String accessToken,
+    required Option<Map<String, dynamic>> filter,
+  });
 }
 
 class GoogleDrive implements DriveService {
@@ -79,7 +83,10 @@ class GoogleDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> getAllFiles({required String accessToken}) {
+  TaskEither<AppError, List<Map<String, dynamic>>> getAllFiles({
+    required String accessToken,
+    required Option<Map<String, dynamic>> filter,
+  }) {
     final uri = Uri.https(apiHost, '$basePath/files');
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
@@ -92,8 +99,25 @@ class GoogleDrive implements DriveService {
           uri,
           options: authOptions,
         );
-        print(response.data!);
-        return '';
+
+        final rawFiles = response.data!['files'] as List<dynamic>;
+        final files = rawFiles
+            .map((e) => jsonDecode(jsonEncode(e)) as Map<String, dynamic>)
+            .toList();
+
+        filter.match(
+          () => files,
+          (t) => files.where(
+            (e) => t.keys.any(
+              (element) => e.lookup(element).match(
+                    () => false,
+                    (val) => val == t[element],
+                  ),
+            ),
+          ),
+        );
+
+        return files;
       },
       (error, stackTrace) {
         return (error as Exception).segregate();
@@ -154,7 +178,10 @@ class DropBox implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> getAllFiles({required String accessToken}) {
+  TaskEither<AppError, List<Map<String, dynamic>>> getAllFiles({
+    required String accessToken,
+    required Option<Map<String, dynamic>> filter,
+  }) {
     throw UnimplementedError();
   }
 }
@@ -313,7 +340,10 @@ class OneDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> getAllFiles({required String accessToken}) {
+  TaskEither<AppError, List<Map<String, dynamic>>> getAllFiles({
+    required String accessToken,
+    required Option<Map<String, dynamic>> filter,
+  }) {
     throw UnimplementedError();
   }
 }

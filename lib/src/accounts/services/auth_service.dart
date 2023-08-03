@@ -94,26 +94,40 @@ final class GoogleDriveAuth implements AuthService {
         (r) => r,
       );
 
-      final folderIdResult = await GoogleDrive()
-          .createFolder(
-            folderName: none(),
+      final folders = await GoogleDrive()
+          .getAllFiles(
             accessToken: accessToken,
-            folderId: none(),
+            filter: some(
+              {'name': 'SyncVault'},
+            ),
           )
           .run();
 
-      return folderIdResult.match(
-        (e) => throw e,
-        (id) => AuthProviderModel(
-          accessToken: accessToken,
-          refreshToken: response.data!['refresh_token'],
-          expiresIn: response.data!['expires_in'],
-          provider: AuthProviderType.googleDrive,
-          email: user['email'],
-          name: user['name'],
-          createdAt: DateTime.now().toIso8601String(),
-          folderId: id,
-        ),
+      final id = await folders.match((l) => throw l, (r) async {
+        if (r.isNotEmpty) {
+          return r[0]['id'] as String;
+        } else {
+          final folderIdResult = await GoogleDrive()
+              .createFolder(
+                folderName: none(),
+                accessToken: accessToken,
+                folderId: none(),
+              )
+              .run();
+
+          return folderIdResult.match((l) => throw l, (r) => r);
+        }
+      });
+
+      return AuthProviderModel(
+        accessToken: accessToken,
+        refreshToken: response.data!['refresh_token'],
+        expiresIn: response.data!['expires_in'],
+        provider: AuthProviderType.googleDrive,
+        email: user['email'],
+        name: user['name'],
+        createdAt: DateTime.now().toIso8601String(),
+        folderId: id,
       );
     }, (error, stackTrace) {
       return (error as Exception).segregate();
