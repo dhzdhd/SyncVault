@@ -195,7 +195,28 @@ final class GoogleDriveAuth implements AuthService {
 
   @override
   TaskEither<AppError, FolderInfoModel> getDriveInfo(String accessToken) {
-    throw UnimplementedError();
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer $accessToken',
+    });
+
+    final uri =
+        Uri.https(apiHost, '/drive/v3/about', {'fields': 'storageQuota'});
+
+    return TaskEither.tryCatch(
+      () async {
+        final response = await dio.getUri<Map<String, dynamic>>(
+          uri,
+          options: authOptions,
+        );
+
+        return FolderInfoModel(
+          remainingStorage: int.parse(response.data!['storageQuota']['limit']) -
+              int.parse(response.data!['storageQuota']['usage']),
+          usedStorage: int.parse(response.data!['storageQuota']['usage']),
+        );
+      },
+      (error, stackTrace) => error.segregate(),
+    );
   }
 }
 

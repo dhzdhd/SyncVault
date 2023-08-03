@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-extension ErrorSegregation on Exception {
+extension ErrorSegregation on Object {
   AppError segregate() {
     if (this is AppError) {
       return this as AppError;
