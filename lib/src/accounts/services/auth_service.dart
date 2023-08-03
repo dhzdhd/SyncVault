@@ -122,7 +122,42 @@ final class GoogleDriveAuth implements AuthService {
 
   @override
   TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model) {
-    throw UnimplementedError();
+    final prev = DateTime.parse(model.createdAt);
+    final now = DateTime.now();
+    final diff = prev.add(Duration(seconds: model.expiresIn)).compareTo(now);
+
+    return TaskEither.tryCatch(() async {
+      if (diff <= 0) {
+        final options = Options(
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        );
+        final uri = Uri.https(
+          apiHost,
+          '/oauth2/v4/token',
+        );
+        final response = await dio.postUri<Map<String, dynamic>>(
+          uri,
+          data: {
+            'client_id': clientId,
+            'grant_type': 'refresh_token',
+            if (Platform.isWindows) 'client_secret': clientSecret,
+            'redirect_uri':
+                Platform.isAndroid ? '$callbackUrlScheme:/' : callbackUrlScheme,
+            'refresh_token': model.refreshToken,
+          },
+          options: options,
+        );
+
+        return model.copyWith(
+          accessToken: response.data!['access_token'],
+          expiresIn: response.data!['expires_in'],
+        );
+      } else {
+        return model;
+      }
+    }, (error, stackTrace) {
+      return (error as Exception).segregate();
+    });
   }
 
   @override

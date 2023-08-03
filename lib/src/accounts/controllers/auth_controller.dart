@@ -88,14 +88,14 @@ class Auth extends _$Auth {
     AuthProviderModel model,
   ) async {
     // Improve with a TaskEither
-    return await (await refresh(model).run()).bindFuture((a) async {
-      return switch (a.provider) {
+    return await (await refresh(model).run()).bindFuture((e) async {
+      return switch (e.provider) {
         AuthProviderType.oneDrive =>
-          await OneDriveAuth().getDriveInfo(a.accessToken).run(),
+          await OneDriveAuth().getDriveInfo(e.accessToken).run(),
         AuthProviderType.dropBox =>
-          await DropBoxAuth().getDriveInfo(a.accessToken).run(),
+          await DropBoxAuth().getDriveInfo(e.accessToken).run(),
         AuthProviderType.googleDrive =>
-          await GoogleDriveAuth().getDriveInfo(a.accessToken).run(),
+          await GoogleDriveAuth().getDriveInfo(e.accessToken).run(),
       };
     }).run();
   }
