@@ -52,10 +52,12 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
           padding: const EdgeInsets.only(top: 16.0),
           child: DropdownButton<AuthProviderModel?>(
             items: driveInfo
-                .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e.email),
-                    ))
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text('${e.provider.name.capitalize()} - ${e.email}'),
+                  ),
+                )
                 .toList(),
             value: selectedProvider.value.toNullable(),
             isExpanded: true,
