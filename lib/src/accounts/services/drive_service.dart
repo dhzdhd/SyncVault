@@ -25,6 +25,7 @@ abstract interface class DriveService {
     required AuthProviderModel authModel,
     required String folderId,
   });
+  TaskEither<AppError, String> getAllFiles({required String accessToken});
 }
 
 class GoogleDrive implements DriveService {
@@ -76,6 +77,29 @@ class GoogleDrive implements DriveService {
       required String folderId}) {
     throw UnimplementedError();
   }
+
+  @override
+  TaskEither<AppError, String> getAllFiles({required String accessToken}) {
+    final uri = Uri.https(apiHost, '$basePath/files');
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json'
+    });
+
+    return TaskEither.tryCatch(
+      () async {
+        final response = await dio.getUri<Map<String, dynamic>>(
+          uri,
+          options: authOptions,
+        );
+        print(response.data!);
+        return '';
+      },
+      (error, stackTrace) {
+        return (error as Exception).segregate();
+      },
+    );
+  }
 }
 
 class DropBox implements DriveService {
@@ -126,6 +150,11 @@ class DropBox implements DriveService {
       {required FolderModel folderModel,
       required AuthProviderModel authModel,
       required String folderId}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  TaskEither<AppError, String> getAllFiles({required String accessToken}) {
     throw UnimplementedError();
   }
 }
@@ -281,5 +310,10 @@ class OneDrive implements DriveService {
         return (error as Exception).segregate();
       },
     );
+  }
+
+  @override
+  TaskEither<AppError, String> getAllFiles({required String accessToken}) {
+    throw UnimplementedError();
   }
 }

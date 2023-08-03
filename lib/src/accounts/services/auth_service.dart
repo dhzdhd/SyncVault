@@ -44,7 +44,7 @@ final class GoogleDriveAuth implements AuthService {
         'scope':
             'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
         'state': '12345',
-        'token_access_type': 'offline',
+        'access_type': 'offline',
       },
     );
 
@@ -81,6 +81,8 @@ final class GoogleDriveAuth implements AuthService {
           if (Platform.isWindows) 'client_secret': clientSecret,
           'redirect_uri':
               Platform.isAndroid ? '$callbackUrlScheme:/' : callbackUrlScheme,
+          'prompt': 'consent',
+          'access_type': 'offline',
         },
         options: options,
       );
@@ -104,7 +106,7 @@ final class GoogleDriveAuth implements AuthService {
         (e) => throw e,
         (id) => AuthProviderModel(
           accessToken: accessToken,
-          refreshToken: 'dummy', // ! Get refresh token
+          refreshToken: response.data!['refresh_token'],
           expiresIn: response.data!['expires_in'],
           provider: AuthProviderType.googleDrive,
           email: user['email'],
@@ -114,8 +116,6 @@ final class GoogleDriveAuth implements AuthService {
         ),
       );
     }, (error, stackTrace) {
-      // print((error as Exception).segregate().message);
-      // throw UnimplementedError();
       return (error as Exception).segregate();
     });
   }
