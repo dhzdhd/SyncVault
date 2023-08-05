@@ -130,7 +130,7 @@ final class GoogleDriveAuth implements AuthService {
         folderId: id,
       );
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -170,7 +170,7 @@ final class GoogleDriveAuth implements AuthService {
         return model;
       }
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -189,7 +189,7 @@ final class GoogleDriveAuth implements AuthService {
 
       return response.data!;
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -216,7 +216,7 @@ final class GoogleDriveAuth implements AuthService {
           totalStorage: int.parse(response.data!['storageQuota']['limit']),
         );
       },
-      (error, stackTrace) => error.segregate(),
+      (error, stackTrace) => error.segregateError(),
     );
   }
 }
@@ -308,7 +308,7 @@ final class DropBoxAuth implements AuthService {
         ),
       );
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -344,7 +344,7 @@ final class DropBoxAuth implements AuthService {
         return model;
       }
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -363,7 +363,7 @@ final class DropBoxAuth implements AuthService {
 
       return response.data!;
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -389,7 +389,7 @@ final class DropBoxAuth implements AuthService {
           totalStorage: response.data!['allocation']['allocated'] as int,
         );
       },
-      (error, stackTrace) => (error as Exception).segregate(),
+      (error, stackTrace) => error.segregateError(),
     );
   }
 }
@@ -480,7 +480,7 @@ final class OneDriveAuth implements AuthService {
         ),
       );
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -517,7 +517,7 @@ final class OneDriveAuth implements AuthService {
         return model;
       }
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -536,7 +536,7 @@ final class OneDriveAuth implements AuthService {
 
       return response.data!;
     }, (error, stackTrace) {
-      return (error as Exception).segregate();
+      return error.segregateError();
     });
   }
 
@@ -564,7 +564,7 @@ final class OneDriveAuth implements AuthService {
               response.data!['quota']['used'],
         );
       },
-      (error, stackTrace) => (error as Exception).segregate(),
+      (error, stackTrace) => error.segregateError(),
     );
   }
 }

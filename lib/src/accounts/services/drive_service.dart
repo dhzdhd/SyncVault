@@ -63,7 +63,7 @@ class GoogleDrive implements DriveService {
         return response.data!['id'];
       },
       (error, stackTrace) {
-        return (error as Exception).segregate();
+        return error.segregateError();
       },
     );
   }
@@ -120,7 +120,7 @@ class GoogleDrive implements DriveService {
         return files;
       },
       (error, stackTrace) {
-        return (error as Exception).segregate();
+        return error.segregateError();
       },
     );
   }
@@ -158,7 +158,7 @@ class DropBox implements DriveService {
         return response.data!['metadata']['id'];
       },
       (error, stackTrace) {
-        return (error as Exception).segregate();
+        return error.segregateError();
       },
     );
   }
@@ -216,7 +216,7 @@ class OneDrive implements DriveService {
         return response.data!['id'];
       },
       (error, stackTrace) {
-        return (error as Exception).segregate();
+        return error.segregateError();
       },
     );
   }
@@ -310,7 +310,7 @@ class OneDrive implements DriveService {
         return 'Success';
       },
       (error, stackTrace) {
-        return (error as Exception).segregate();
+        return error.segregateError();
       },
     );
   }
@@ -334,7 +334,7 @@ class OneDrive implements DriveService {
         return 'Success';
       },
       (error, stackTrace) {
-        return (error as Exception).segregate();
+        return error.segregateError();
       },
     );
   }
