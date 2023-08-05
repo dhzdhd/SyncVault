@@ -213,6 +213,7 @@ final class GoogleDriveAuth implements AuthService {
           remainingStorage: int.parse(response.data!['storageQuota']['limit']) -
               int.parse(response.data!['storageQuota']['usage']),
           usedStorage: int.parse(response.data!['storageQuota']['usage']),
+          totalStorage: int.parse(response.data!['storageQuota']['limit']),
         );
       },
       (error, stackTrace) => error.segregate(),
@@ -385,6 +386,7 @@ final class DropBoxAuth implements AuthService {
           remainingStorage: (response.data!['allocation']['allocated'] as int) -
               (response.data!['used'] as int),
           usedStorage: response.data!['used'],
+          totalStorage: response.data!['allocation']['allocated'] as int,
         );
       },
       (error, stackTrace) => (error as Exception).segregate(),
@@ -558,6 +560,8 @@ final class OneDriveAuth implements AuthService {
         return FolderInfoModel(
           remainingStorage: response.data!['quota']['remaining'],
           usedStorage: response.data!['quota']['used'],
+          totalStorage: response.data!['quota']['remaining'] +
+              response.data!['quota']['used'],
         );
       },
       (error, stackTrace) => (error as Exception).segregate(),

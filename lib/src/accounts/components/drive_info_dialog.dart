@@ -22,7 +22,7 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
                 height: 75,
                 child: Center(
                   child: Text(
-                    '${(model.usedStorage / model.remainingStorage * 100).toStringAsFixed(2)} %\nused',
+                    '${(model.usedStorage / model.totalStorage * 100).toStringAsFixed(2)} %\nused',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
@@ -34,7 +34,7 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
                 width: 75,
                 height: 75,
                 child: CircularProgressIndicator(
-                  value: model.usedStorage / model.remainingStorage,
+                  value: model.usedStorage / model.totalStorage,
                 ),
               ),
             ],
