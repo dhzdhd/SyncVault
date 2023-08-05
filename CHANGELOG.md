@@ -7,7 +7,16 @@ For currently known issues, check the [GitHub issues tab](https://github.com/dhz
 
 ### Additions
 
+- Added auto sync to Android.
+- Added Google Drive support to Windows and Android (cannot upload files yet).
+
 ### Fixes / Improvements
+
+- Fixed redundant account instances.
+- Fixed creation of duplicate `SyncVault` folders in Google Drive
+- Improved drive information UI and added total storage information.
+- Migrated dropdown widget to Material 3.
+- Added auth provider to dropdown in new folder dialog.
 
 ### Deletions
 
