@@ -14,16 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-FolderInfoModel _$FolderInfoModelFromJson(Map<String, dynamic> json) {
-  return _FolderInfoModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$FolderInfoModel {
   int get remainingStorage => throw _privateConstructorUsedError;
   int get usedStorage => throw _privateConstructorUsedError;
+  int get totalStorage => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $FolderInfoModelCopyWith<FolderInfoModel> get copyWith =>
       throw _privateConstructorUsedError;
@@ -35,7 +31,7 @@ abstract class $FolderInfoModelCopyWith<$Res> {
           FolderInfoModel value, $Res Function(FolderInfoModel) then) =
       _$FolderInfoModelCopyWithImpl<$Res, FolderInfoModel>;
   @useResult
-  $Res call({int remainingStorage, int usedStorage});
+  $Res call({int remainingStorage, int usedStorage, int totalStorage});
 }
 
 /// @nodoc
@@ -53,6 +49,7 @@ class _$FolderInfoModelCopyWithImpl<$Res, $Val extends FolderInfoModel>
   $Res call({
     Object? remainingStorage = null,
     Object? usedStorage = null,
+    Object? totalStorage = null,
   }) {
     return _then(_value.copyWith(
       remainingStorage: null == remainingStorage
@@ -62,6 +59,10 @@ class _$FolderInfoModelCopyWithImpl<$Res, $Val extends FolderInfoModel>
       usedStorage: null == usedStorage
           ? _value.usedStorage
           : usedStorage // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalStorage: null == totalStorage
+          ? _value.totalStorage
+          : totalStorage // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -75,7 +76,7 @@ abstract class _$$_FolderInfoModelCopyWith<$Res>
       __$$_FolderInfoModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int remainingStorage, int usedStorage});
+  $Res call({int remainingStorage, int usedStorage, int totalStorage});
 }
 
 /// @nodoc
@@ -91,6 +92,7 @@ class __$$_FolderInfoModelCopyWithImpl<$Res>
   $Res call({
     Object? remainingStorage = null,
     Object? usedStorage = null,
+    Object? totalStorage = null,
   }) {
     return _then(_$_FolderInfoModel(
       remainingStorage: null == remainingStorage
@@ -101,29 +103,34 @@ class __$$_FolderInfoModelCopyWithImpl<$Res>
           ? _value.usedStorage
           : usedStorage // ignore: cast_nullable_to_non_nullable
               as int,
+      totalStorage: null == totalStorage
+          ? _value.totalStorage
+          : totalStorage // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$_FolderInfoModel
     with DiagnosticableTreeMixin
     implements _FolderInfoModel {
   const _$_FolderInfoModel(
-      {required this.remainingStorage, required this.usedStorage});
-
-  factory _$_FolderInfoModel.fromJson(Map<String, dynamic> json) =>
-      _$$_FolderInfoModelFromJson(json);
+      {required this.remainingStorage,
+      required this.usedStorage,
+      required this.totalStorage});
 
   @override
   final int remainingStorage;
   @override
   final int usedStorage;
+  @override
+  final int totalStorage;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderInfoModel(remainingStorage: $remainingStorage, usedStorage: $usedStorage)';
+    return 'FolderInfoModel(remainingStorage: $remainingStorage, usedStorage: $usedStorage, totalStorage: $totalStorage)';
   }
 
   @override
@@ -132,7 +139,8 @@ class _$_FolderInfoModel
     properties
       ..add(DiagnosticsProperty('type', 'FolderInfoModel'))
       ..add(DiagnosticsProperty('remainingStorage', remainingStorage))
-      ..add(DiagnosticsProperty('usedStorage', usedStorage));
+      ..add(DiagnosticsProperty('usedStorage', usedStorage))
+      ..add(DiagnosticsProperty('totalStorage', totalStorage));
   }
 
   @override
@@ -143,39 +151,34 @@ class _$_FolderInfoModel
             (identical(other.remainingStorage, remainingStorage) ||
                 other.remainingStorage == remainingStorage) &&
             (identical(other.usedStorage, usedStorage) ||
-                other.usedStorage == usedStorage));
+                other.usedStorage == usedStorage) &&
+            (identical(other.totalStorage, totalStorage) ||
+                other.totalStorage == totalStorage));
   }
 
-  @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, remainingStorage, usedStorage);
+  int get hashCode =>
+      Object.hash(runtimeType, remainingStorage, usedStorage, totalStorage);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$_FolderInfoModelCopyWith<_$_FolderInfoModel> get copyWith =>
       __$$_FolderInfoModelCopyWithImpl<_$_FolderInfoModel>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_FolderInfoModelToJson(
-      this,
-    );
-  }
 }
 
 abstract class _FolderInfoModel implements FolderInfoModel {
   const factory _FolderInfoModel(
       {required final int remainingStorage,
-      required final int usedStorage}) = _$_FolderInfoModel;
-
-  factory _FolderInfoModel.fromJson(Map<String, dynamic> json) =
-      _$_FolderInfoModel.fromJson;
+      required final int usedStorage,
+      required final int totalStorage}) = _$_FolderInfoModel;
 
   @override
   int get remainingStorage;
   @override
   int get usedStorage;
+  @override
+  int get totalStorage;
   @override
   @JsonKey(ignore: true)
   _$$_FolderInfoModelCopyWith<_$_FolderInfoModel> get copyWith =>
