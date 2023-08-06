@@ -70,9 +70,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
             case ChangeType.REMOVE
                 when folders[i].isDeletionEnabled && folders[i].isAutoSync:
               {
-                ref
+                final result = await ref
                     .read(folderProvider.notifier)
-                    .delete(folders[i], some(event.path));
+                    .delete(folders[i], some(event.path))
+                    .run();
+
+                result.match(
+                    (l) => debugPrint(l.message), (r) => debugPrint('Success'));
               }
           }
         });

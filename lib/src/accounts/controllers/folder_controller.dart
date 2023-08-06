@@ -157,7 +157,7 @@ class Folder extends _$Folder {
         .first;
 
     return TaskEither.tryCatch(() async {
-      await ref
+      final result = await ref
           .read(authProvider.notifier)
           .refresh(oldAuthModel)
           .flatMap((r) => switch (model.provider) {
@@ -170,15 +170,17 @@ class Folder extends _$Folder {
               })
           .run();
 
-      if (path.isNone()) {
-        state = state.where((element) => element != model).toList();
-        Hive.box('vault').put(
-          'folders',
-          jsonEncode(state.map((e) => e.toJson()).toList()),
-        );
-      }
+      return result.match((l) => throw l, (r) {
+        if (path.isNone()) {
+          state = state.where((element) => element != model).toList();
+          Hive.box('vault').put(
+            'folders',
+            jsonEncode(state.map((e) => e.toJson()).toList()),
+          );
+        }
 
-      return ();
+        return ();
+      });
     }, (error, stackTrace) => error.segregateError());
   }
 }

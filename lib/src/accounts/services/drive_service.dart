@@ -349,20 +349,21 @@ class OneDrive implements DriveService {
 
     return TaskEither.tryCatch(
       () async {
-        final subPath = path.match(
-          () => 'items/${folderModel.folderId}',
+        final subPath = await path.match(
+          () => Future.value('items/${folderModel.folderId}'),
           (t) async {
-            final uri = Uri.https(apiHost, '$basePath/root:/$t');
+            final path =
+                Uri.file(t.replaceFirst(folderModel.folderPath, '')).path;
+
+            final uri = Uri.https(apiHost,
+                '$basePath/root:/SyncVault/${folderModel.folderName}$path');
             final response = await dio.getUri(uri, options: authOptions);
 
-            print(response.data); // ! get id
+            return response.data!['id'].toString();
           },
         );
 
-        throw UnimplementedError();
-
-        final uri = Uri.https(apiHost, '$basePath/$subPath/children');
-
+        final uri = Uri.https(apiHost, '$basePath/items/$subPath');
         await dio.deleteUri(uri, options: authOptions);
         return ();
       },
