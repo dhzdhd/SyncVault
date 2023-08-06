@@ -21,10 +21,10 @@ abstract interface class DriveService {
     AuthProviderModel authModel,
     Option<String> filePath,
   );
-  TaskEither<AppError, String> delete({
+  TaskEither<AppError, ()> delete({
     required FolderModel folderModel,
     required AuthProviderModel authModel,
-    required String folderId,
+    required Option<String> path,
   });
   TaskEither<AppError, List<Map<String, dynamic>>> getAllFiles({
     required String accessToken,
@@ -75,10 +75,11 @@ class GoogleDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> delete(
-      {required FolderModel folderModel,
-      required AuthProviderModel authModel,
-      required String folderId}) {
+  TaskEither<AppError, ()> delete({
+    required FolderModel folderModel,
+    required AuthProviderModel authModel,
+    required Option<String> path,
+  }) {
     throw UnimplementedError();
   }
 
@@ -170,11 +171,31 @@ class DropBox implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> delete(
-      {required FolderModel folderModel,
-      required AuthProviderModel authModel,
-      required String folderId}) {
-    throw UnimplementedError();
+  TaskEither<AppError, ()> delete({
+    required FolderModel folderModel,
+    required AuthProviderModel authModel,
+    required Option<String> path,
+  }) {
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer ${authModel.accessToken}',
+      'Content-Type': 'application/json'
+    });
+    final uri = Uri.https(apiHost, '/2/files/delete_v2');
+
+    return TaskEither.tryCatch(
+      () async {
+        await dio.deleteUri(uri, options: authOptions, data: {
+          'path': path.match(
+            () => '/SyncVault/${folderModel.folderName}/',
+            (t) => '/SyncVault/${folderModel.folderName}/$t',
+          ),
+        });
+        return ();
+      },
+      (error, stackTrace) {
+        return error.segregateError();
+      },
+    );
   }
 
   @override
@@ -316,22 +337,34 @@ class OneDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> delete({
+  TaskEither<AppError, ()> delete({
     required FolderModel folderModel,
     required AuthProviderModel authModel,
-    required String folderId,
+    required Option<String> path,
   }) {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer ${authModel.accessToken}',
       'Content-Type': 'application/json'
     });
-    final subPath = 'items/$folderId';
-    final uri = Uri.https(apiHost, '$basePath/$subPath/children');
 
     return TaskEither.tryCatch(
       () async {
+        final subPath = path.match(
+          () => 'items/${folderModel.folderId}',
+          (t) async {
+            final uri = Uri.https(apiHost, '$basePath/root:/$t');
+            final response = await dio.getUri(uri, options: authOptions);
+
+            print(response.data); // ! get id
+          },
+        );
+
+        throw UnimplementedError();
+
+        final uri = Uri.https(apiHost, '$basePath/$subPath/children');
+
         await dio.deleteUri(uri, options: authOptions);
-        return 'Success';
+        return ();
       },
       (error, stackTrace) {
         return error.segregateError();

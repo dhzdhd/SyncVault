@@ -56,17 +56,23 @@ class _HomeViewState extends ConsumerState<HomeView> {
           switch (event.type) {
             case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
               {
-                final result = await ref.read(folderProvider.notifier).upload(
+                final result = await ref
+                    .read(folderProvider.notifier)
+                    .upload(
                       folders[i],
                       some(event.path),
-                    );
+                    )
+                    .run();
 
                 result.match(
-                    (l) => debugPrint(l.message), (r) => debugPrint(r));
+                    (l) => debugPrint(l.message), (r) => debugPrint('Success'));
               }
-            case ChangeType.REMOVE when folders[i].isDeletionEnabled:
+            case ChangeType.REMOVE
+                when folders[i].isDeletionEnabled && folders[i].isAutoSync:
               {
-                ref.read(folderProvider.notifier).delete(folders[i]);
+                ref
+                    .read(folderProvider.notifier)
+                    .delete(folders[i], some(event.path));
               }
           }
         });
@@ -205,7 +211,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                             ];
                                             final result = await ref
                                                 .read(folderProvider.notifier)
-                                                .upload(e, none());
+                                                .upload(e, none())
+                                                .run();
                                             progressVisibleList.value = [
                                               ...progressVisibleList.value
                                                 ..removeAt(index)
@@ -219,7 +226,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                         l.message),
                                                 (r) =>
                                                     context.showSuccessSnackBar(
-                                                  content: r,
+                                                  content: 'Success',
                                                   action: none(),
                                                 ),
                                               );
@@ -243,7 +250,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
                                             ref
                                                 .watch(folderProvider.notifier)
-                                                .delete(e);
+                                                .delete(e, none());
                                             context.showSuccessSnackBar(
                                               content: 'Deleted folder',
                                               action: none(),

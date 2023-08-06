@@ -61,70 +61,124 @@ class Folder extends _$Folder {
     );
   }
 
-  Future<Either<AppError, String>> create(
+  TaskEither<AppError, ()> create(
     AuthProviderModel authModel,
     String folderPath,
     String folderName,
-  ) async {
-    await ref.read(authProvider.notifier).refresh(authModel).run();
-    final newAuthModel = ref
-        .read(authProvider)
-        .where((element) => element.email == authModel.email)
-        .first;
+  ) {
+    return TaskEither.tryCatch(() async {
+      final response =
+          await ref.read(authProvider.notifier).refresh(authModel).run();
 
-    // Perhaps make authModel mutable
-    final idResult = await OneDrive()
-        .createFolder(
-          folderName: some(folderName),
-          accessToken: newAuthModel.accessToken,
-          folderId: some(newAuthModel.folderId),
-        )
-        .run();
-    return idResult.bind((id) {
-      final folderModel = FolderModel(
-        email: authModel.email,
-        provider: authModel.provider,
-        folderPath: folderPath,
-        folderName: folderName,
-        folderId: id,
-        isAutoSync: true,
-        isDeletionEnabled: false,
-      );
+      final newAuthModel = response.match((l) => throw l, (r) => r);
 
-      state = [...state, folderModel];
-      Hive.box('vault').put(
-        'folders',
-        jsonEncode(state.map((e) => e.toJson()).toList()),
-      );
-      return right('Success');
-    });
+      // Perhaps make authModel mutable
+      final idResult = await switch (newAuthModel.provider) {
+        AuthProviderType.oneDrive => OneDrive(),
+        AuthProviderType.dropBox => DropBox(),
+        AuthProviderType.googleDrive => GoogleDrive()
+      }
+          .createFolder(
+            folderName: some(folderName),
+            accessToken: newAuthModel.accessToken,
+            folderId: some(newAuthModel.folderId),
+          )
+          .run();
+
+      return idResult.bind((id) {
+        final folderModel = FolderModel(
+          email: authModel.email,
+          provider: authModel.provider,
+          folderPath: folderPath,
+          folderName: folderName,
+          folderId: id,
+          isAutoSync: true,
+          isDeletionEnabled: false,
+        );
+
+        state = [...state, folderModel];
+        Hive.box('vault').put(
+          'folders',
+          jsonEncode(state.map((e) => e.toJson()).toList()),
+        );
+        return right('Success');
+      }).match((l) => throw l, (r) => ());
+    }, (error, stackTrace) => error.segregateError());
   }
 
-  Future<Either<AppError, String>> upload(
+  TaskEither<AppError, ()> upload(
     FolderModel folderModel,
     Option<String> filePath,
-  ) async {
+  ) {
     // Improvise
     final oldAuthModel = ref
         .read(authProvider)
-        .where((element) => element.email == folderModel.email)
+        .where(
+          (element) =>
+              element.email == folderModel.email &&
+              element.provider == folderModel.provider,
+        )
         .first;
 
-    await ref.read(authProvider.notifier).refresh(oldAuthModel).run();
+    return TaskEither.tryCatch(
+      () async {
+        // final authModel = ref
+        //     .read(authProvider)
+        //     .where((element) => element.email == folderModel.email)
+        //     .first;
 
-    final authModel = ref
-        .read(authProvider)
-        .where((element) => element.email == folderModel.email)
-        .first;
+        final response = await ref
+            .read(authProvider.notifier)
+            .refresh(oldAuthModel)
+            .flatMap((r) => switch (r.provider) {
+                  AuthProviderType.oneDrive =>
+                    OneDrive().upload(folderModel, r, filePath),
+                  AuthProviderType.dropBox =>
+                    DropBox().upload(folderModel, r, filePath),
+                  AuthProviderType.googleDrive =>
+                    GoogleDrive().upload(folderModel, r, filePath)
+                })
+            .run();
 
-    return await OneDrive().upload(folderModel, authModel, filePath).run();
+        return response.match((l) => throw l, (r) => ());
+      },
+      (error, stackTrace) => error.segregateError(),
+    );
   }
 
-  void delete(FolderModel model) {
-    state = state.where((element) => element != model).toList();
-    Hive.box('vault').put(
-      'folders',
-      jsonEncode(state.map((e) => e.toJson()).toList()),
-    );
+  TaskEither<AppError, ()> delete(FolderModel model, Option<String> path) {
+    final oldAuthModel = ref
+        .read(authProvider)
+        .where(
+          (element) =>
+              element.email == model.email &&
+              element.provider == model.provider,
+        )
+        .first;
+
+    return TaskEither.tryCatch(() async {
+      await ref
+          .read(authProvider.notifier)
+          .refresh(oldAuthModel)
+          .flatMap((r) => switch (model.provider) {
+                AuthProviderType.oneDrive => OneDrive()
+                    .delete(folderModel: model, authModel: r, path: path),
+                AuthProviderType.dropBox => DropBox()
+                    .delete(folderModel: model, authModel: r, path: path),
+                AuthProviderType.googleDrive => GoogleDrive()
+                    .delete(folderModel: model, authModel: r, path: path)
+              })
+          .run();
+
+      if (path.isNone()) {
+        state = state.where((element) => element != model).toList();
+        Hive.box('vault').put(
+          'folders',
+          jsonEncode(state.map((e) => e.toJson()).toList()),
+        );
+      }
+
+      return ();
+    }, (error, stackTrace) => error.segregateError());
   }
 }
