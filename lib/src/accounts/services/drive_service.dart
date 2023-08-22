@@ -14,7 +14,7 @@ abstract interface class DriveService {
   TaskEither<AppError, String> createFolder({
     required Option<String> folderName,
     required String accessToken,
-    required Option<String> folderId,
+    required Option<String> parentId,
   });
   TaskEither<AppError, String> upload(
     FolderModel folderModel,
@@ -37,10 +37,11 @@ class GoogleDrive implements DriveService {
   static const basePath = '/drive/v3';
 
   @override
-  TaskEither<AppError, String> createFolder(
-      {required Option<String> folderName,
-      required String accessToken,
-      required Option<String> folderId}) {
+  TaskEither<AppError, String> createFolder({
+    required Option<String> folderName,
+    required String accessToken,
+    required Option<String> parentId,
+  }) {
     final uri = Uri.https(apiHost, '$basePath/files');
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
@@ -56,8 +57,9 @@ class GoogleDrive implements DriveService {
             'mimeType': 'application/vnd.google-apps.folder',
             'name': folderName.match(
               () => 'SyncVault',
-              (t) => 'SyncVault/$t', // ! Does not work in google
+              (t) => t,
             ),
+            // 'parents': parentId.match(() => [], (t) => [t]),
           },
         );
         return response.data!['id'];
@@ -69,9 +71,113 @@ class GoogleDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> upload(FolderModel folderModel,
-      AuthProviderModel authModel, Option<String> filePath) {
-    throw UnimplementedError();
+  TaskEither<AppError, String> upload(
+    FolderModel folderModel,
+    AuthProviderModel authModel,
+    Option<String> filePath,
+  ) {
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer ${authModel.accessToken}',
+      'Content-Type': 'application/json'
+    });
+
+    final sessionUri = Uri.https(
+      apiHost,
+      '/upload$basePath/files',
+      {'uploadType': 'resumable'},
+    );
+
+    final folder = Directory(folderModel.folderPath);
+    final files = filePath.match(
+      () => folder.listSync(recursive: true, followLinks: false),
+      (t) => [File(t)],
+    );
+    debugPrint(files.toString());
+
+    final totalSize = files.fold(0, (prev, e) => prev + e.statSync().size);
+
+    final Map<String, String> idMap = {folder.path: folderModel.folderId};
+
+    return TaskEither.tryCatch(
+      () async {
+        for (final file in files) {
+          if (file is File) {
+            final fileName = file.uri.pathSegments.last;
+            final parentFolderDir = file.parent;
+
+            var tempAncestorDir = parentFolderDir;
+            List<Directory> ancestorDirList = [];
+            while (tempAncestorDir.path != folder.path) {
+              ancestorDirList.add(tempAncestorDir);
+              tempAncestorDir = tempAncestorDir.parent;
+            }
+
+            for (final i in ancestorDirList.reversed) {
+              if (!idMap.containsKey(i.path)) {
+                final result = await createFolder(
+                  folderName: some(
+                    i.uri.pathSegments.elementAt(i.uri.pathSegments.length - 2),
+                  ),
+                  accessToken: authModel.accessToken,
+                  parentId: some(idMap[i.parent.path]!),
+                ).run();
+
+                result.match(
+                  (l) => throw l,
+                  (r) => idMap[i.path] = r,
+                );
+              }
+            }
+            print(idMap);
+
+            final bytes = await file.readAsBytes();
+            final fileSize = '${file.statSync().size}';
+
+            if (bytes.isEmpty) {
+              // Throws Content-Range not found if file is empty
+              continue;
+            }
+
+            final sessionResponse = await dio.postUri<Map<String, dynamic>>(
+              sessionUri,
+              options: Options(headers: {
+                ...authOptions.headers!,
+                'X-Upload-Content-Type': 'application/octet-stream',
+                'X-Upload-Content-Length': fileSize,
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Content-Length': fileSize
+              }),
+              data: {
+                'name': file.uri.pathSegments.last,
+                'parents': [idMap[file.parent.path]]
+              },
+            );
+
+            final uploadUri =
+                Uri.parse(sessionResponse.headers.value('location')!);
+
+            final uploadResponse = await dio.putUri<Map<String, dynamic>>(
+              uploadUri,
+              options: Options(
+                contentType: 'application/octet-stream',
+                headers: {
+                  ...authOptions.headers!,
+                  'Content-Length': fileSize,
+                },
+              ),
+              data: file.openRead(),
+            );
+
+            print(uploadResponse.data);
+          }
+        }
+
+        return 'Success';
+      },
+      (error, stackTrace) {
+        return error.segregateError();
+      },
+    );
   }
 
   @override
@@ -129,13 +235,14 @@ class GoogleDrive implements DriveService {
 
 class DropBox implements DriveService {
   static const apiHost = 'api.dropbox.com';
+  static const uploadHost = 'content.dropbox.com';
   static const basePath = '/2/files';
 
   @override
   TaskEither<AppError, String> createFolder({
     required Option<String> folderName,
     required String accessToken,
-    required Option<String> folderId,
+    required Option<String> parentId,
   }) {
     final uri = Uri.https(apiHost, '$basePath/create_folder_v2');
     final authOptions = Options(headers: {
@@ -167,7 +274,106 @@ class DropBox implements DriveService {
   @override
   TaskEither<AppError, String> upload(FolderModel folderModel,
       AuthProviderModel authModel, Option<String> filePath) {
-    throw UnimplementedError();
+    final authOptions = Options(
+      headers: {
+        'Authorization': 'Bearer ${authModel.accessToken}',
+      },
+      contentType: 'application/octet-stream',
+    );
+
+    final folder = Directory(folderModel.folderPath);
+    final files = filePath.match(
+      () => folder.listSync(recursive: true, followLinks: false),
+      (t) => [File(t)],
+    );
+
+    debugPrint(files.toString());
+
+    final Map<String, String> idMap = {folder.path: folderModel.folderId};
+
+    return TaskEither.tryCatch(
+      () async {
+        final startUri = Uri.https(
+          uploadHost,
+          '$basePath/upload_session/start',
+        );
+
+        final response = await dio.postUri<Map<String, dynamic>>(
+          startUri,
+          options: authOptions,
+        );
+
+        final sessionId = response.data!['session_id'];
+
+        for (final file in files) {
+          if (file is File) {
+            final fileName = file.uri.pathSegments.last;
+            final parentFolderDir = file.parent;
+
+            var tempAncestorDir = parentFolderDir;
+            List<Directory> ancestorDirList = [];
+            while (tempAncestorDir.path != folder.path) {
+              ancestorDirList.add(tempAncestorDir);
+              tempAncestorDir = tempAncestorDir.parent;
+            }
+
+            for (final i in ancestorDirList.reversed) {
+              if (!idMap.containsKey(i.path)) {
+                final result = await createFolder(
+                  folderName: some(
+                    i.uri.pathSegments.elementAt(i.uri.pathSegments.length - 2),
+                  ),
+                  accessToken: authModel.accessToken,
+                  parentId: some(idMap[i.parent.path]!),
+                ).run();
+
+                result.match(
+                  (l) => throw l,
+                  (r) => idMap[i.path] = r,
+                );
+              }
+            }
+            // /${idMap[parentFolderDir.path]}:/$fileName:/createUploadSession
+            final startUri = Uri.https(
+              uploadHost,
+              '$basePath/upload_session/start',
+            );
+
+            final response = await dio.postUri<Map<String, dynamic>>(
+              startUri,
+              options: authOptions,
+              data: {
+                'item': {'@microsoft.graph.conflictBehavior': 'replace'},
+              },
+            );
+
+            final uploadUri = Uri.parse(response.data!['uploadUrl']);
+            final bytes = await file.readAsBytes();
+
+            if (bytes.isEmpty) {
+              // Throws Content-Range not found if file is empty
+              continue;
+            }
+
+            await dio.putUri(
+              uploadUri,
+              options: Options(
+                contentType: 'application/octet-stream',
+                headers: {
+                  'Content-Length': bytes.length.toString(),
+                },
+              ),
+              data: file.openRead(),
+            );
+          }
+        }
+
+        return 'Success';
+      },
+      (error, stackTrace) {
+        return error.segregateError();
+      },
+    );
   }
 
   @override
@@ -215,9 +421,9 @@ class OneDrive implements DriveService {
   TaskEither<AppError, String> createFolder({
     required Option<String> folderName,
     required String accessToken,
-    required Option<String> folderId,
+    required Option<String> parentId,
   }) {
-    final subPath = folderId.match(() => 'root', (t) => 'items/$t');
+    final subPath = parentId.match(() => 'root', (t) => 'items/$t');
     final uri = Uri.https(apiHost, '$basePath/$subPath/children');
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
@@ -284,7 +490,7 @@ class OneDrive implements DriveService {
                     i.uri.pathSegments.elementAt(i.uri.pathSegments.length - 2),
                   ),
                   accessToken: authModel.accessToken,
-                  folderId: some(idMap[i.parent.path]!),
+                  parentId: some(idMap[i.parent.path]!),
                 ).run();
 
                 result.match(

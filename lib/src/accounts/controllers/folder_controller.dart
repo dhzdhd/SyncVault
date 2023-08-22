@@ -81,7 +81,7 @@ class Folder extends _$Folder {
           .createFolder(
             folderName: some(folderName),
             accessToken: newAuthModel.accessToken,
-            folderId: some(newAuthModel.folderId),
+            parentId: some(newAuthModel.folderId),
           )
           .run();
 
