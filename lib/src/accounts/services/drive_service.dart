@@ -59,7 +59,7 @@ class GoogleDrive implements DriveService {
               () => 'SyncVault',
               (t) => t,
             ),
-            // 'parents': parentId.match(() => [], (t) => [t]),
+            if (parentId.isSome()) 'parents': [parentId.toNullable()!],
           },
         );
         return response.data!['id'];
