@@ -72,11 +72,15 @@ final lightTheme = ThemeData(
   brightness: Brightness.light,
   useMaterial3: true,
   colorScheme: lightColorScheme,
+  cardColor: lightColorScheme.onSecondary,
+  cardTheme: CardTheme(color: lightColorScheme.onSecondary),
   textTheme: const TextTheme(),
 );
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
   useMaterial3: true,
   colorScheme: darkColorScheme,
+  cardColor: darkColorScheme.onSecondary,
+  cardTheme: CardTheme(color: darkColorScheme.onSecondary),
   textTheme: const TextTheme(),
 );

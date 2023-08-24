@@ -30,9 +30,7 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
         padding: const EdgeInsets.all(4.0),
         child: Ink(
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? darkColorScheme.onSecondary
-                : lightColorScheme.inversePrimary,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: InkWell(
