@@ -130,14 +130,14 @@ class Folder extends _$Folder {
         final response = await ref
             .read(authProvider.notifier)
             .refresh(oldAuthModel)
-            .flatMap((r) => switch (r.provider) {
-                  AuthProviderType.oneDrive =>
-                    OneDrive().upload(folderModel, r, filePath),
-                  AuthProviderType.dropBox =>
-                    DropBox().upload(folderModel, r, filePath),
-                  AuthProviderType.googleDrive =>
-                    GoogleDrive().upload(folderModel, r, filePath)
-                })
+            .flatMap(
+              (r) => switch (r.provider) {
+                AuthProviderType.oneDrive => OneDrive(),
+                AuthProviderType.dropBox => DropBox(),
+                AuthProviderType.googleDrive => GoogleDrive()
+              }
+                  .upload(folderModel, r, filePath),
+            )
             .run();
 
         return response.match((l) => throw l, (r) => ());
@@ -160,14 +160,14 @@ class Folder extends _$Folder {
       final result = await ref
           .read(authProvider.notifier)
           .refresh(oldAuthModel)
-          .flatMap((r) => switch (model.provider) {
-                AuthProviderType.oneDrive => OneDrive()
-                    .delete(folderModel: model, authModel: r, path: path),
-                AuthProviderType.dropBox => DropBox()
-                    .delete(folderModel: model, authModel: r, path: path),
-                AuthProviderType.googleDrive => GoogleDrive()
-                    .delete(folderModel: model, authModel: r, path: path)
-              })
+          .flatMap(
+            (r) => switch (model.provider) {
+              AuthProviderType.oneDrive => OneDrive(),
+              AuthProviderType.dropBox => DropBox(),
+              AuthProviderType.googleDrive => GoogleDrive()
+            }
+                .delete(folderModel: model, authModel: r, path: path),
+          )
           .run();
 
       return result.match((l) => throw l, (r) {

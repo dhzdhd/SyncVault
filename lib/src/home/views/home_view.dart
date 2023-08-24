@@ -155,7 +155,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16.0),
                     child: Visibility(
-                      visible: progressVisibleList.value[index],
+                      visible: progressVisibleList.value.elementAt(index),
                       child: const SizedBox(
                         width: 20,
                         height: 20,
@@ -244,21 +244,25 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                         width: 50,
                                         child: TextButton(
                                           child: const Icon(Icons.delete),
-                                          onPressed: () {
-                                            progressVisibleList.value = [
-                                              ...progressVisibleList.value
-                                                ..removeAt(
-                                                  folderInfo.indexOf(e),
-                                                )
-                                            ];
+                                          onPressed: () async {
+                                            await ref
+                                                .read(folderProvider.notifier)
+                                                .delete(e, none())
+                                                .run();
 
-                                            ref
-                                                .watch(folderProvider.notifier)
-                                                .delete(e, none());
-                                            context.showSuccessSnackBar(
-                                              content: 'Deleted folder',
-                                              action: none(),
-                                            );
+                                            if (context.mounted) {
+                                              context.showSuccessSnackBar(
+                                                content: 'Deleted folder',
+                                                action: none(),
+                                              );
+                                            }
+                                            // progressVisibleList.value = [
+                                            //   ...progressVisibleList.value
+                                            //     ..removeAt(
+                                            //       folderInfo.indexOf(e),
+                                            //     )
+                                            // ];
+                                            // print(progressVisibleList.value);
                                           },
                                         ),
                                       ),

@@ -128,7 +128,6 @@ class GoogleDrive implements DriveService {
                 );
               }
             }
-            print(idMap);
 
             final bytes = await file.readAsBytes();
             final fileSize = '${file.statSync().size}';
