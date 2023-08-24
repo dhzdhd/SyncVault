@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
@@ -151,7 +152,33 @@ class _HomeViewState extends ConsumerState<HomeView> {
           children: folderInfo
               .mapWithIndex(
                 (e, index) => ExpandableCardWidget(
-                  title: e.folderName.capitalize(),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Tooltip(
+                        message: e.provider.name.capitalize(),
+                        child: SvgPicture.asset(
+                          switch (e.provider) {
+                            AuthProviderType.oneDrive =>
+                              'assets/logos/onedrive.svg',
+                            AuthProviderType.dropBox =>
+                              'assets/logos/dropbox.svg',
+                            AuthProviderType.googleDrive =>
+                              'assets/logos/gdrive.svg'
+                          },
+                          width: 25,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          e.folderName,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
+                    ],
+                  ),
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16.0),
                     child: Visibility(
