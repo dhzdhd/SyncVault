@@ -185,7 +185,53 @@ class GoogleDrive implements DriveService {
     required AuthProviderModel authModel,
     required Option<String> path,
   }) {
-    throw UnimplementedError();
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer ${authModel.accessToken}',
+      'Content-Type': 'application/json'
+    });
+
+    final uri = path.match(
+      () => Uri.https(apiHost, '$basePath/files/${folderModel.folderId}'),
+      (t) => Uri.https(''),
+    );
+
+    return TaskEither.tryCatch(() async {
+      // final resp = await getAllFiles(
+      //   accessToken: authModel.accessToken,
+      //   filter: some({
+      //     'name': Uri.file(path.toNullable()!).pathSegments.last,
+      //   }),
+      // ).run();
+      // print(resp);
+
+      await dio.deleteUri(uri, options: authOptions);
+      return ();
+    }, (error, stackTrace) => error.segregateError());
+
+    return TaskEither.tryCatch(
+      () async {
+        final subPath = await path.match(
+          () => Future.value('items/${folderModel.folderId}'),
+          (t) async {
+            final path =
+                Uri.file(t.replaceFirst(folderModel.folderPath, '')).path;
+
+            final uri = Uri.https(apiHost,
+                '$basePath/root:/SyncVault/${folderModel.folderName}$path');
+            final response = await dio.getUri(uri, options: authOptions);
+
+            return response.data!['id'].toString();
+          },
+        );
+
+        final uri = Uri.https(apiHost, '$basePath/items/$subPath');
+        await dio.deleteUri(uri, options: authOptions);
+        return ();
+      },
+      (error, stackTrace) {
+        return error.segregateError();
+      },
+    );
   }
 
   @override
