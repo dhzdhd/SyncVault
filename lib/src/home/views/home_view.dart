@@ -272,15 +272,21 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                         child: TextButton(
                                           child: const Icon(Icons.delete),
                                           onPressed: () async {
-                                            await ref
+                                            final result = await ref
                                                 .read(folderProvider.notifier)
                                                 .delete(e, none())
                                                 .run();
 
                                             if (context.mounted) {
-                                              context.showSuccessSnackBar(
-                                                content: 'Deleted folder',
-                                                action: none(),
+                                              result.match(
+                                                (l) =>
+                                                    context.showErrorSnackBar(
+                                                        l.message),
+                                                (r) =>
+                                                    context.showSuccessSnackBar(
+                                                  content: 'Deleted folder',
+                                                  action: none(),
+                                                ),
                                               );
                                             }
                                             // progressVisibleList.value = [
