@@ -15,6 +15,9 @@ _$_FolderModel _$$_FolderModelFromJson(Map<String, dynamic> json) =>
       folderId: json['folderId'] as String,
       isAutoSync: json['isAutoSync'] as bool,
       isDeletionEnabled: json['isDeletionEnabled'] as bool,
+      files: (json['files'] as List<dynamic>)
+          .map((e) => FileModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$_FolderModelToJson(_$_FolderModel instance) =>
@@ -26,6 +29,7 @@ Map<String, dynamic> _$$_FolderModelToJson(_$_FolderModel instance) =>
       'folderId': instance.folderId,
       'isAutoSync': instance.isAutoSync,
       'isDeletionEnabled': instance.isDeletionEnabled,
+      'files': instance.files,
     };
 
 const _$AuthProviderTypeEnumMap = {

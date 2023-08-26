@@ -27,6 +27,7 @@ mixin _$FolderModel {
   String get folderId => throw _privateConstructorUsedError;
   bool get isAutoSync => throw _privateConstructorUsedError;
   bool get isDeletionEnabled => throw _privateConstructorUsedError;
+  List<FileModel> get files => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,7 +48,8 @@ abstract class $FolderModelCopyWith<$Res> {
       String folderName,
       String folderId,
       bool isAutoSync,
-      bool isDeletionEnabled});
+      bool isDeletionEnabled,
+      List<FileModel> files});
 }
 
 /// @nodoc
@@ -70,6 +72,7 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
     Object? folderId = null,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
+    Object? files = null,
   }) {
     return _then(_value.copyWith(
       email: null == email
@@ -100,6 +103,10 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
           ? _value.isDeletionEnabled
           : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      files: null == files
+          ? _value.files
+          : files // ignore: cast_nullable_to_non_nullable
+              as List<FileModel>,
     ) as $Val);
   }
 }
@@ -119,7 +126,8 @@ abstract class _$$_FolderModelCopyWith<$Res>
       String folderName,
       String folderId,
       bool isAutoSync,
-      bool isDeletionEnabled});
+      bool isDeletionEnabled,
+      List<FileModel> files});
 }
 
 /// @nodoc
@@ -140,6 +148,7 @@ class __$$_FolderModelCopyWithImpl<$Res>
     Object? folderId = null,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
+    Object? files = null,
   }) {
     return _then(_$_FolderModel(
       email: null == email
@@ -170,6 +179,10 @@ class __$$_FolderModelCopyWithImpl<$Res>
           ? _value.isDeletionEnabled
           : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      files: null == files
+          ? _value._files
+          : files // ignore: cast_nullable_to_non_nullable
+              as List<FileModel>,
     ));
   }
 }
@@ -184,7 +197,9 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
       required this.folderName,
       required this.folderId,
       required this.isAutoSync,
-      required this.isDeletionEnabled});
+      required this.isDeletionEnabled,
+      required final List<FileModel> files})
+      : _files = files;
 
   factory _$_FolderModel.fromJson(Map<String, dynamic> json) =>
       _$$_FolderModelFromJson(json);
@@ -203,10 +218,17 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
   final bool isAutoSync;
   @override
   final bool isDeletionEnabled;
+  final List<FileModel> _files;
+  @override
+  List<FileModel> get files {
+    if (_files is EqualUnmodifiableListView) return _files;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_files);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(email: $email, provider: $provider, folderPath: $folderPath, folderName: $folderName, folderId: $folderId, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled)';
+    return 'FolderModel(email: $email, provider: $provider, folderPath: $folderPath, folderName: $folderName, folderId: $folderId, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, files: $files)';
   }
 
   @override
@@ -220,7 +242,8 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
       ..add(DiagnosticsProperty('folderName', folderName))
       ..add(DiagnosticsProperty('folderId', folderId))
       ..add(DiagnosticsProperty('isAutoSync', isAutoSync))
-      ..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled));
+      ..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))
+      ..add(DiagnosticsProperty('files', files));
   }
 
   @override
@@ -240,13 +263,22 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
             (identical(other.isAutoSync, isAutoSync) ||
                 other.isAutoSync == isAutoSync) &&
             (identical(other.isDeletionEnabled, isDeletionEnabled) ||
-                other.isDeletionEnabled == isDeletionEnabled));
+                other.isDeletionEnabled == isDeletionEnabled) &&
+            const DeepCollectionEquality().equals(other._files, _files));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, email, provider, folderPath,
-      folderName, folderId, isAutoSync, isDeletionEnabled);
+  int get hashCode => Object.hash(
+      runtimeType,
+      email,
+      provider,
+      folderPath,
+      folderName,
+      folderId,
+      isAutoSync,
+      isDeletionEnabled,
+      const DeepCollectionEquality().hash(_files));
 
   @JsonKey(ignore: true)
   @override
@@ -270,7 +302,8 @@ abstract class _FolderModel implements FolderModel {
       required final String folderName,
       required final String folderId,
       required final bool isAutoSync,
-      required final bool isDeletionEnabled}) = _$_FolderModel;
+      required final bool isDeletionEnabled,
+      required final List<FileModel> files}) = _$_FolderModel;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
       _$_FolderModel.fromJson;
@@ -289,6 +322,8 @@ abstract class _FolderModel implements FolderModel {
   bool get isAutoSync;
   @override
   bool get isDeletionEnabled;
+  @override
+  List<FileModel> get files;
   @override
   @JsonKey(ignore: true)
   _$$_FolderModelCopyWith<_$_FolderModel> get copyWith =>

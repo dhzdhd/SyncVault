@@ -75,11 +75,12 @@ class Folder extends _$Folder {
       final newAuthModel = response.match((l) => throw l, (r) => r);
 
       // Perhaps make authModel mutable
-      final idResult = await switch (newAuthModel.provider) {
+      final provider = switch (newAuthModel.provider) {
         AuthProviderType.oneDrive => OneDrive(),
         AuthProviderType.dropBox => DropBox(),
         AuthProviderType.googleDrive => GoogleDrive()
-      }
+      };
+      final idResult = await provider
           .createFolder(
             folderName: some(folderName),
             accessToken: newAuthModel.accessToken,
@@ -87,24 +88,28 @@ class Folder extends _$Folder {
           )
           .run();
 
-      return idResult.bind((id) {
-        final folderModel = FolderModel(
-          email: authModel.email,
-          provider: authModel.provider,
-          folderPath: folderPath,
-          folderName: folderName,
-          folderId: id,
-          isAutoSync: true,
-          isDeletionEnabled: false,
-        );
+      return idResult
+          .bindFuture((id) async {
+            final folderModel = FolderModel(
+              email: authModel.email,
+              provider: authModel.provider,
+              folderPath: folderPath,
+              folderName: folderName,
+              folderId: id,
+              isAutoSync: true,
+              isDeletionEnabled: false,
+              files: [],
+            );
 
-        state = [...state, folderModel];
-        Hive.box('vault').put(
-          'folders',
-          jsonEncode(state.map((e) => e.toJson()).toList()),
-        );
-        return right('Success');
-      }).match((l) => throw l, (r) => ());
+            state = [...state, folderModel];
+            Hive.box('vault').put(
+              'folders',
+              jsonEncode(state.map((e) => e.toJson()).toList()),
+            );
+            return right('Success');
+          })
+          .match((l) => throw l, (r) => ())
+          .run();
     }, (error, stackTrace) => error.segregateError());
   }
 
