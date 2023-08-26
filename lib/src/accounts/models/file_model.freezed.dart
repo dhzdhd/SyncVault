@@ -22,10 +22,11 @@ FileModel _$FileModelFromJson(Map<String, dynamic> json) {
 mixin _$FileModel {
   Option<String> get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get path => throw _privateConstructorUsedError;
-  bool get isDir => throw _privateConstructorUsedError;
-  String get parentPath => throw _privateConstructorUsedError;
-  Option<String> get child => throw _privateConstructorUsedError;
+  @FileSystemEntityConverter()
+  FileSystemEntity get file => throw _privateConstructorUsedError;
+  @DirectoryConverter()
+  Directory get parent => throw _privateConstructorUsedError;
+  Option<String> get childPath => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,10 +42,9 @@ abstract class $FileModelCopyWith<$Res> {
   $Res call(
       {Option<String> id,
       String name,
-      String path,
-      bool isDir,
-      String parentPath,
-      Option<String> child});
+      @FileSystemEntityConverter() FileSystemEntity file,
+      @DirectoryConverter() Directory parent,
+      Option<String> childPath});
 }
 
 /// @nodoc
@@ -62,10 +62,9 @@ class _$FileModelCopyWithImpl<$Res, $Val extends FileModel>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? path = null,
-    Object? isDir = null,
-    Object? parentPath = null,
-    Object? child = null,
+    Object? file = null,
+    Object? parent = null,
+    Object? childPath = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -76,21 +75,17 @@ class _$FileModelCopyWithImpl<$Res, $Val extends FileModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
-              as String,
-      isDir: null == isDir
-          ? _value.isDir
-          : isDir // ignore: cast_nullable_to_non_nullable
-              as bool,
-      parentPath: null == parentPath
-          ? _value.parentPath
-          : parentPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      child: null == child
-          ? _value.child
-          : child // ignore: cast_nullable_to_non_nullable
+      file: null == file
+          ? _value.file
+          : file // ignore: cast_nullable_to_non_nullable
+              as FileSystemEntity,
+      parent: null == parent
+          ? _value.parent
+          : parent // ignore: cast_nullable_to_non_nullable
+              as Directory,
+      childPath: null == childPath
+          ? _value.childPath
+          : childPath // ignore: cast_nullable_to_non_nullable
               as Option<String>,
     ) as $Val);
   }
@@ -106,10 +101,9 @@ abstract class _$$_FileModelCopyWith<$Res> implements $FileModelCopyWith<$Res> {
   $Res call(
       {Option<String> id,
       String name,
-      String path,
-      bool isDir,
-      String parentPath,
-      Option<String> child});
+      @FileSystemEntityConverter() FileSystemEntity file,
+      @DirectoryConverter() Directory parent,
+      Option<String> childPath});
 }
 
 /// @nodoc
@@ -125,10 +119,9 @@ class __$$_FileModelCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? path = null,
-    Object? isDir = null,
-    Object? parentPath = null,
-    Object? child = null,
+    Object? file = null,
+    Object? parent = null,
+    Object? childPath = null,
   }) {
     return _then(_$_FileModel(
       id: null == id
@@ -139,21 +132,17 @@ class __$$_FileModelCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
-              as String,
-      isDir: null == isDir
-          ? _value.isDir
-          : isDir // ignore: cast_nullable_to_non_nullable
-              as bool,
-      parentPath: null == parentPath
-          ? _value.parentPath
-          : parentPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      child: null == child
-          ? _value.child
-          : child // ignore: cast_nullable_to_non_nullable
+      file: null == file
+          ? _value.file
+          : file // ignore: cast_nullable_to_non_nullable
+              as FileSystemEntity,
+      parent: null == parent
+          ? _value.parent
+          : parent // ignore: cast_nullable_to_non_nullable
+              as Directory,
+      childPath: null == childPath
+          ? _value.childPath
+          : childPath // ignore: cast_nullable_to_non_nullable
               as Option<String>,
     ));
   }
@@ -165,10 +154,9 @@ class _$_FileModel with DiagnosticableTreeMixin implements _FileModel {
   const _$_FileModel(
       {required this.id,
       required this.name,
-      required this.path,
-      required this.isDir,
-      required this.parentPath,
-      required this.child});
+      @FileSystemEntityConverter() required this.file,
+      @DirectoryConverter() required this.parent,
+      required this.childPath});
 
   factory _$_FileModel.fromJson(Map<String, dynamic> json) =>
       _$$_FileModelFromJson(json);
@@ -178,17 +166,17 @@ class _$_FileModel with DiagnosticableTreeMixin implements _FileModel {
   @override
   final String name;
   @override
-  final String path;
+  @FileSystemEntityConverter()
+  final FileSystemEntity file;
   @override
-  final bool isDir;
+  @DirectoryConverter()
+  final Directory parent;
   @override
-  final String parentPath;
-  @override
-  final Option<String> child;
+  final Option<String> childPath;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FileModel(id: $id, name: $name, path: $path, isDir: $isDir, parentPath: $parentPath, child: $child)';
+    return 'FileModel(id: $id, name: $name, file: $file, parent: $parent, childPath: $childPath)';
   }
 
   @override
@@ -198,10 +186,9 @@ class _$_FileModel with DiagnosticableTreeMixin implements _FileModel {
       ..add(DiagnosticsProperty('type', 'FileModel'))
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('path', path))
-      ..add(DiagnosticsProperty('isDir', isDir))
-      ..add(DiagnosticsProperty('parentPath', parentPath))
-      ..add(DiagnosticsProperty('child', child));
+      ..add(DiagnosticsProperty('file', file))
+      ..add(DiagnosticsProperty('parent', parent))
+      ..add(DiagnosticsProperty('childPath', childPath));
   }
 
   @override
@@ -211,17 +198,16 @@ class _$_FileModel with DiagnosticableTreeMixin implements _FileModel {
             other is _$_FileModel &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.path, path) || other.path == path) &&
-            (identical(other.isDir, isDir) || other.isDir == isDir) &&
-            (identical(other.parentPath, parentPath) ||
-                other.parentPath == parentPath) &&
-            (identical(other.child, child) || other.child == child));
+            (identical(other.file, file) || other.file == file) &&
+            (identical(other.parent, parent) || other.parent == parent) &&
+            (identical(other.childPath, childPath) ||
+                other.childPath == childPath));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, name, path, isDir, parentPath, child);
+      Object.hash(runtimeType, id, name, file, parent, childPath);
 
   @JsonKey(ignore: true)
   @override
@@ -241,10 +227,9 @@ abstract class _FileModel implements FileModel {
   const factory _FileModel(
       {required final Option<String> id,
       required final String name,
-      required final String path,
-      required final bool isDir,
-      required final String parentPath,
-      required final Option<String> child}) = _$_FileModel;
+      @FileSystemEntityConverter() required final FileSystemEntity file,
+      @DirectoryConverter() required final Directory parent,
+      required final Option<String> childPath}) = _$_FileModel;
 
   factory _FileModel.fromJson(Map<String, dynamic> json) =
       _$_FileModel.fromJson;
@@ -254,13 +239,13 @@ abstract class _FileModel implements FileModel {
   @override
   String get name;
   @override
-  String get path;
+  @FileSystemEntityConverter()
+  FileSystemEntity get file;
   @override
-  bool get isDir;
+  @DirectoryConverter()
+  Directory get parent;
   @override
-  String get parentPath;
-  @override
-  Option<String> get child;
+  Option<String> get childPath;
   @override
   @JsonKey(ignore: true)
   _$$_FileModelCopyWith<_$_FileModel> get copyWith =>
