@@ -4,7 +4,9 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hive/hive.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
-import 'package:syncvault/src/accounts/services/auth_service.dart';
+import 'package:syncvault/src/accounts/services/auth/dropbox.dart';
+import 'package:syncvault/src/accounts/services/auth/gdrive.dart';
+import 'package:syncvault/src/accounts/services/auth/onedrive.dart';
 import 'package:syncvault/errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

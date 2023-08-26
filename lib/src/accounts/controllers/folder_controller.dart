@@ -5,9 +5,11 @@ import 'package:hive/hive.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
-import 'package:syncvault/src/accounts/services/drive_service.dart';
 import 'package:syncvault/errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:syncvault/src/accounts/services/drive/dropbox.dart';
+import 'package:syncvault/src/accounts/services/drive/gdrive.dart';
+import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
 
 part 'folder_controller.g.dart';
 

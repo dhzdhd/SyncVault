@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:syncvault/src/settings/controllers/theme_controller.dart';
 
 class ExpandableCardWidget extends StatefulWidget {
   const ExpandableCardWidget({
