@@ -73,7 +73,7 @@ class GoogleDrive implements DriveService {
     );
     debugPrint(files.toString());
 
-    final totalSize = files.fold(0, (prev, e) => prev + e.statSync().size);
+    // final totalSize = files.fold(0, (prev, e) => prev + e.statSync().size);
 
     final Map<String, String> idMap = {folder.path: folderModel.folderId};
 
@@ -81,7 +81,7 @@ class GoogleDrive implements DriveService {
       () async {
         for (final file in files) {
           if (file is File) {
-            final fileName = file.uri.pathSegments.last;
+            // final fileName = file.uri.pathSegments.last;
             final parentFolderDir = file.parent;
 
             var tempAncestorDir = parentFolderDir;
@@ -134,7 +134,7 @@ class GoogleDrive implements DriveService {
             final uploadUri =
                 Uri.parse(sessionResponse.headers.value('location')!);
 
-            final uploadResponse = await dio.putUri<Map<String, dynamic>>(
+            await dio.putUri<Map<String, dynamic>>(
               uploadUri,
               options: Options(
                 contentType: 'application/octet-stream',
@@ -145,8 +145,6 @@ class GoogleDrive implements DriveService {
               ),
               data: file.openRead(),
             );
-
-            print(uploadResponse.data);
           }
         }
 
@@ -187,30 +185,30 @@ class GoogleDrive implements DriveService {
       return ();
     }, (error, stackTrace) => error.segregateError());
 
-    return TaskEither.tryCatch(
-      () async {
-        final subPath = await path.match(
-          () => Future.value('items/${folderModel.folderId}'),
-          (t) async {
-            final path =
-                Uri.file(t.replaceFirst(folderModel.folderPath, '')).path;
+    // return TaskEither.tryCatch(
+    //   () async {
+    //     final subPath = await path.match(
+    //       () => Future.value('items/${folderModel.folderId}'),
+    //       (t) async {
+    //         final path =
+    //             Uri.file(t.replaceFirst(folderModel.folderPath, '')).path;
 
-            final uri = Uri.https(apiHost,
-                '$basePath/root:/SyncVault/${folderModel.folderName}$path');
-            final response = await dio.getUri(uri, options: authOptions);
+    //         final uri = Uri.https(apiHost,
+    //             '$basePath/root:/SyncVault/${folderModel.folderName}$path');
+    //         final response = await dio.getUri(uri, options: authOptions);
 
-            return response.data!['id'].toString();
-          },
-        );
+    //         return response.data!['id'].toString();
+    //       },
+    //     );
 
-        final uri = Uri.https(apiHost, '$basePath/items/$subPath');
-        await dio.deleteUri(uri, options: authOptions);
-        return ();
-      },
-      (error, stackTrace) {
-        return error.segregateError();
-      },
-    );
+    //     final uri = Uri.https(apiHost, '$basePath/items/$subPath');
+    //     await dio.deleteUri(uri, options: authOptions);
+    //     return ();
+    //   },
+    //   (error, stackTrace) {
+    //     return error.segregateError();
+    //   },
+    // );
   }
 
   @override

@@ -75,16 +75,16 @@ class DropBox implements DriveService {
           '$basePath/upload_session/start',
         );
 
-        final response = await dio.postUri<Map<String, dynamic>>(
+        await dio.postUri<Map<String, dynamic>>(
           startUri,
           options: authOptions,
         );
 
-        final sessionId = response.data!['session_id'];
+        // final sessionId = response.data!['session_id'];
 
         for (final file in files) {
           if (file is File) {
-            final fileName = file.uri.pathSegments.last;
+            // final fileName = file.uri.pathSegments.last;
             final parentFolderDir = file.parent;
 
             var tempAncestorDir = parentFolderDir;
