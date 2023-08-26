@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'folder_info_model.dart';
+part of 'drive_info_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,29 +15,29 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$FolderInfoModel {
+mixin _$DriveInfoModel {
   int get remainingStorage => throw _privateConstructorUsedError;
   int get usedStorage => throw _privateConstructorUsedError;
   int get totalStorage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $FolderInfoModelCopyWith<FolderInfoModel> get copyWith =>
+  $DriveInfoModelCopyWith<DriveInfoModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $FolderInfoModelCopyWith<$Res> {
-  factory $FolderInfoModelCopyWith(
-          FolderInfoModel value, $Res Function(FolderInfoModel) then) =
-      _$FolderInfoModelCopyWithImpl<$Res, FolderInfoModel>;
+abstract class $DriveInfoModelCopyWith<$Res> {
+  factory $DriveInfoModelCopyWith(
+          DriveInfoModel value, $Res Function(DriveInfoModel) then) =
+      _$DriveInfoModelCopyWithImpl<$Res, DriveInfoModel>;
   @useResult
   $Res call({int remainingStorage, int usedStorage, int totalStorage});
 }
 
 /// @nodoc
-class _$FolderInfoModelCopyWithImpl<$Res, $Val extends FolderInfoModel>
-    implements $FolderInfoModelCopyWith<$Res> {
-  _$FolderInfoModelCopyWithImpl(this._value, this._then);
+class _$DriveInfoModelCopyWithImpl<$Res, $Val extends DriveInfoModel>
+    implements $DriveInfoModelCopyWith<$Res> {
+  _$DriveInfoModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -69,22 +69,22 @@ class _$FolderInfoModelCopyWithImpl<$Res, $Val extends FolderInfoModel>
 }
 
 /// @nodoc
-abstract class _$$_FolderInfoModelCopyWith<$Res>
-    implements $FolderInfoModelCopyWith<$Res> {
-  factory _$$_FolderInfoModelCopyWith(
-          _$_FolderInfoModel value, $Res Function(_$_FolderInfoModel) then) =
-      __$$_FolderInfoModelCopyWithImpl<$Res>;
+abstract class _$$_DriveInfoModelCopyWith<$Res>
+    implements $DriveInfoModelCopyWith<$Res> {
+  factory _$$_DriveInfoModelCopyWith(
+          _$_DriveInfoModel value, $Res Function(_$_DriveInfoModel) then) =
+      __$$_DriveInfoModelCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int remainingStorage, int usedStorage, int totalStorage});
 }
 
 /// @nodoc
-class __$$_FolderInfoModelCopyWithImpl<$Res>
-    extends _$FolderInfoModelCopyWithImpl<$Res, _$_FolderInfoModel>
-    implements _$$_FolderInfoModelCopyWith<$Res> {
-  __$$_FolderInfoModelCopyWithImpl(
-      _$_FolderInfoModel _value, $Res Function(_$_FolderInfoModel) _then)
+class __$$_DriveInfoModelCopyWithImpl<$Res>
+    extends _$DriveInfoModelCopyWithImpl<$Res, _$_DriveInfoModel>
+    implements _$$_DriveInfoModelCopyWith<$Res> {
+  __$$_DriveInfoModelCopyWithImpl(
+      _$_DriveInfoModel _value, $Res Function(_$_DriveInfoModel) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -94,7 +94,7 @@ class __$$_FolderInfoModelCopyWithImpl<$Res>
     Object? usedStorage = null,
     Object? totalStorage = null,
   }) {
-    return _then(_$_FolderInfoModel(
+    return _then(_$_DriveInfoModel(
       remainingStorage: null == remainingStorage
           ? _value.remainingStorage
           : remainingStorage // ignore: cast_nullable_to_non_nullable
@@ -113,10 +113,10 @@ class __$$_FolderInfoModelCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_FolderInfoModel
+class _$_DriveInfoModel
     with DiagnosticableTreeMixin
-    implements _FolderInfoModel {
-  const _$_FolderInfoModel(
+    implements _DriveInfoModel {
+  const _$_DriveInfoModel(
       {required this.remainingStorage,
       required this.usedStorage,
       required this.totalStorage});
@@ -130,14 +130,14 @@ class _$_FolderInfoModel
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderInfoModel(remainingStorage: $remainingStorage, usedStorage: $usedStorage, totalStorage: $totalStorage)';
+    return 'DriveInfoModel(remainingStorage: $remainingStorage, usedStorage: $usedStorage, totalStorage: $totalStorage)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'FolderInfoModel'))
+      ..add(DiagnosticsProperty('type', 'DriveInfoModel'))
       ..add(DiagnosticsProperty('remainingStorage', remainingStorage))
       ..add(DiagnosticsProperty('usedStorage', usedStorage))
       ..add(DiagnosticsProperty('totalStorage', totalStorage));
@@ -147,7 +147,7 @@ class _$_FolderInfoModel
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FolderInfoModel &&
+            other is _$_DriveInfoModel &&
             (identical(other.remainingStorage, remainingStorage) ||
                 other.remainingStorage == remainingStorage) &&
             (identical(other.usedStorage, usedStorage) ||
@@ -163,15 +163,15 @@ class _$_FolderInfoModel
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FolderInfoModelCopyWith<_$_FolderInfoModel> get copyWith =>
-      __$$_FolderInfoModelCopyWithImpl<_$_FolderInfoModel>(this, _$identity);
+  _$$_DriveInfoModelCopyWith<_$_DriveInfoModel> get copyWith =>
+      __$$_DriveInfoModelCopyWithImpl<_$_DriveInfoModel>(this, _$identity);
 }
 
-abstract class _FolderInfoModel implements FolderInfoModel {
-  const factory _FolderInfoModel(
+abstract class _DriveInfoModel implements DriveInfoModel {
+  const factory _DriveInfoModel(
       {required final int remainingStorage,
       required final int usedStorage,
-      required final int totalStorage}) = _$_FolderInfoModel;
+      required final int totalStorage}) = _$_DriveInfoModel;
 
   @override
   int get remainingStorage;
@@ -181,6 +181,6 @@ abstract class _FolderInfoModel implements FolderInfoModel {
   int get totalStorage;
   @override
   @JsonKey(ignore: true)
-  _$$_FolderInfoModelCopyWith<_$_FolderInfoModel> get copyWith =>
+  _$$_DriveInfoModelCopyWith<_$_DriveInfoModel> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/src/accounts/models/folder_info_model.dart';
+import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 
 class DriveInfoDialogWidget extends HookConsumerWidget {
   const DriveInfoDialogWidget({Key? key, required this.model})
       : super(key: key);
 
-  final FolderInfoModel model;
+  final DriveInfoModel model;
 
   String getSize(num val) {
     final mb = val / (1000 * 1000);

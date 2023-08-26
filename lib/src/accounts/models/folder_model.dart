@@ -1,4 +1,4 @@
-// flutter pub run build_runner build
+// dart run build_runner build
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';

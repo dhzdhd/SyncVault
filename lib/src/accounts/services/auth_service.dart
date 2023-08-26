@@ -7,7 +7,7 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
-import 'package:syncvault/src/accounts/models/folder_info_model.dart';
+import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
 import 'package:syncvault/errors.dart';
 
@@ -17,7 +17,7 @@ abstract interface class AuthService {
   TaskEither<AppError, AuthProviderModel> signIn();
   TaskEither<AppError, AuthProviderModel> refresh(AuthProviderModel model);
   TaskEither<AppError, Map<String, dynamic>> getUserInfo(String accessToken);
-  TaskEither<AppError, FolderInfoModel> getDriveInfo(String accessToken);
+  TaskEither<AppError, DriveInfoModel> getDriveInfo(String accessToken);
 }
 
 final class GoogleDriveAuth implements AuthService {
@@ -194,7 +194,7 @@ final class GoogleDriveAuth implements AuthService {
   }
 
   @override
-  TaskEither<AppError, FolderInfoModel> getDriveInfo(String accessToken) {
+  TaskEither<AppError, DriveInfoModel> getDriveInfo(String accessToken) {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
@@ -209,7 +209,7 @@ final class GoogleDriveAuth implements AuthService {
           options: authOptions,
         );
 
-        return FolderInfoModel(
+        return DriveInfoModel(
           remainingStorage: int.parse(response.data!['storageQuota']['limit']) -
               int.parse(response.data!['storageQuota']['usage']),
           usedStorage: int.parse(response.data!['storageQuota']['usage']),
@@ -368,7 +368,7 @@ final class DropBoxAuth implements AuthService {
   }
 
   @override
-  TaskEither<AppError, FolderInfoModel> getDriveInfo(String accessToken) {
+  TaskEither<AppError, DriveInfoModel> getDriveInfo(String accessToken) {
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
     });
@@ -382,7 +382,7 @@ final class DropBoxAuth implements AuthService {
           options: authOptions,
         );
 
-        return FolderInfoModel(
+        return DriveInfoModel(
           remainingStorage: (response.data!['allocation']['allocated'] as int) -
               (response.data!['used'] as int),
           usedStorage: response.data!['used'],
@@ -541,7 +541,7 @@ final class OneDriveAuth implements AuthService {
   }
 
   @override
-  TaskEither<AppError, FolderInfoModel> getDriveInfo(
+  TaskEither<AppError, DriveInfoModel> getDriveInfo(
     String accessToken,
   ) {
     final authOptions = Options(headers: {
@@ -557,7 +557,7 @@ final class OneDriveAuth implements AuthService {
           options: authOptions,
         );
 
-        return FolderInfoModel(
+        return DriveInfoModel(
           remainingStorage: response.data!['quota']['remaining'],
           usedStorage: response.data!['quota']['used'],
           totalStorage: response.data!['quota']['remaining'] +
