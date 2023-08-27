@@ -281,21 +281,22 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                               result.match(
                                                 (l) =>
                                                     context.showErrorSnackBar(
-                                                        l.message),
-                                                (r) =>
-                                                    context.showSuccessSnackBar(
-                                                  content: 'Deleted folder',
-                                                  action: none(),
+                                                  l.message,
                                                 ),
+                                                (r) {
+                                                  context.showSuccessSnackBar(
+                                                    content: 'Deleted folder',
+                                                    action: none(),
+                                                  );
+                                                  progressVisibleList.value = [
+                                                    ...progressVisibleList.value
+                                                      ..removeAt(
+                                                        folderInfo.indexOf(e),
+                                                      )
+                                                  ];
+                                                },
                                               );
                                             }
-                                            // progressVisibleList.value = [
-                                            //   ...progressVisibleList.value
-                                            //     ..removeAt(
-                                            //       folderInfo.indexOf(e),
-                                            //     )
-                                            // ];
-                                            // print(progressVisibleList.value);
                                           },
                                         ),
                                       ),

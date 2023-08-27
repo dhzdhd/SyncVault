@@ -11,7 +11,7 @@ extension StringExtension on String {
   }
 }
 
-extension ShowSnackBar on BuildContext {
+extension SnackBarExtension on BuildContext {
   void showSuccessSnackBar(
       {required String content, required Option<SnackBarAction> action}) {
     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
