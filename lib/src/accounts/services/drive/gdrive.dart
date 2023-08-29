@@ -73,15 +73,12 @@ class GoogleDrive implements DriveService {
     );
     debugPrint(files.toString());
 
-    // final totalSize = files.fold(0, (prev, e) => prev + e.statSync().size);
-
     final Map<String, String> idMap = {folder.path: folderModel.folderId};
 
     return TaskEither.tryCatch(
       () async {
         for (final file in files) {
           if (file is File) {
-            // final fileName = file.uri.pathSegments.last;
             final parentFolderDir = file.parent;
 
             var tempAncestorDir = parentFolderDir;
@@ -233,6 +230,8 @@ class GoogleDrive implements DriveService {
         final files = rawFiles
             .map((e) => jsonDecode(jsonEncode(e)) as Map<String, dynamic>)
             .toList();
+
+        print(files);
 
         filter.match(
           () => files,

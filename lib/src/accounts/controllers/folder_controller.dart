@@ -63,7 +63,7 @@ class Folder extends _$Folder {
     );
   }
 
-  TaskEither<AppError, ()> create(
+  TaskEither<AppError, ()> createFolder(
     AuthProviderModel authModel,
     String folderPath,
     String folderName,
@@ -71,16 +71,14 @@ class Folder extends _$Folder {
     return TaskEither.tryCatch(() async {
       final response =
           await ref.read(authProvider.notifier).refresh(authModel).run();
-
       final newAuthModel = response.match((l) => throw l, (r) => r);
 
-      // Perhaps make authModel mutable
-      final provider = switch (newAuthModel.provider) {
+      final driveService = switch (newAuthModel.provider) {
         AuthProviderType.oneDrive => OneDrive(),
         AuthProviderType.dropBox => DropBox(),
         AuthProviderType.googleDrive => GoogleDrive()
       };
-      final idResult = await provider
+      final idResult = await driveService
           .createFolder(
             folderName: some(folderName),
             accessToken: newAuthModel.accessToken,
@@ -91,8 +89,8 @@ class Folder extends _$Folder {
       return idResult
           .bindFuture((id) async {
             final folderModel = FolderModel(
-              email: authModel.email,
-              provider: authModel.provider,
+              email: newAuthModel.email,
+              provider: newAuthModel.provider,
               folderPath: folderPath,
               folderName: folderName,
               folderId: id,
@@ -100,6 +98,12 @@ class Folder extends _$Folder {
               isDeletionEnabled: false,
               files: [],
             );
+            final resp = await driveService
+                .getAllFiles(
+                  accessToken: newAuthModel.accessToken,
+                  filter: none(),
+                )
+                .run();
 
             state = [...state, folderModel];
             Hive.box('vault').put(
