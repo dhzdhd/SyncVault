@@ -63,7 +63,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
             isExpanded: true,
             hint: const Text('Enter provider account'),
             onChanged: (AuthProviderModel? e) {
-              selectedProvider.value = e.toOption();
+              selectedProvider.value = Option.fromNullable(e);
             },
           ),
         ),
@@ -90,7 +90,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                 tooltip: 'Get directory',
                 onPressed: () async {
                   final result = await FilePicker.platform.getDirectoryPath();
-                  selectedFolder.value = result.toOption();
+                  selectedFolder.value = Option.fromNullable(result);
                 },
               ),
             ],
