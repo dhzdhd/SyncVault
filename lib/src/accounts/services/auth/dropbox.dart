@@ -43,12 +43,16 @@ final class DropBoxAuth implements AuthService {
         true => await FlutterWebAuth2.authenticate(
             url: codeUri.toString(),
             callbackUrlScheme: 'https',
-            preferEphemeral: true,
+            options: const FlutterWebAuth2Options(
+              intentFlags: ephemeralIntentFlags,
+            ),
           ),
-        false => await FlutterWebAuth2WindowsPlugin().authenticate(
+        false => await FlutterWebAuth2.authenticate(
             url: codeUri.toString(),
             callbackUrlScheme: callbackUrlScheme,
-            preferEphemeral: true,
+            options: const FlutterWebAuth2Options(
+              preferEphemeral: true,
+            ),
           ),
       };
 
