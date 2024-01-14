@@ -86,7 +86,6 @@ void main() async {
   }
 
   final settingsController = SettingsController(SettingsService());
-
   await settingsController.loadSettings();
 
   await Hive.initFlutter();
