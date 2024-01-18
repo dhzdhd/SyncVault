@@ -112,11 +112,11 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
 }
 
 /// @nodoc
-abstract class _$$_FolderModelCopyWith<$Res>
+abstract class _$$FolderModelImplCopyWith<$Res>
     implements $FolderModelCopyWith<$Res> {
-  factory _$$_FolderModelCopyWith(
-          _$_FolderModel value, $Res Function(_$_FolderModel) then) =
-      __$$_FolderModelCopyWithImpl<$Res>;
+  factory _$$FolderModelImplCopyWith(
+          _$FolderModelImpl value, $Res Function(_$FolderModelImpl) then) =
+      __$$FolderModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -131,11 +131,11 @@ abstract class _$$_FolderModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_FolderModelCopyWithImpl<$Res>
-    extends _$FolderModelCopyWithImpl<$Res, _$_FolderModel>
-    implements _$$_FolderModelCopyWith<$Res> {
-  __$$_FolderModelCopyWithImpl(
-      _$_FolderModel _value, $Res Function(_$_FolderModel) _then)
+class __$$FolderModelImplCopyWithImpl<$Res>
+    extends _$FolderModelCopyWithImpl<$Res, _$FolderModelImpl>
+    implements _$$FolderModelImplCopyWith<$Res> {
+  __$$FolderModelImplCopyWithImpl(
+      _$FolderModelImpl _value, $Res Function(_$FolderModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -150,7 +150,7 @@ class __$$_FolderModelCopyWithImpl<$Res>
     Object? isDeletionEnabled = null,
     Object? files = null,
   }) {
-    return _then(_$_FolderModel(
+    return _then(_$FolderModelImpl(
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -189,8 +189,8 @@ class __$$_FolderModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
-  const _$_FolderModel(
+class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
+  const _$FolderModelImpl(
       {required this.email,
       required this.provider,
       required this.folderPath,
@@ -201,8 +201,8 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
       required final List<FileModel> files})
       : _files = files;
 
-  factory _$_FolderModel.fromJson(Map<String, dynamic> json) =>
-      _$$_FolderModelFromJson(json);
+  factory _$FolderModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FolderModelImplFromJson(json);
 
   @override
   final String email;
@@ -247,10 +247,10 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FolderModel &&
+            other is _$FolderModelImpl &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.provider, provider) ||
                 other.provider == provider) &&
@@ -283,12 +283,12 @@ class _$_FolderModel with DiagnosticableTreeMixin implements _FolderModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FolderModelCopyWith<_$_FolderModel> get copyWith =>
-      __$$_FolderModelCopyWithImpl<_$_FolderModel>(this, _$identity);
+  _$$FolderModelImplCopyWith<_$FolderModelImpl> get copyWith =>
+      __$$FolderModelImplCopyWithImpl<_$FolderModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_FolderModelToJson(
+    return _$$FolderModelImplToJson(
       this,
     );
   }
@@ -303,10 +303,10 @@ abstract class _FolderModel implements FolderModel {
       required final String folderId,
       required final bool isAutoSync,
       required final bool isDeletionEnabled,
-      required final List<FileModel> files}) = _$_FolderModel;
+      required final List<FileModel> files}) = _$FolderModelImpl;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
-      _$_FolderModel.fromJson;
+      _$FolderModelImpl.fromJson;
 
   @override
   String get email;
@@ -326,6 +326,6 @@ abstract class _FolderModel implements FolderModel {
   List<FileModel> get files;
   @override
   @JsonKey(ignore: true)
-  _$$_FolderModelCopyWith<_$_FolderModel> get copyWith =>
+  _$$FolderModelImplCopyWith<_$FolderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

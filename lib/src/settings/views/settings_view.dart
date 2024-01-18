@@ -35,10 +35,10 @@ class SettingsView extends ConsumerWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     SizedBox(
-                      // width: 200,
                       child: DropdownMenu<ThemeMode>(
-                        width: 160,
+                        width: 180,
                         enableSearch: false,
+                        enableFilter: false,
                         initialSelection: controller.themeMode,
                         onSelected: controller.updateThemeMode,
                         dropdownMenuEntries: const [

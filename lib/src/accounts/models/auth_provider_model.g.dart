@@ -6,8 +6,9 @@ part of 'auth_provider_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_AuthProviderModel _$$_AuthProviderModelFromJson(Map<String, dynamic> json) =>
-    _$_AuthProviderModel(
+_$AuthProviderModelImpl _$$AuthProviderModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$AuthProviderModelImpl(
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
       expiresIn: json['expiresIn'] as int,
@@ -18,8 +19,8 @@ _$_AuthProviderModel _$$_AuthProviderModelFromJson(Map<String, dynamic> json) =>
       folderId: json['folderId'] as String,
     );
 
-Map<String, dynamic> _$$_AuthProviderModelToJson(
-        _$_AuthProviderModel instance) =>
+Map<String, dynamic> _$$AuthProviderModelImplToJson(
+        _$AuthProviderModelImpl instance) =>
     <String, dynamic>{
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,

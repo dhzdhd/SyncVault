@@ -6,7 +6,7 @@ part of 'folder_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$folderHash() => r'8fbcc730f0da2d1798d739d9481c2d95276f52f6';
+String _$folderHash() => r'd4571cd36e4a4e050df785494ac59b8d7ab53c1d';
 
 /// See also [Folder].
 @ProviderFor(Folder)
@@ -21,4 +21,5 @@ final folderProvider =
 );
 
 typedef _$Folder = AutoDisposeNotifier<List<FolderModel>>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

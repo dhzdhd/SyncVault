@@ -6,8 +6,8 @@ part of 'folder_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_FolderModel _$$_FolderModelFromJson(Map<String, dynamic> json) =>
-    _$_FolderModel(
+_$FolderModelImpl _$$FolderModelImplFromJson(Map<String, dynamic> json) =>
+    _$FolderModelImpl(
       email: json['email'] as String,
       provider: $enumDecode(_$AuthProviderTypeEnumMap, json['provider']),
       folderPath: json['folderPath'] as String,
@@ -20,7 +20,7 @@ _$_FolderModel _$$_FolderModelFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$_FolderModelToJson(_$_FolderModel instance) =>
+Map<String, dynamic> _$$FolderModelImplToJson(_$FolderModelImpl instance) =>
     <String, dynamic>{
       'email': instance.email,
       'provider': _$AuthProviderTypeEnumMap[instance.provider]!,

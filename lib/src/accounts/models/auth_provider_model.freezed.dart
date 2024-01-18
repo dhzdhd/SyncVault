@@ -112,11 +112,11 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
 }
 
 /// @nodoc
-abstract class _$$_AuthProviderModelCopyWith<$Res>
+abstract class _$$AuthProviderModelImplCopyWith<$Res>
     implements $AuthProviderModelCopyWith<$Res> {
-  factory _$$_AuthProviderModelCopyWith(_$_AuthProviderModel value,
-          $Res Function(_$_AuthProviderModel) then) =
-      __$$_AuthProviderModelCopyWithImpl<$Res>;
+  factory _$$AuthProviderModelImplCopyWith(_$AuthProviderModelImpl value,
+          $Res Function(_$AuthProviderModelImpl) then) =
+      __$$AuthProviderModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -131,11 +131,11 @@ abstract class _$$_AuthProviderModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AuthProviderModelCopyWithImpl<$Res>
-    extends _$AuthProviderModelCopyWithImpl<$Res, _$_AuthProviderModel>
-    implements _$$_AuthProviderModelCopyWith<$Res> {
-  __$$_AuthProviderModelCopyWithImpl(
-      _$_AuthProviderModel _value, $Res Function(_$_AuthProviderModel) _then)
+class __$$AuthProviderModelImplCopyWithImpl<$Res>
+    extends _$AuthProviderModelCopyWithImpl<$Res, _$AuthProviderModelImpl>
+    implements _$$AuthProviderModelImplCopyWith<$Res> {
+  __$$AuthProviderModelImplCopyWithImpl(_$AuthProviderModelImpl _value,
+      $Res Function(_$AuthProviderModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -150,7 +150,7 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? folderId = null,
   }) {
-    return _then(_$_AuthProviderModel(
+    return _then(_$AuthProviderModelImpl(
       accessToken: null == accessToken
           ? _value.accessToken
           : accessToken // ignore: cast_nullable_to_non_nullable
@@ -189,10 +189,10 @@ class __$$_AuthProviderModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AuthProviderModel
+class _$AuthProviderModelImpl
     with DiagnosticableTreeMixin
     implements _AuthProviderModel {
-  const _$_AuthProviderModel(
+  const _$AuthProviderModelImpl(
       {required this.accessToken,
       required this.refreshToken,
       required this.expiresIn,
@@ -202,8 +202,8 @@ class _$_AuthProviderModel
       required this.createdAt,
       required this.folderId});
 
-  factory _$_AuthProviderModel.fromJson(Map<String, dynamic> json) =>
-      _$$_AuthProviderModelFromJson(json);
+  factory _$AuthProviderModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AuthProviderModelImplFromJson(json);
 
   @override
   final String accessToken;
@@ -243,10 +243,10 @@ class _$_AuthProviderModel
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AuthProviderModel &&
+            other is _$AuthProviderModelImpl &&
             (identical(other.accessToken, accessToken) ||
                 other.accessToken == accessToken) &&
             (identical(other.refreshToken, refreshToken) ||
@@ -271,13 +271,13 @@ class _$_AuthProviderModel
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AuthProviderModelCopyWith<_$_AuthProviderModel> get copyWith =>
-      __$$_AuthProviderModelCopyWithImpl<_$_AuthProviderModel>(
+  _$$AuthProviderModelImplCopyWith<_$AuthProviderModelImpl> get copyWith =>
+      __$$AuthProviderModelImplCopyWithImpl<_$AuthProviderModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AuthProviderModelToJson(
+    return _$$AuthProviderModelImplToJson(
       this,
     );
   }
@@ -292,10 +292,10 @@ abstract class _AuthProviderModel implements AuthProviderModel {
       required final String name,
       required final String email,
       required final String createdAt,
-      required final String folderId}) = _$_AuthProviderModel;
+      required final String folderId}) = _$AuthProviderModelImpl;
 
   factory _AuthProviderModel.fromJson(Map<String, dynamic> json) =
-      _$_AuthProviderModel.fromJson;
+      _$AuthProviderModelImpl.fromJson;
 
   @override
   String get accessToken;
@@ -315,6 +315,6 @@ abstract class _AuthProviderModel implements AuthProviderModel {
   String get folderId;
   @override
   @JsonKey(ignore: true)
-  _$$_AuthProviderModelCopyWith<_$_AuthProviderModel> get copyWith =>
+  _$$AuthProviderModelImplCopyWith<_$AuthProviderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

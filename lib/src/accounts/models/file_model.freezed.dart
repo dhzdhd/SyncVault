@@ -92,10 +92,11 @@ class _$FileModelCopyWithImpl<$Res, $Val extends FileModel>
 }
 
 /// @nodoc
-abstract class _$$_FileModelCopyWith<$Res> implements $FileModelCopyWith<$Res> {
-  factory _$$_FileModelCopyWith(
-          _$_FileModel value, $Res Function(_$_FileModel) then) =
-      __$$_FileModelCopyWithImpl<$Res>;
+abstract class _$$FileModelImplCopyWith<$Res>
+    implements $FileModelCopyWith<$Res> {
+  factory _$$FileModelImplCopyWith(
+          _$FileModelImpl value, $Res Function(_$FileModelImpl) then) =
+      __$$FileModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -107,11 +108,11 @@ abstract class _$$_FileModelCopyWith<$Res> implements $FileModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_FileModelCopyWithImpl<$Res>
-    extends _$FileModelCopyWithImpl<$Res, _$_FileModel>
-    implements _$$_FileModelCopyWith<$Res> {
-  __$$_FileModelCopyWithImpl(
-      _$_FileModel _value, $Res Function(_$_FileModel) _then)
+class __$$FileModelImplCopyWithImpl<$Res>
+    extends _$FileModelCopyWithImpl<$Res, _$FileModelImpl>
+    implements _$$FileModelImplCopyWith<$Res> {
+  __$$FileModelImplCopyWithImpl(
+      _$FileModelImpl _value, $Res Function(_$FileModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -123,7 +124,7 @@ class __$$_FileModelCopyWithImpl<$Res>
     Object? parent = null,
     Object? childPath = null,
   }) {
-    return _then(_$_FileModel(
+    return _then(_$FileModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -150,16 +151,16 @@ class __$$_FileModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_FileModel with DiagnosticableTreeMixin implements _FileModel {
-  const _$_FileModel(
+class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
+  const _$FileModelImpl(
       {required this.id,
       required this.name,
       @FileSystemEntityConverter() required this.file,
       @DirectoryConverter() required this.parent,
       required this.childPath});
 
-  factory _$_FileModel.fromJson(Map<String, dynamic> json) =>
-      _$$_FileModelFromJson(json);
+  factory _$FileModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FileModelImplFromJson(json);
 
   @override
   final Option<String> id;
@@ -192,10 +193,10 @@ class _$_FileModel with DiagnosticableTreeMixin implements _FileModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FileModel &&
+            other is _$FileModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.file, file) || other.file == file) &&
@@ -212,12 +213,12 @@ class _$_FileModel with DiagnosticableTreeMixin implements _FileModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FileModelCopyWith<_$_FileModel> get copyWith =>
-      __$$_FileModelCopyWithImpl<_$_FileModel>(this, _$identity);
+  _$$FileModelImplCopyWith<_$FileModelImpl> get copyWith =>
+      __$$FileModelImplCopyWithImpl<_$FileModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_FileModelToJson(
+    return _$$FileModelImplToJson(
       this,
     );
   }
@@ -229,10 +230,10 @@ abstract class _FileModel implements FileModel {
       required final String name,
       @FileSystemEntityConverter() required final FileSystemEntity file,
       @DirectoryConverter() required final Directory parent,
-      required final Option<String> childPath}) = _$_FileModel;
+      required final Option<String> childPath}) = _$FileModelImpl;
 
   factory _FileModel.fromJson(Map<String, dynamic> json) =
-      _$_FileModel.fromJson;
+      _$FileModelImpl.fromJson;
 
   @override
   Option<String> get id;
@@ -248,6 +249,6 @@ abstract class _FileModel implements FileModel {
   Option<String> get childPath;
   @override
   @JsonKey(ignore: true)
-  _$$_FileModelCopyWith<_$_FileModel> get copyWith =>
+  _$$FileModelImplCopyWith<_$FileModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

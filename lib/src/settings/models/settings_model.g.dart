@@ -6,12 +6,12 @@ part of 'settings_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_SettingsModel _$$_SettingsModelFromJson(Map<String, dynamic> json) =>
-    _$_SettingsModel(
+_$SettingsModelImpl _$$SettingsModelImplFromJson(Map<String, dynamic> json) =>
+    _$SettingsModelImpl(
       isSentryEnabled: json['isSentryEnabled'] as bool,
     );
 
-Map<String, dynamic> _$$_SettingsModelToJson(_$_SettingsModel instance) =>
+Map<String, dynamic> _$$SettingsModelImplToJson(_$SettingsModelImpl instance) =>
     <String, dynamic>{
       'isSentryEnabled': instance.isSentryEnabled,
     };

@@ -69,22 +69,22 @@ class _$DriveInfoModelCopyWithImpl<$Res, $Val extends DriveInfoModel>
 }
 
 /// @nodoc
-abstract class _$$_DriveInfoModelCopyWith<$Res>
+abstract class _$$DriveInfoModelImplCopyWith<$Res>
     implements $DriveInfoModelCopyWith<$Res> {
-  factory _$$_DriveInfoModelCopyWith(
-          _$_DriveInfoModel value, $Res Function(_$_DriveInfoModel) then) =
-      __$$_DriveInfoModelCopyWithImpl<$Res>;
+  factory _$$DriveInfoModelImplCopyWith(_$DriveInfoModelImpl value,
+          $Res Function(_$DriveInfoModelImpl) then) =
+      __$$DriveInfoModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int remainingStorage, int usedStorage, int totalStorage});
 }
 
 /// @nodoc
-class __$$_DriveInfoModelCopyWithImpl<$Res>
-    extends _$DriveInfoModelCopyWithImpl<$Res, _$_DriveInfoModel>
-    implements _$$_DriveInfoModelCopyWith<$Res> {
-  __$$_DriveInfoModelCopyWithImpl(
-      _$_DriveInfoModel _value, $Res Function(_$_DriveInfoModel) _then)
+class __$$DriveInfoModelImplCopyWithImpl<$Res>
+    extends _$DriveInfoModelCopyWithImpl<$Res, _$DriveInfoModelImpl>
+    implements _$$DriveInfoModelImplCopyWith<$Res> {
+  __$$DriveInfoModelImplCopyWithImpl(
+      _$DriveInfoModelImpl _value, $Res Function(_$DriveInfoModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -94,7 +94,7 @@ class __$$_DriveInfoModelCopyWithImpl<$Res>
     Object? usedStorage = null,
     Object? totalStorage = null,
   }) {
-    return _then(_$_DriveInfoModel(
+    return _then(_$DriveInfoModelImpl(
       remainingStorage: null == remainingStorage
           ? _value.remainingStorage
           : remainingStorage // ignore: cast_nullable_to_non_nullable
@@ -113,10 +113,10 @@ class __$$_DriveInfoModelCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_DriveInfoModel
+class _$DriveInfoModelImpl
     with DiagnosticableTreeMixin
     implements _DriveInfoModel {
-  const _$_DriveInfoModel(
+  const _$DriveInfoModelImpl(
       {required this.remainingStorage,
       required this.usedStorage,
       required this.totalStorage});
@@ -144,10 +144,10 @@ class _$_DriveInfoModel
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DriveInfoModel &&
+            other is _$DriveInfoModelImpl &&
             (identical(other.remainingStorage, remainingStorage) ||
                 other.remainingStorage == remainingStorage) &&
             (identical(other.usedStorage, usedStorage) ||
@@ -163,15 +163,16 @@ class _$_DriveInfoModel
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DriveInfoModelCopyWith<_$_DriveInfoModel> get copyWith =>
-      __$$_DriveInfoModelCopyWithImpl<_$_DriveInfoModel>(this, _$identity);
+  _$$DriveInfoModelImplCopyWith<_$DriveInfoModelImpl> get copyWith =>
+      __$$DriveInfoModelImplCopyWithImpl<_$DriveInfoModelImpl>(
+          this, _$identity);
 }
 
 abstract class _DriveInfoModel implements DriveInfoModel {
   const factory _DriveInfoModel(
       {required final int remainingStorage,
       required final int usedStorage,
-      required final int totalStorage}) = _$_DriveInfoModel;
+      required final int totalStorage}) = _$DriveInfoModelImpl;
 
   @override
   int get remainingStorage;
@@ -181,6 +182,6 @@ abstract class _DriveInfoModel implements DriveInfoModel {
   int get totalStorage;
   @override
   @JsonKey(ignore: true)
-  _$$_DriveInfoModelCopyWith<_$_DriveInfoModel> get copyWith =>
+  _$$DriveInfoModelImplCopyWith<_$DriveInfoModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
