@@ -21,6 +21,7 @@ SettingsModel _$SettingsModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$SettingsModel {
   bool get isSentryEnabled => throw _privateConstructorUsedError;
+  ThemeMode get themeMode => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +35,7 @@ abstract class $SettingsModelCopyWith<$Res> {
           SettingsModel value, $Res Function(SettingsModel) then) =
       _$SettingsModelCopyWithImpl<$Res, SettingsModel>;
   @useResult
-  $Res call({bool isSentryEnabled});
+  $Res call({bool isSentryEnabled, ThemeMode themeMode});
 }
 
 /// @nodoc
@@ -51,12 +52,17 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
   @override
   $Res call({
     Object? isSentryEnabled = null,
+    Object? themeMode = null,
   }) {
     return _then(_value.copyWith(
       isSentryEnabled: null == isSentryEnabled
           ? _value.isSentryEnabled
           : isSentryEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      themeMode: null == themeMode
+          ? _value.themeMode
+          : themeMode // ignore: cast_nullable_to_non_nullable
+              as ThemeMode,
     ) as $Val);
   }
 }
@@ -69,7 +75,7 @@ abstract class _$$SettingsModelImplCopyWith<$Res>
       __$$SettingsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isSentryEnabled});
+  $Res call({bool isSentryEnabled, ThemeMode themeMode});
 }
 
 /// @nodoc
@@ -84,40 +90,38 @@ class __$$SettingsModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isSentryEnabled = null,
+    Object? themeMode = null,
   }) {
     return _then(_$SettingsModelImpl(
       isSentryEnabled: null == isSentryEnabled
           ? _value.isSentryEnabled
           : isSentryEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      themeMode: null == themeMode
+          ? _value.themeMode
+          : themeMode // ignore: cast_nullable_to_non_nullable
+              as ThemeMode,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$SettingsModelImpl
-    with DiagnosticableTreeMixin
-    implements _SettingsModel {
-  const _$SettingsModelImpl({required this.isSentryEnabled});
+class _$SettingsModelImpl implements _SettingsModel {
+  const _$SettingsModelImpl(
+      {required this.isSentryEnabled, required this.themeMode});
 
   factory _$SettingsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SettingsModelImplFromJson(json);
 
   @override
   final bool isSentryEnabled;
+  @override
+  final ThemeMode themeMode;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SettingsModel(isSentryEnabled: $isSentryEnabled)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'SettingsModel'))
-      ..add(DiagnosticsProperty('isSentryEnabled', isSentryEnabled));
+  String toString() {
+    return 'SettingsModel(isSentryEnabled: $isSentryEnabled, themeMode: $themeMode)';
   }
 
   @override
@@ -126,12 +130,14 @@ class _$SettingsModelImpl
         (other.runtimeType == runtimeType &&
             other is _$SettingsModelImpl &&
             (identical(other.isSentryEnabled, isSentryEnabled) ||
-                other.isSentryEnabled == isSentryEnabled));
+                other.isSentryEnabled == isSentryEnabled) &&
+            (identical(other.themeMode, themeMode) ||
+                other.themeMode == themeMode));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, isSentryEnabled);
+  int get hashCode => Object.hash(runtimeType, isSentryEnabled, themeMode);
 
   @JsonKey(ignore: true)
   @override
@@ -148,14 +154,17 @@ class _$SettingsModelImpl
 }
 
 abstract class _SettingsModel implements SettingsModel {
-  const factory _SettingsModel({required final bool isSentryEnabled}) =
-      _$SettingsModelImpl;
+  const factory _SettingsModel(
+      {required final bool isSentryEnabled,
+      required final ThemeMode themeMode}) = _$SettingsModelImpl;
 
   factory _SettingsModel.fromJson(Map<String, dynamic> json) =
       _$SettingsModelImpl.fromJson;
 
   @override
   bool get isSentryEnabled;
+  @override
+  ThemeMode get themeMode;
   @override
   @JsonKey(ignore: true)
   _$$SettingsModelImplCopyWith<_$SettingsModelImpl> get copyWith =>

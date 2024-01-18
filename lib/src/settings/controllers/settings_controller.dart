@@ -6,8 +6,6 @@ import 'package:hive/hive.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../services/settings_service.dart';
-
 part 'settings_controller.g.dart';
 
 final lightTheme = ThemeData(
@@ -33,18 +31,22 @@ class Settings extends _$Settings {
   }
 
   static SettingsModel init() {
-    final Map<String, dynamic> raw = jsonDecode(
-      Hive.box('vault').get(
-        'settings',
-        defaultValue: jsonEncode(
-          const SettingsModel(
-            isSentryEnabled: false,
-          ).toJson(),
-        ),
-      ),
-    );
+    const defaultValue =
+        SettingsModel(isSentryEnabled: false, themeMode: ThemeMode.system);
 
-    return SettingsModel.fromJson(raw);
+    try {
+      final Map<String, dynamic> raw = jsonDecode(
+        Hive.box('vault').get(
+          'settings',
+          defaultValue: jsonEncode(defaultValue.toJson()),
+        ),
+      );
+
+      return SettingsModel.fromJson(raw);
+    } catch (err) {
+      // TODO: Silently fails if box not working. Might have to refactor
+      return defaultValue;
+    }
   }
 
   void setSentry(Option<bool> choice) {
@@ -56,28 +58,11 @@ class Settings extends _$Settings {
     );
     Hive.box('vault').put('settings', jsonEncode(state.toJson()));
   }
-}
 
-class SettingsController with ChangeNotifier {
-  SettingsController(this._settingsService);
+  void updateThemeMode(ThemeMode? newThemeMode) async {
+    if (newThemeMode == state.themeMode || newThemeMode == null) return;
 
-  final SettingsService _settingsService;
-  late ThemeMode _themeMode;
-
-  ThemeMode get themeMode => _themeMode;
-
-  Future<void> loadSettings() async {
-    _themeMode = await _settingsService.themeMode();
-    notifyListeners();
-  }
-
-  Future<void> updateThemeMode(ThemeMode? newThemeMode) async {
-    if (newThemeMode == null) return;
-    if (newThemeMode == _themeMode) return;
-
-    _themeMode = newThemeMode;
-    notifyListeners();
-
-    await _settingsService.updateThemeMode(newThemeMode);
+    state = state.copyWith(themeMode: newThemeMode);
+    Hive.box('vault').put('settings', jsonEncode(state.toJson()));
   }
 }

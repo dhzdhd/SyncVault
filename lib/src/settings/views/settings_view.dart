@@ -5,11 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../controllers/settings_controller.dart';
 
 class SettingsView extends ConsumerWidget {
-  const SettingsView({super.key, required this.controller});
+  const SettingsView({super.key});
 
   static const routeName = '/settings';
-
-  final SettingsController controller;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,8 +37,9 @@ class SettingsView extends ConsumerWidget {
                         width: 180,
                         enableSearch: false,
                         enableFilter: false,
-                        initialSelection: controller.themeMode,
-                        onSelected: controller.updateThemeMode,
+                        initialSelection: settings.themeMode,
+                        onSelected:
+                            ref.read(settingsProvider.notifier).updateThemeMode,
                         dropdownMenuEntries: const [
                           DropdownMenuEntry(
                             value: ThemeMode.system,

@@ -15,7 +15,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
-import 'src/settings/services/settings_service.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -85,9 +84,6 @@ void main() async {
     );
   }
 
-  final settingsController = SettingsController(SettingsService());
-  await settingsController.loadSettings();
-
   await Hive.initFlutter();
   await Hive.openBox('vault');
 
@@ -100,10 +96,10 @@ void main() async {
         options.tracesSampleRate = 1.0;
       },
       appRunner: () => runApp(
-        ProviderScope(child: MyApp(settingsController: settingsController)),
+        const ProviderScope(child: MyApp()),
       ),
     );
   } else {
-    runApp(ProviderScope(child: MyApp(settingsController: settingsController)));
+    runApp(const ProviderScope(child: MyApp()));
   }
 }
