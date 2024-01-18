@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
-import 'package:syncvault/src/settings/controllers/theme_controller.dart';
 
 import 'home/views/home_view.dart';
 import 'settings/controllers/settings_controller.dart';
