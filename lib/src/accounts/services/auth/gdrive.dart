@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
@@ -12,8 +14,9 @@ import 'package:syncvault/src/accounts/services/auth_service.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/services/drive/gdrive.dart';
 
-final dio = Dio();
+final _dio = GetIt.I<Dio>();
 
+@singleton
 final class GoogleDriveAuth implements AuthService {
   static final clientId = Platform.isAndroid
       ? '844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q.apps.googleusercontent.com'
@@ -70,7 +73,7 @@ final class GoogleDriveAuth implements AuthService {
       final options = Options(
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       );
-      final response = await dio.postUri<Map<String, dynamic>>(
+      final response = await _dio.postUri<Map<String, dynamic>>(
         tokenUri,
         data: {
           'client_id': clientId,
@@ -147,7 +150,7 @@ final class GoogleDriveAuth implements AuthService {
           apiHost,
           '/oauth2/v4/token',
         );
-        final response = await dio.postUri<Map<String, dynamic>>(
+        final response = await _dio.postUri<Map<String, dynamic>>(
           uri,
           data: {
             'client_id': clientId,
@@ -180,7 +183,7 @@ final class GoogleDriveAuth implements AuthService {
 
     return TaskEither.tryCatch(() async {
       final uri = Uri.https(apiHost, '/oauth2/v2/userinfo');
-      final response = await dio.getUri<Map<String, dynamic>>(
+      final response = await _dio.getUri<Map<String, dynamic>>(
         uri,
         options: authOptions,
       );
@@ -202,7 +205,7 @@ final class GoogleDriveAuth implements AuthService {
 
     return TaskEither.tryCatch(
       () async {
-        final response = await dio.getUri<Map<String, dynamic>>(
+        final response = await _dio.getUri<Map<String, dynamic>>(
           uri,
           options: authOptions,
         );

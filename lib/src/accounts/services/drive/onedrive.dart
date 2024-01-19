@@ -3,13 +3,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
 
-final dio = Dio();
+final _dio = GetIt.I<Dio>();
 
+@singleton
 class OneDrive implements DriveService {
   static const apiHost = 'graph.microsoft.com';
   static const basePath = '/beta/me/drive';
@@ -29,7 +32,7 @@ class OneDrive implements DriveService {
 
     return TaskEither.tryCatch(
       () async {
-        final response = await dio.postUri<Map<String, dynamic>>(
+        final response = await _dio.postUri<Map<String, dynamic>>(
           uri,
           options: authOptions,
           data: {
@@ -102,7 +105,7 @@ class OneDrive implements DriveService {
               '$basePath/items/${idMap[parentFolderDir.path]}:/$fileName:/createUploadSession',
             );
 
-            final response = await dio.postUri<Map<String, dynamic>>(
+            final response = await _dio.postUri<Map<String, dynamic>>(
               uri,
               options: authOptions,
               data: {
@@ -118,7 +121,7 @@ class OneDrive implements DriveService {
               continue;
             }
 
-            await dio.putUri(
+            await _dio.putUri(
               uploadUri,
               options: Options(
                 contentType: 'application/octet-stream',
@@ -160,14 +163,14 @@ class OneDrive implements DriveService {
 
             final uri = Uri.https(apiHost,
                 '$basePath/root:/SyncVault/${folderModel.folderName}$path');
-            final response = await dio.getUri(uri, options: authOptions);
+            final response = await _dio.getUri(uri, options: authOptions);
 
             return response.data!['id'].toString();
           },
         );
 
         final uri = Uri.https(apiHost, '$basePath/items/$subPath');
-        await dio.deleteUri(uri, options: authOptions);
+        await _dio.deleteUri(uri, options: authOptions);
         return ();
       },
       (error, stackTrace) {

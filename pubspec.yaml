@@ -34,6 +34,8 @@ dependencies:
   workmanager: ^0.5.2
   permission_handler: ^11.1.0
   flutter_dotenv: ^5.1.0
+  injectable: ^2.3.2
+  get_it: ^7.6.7
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +49,7 @@ dev_dependencies:
   riverpod_lint: ^2.1.1
   riverpod_generator: ^2.2.3
   flutter_launcher_icons: ^0.13.1
+  injectable_generator: ^2.4.1
 
 flutter:
   uses-material-design: true

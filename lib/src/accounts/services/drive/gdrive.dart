@@ -4,13 +4,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
 
-final dio = Dio();
+final _dio = GetIt.I<Dio>();
 
+@singleton
 class GoogleDrive implements DriveService {
   static const apiHost = 'www.googleapis.com';
   static const basePath = '/drive/v3';
@@ -29,7 +32,7 @@ class GoogleDrive implements DriveService {
 
     return TaskEither.tryCatch(
       () async {
-        final response = await dio.postUri<Map<String, dynamic>>(
+        final response = await _dio.postUri<Map<String, dynamic>>(
           uri,
           options: authOptions,
           data: {
@@ -113,7 +116,7 @@ class GoogleDrive implements DriveService {
               continue;
             }
 
-            final sessionResponse = await dio.postUri<Map<String, dynamic>>(
+            final sessionResponse = await _dio.postUri<Map<String, dynamic>>(
               sessionUri,
               options: Options(headers: {
                 ...authOptions.headers!,
@@ -131,7 +134,7 @@ class GoogleDrive implements DriveService {
             final uploadUri =
                 Uri.parse(sessionResponse.headers.value('location')!);
 
-            await dio.putUri<Map<String, dynamic>>(
+            await _dio.putUri<Map<String, dynamic>>(
               uploadUri,
               options: Options(
                 contentType: 'application/octet-stream',
@@ -178,7 +181,7 @@ class GoogleDrive implements DriveService {
       // ).run();
       // print(resp);
 
-      await dio.deleteUri(uri, options: authOptions);
+      await _dio.deleteUri(uri, options: authOptions);
       return ();
     }, (error, stackTrace) => error.segregateError());
 
@@ -192,7 +195,7 @@ class GoogleDrive implements DriveService {
 
     //         final uri = Uri.https(apiHost,
     //             '$basePath/root:/SyncVault/${folderModel.folderName}$path');
-    //         final response = await dio.getUri(uri, options: authOptions);
+    //         final response = await _dio.getUri(uri, options: authOptions);
 
     //         return response.data!['id'].toString();
     //       },
@@ -221,7 +224,7 @@ class GoogleDrive implements DriveService {
 
     return TaskEither.tryCatch(
       () async {
-        final response = await dio.getUri<Map<String, dynamic>>(
+        final response = await _dio.getUri<Map<String, dynamic>>(
           uri,
           options: authOptions,
         );

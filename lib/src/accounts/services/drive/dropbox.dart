@@ -3,13 +3,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
 
-final dio = Dio();
+final _dio = GetIt.I<Dio>();
 
+@singleton
 class DropBox implements DriveService {
   static const apiHost = 'api.dropbox.com';
   static const uploadHost = 'content.dropbox.com';
@@ -29,7 +32,7 @@ class DropBox implements DriveService {
 
     return TaskEither.tryCatch(
       () async {
-        final response = await dio.postUri<Map<String, dynamic>>(
+        final response = await _dio.postUri<Map<String, dynamic>>(
           uri,
           options: authOptions,
           data: {
@@ -75,7 +78,7 @@ class DropBox implements DriveService {
           '$basePath/upload_session/start',
         );
 
-        await dio.postUri<Map<String, dynamic>>(
+        await _dio.postUri<Map<String, dynamic>>(
           startUri,
           options: authOptions,
         );
@@ -116,7 +119,7 @@ class DropBox implements DriveService {
               '$basePath/upload_session/start',
             );
 
-            final response = await dio.postUri<Map<String, dynamic>>(
+            final response = await _dio.postUri<Map<String, dynamic>>(
               startUri,
               options: authOptions,
               data: {
@@ -132,7 +135,7 @@ class DropBox implements DriveService {
               continue;
             }
 
-            await dio.putUri(
+            await _dio.putUri(
               uploadUri,
               options: Options(
                 contentType: 'application/octet-stream',
@@ -167,7 +170,7 @@ class DropBox implements DriveService {
 
     return TaskEither.tryCatch(
       () async {
-        await dio.deleteUri(uri, options: authOptions, data: {
+        await _dio.deleteUri(uri, options: authOptions, data: {
           'path': path.match(
             () => '/SyncVault/${folderModel.folderName}/',
             (t) => '/SyncVault/${folderModel.folderName}/$t',

@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
@@ -12,8 +14,9 @@ import 'package:syncvault/src/accounts/services/auth_service.dart';
 import 'package:syncvault/src/accounts/services/drive/dropbox.dart';
 import 'package:syncvault/errors.dart';
 
-final dio = Dio();
+final _dio = GetIt.I<Dio>();
 
+@singleton
 final class DropBoxAuth implements AuthService {
   static const clientId = 'ma42r73plfcdnrf';
   static final clientSecret = dotenv.env['DROPBOX_SECRET']!;
@@ -65,7 +68,7 @@ final class DropBoxAuth implements AuthService {
       final options = Options(
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       );
-      final response = await dio.postUri<Map<String, dynamic>>(
+      final response = await _dio.postUri<Map<String, dynamic>>(
         tokenUri,
         data: {
           'client_id': clientId,
@@ -121,7 +124,7 @@ final class DropBoxAuth implements AuthService {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         );
         final uri = Uri.https(authHost, '/oauth2/token');
-        final response = await dio.postUri<Map<String, dynamic>>(
+        final response = await _dio.postUri<Map<String, dynamic>>(
           uri,
           data: {
             'client_id': clientId,
@@ -153,7 +156,7 @@ final class DropBoxAuth implements AuthService {
 
     return TaskEither.tryCatch(() async {
       final uri = Uri.https(apiHost, '/2/users/get_current_account');
-      final response = await dio.postUri<Map<String, dynamic>>(
+      final response = await _dio.postUri<Map<String, dynamic>>(
         uri,
         options: authOptions,
       );
@@ -174,7 +177,7 @@ final class DropBoxAuth implements AuthService {
 
     return TaskEither.tryCatch(
       () async {
-        final response = await dio.postUri<Map<String, dynamic>>(
+        final response = await _dio.postUri<Map<String, dynamic>>(
           uri,
           options: authOptions,
         );

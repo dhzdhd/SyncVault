@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
@@ -11,17 +13,10 @@ import 'package:syncvault/src/accounts/services/auth_service.dart';
 import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
 import 'package:syncvault/errors.dart';
 
-final dio = Dio();
+final _dio = GetIt.I<Dio>();
 
+@singleton
 final class OneDriveAuth implements AuthService {
-  // static final _singleton = OneDriveAuth._internal();
-
-  // factory OneDriveAuth() {
-  //   return _singleton;
-  // }
-
-  // OneDriveAuth._internal();
-
   static const clientId = '591486db-4bcc-46b7-ad21-45a6c59cfa26';
   static final callbackUrlScheme = Platform.isAndroid
       ? 'msauth://com.example.syncvault/mf%2BaFV5Ps1q90nV2hXuUBpjGfXo%3D'
@@ -71,7 +66,7 @@ final class OneDriveAuth implements AuthService {
       final options = Options(
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       );
-      final response = await dio.postUri<Map<String, dynamic>>(
+      final response = await _dio.postUri<Map<String, dynamic>>(
         tokenUri,
         data: {
           'client_id': clientId,
@@ -128,7 +123,7 @@ final class OneDriveAuth implements AuthService {
         );
         final uri = Uri.https(authHost, '/common/oauth2/v2.0/token');
 
-        final response = await dio.postUri<Map<String, dynamic>>(
+        final response = await _dio.postUri<Map<String, dynamic>>(
           uri,
           data: {
             'client_id': clientId,
@@ -160,7 +155,7 @@ final class OneDriveAuth implements AuthService {
 
     return TaskEither.tryCatch(() async {
       final uri = Uri.https(apiHost, '/beta/me');
-      final response = await dio.getUri<Map<String, dynamic>>(
+      final response = await _dio.getUri<Map<String, dynamic>>(
         uri,
         options: authOptions,
       );
@@ -183,7 +178,7 @@ final class OneDriveAuth implements AuthService {
 
     return TaskEither.tryCatch(
       () async {
-        final response = await dio.getUri<Map<String, dynamic>>(
+        final response = await _dio.getUri<Map<String, dynamic>>(
           uri,
           options: authOptions,
         );
