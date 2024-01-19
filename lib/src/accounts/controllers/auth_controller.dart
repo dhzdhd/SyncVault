@@ -18,6 +18,22 @@ enum AuthProviderType {
   googleDrive,
 }
 
+// The AsyncValue controller to provide states to UI
+@riverpod
+class AuthController extends _$AuthController {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> signIn(AuthProviderType provider) async {
+    final authNotifier = ref.read(authProvider.notifier);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => authNotifier.signIn(provider));
+  }
+}
+
+// The actual repository to handle backend API calls
+// Called from the controller
 @riverpod
 class Auth extends _$Auth {
   @override
@@ -26,40 +42,47 @@ class Auth extends _$Auth {
   }
 
   static List<AuthProviderModel> init() {
-    final List<dynamic> raw =
-        jsonDecode(Hive.box('vault').get('accounts', defaultValue: '[]'));
+    const List<AuthProviderModel> defaultValue = [];
+
+    final List<dynamic> raw = jsonDecode(Hive.box('vault')
+        .get('accounts', defaultValue: defaultValue.toString()));
 
     try {
       return raw.map((e) => AuthProviderModel.fromJson(e)).toList();
     } catch (e) {
-      return [];
+      // TODO: Log errors
+      return defaultValue;
     }
   }
 
-  TaskEither<AppError, ()> signIn(AuthProviderType provider) {
-    return switch (provider) {
+  Future<void> signIn(AuthProviderType provider) async {
+    final service = await switch (provider) {
       AuthProviderType.oneDrive => OneDriveAuth().signIn(),
       AuthProviderType.dropBox => DropBoxAuth().signIn(),
       AuthProviderType.googleDrive => GoogleDriveAuth().signIn(),
     }
-        .chainEither(
+        .run();
+
+    service.match(
+      (l) => throw l,
       (model) {
-        if (state.any((element) =>
-            (element.provider == model.provider) &&
-            (element.email == model.email))) {
-          return Left(GeneralError(
+        if (state.any(
+          (element) =>
+              element.provider == model.provider &&
+              element.email == model.email,
+        )) {
+          throw GeneralError(
             message: 'The provider already exists',
             stackTrace: '',
-          ));
+          );
         }
 
         state = [...state, model];
+
         Hive.box('vault').put(
           'accounts',
           jsonEncode(state.map((e) => e.toJson()).toList()),
         );
-
-        return const Right(());
       },
     );
   }
@@ -78,6 +101,7 @@ class Auth extends _$Auth {
     );
   }
 
+  // TODO: Add functionality to delete folders
   void signOut(AuthProviderModel model) async {
     state = state.where((element) => element != model).toList();
     Hive.box('vault').put(

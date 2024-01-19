@@ -3,13 +3,26 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/errors.dart';
 
 class NewAccountDialogWidget extends HookConsumerWidget {
-  const NewAccountDialogWidget({Key? key}) : super(key: key);
+  const NewAccountDialogWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedProvider = useState(AuthProviderType.oneDrive);
+    final selected = useState(AuthProviderType.oneDrive);
+    final authController = ref.watch(authControllerProvider);
+
+    ref.listen<AsyncValue>(
+      authControllerProvider,
+      (prev, state) => {
+        if (!state.isLoading && state.hasError)
+          {
+            context.showErrorSnackBar(
+                state.error!.segregateError().toErrorString())
+          }
+      },
+    );
 
     return SimpleDialog(
       title: const Text('Register a new drive account'),
@@ -22,27 +35,32 @@ class NewAccountDialogWidget extends HookConsumerWidget {
                     child: Text(e.name.capitalize()),
                   ))
               .toList(),
-          value: selectedProvider.value,
+          value: selected.value,
           isExpanded: true,
           onChanged: (AuthProviderType? e) {
-            selectedProvider.value = e!;
+            selected.value = e!;
           },
         ),
         Padding(
           padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
           child: ElevatedButton(
             onPressed: () async {
-              final res = await ref
-                  .read(authProvider.notifier)
-                  .signIn(selectedProvider.value)
-                  .run();
-              res.match(
-                (l) => context.showErrorSnackBar(l.message),
-                (r) => null,
-              );
-              if (context.mounted) Navigator.of(context).pop();
+              if (!authController.isLoading) {
+                await ref
+                    .read(authControllerProvider.notifier)
+                    .signIn(selected.value);
+
+                if (context.mounted && !authController.isLoading) {
+                  Navigator.of(context).pop();
+                }
+              }
             },
-            child: const Text('Submit'),
+            child: authController.isLoading
+                ? const SizedBox.square(
+                    dimension: 20.0,
+                    child: CircularProgressIndicator(),
+                  )
+                : const Text('Submit'),
           ),
         )
       ],

@@ -3,8 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 
 class DriveInfoDialogWidget extends HookConsumerWidget {
-  const DriveInfoDialogWidget({Key? key, required this.model})
-      : super(key: key);
+  const DriveInfoDialogWidget({super.key, required this.model});
 
   final DriveInfoModel model;
 
@@ -55,7 +54,6 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
           ),
         ),
         Card(
-          color: Theme.of(context).scaffoldBackgroundColor,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -73,7 +71,6 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
           ),
         ),
         Card(
-          color: Theme.of(context).scaffoldBackgroundColor,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -91,7 +88,6 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
           ),
         ),
         Card(
-          color: Theme.of(context).scaffoldBackgroundColor,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

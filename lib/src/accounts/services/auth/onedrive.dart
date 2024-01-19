@@ -14,6 +14,14 @@ import 'package:syncvault/errors.dart';
 final dio = Dio();
 
 final class OneDriveAuth implements AuthService {
+  // static final _singleton = OneDriveAuth._internal();
+
+  // factory OneDriveAuth() {
+  //   return _singleton;
+  // }
+
+  // OneDriveAuth._internal();
+
   static const clientId = '591486db-4bcc-46b7-ad21-45a6c59cfa26';
   static final callbackUrlScheme = Platform.isAndroid
       ? 'msauth://com.example.syncvault/mf%2BaFV5Ps1q90nV2hXuUBpjGfXo%3D'

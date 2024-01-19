@@ -4,8 +4,8 @@ extension ErrorSegregation on Object {
   AppError segregateError() {
     if (this is AppError) {
       return this as AppError;
-    } else if (this is DioError) {
-      final error = this as DioError;
+    } else if (this is DioException) {
+      final error = this as DioException;
       return HttpError(
         message: error.response.toString(),
         stackTrace: error.stackTrace.toString(),
@@ -13,6 +13,13 @@ extension ErrorSegregation on Object {
     } else {
       return GeneralError(message: toString(), stackTrace: 'No stacktrace');
     }
+  }
+
+  String toErrorString() {
+    if (this is AppError) {
+      return (this as AppError).message;
+    }
+    return '';
   }
 }
 

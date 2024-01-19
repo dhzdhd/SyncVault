@@ -6,7 +6,23 @@ part of 'auth_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authHash() => r'122bc171f130b7550969e7a9ac7ed668013e937d';
+String _$authControllerHash() => r'1a450cb08f9c89ad4612d36261cb94ab4ab973a8';
+
+/// See also [AuthController].
+@ProviderFor(AuthController)
+final authControllerProvider =
+    AutoDisposeAsyncNotifierProvider<AuthController, void>.internal(
+  AuthController.new,
+  name: r'authControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
+String _$authHash() => r'04fc348694e5096a3ffcb97a8b4ea6b1bd0f5ae9';
 
 /// See also [Auth].
 @ProviderFor(Auth)
