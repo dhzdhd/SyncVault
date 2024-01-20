@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/src/accounts/components/delete_account_dialog.dart';
 import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
@@ -124,36 +125,13 @@ class AccountView extends ConsumerWidget {
                                   Icon(Icons.delete),
                                 ],
                               ),
-                              onTap: () {
-                                if (ref.read(folderProvider).any(
-                                      (element) => element.email == e.email,
-                                    )) {
-                                  showDialog(
+                              onTap: () async {
+                                if (context.mounted) {
+                                  await showDialog(
                                     context: context,
-                                    builder: (ctx) {
-                                      return AlertDialog(
-                                        title: const Text('Confirm deletion'),
-                                        content: const Text(
-                                          'The account contains dependent folders. Are you sure you want to sign out?\n This will delete all dependent folders from the app but not from the drive.',
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            child: const Text('Cancel'),
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(),
-                                          ),
-                                          ElevatedButton(
-                                            child: const Text('Confirm'),
-                                            onPressed: () => ref
-                                                .read(authProvider.notifier)
-                                                .signOut(e),
-                                          ),
-                                        ],
-                                      );
-                                    },
+                                    builder: (ctx) =>
+                                        DeleteAccountDialogWidget(model: e),
                                   );
-                                } else {
-                                  ref.watch(authProvider.notifier).signOut(e);
                                 }
                               },
                             ),
