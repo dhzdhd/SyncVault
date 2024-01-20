@@ -39,8 +39,6 @@ Future<DriveInfoModel> driveInfoController(
 ) async {
   final authNotifier = ref.read(authProvider.notifier);
 
-  throw GeneralError(message: 'message', stackTrace: '');
-
   return authNotifier.getDriveInfo(model);
 }
 
