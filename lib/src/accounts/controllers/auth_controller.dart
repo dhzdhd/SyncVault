@@ -32,6 +32,18 @@ class AuthController extends _$AuthController {
   }
 }
 
+@riverpod
+Future<DriveInfoModel> driveInfoController(
+  DriveInfoControllerRef ref,
+  AuthProviderModel model,
+) async {
+  final authNotifier = ref.read(authProvider.notifier);
+
+  throw GeneralError(message: 'message', stackTrace: '');
+
+  return authNotifier.getDriveInfo(model);
+}
+
 // The actual repository to handle backend API calls
 // Called from the controller
 @riverpod
@@ -95,7 +107,12 @@ class Auth extends _$Auth {
     }
         .map(
       (r) {
-        state = [...state.where((e) => e != model), r];
+        state = [
+          ...state
+              .where((e) => e != model)
+              .sortBy(Order.by((a) => a.hashCode, Order.orderInt)),
+          r
+        ];
         return r;
       },
     );
@@ -110,19 +127,21 @@ class Auth extends _$Auth {
     );
   }
 
-  Future<Either<AppError, DriveInfoModel>> getDriveInfo(
+  Future<DriveInfoModel> getDriveInfo(
     AuthProviderModel model,
   ) async {
-    // Improve with a TaskEither
-    return await (await refresh(model).run()).bindFuture((e) async {
-      return switch (e.provider) {
-        AuthProviderType.oneDrive =>
-          await OneDriveAuth().getDriveInfo(e.accessToken).run(),
-        AuthProviderType.dropBox =>
-          await DropBoxAuth().getDriveInfo(e.accessToken).run(),
-        AuthProviderType.googleDrive =>
-          await GoogleDriveAuth().getDriveInfo(e.accessToken).run(),
-      };
-    }).run();
+    return await (await refresh(model).run())
+        .bindFuture((e) async {
+          return switch (e.provider) {
+            AuthProviderType.oneDrive =>
+              await OneDriveAuth().getDriveInfo(e.accessToken).run(),
+            AuthProviderType.dropBox =>
+              await DropBoxAuth().getDriveInfo(e.accessToken).run(),
+            AuthProviderType.googleDrive =>
+              await GoogleDriveAuth().getDriveInfo(e.accessToken).run(),
+          };
+        })
+        .match((l) => throw l, (r) => r)
+        .run();
   }
 }

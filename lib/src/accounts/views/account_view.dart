@@ -105,20 +105,12 @@ class AccountView extends ConsumerWidget {
                                 ],
                               ),
                               onTap: () async {
-                                final info = await ref
-                                    .read(authProvider.notifier)
-                                    .getDriveInfo(e);
-                                info.match(
-                                  (l) => ctx.showErrorSnackBar(
-                                    l.message,
-                                  ),
-                                  (r) async => await Future.delayed(
-                                    Duration.zero,
-                                    () => showDialog(
-                                      context: context,
-                                      builder: (ctx) => DriveInfoDialogWidget(
-                                        model: r,
-                                      ),
+                                await Future.delayed(
+                                  Duration.zero,
+                                  () => showDialog(
+                                    context: context,
+                                    builder: (ctx) => DriveInfoDialogWidget(
+                                      model: e,
                                     ),
                                   ),
                                 );
