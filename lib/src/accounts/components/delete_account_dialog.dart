@@ -14,7 +14,7 @@ class DeleteAccountDialogWidget extends ConsumerWidget {
     return AlertDialog(
       title: const Text('Delete account?'),
       content: Text(
-        ref.read(folderProvider).any(
+        ref.watch(folderProvider).any(
                   (element) => element.email == model.email,
                 )
             ? 'The account contains dependent folders. Are you sure you want to sign out?\n This action will not delete the folders stored locally/in your drive.'

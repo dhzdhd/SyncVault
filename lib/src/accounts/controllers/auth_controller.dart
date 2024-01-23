@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/auth/dropbox.dart';
@@ -60,7 +62,10 @@ class Auth extends _$Auth {
     try {
       return raw.map((e) => AuthProviderModel.fromJson(e)).toList();
     } catch (e) {
-      // TODO: Log errors
+      // TODO: Log to sentry
+      final logger = GetIt.I<Logger>();
+      logger.e('Failed to parse local accounts data', error: e);
+
       return defaultValue;
     }
   }
