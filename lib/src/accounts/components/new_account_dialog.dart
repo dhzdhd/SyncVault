@@ -15,12 +15,11 @@ class NewAccountDialogWidget extends HookConsumerWidget {
 
     ref.listen<AsyncValue>(
       authControllerProvider,
-      (prev, state) => {
-        if (!state.isLoading && state.hasError)
-          {
-            context.showErrorSnackBar(
-                state.error!.segregateError().toErrorString())
-          }
+      (prev, state) {
+        if (!state.isLoading && state.hasError) {
+          context
+              .showErrorSnackBar(state.error!.segregateError().toErrorString());
+        }
       },
     );
 

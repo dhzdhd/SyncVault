@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:dio/dio.dart';
@@ -42,6 +43,7 @@ final class GoogleDriveAuth implements AuthService {
             'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
         'state': '12345',
         'access_type': 'offline',
+        'prompt': 'select_account consent',
       },
     );
 
@@ -82,8 +84,6 @@ final class GoogleDriveAuth implements AuthService {
           if (Platform.isWindows) 'client_secret': clientSecret,
           'redirect_uri':
               Platform.isAndroid ? '$callbackUrlScheme:/' : callbackUrlScheme,
-          'prompt': 'consent',
-          'access_type': 'offline',
         },
         options: options,
       );

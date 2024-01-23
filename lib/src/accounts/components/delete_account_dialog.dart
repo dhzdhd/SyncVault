@@ -25,6 +25,9 @@ class DeleteAccountDialogWidget extends ConsumerWidget {
         TextButton(
             onPressed: () {
               ref.read(authProvider.notifier).signOut(model);
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
             },
             child: const Text('Delete')),
         ElevatedButton(

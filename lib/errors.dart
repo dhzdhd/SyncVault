@@ -11,7 +11,10 @@ extension ErrorSegregation on Object {
         stackTrace: error.stackTrace.toString(),
       );
     } else {
-      return GeneralError(message: toString(), stackTrace: 'No stacktrace');
+      return GeneralError(
+        message: toString(),
+        stackTrace: (this as Error).stackTrace.toString(),
+      );
     }
   }
 
