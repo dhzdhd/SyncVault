@@ -1,7 +1,9 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
+import 'package:syncvault/src/accounts/models/cloud_file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/accounts/models/filter.dart';
 
 abstract interface class DriveService {
   TaskEither<AppError, String> createFolder({
@@ -19,8 +21,8 @@ abstract interface class DriveService {
     required AuthProviderModel authModel,
     required Option<String> path,
   });
-  TaskEither<AppError, List<Map<String, dynamic>>> getAllFiles({
+  TaskEither<AppError, List<CloudFileModel>> getAllFiles({
     required String accessToken,
-    required Option<Map<String, dynamic>> filter,
+    required Option<Filter> filter,
   });
 }

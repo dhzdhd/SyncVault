@@ -6,9 +6,11 @@ import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
+import 'package:syncvault/src/accounts/models/cloud_file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
+import 'package:syncvault/src/accounts/models/filter.dart';
 
 final _dio = GetIt.I<Dio>();
 
@@ -185,9 +187,9 @@ class DropBox implements DriveService {
   }
 
   @override
-  TaskEither<AppError, List<Map<String, dynamic>>> getAllFiles({
+  TaskEither<AppError, List<CloudFileModel>> getAllFiles({
     required String accessToken,
-    required Option<Map<String, dynamic>> filter,
+    required Option<Filter> filter,
   }) {
     throw UnimplementedError();
   }

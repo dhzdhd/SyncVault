@@ -7,9 +7,11 @@ import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
+import 'package:syncvault/src/accounts/models/cloud_file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/services/drive_service.dart';
+import 'package:syncvault/src/accounts/models/filter.dart';
 
 final _dio = GetIt.I<Dio>();
 
@@ -212,9 +214,9 @@ class GoogleDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, List<Map<String, dynamic>>> getAllFiles({
+  TaskEither<AppError, List<CloudFileModel>> getAllFiles({
     required String accessToken,
-    required Option<Map<String, dynamic>> filter,
+    required Option<Filter> filter,
   }) {
     final uri = Uri.https(apiHost, '$basePath/files');
     final authOptions = Options(headers: {
@@ -230,21 +232,36 @@ class GoogleDrive implements DriveService {
         );
 
         final rawFiles = response.data!['files'] as List<dynamic>;
-        final files = rawFiles
-            .map((e) => jsonDecode(jsonEncode(e)) as Map<String, dynamic>)
-            .toList();
+
+        final files = rawFiles.map((item) {
+          if (item
+              case {
+                'kind': String _,
+                'mimeType': String mimeType,
+                'id': String id,
+                'name': String name
+              }) {
+            final isDirectory =
+                mimeType == 'application/vnd.google-apps.folder';
+            return CloudFileModel(id: id, isDirectory: isDirectory, name: name);
+          } else {
+            throw HttpError(
+              message: 'Get all files could not be parsed',
+              stackTrace: '',
+            );
+          }
+        }).toList();
 
         print(files);
 
         filter.match(
           () => files,
           (t) => files.where(
-            (e) => t.keys.any(
-              (element) => e.lookup(element).match(
-                    () => false,
-                    (val) => val == t[element],
-                  ),
-            ),
+            (e) => switch (t) {
+              DirectoryFilter(:final value) => e.isDirectory == value,
+              IDFilter(:final value) => e.id == value,
+              NameFilter(:final value) => e.name == value,
+            },
           ),
         );
 

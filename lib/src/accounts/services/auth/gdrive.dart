@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:dio/dio.dart';
@@ -14,6 +13,7 @@ import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/services/drive/gdrive.dart';
+import 'package:syncvault/src/accounts/models/filter.dart';
 
 final _dio = GetIt.I<Dio>();
 
@@ -98,15 +98,13 @@ final class GoogleDriveAuth implements AuthService {
       final folders = await GoogleDrive()
           .getAllFiles(
             accessToken: accessToken,
-            filter: some(
-              {'name': 'SyncVault'},
-            ),
+            filter: const Some(Filter.name('SyncVault')),
           )
           .run();
 
       final id = await folders.match((l) => throw l, (r) async {
         if (r.isNotEmpty) {
-          return r[0]['id'] as String;
+          return r.first.id;
         } else {
           final folderIdResult = await GoogleDrive()
               .createFolder(
