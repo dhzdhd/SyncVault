@@ -25,7 +25,9 @@ class OneDrive implements DriveService {
     required String accessToken,
     required Option<String> parentId,
   }) {
+    // Default parent is root directory
     final subPath = parentId.match(() => 'root', (t) => 'items/$t');
+
     final uri = Uri.https(apiHost, '$basePath/$subPath/children');
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
@@ -38,6 +40,8 @@ class OneDrive implements DriveService {
           uri,
           options: authOptions,
           data: {
+            // Default created folder = SyncVault (usually only on account creation)
+            // TODO: Move "SyncVault" to a globally accessible constant
             'name': folderName.match(() => 'SyncVault', (t) => t),
             'folder': {'childCount': 0}
           },
@@ -51,7 +55,7 @@ class OneDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> upload(
+  TaskEither<AppError, ()> upload(
     FolderModel folderModel,
     AuthProviderModel authModel,
     Option<String> filePath,
@@ -62,6 +66,7 @@ class OneDrive implements DriveService {
     });
 
     final folder = Directory(folderModel.folderPath);
+    // Default path is all the files in the given root folder
     final files = filePath.match(
       () => folder.listSync(recursive: true, followLinks: false),
       (t) => [File(t)],
@@ -136,7 +141,7 @@ class OneDrive implements DriveService {
           }
         }
 
-        return 'Success';
+        return ();
       },
       (error, stackTrace) {
         return error.segregateError();

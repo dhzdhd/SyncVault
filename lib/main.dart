@@ -37,7 +37,7 @@ void callbackDispatcher() {
         final a = await res.bindFuture((r) async {
           return await OneDrive().upload(i, r, none()).run();
         }).run();
-        a.match((l) => debugPrint(l.message), (r) => debugPrint(r));
+        a.match((l) => debugPrint(l.message), (r) => debugPrint('Success'));
       }
     }
 

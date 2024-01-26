@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -55,7 +54,7 @@ class GoogleDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> upload(
+  TaskEither<AppError, ()> upload(
     FolderModel folderModel,
     AuthProviderModel authModel,
     Option<String> filePath,
@@ -150,7 +149,7 @@ class GoogleDrive implements DriveService {
           }
         }
 
-        return 'Success';
+        return ();
       },
       (error, stackTrace) {
         return error.segregateError();

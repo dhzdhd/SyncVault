@@ -1,6 +1,5 @@
 // dart run build_runner build
 
-import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'cloud_file_model.freezed.dart';

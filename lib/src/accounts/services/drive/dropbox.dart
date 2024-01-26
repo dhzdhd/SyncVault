@@ -54,7 +54,7 @@ class DropBox implements DriveService {
   }
 
   @override
-  TaskEither<AppError, String> upload(FolderModel folderModel,
+  TaskEither<AppError, ()> upload(FolderModel folderModel,
       AuthProviderModel authModel, Option<String> filePath) {
     final authOptions = Options(
       headers: {
@@ -150,7 +150,7 @@ class DropBox implements DriveService {
           }
         }
 
-        return 'Success';
+        return ();
       },
       (error, stackTrace) {
         return error.segregateError();

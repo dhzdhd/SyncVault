@@ -11,7 +11,7 @@ abstract interface class DriveService {
     required String accessToken,
     required Option<String> parentId,
   });
-  TaskEither<AppError, String> upload(
+  TaskEither<AppError, ()> upload(
     FolderModel folderModel,
     AuthProviderModel authModel,
     Option<String> filePath,
