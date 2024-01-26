@@ -187,9 +187,20 @@ class DropBox implements DriveService {
   }
 
   @override
-  TaskEither<AppError, List<CloudFileModel>> getAllFiles({
+  TaskEither<AppError, List<CloudFileModel>> getAllItems({
     required String accessToken,
     required Option<Filter> filter,
+    required String root,
+    bool flatten = true,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  TaskEither<AppError, List<String>> getItemByFilter({
+    required String accessToken,
+    required Option<Filter> filter,
+    required bool isInRoot,
   }) {
     throw UnimplementedError();
   }

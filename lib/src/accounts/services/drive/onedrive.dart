@@ -187,9 +187,130 @@ class OneDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, List<CloudFileModel>> getAllFiles({
+  TaskEither<AppError, List<CloudFileModel>> getAllItems({
+    required String accessToken,
+    required String root,
+    required Option<Filter> filter,
+    bool flatten = true,
+  }) {
+    final uri = Uri.https(apiHost, '$basePath/root/children');
+    final authOptions = Options(headers: {
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json'
+    });
+
+    Future<void> recExpandItems(CloudFileModel item) async {
+      final uri = Uri.https(apiHost, '$basePath/items/${item.id}/children');
+      final response = await _dio.getUri<Map<String, dynamic>>(
+        uri,
+        options: authOptions,
+      );
+
+      // debugPrint(response.data.toString());
+      final rawFiles = response.data!['value'] as List<dynamic>;
+
+      for (final recItem in rawFiles) {
+        if (recItem
+            case {
+              'id': String id,
+              'name': String name,
+              'parentReference': {
+                'id': String parentId,
+                'path': String parentPath,
+              },
+            }) {
+          final isDirectory = recItem.containsKey('folder');
+          final relativePath = parentPath.split('/drive/root:');
+          final model = CloudFileModel(
+            id: id,
+            isDirectory: isDirectory,
+            name: name,
+            path: Uri.file('$relativePath$name'),
+            parentId: Some(parentId),
+            children: [],
+          );
+
+          if (isDirectory) {
+            await recExpandItems(model);
+          } else {
+            item.children.add(model);
+          }
+        } else {
+          throw HttpError(
+            message: 'Get all files could not be parsed',
+            stackTrace: '',
+          );
+        }
+      }
+    }
+
+    return TaskEither.tryCatch(
+      () async {
+        final response = await _dio.getUri<Map<String, dynamic>>(
+          uri,
+          options: authOptions,
+        );
+
+        final rawFiles = response.data!['value'] as List<dynamic>;
+
+        final files = rawFiles.map((item) {
+          if (item
+              case {
+                'id': String id,
+                'name': String name,
+                'parentReference': {
+                  'id': String parentId,
+                  'path': String parentPath,
+                },
+              }) {
+            final isDirectory = item.containsKey('folder');
+            final relativePath = parentPath.split('/drive/root:');
+            return CloudFileModel(
+              id: id,
+              isDirectory: isDirectory,
+              name: name,
+              path: Uri.file('$relativePath$name'),
+              parentId: Some(parentId),
+              children: [],
+            );
+          } else {
+            throw HttpError(
+              message: 'Get all files could not be parsed',
+              stackTrace: '',
+            );
+          }
+        }).toList();
+
+        for (final item in files) {
+          await recExpandItems(item);
+        }
+
+        // print(files);
+
+        // filter.match(
+        //   () => files,
+        //   (t) => files.where(
+        //     (e) => switch (t) {
+        //       DirectoryFilter(:final value) => e.isDirectory == value,
+        //       IDFilter(:final value) => e.id == value,
+        //       NameFilter(:final value) => e.name == value,
+        //     },
+        //   ),
+        // );
+
+        return files;
+      },
+      (error, stackTrace) {
+        return error.segregateError();
+      },
+    );
+  }
+
+  @override
+  TaskEither<AppError, List<String>> getItemByFilter({
     required String accessToken,
     required Option<Filter> filter,
+    required bool isInRoot,
   }) {
     throw UnimplementedError();
   }

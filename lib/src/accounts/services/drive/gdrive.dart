@@ -213,9 +213,11 @@ class GoogleDrive implements DriveService {
   }
 
   @override
-  TaskEither<AppError, List<CloudFileModel>> getAllFiles({
+  TaskEither<AppError, List<CloudFileModel>> getAllItems({
     required String accessToken,
+    required String root,
     required Option<Filter> filter,
+    bool flatten = true,
   }) {
     final uri = Uri.https(apiHost, '$basePath/files');
     final authOptions = Options(headers: {
@@ -242,7 +244,14 @@ class GoogleDrive implements DriveService {
               }) {
             final isDirectory =
                 mimeType == 'application/vnd.google-apps.folder';
-            return CloudFileModel(id: id, isDirectory: isDirectory, name: name);
+            return CloudFileModel(
+              id: id,
+              isDirectory: isDirectory,
+              name: name,
+              children: [],
+              parentId: const Some(''),
+              path: Uri.file(''),
+            );
           } else {
             throw HttpError(
               message: 'Get all files could not be parsed',
@@ -270,5 +279,14 @@ class GoogleDrive implements DriveService {
         return error.segregateError();
       },
     );
+  }
+
+  @override
+  TaskEither<AppError, List<String>> getItemByFilter({
+    required String accessToken,
+    required Option<Filter> filter,
+    required bool isInRoot,
+  }) {
+    throw UnimplementedError();
   }
 }

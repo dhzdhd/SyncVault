@@ -21,8 +21,15 @@ abstract interface class DriveService {
     required AuthProviderModel authModel,
     required Option<String> path,
   });
-  TaskEither<AppError, List<CloudFileModel>> getAllFiles({
+  TaskEither<AppError, List<CloudFileModel>> getAllItems({
+    required String accessToken,
+    required String root,
+    required Option<Filter> filter,
+    bool flatten,
+  });
+  TaskEither<AppError, List<String>> getItemByFilter({
     required String accessToken,
     required Option<Filter> filter,
+    required bool isInRoot,
   });
 }

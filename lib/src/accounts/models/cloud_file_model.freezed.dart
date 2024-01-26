@@ -22,7 +22,12 @@ CloudFileModel _$CloudFileModelFromJson(Map<String, dynamic> json) {
 mixin _$CloudFileModel {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  bool get isDirectory => throw _privateConstructorUsedError;
+  bool get isDirectory =>
+      throw _privateConstructorUsedError; // Relative to root folder defined in FolderModel
+  @UriConverter()
+  Uri get path => throw _privateConstructorUsedError;
+  Option<String> get parentId => throw _privateConstructorUsedError;
+  List<CloudFileModel> get children => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +41,13 @@ abstract class $CloudFileModelCopyWith<$Res> {
           CloudFileModel value, $Res Function(CloudFileModel) then) =
       _$CloudFileModelCopyWithImpl<$Res, CloudFileModel>;
   @useResult
-  $Res call({String id, String name, bool isDirectory});
+  $Res call(
+      {String id,
+      String name,
+      bool isDirectory,
+      @UriConverter() Uri path,
+      Option<String> parentId,
+      List<CloudFileModel> children});
 }
 
 /// @nodoc
@@ -55,6 +66,9 @@ class _$CloudFileModelCopyWithImpl<$Res, $Val extends CloudFileModel>
     Object? id = null,
     Object? name = null,
     Object? isDirectory = null,
+    Object? path = null,
+    Object? parentId = null,
+    Object? children = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -69,6 +83,18 @@ class _$CloudFileModelCopyWithImpl<$Res, $Val extends CloudFileModel>
           ? _value.isDirectory
           : isDirectory // ignore: cast_nullable_to_non_nullable
               as bool,
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as Uri,
+      parentId: null == parentId
+          ? _value.parentId
+          : parentId // ignore: cast_nullable_to_non_nullable
+              as Option<String>,
+      children: null == children
+          ? _value.children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<CloudFileModel>,
     ) as $Val);
   }
 }
@@ -81,7 +107,13 @@ abstract class _$$CloudFileModelImplCopyWith<$Res>
       __$$CloudFileModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, bool isDirectory});
+  $Res call(
+      {String id,
+      String name,
+      bool isDirectory,
+      @UriConverter() Uri path,
+      Option<String> parentId,
+      List<CloudFileModel> children});
 }
 
 /// @nodoc
@@ -98,6 +130,9 @@ class __$$CloudFileModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? isDirectory = null,
+    Object? path = null,
+    Object? parentId = null,
+    Object? children = null,
   }) {
     return _then(_$CloudFileModelImpl(
       id: null == id
@@ -112,6 +147,18 @@ class __$$CloudFileModelImplCopyWithImpl<$Res>
           ? _value.isDirectory
           : isDirectory // ignore: cast_nullable_to_non_nullable
               as bool,
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as Uri,
+      parentId: null == parentId
+          ? _value.parentId
+          : parentId // ignore: cast_nullable_to_non_nullable
+              as Option<String>,
+      children: null == children
+          ? _value.children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<CloudFileModel>,
     ));
   }
 }
@@ -120,7 +167,12 @@ class __$$CloudFileModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CloudFileModelImpl implements _CloudFileModel {
   const _$CloudFileModelImpl(
-      {required this.id, required this.name, required this.isDirectory});
+      {required this.id,
+      required this.name,
+      required this.isDirectory,
+      @UriConverter() required this.path,
+      required this.parentId,
+      required this.children});
 
   factory _$CloudFileModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CloudFileModelImplFromJson(json);
@@ -131,10 +183,18 @@ class _$CloudFileModelImpl implements _CloudFileModel {
   final String name;
   @override
   final bool isDirectory;
+// Relative to root folder defined in FolderModel
+  @override
+  @UriConverter()
+  final Uri path;
+  @override
+  final Option<String> parentId;
+  @override
+  final List<CloudFileModel> children;
 
   @override
   String toString() {
-    return 'CloudFileModel(id: $id, name: $name, isDirectory: $isDirectory)';
+    return 'CloudFileModel(id: $id, name: $name, isDirectory: $isDirectory, path: $path, parentId: $parentId, children: $children)';
   }
 
   @override
@@ -145,12 +205,17 @@ class _$CloudFileModelImpl implements _CloudFileModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.isDirectory, isDirectory) ||
-                other.isDirectory == isDirectory));
+                other.isDirectory == isDirectory) &&
+            (identical(other.path, path) || other.path == path) &&
+            (identical(other.parentId, parentId) ||
+                other.parentId == parentId) &&
+            const DeepCollectionEquality().equals(other.children, children));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, isDirectory);
+  int get hashCode => Object.hash(runtimeType, id, name, isDirectory, path,
+      parentId, const DeepCollectionEquality().hash(children));
 
   @JsonKey(ignore: true)
   @override
@@ -171,7 +236,10 @@ abstract class _CloudFileModel implements CloudFileModel {
   const factory _CloudFileModel(
       {required final String id,
       required final String name,
-      required final bool isDirectory}) = _$CloudFileModelImpl;
+      required final bool isDirectory,
+      @UriConverter() required final Uri path,
+      required final Option<String> parentId,
+      required final List<CloudFileModel> children}) = _$CloudFileModelImpl;
 
   factory _CloudFileModel.fromJson(Map<String, dynamic> json) =
       _$CloudFileModelImpl.fromJson;
@@ -182,6 +250,13 @@ abstract class _CloudFileModel implements CloudFileModel {
   String get name;
   @override
   bool get isDirectory;
+  @override // Relative to root folder defined in FolderModel
+  @UriConverter()
+  Uri get path;
+  @override
+  Option<String> get parentId;
+  @override
+  List<CloudFileModel> get children;
   @override
   @JsonKey(ignore: true)
   _$$CloudFileModelImplCopyWith<_$CloudFileModelImpl> get copyWith =>

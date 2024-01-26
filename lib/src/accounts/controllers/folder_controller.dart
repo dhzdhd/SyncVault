@@ -99,7 +99,8 @@ class Folder extends _$Folder {
               files: [],
             );
             final resp = await driveService
-                .getAllFiles(
+                .getAllItems(
+                  root: '',
                   accessToken: newAuthModel.accessToken,
                   filter: none(),
                 )
