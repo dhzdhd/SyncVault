@@ -3,23 +3,41 @@ import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/cloud_file_model.dart';
 
-class TreeWidget extends ConsumerWidget {
+class TreeWidget extends ConsumerStatefulWidget {
   const TreeWidget({super.key, required this.files});
 
   final List<CloudFileModel> files;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final treeController = TreeController<CloudFileModel>(
-      roots: files,
+  ConsumerState<TreeWidget> createState() => _TreeWidgetState();
+}
+
+class _TreeWidgetState extends ConsumerState<TreeWidget> {
+  late final TreeController<CloudFileModel> _treeController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _treeController = TreeController<CloudFileModel>(
+      roots: widget.files,
       childrenProvider: (CloudFileModel node) => node.children,
     );
+  }
 
+  @override
+  void dispose() {
+    _treeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AnimatedTreeView<CloudFileModel>(
-      treeController: treeController,
+      treeController: _treeController,
       nodeBuilder: (BuildContext context, TreeEntry<CloudFileModel> entry) {
         return InkWell(
-          onTap: () => treeController.toggleExpansion(entry.node),
+          onTap: () => _treeController.toggleExpansion(entry.node),
           child: TreeIndentation(
             entry: entry,
             child: Text(entry.node.name),
