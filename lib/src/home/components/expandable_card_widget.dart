@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class ExpandableCardWidget extends StatefulWidget {
   const ExpandableCardWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.trailing,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget title;
   final Widget trailing;
@@ -29,7 +29,9 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
         padding: const EdgeInsets.all(4.0),
         child: Ink(
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).hoverColor
+                : Theme.of(context).hoverColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: InkWell(
@@ -42,7 +44,7 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
             },
             child: Card(
               margin: const EdgeInsets.all(0),
-              color: Colors.transparent,
+              color: const Color.fromARGB(0, 51, 46, 46),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(

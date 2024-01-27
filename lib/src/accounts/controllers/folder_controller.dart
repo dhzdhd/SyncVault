@@ -78,6 +78,16 @@ class Folder extends _$Folder {
         AuthProviderType.dropBox => DropBox(),
         AuthProviderType.googleDrive => GoogleDrive()
       };
+
+      // TODO: Check if SyncVault already exists and use it
+      final files = await driveService
+          .getAllItems(
+            root: '',
+            accessToken: newAuthModel.accessToken,
+            filter: none(),
+          )
+          .run();
+
       final idResult = await driveService
           .createFolder(
             folderName: some(folderName),
@@ -98,13 +108,6 @@ class Folder extends _$Folder {
               isDeletionEnabled: false,
               files: [],
             );
-            final resp = await driveService
-                .getAllItems(
-                  root: '',
-                  accessToken: newAuthModel.accessToken,
-                  filter: none(),
-                )
-                .run();
 
             state = [...state, folderModel];
             Hive.box('vault').put(

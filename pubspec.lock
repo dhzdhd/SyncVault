@@ -286,6 +286,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
+  flutter_fancy_tree_view:
+    dependency: "direct main"
+    description:
+      name: flutter_fancy_tree_view
+      sha256: f3883801aa2beedce285ffb7eac9b9d59fb7dcdd3fd71703dea60f3e4e1f29f2
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
   flutter_hooks:
     dependency: "direct main"
     description:

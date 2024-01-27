@@ -16,7 +16,7 @@ _$FolderModelImpl _$$FolderModelImplFromJson(Map<String, dynamic> json) =>
       isAutoSync: json['isAutoSync'] as bool,
       isDeletionEnabled: json['isDeletionEnabled'] as bool,
       files: (json['files'] as List<dynamic>)
-          .map((e) => FileModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => CloudFileModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

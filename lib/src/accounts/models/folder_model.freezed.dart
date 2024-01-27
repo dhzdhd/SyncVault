@@ -27,7 +27,7 @@ mixin _$FolderModel {
   String get folderId => throw _privateConstructorUsedError;
   bool get isAutoSync => throw _privateConstructorUsedError;
   bool get isDeletionEnabled => throw _privateConstructorUsedError;
-  List<FileModel> get files => throw _privateConstructorUsedError;
+  List<CloudFileModel> get files => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,7 +49,7 @@ abstract class $FolderModelCopyWith<$Res> {
       String folderId,
       bool isAutoSync,
       bool isDeletionEnabled,
-      List<FileModel> files});
+      List<CloudFileModel> files});
 }
 
 /// @nodoc
@@ -106,7 +106,7 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
       files: null == files
           ? _value.files
           : files // ignore: cast_nullable_to_non_nullable
-              as List<FileModel>,
+              as List<CloudFileModel>,
     ) as $Val);
   }
 }
@@ -127,7 +127,7 @@ abstract class _$$FolderModelImplCopyWith<$Res>
       String folderId,
       bool isAutoSync,
       bool isDeletionEnabled,
-      List<FileModel> files});
+      List<CloudFileModel> files});
 }
 
 /// @nodoc
@@ -182,7 +182,7 @@ class __$$FolderModelImplCopyWithImpl<$Res>
       files: null == files
           ? _value._files
           : files // ignore: cast_nullable_to_non_nullable
-              as List<FileModel>,
+              as List<CloudFileModel>,
     ));
   }
 }
@@ -198,7 +198,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       required this.folderId,
       required this.isAutoSync,
       required this.isDeletionEnabled,
-      required final List<FileModel> files})
+      required final List<CloudFileModel> files})
       : _files = files;
 
   factory _$FolderModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -218,9 +218,9 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
   final bool isAutoSync;
   @override
   final bool isDeletionEnabled;
-  final List<FileModel> _files;
+  final List<CloudFileModel> _files;
   @override
-  List<FileModel> get files {
+  List<CloudFileModel> get files {
     if (_files is EqualUnmodifiableListView) return _files;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_files);
@@ -303,7 +303,7 @@ abstract class _FolderModel implements FolderModel {
       required final String folderId,
       required final bool isAutoSync,
       required final bool isDeletionEnabled,
-      required final List<FileModel> files}) = _$FolderModelImpl;
+      required final List<CloudFileModel> files}) = _$FolderModelImpl;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
       _$FolderModelImpl.fromJson;
@@ -323,7 +323,7 @@ abstract class _FolderModel implements FolderModel {
   @override
   bool get isDeletionEnabled;
   @override
-  List<FileModel> get files;
+  List<CloudFileModel> get files;
   @override
   @JsonKey(ignore: true)
   _$$FolderModelImplCopyWith<_$FolderModelImpl> get copyWith =>

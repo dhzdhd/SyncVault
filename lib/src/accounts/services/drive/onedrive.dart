@@ -285,19 +285,6 @@ class OneDrive implements DriveService {
           await recExpandItems(item);
         }
 
-        // print(files);
-
-        // filter.match(
-        //   () => files,
-        //   (t) => files.where(
-        //     (e) => switch (t) {
-        //       DirectoryFilter(:final value) => e.isDirectory == value,
-        //       IDFilter(:final value) => e.id == value,
-        //       NameFilter(:final value) => e.name == value,
-        //     },
-        //   ),
-        // );
-
         return files;
       },
       (error, stackTrace) {
@@ -312,6 +299,17 @@ class OneDrive implements DriveService {
     required Option<Filter> filter,
     required bool isInRoot,
   }) {
+    // filter.match(
+    //       () => files,
+    //       (t) => files.where(
+    //         (e) => switch (t) {
+    //           DirectoryFilter(:final value) => e.isDirectory == value,
+    //           IDFilter(:final value) => e.id == value,
+    //           NameFilter(:final value) => e.name == value,
+    //         },
+    //       ),
+    //     );
+
     throw UnimplementedError();
   }
 }

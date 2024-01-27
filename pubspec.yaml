@@ -37,6 +37,7 @@ dependencies:
   injectable: ^2.3.2
   get_it: ^7.6.7
   logger: ^2.0.2+1
+  flutter_fancy_tree_view: ^1.4.1
 
 dev_dependencies:
   flutter_test:
