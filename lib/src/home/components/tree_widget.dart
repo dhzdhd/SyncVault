@@ -40,7 +40,13 @@ class _TreeWidgetState extends ConsumerState<TreeWidget> {
           onTap: () => _treeController.toggleExpansion(entry.node),
           child: TreeIndentation(
             entry: entry,
-            child: Text(entry.node.name),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+              child: Text(
+                entry.node.name,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
           ),
         );
       },
