@@ -27,16 +27,9 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
       curve: Curves.easeInOut,
       child: Padding(
         padding: const EdgeInsets.all(4.0),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).hoverColor
-                : Theme.of(context).hoverColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(10),
-            splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
             onTap: () {
               setState(() {
                 _show = !_show;
@@ -44,7 +37,6 @@ class _ExpandableCardWidgetState extends State<ExpandableCardWidget> {
             },
             child: Card(
               margin: const EdgeInsets.all(0),
-              color: const Color.fromARGB(0, 51, 46, 46),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
