@@ -6,7 +6,24 @@ part of 'folder_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$folderHash() => r'58767c5b391c6e3091de274ce5d8fa31f91ed71a';
+String _$createFolderControllerHash() =>
+    r'73df8d7c7471730575b6c3228524c0309d8e0adb';
+
+/// See also [CreateFolderController].
+@ProviderFor(CreateFolderController)
+final createFolderControllerProvider =
+    AutoDisposeAsyncNotifierProvider<CreateFolderController, void>.internal(
+  CreateFolderController.new,
+  name: r'createFolderControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$createFolderControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CreateFolderController = AutoDisposeAsyncNotifier<void>;
+String _$folderHash() => r'f01c4ba1cace544fa346516a6ff7c5c049e3043c';
 
 /// See also [Folder].
 @ProviderFor(Folder)

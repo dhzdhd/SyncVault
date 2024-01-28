@@ -14,6 +14,29 @@ import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
 part 'folder_controller.g.dart';
 
 @riverpod
+class CreateFolderController extends _$CreateFolderController {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> createFolder(
+    AuthProviderModel authModel,
+    String folderPath,
+    String folderName,
+  ) async {
+    final folderNotifier = ref.read(folderProvider.notifier);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => folderNotifier.createFolder(
+        authModel,
+        folderPath,
+        folderName,
+      ),
+    );
+  }
+}
+
+@riverpod
 class Folder extends _$Folder {
   @override
   List<FolderModel> build() {
@@ -63,62 +86,57 @@ class Folder extends _$Folder {
     );
   }
 
-  TaskEither<AppError, ()> createFolder(
+  Future<void> createFolder(
     AuthProviderModel authModel,
     String folderPath,
     String folderName,
-  ) {
-    return TaskEither.tryCatch(() async {
-      final response =
-          await ref.read(authProvider.notifier).refresh(authModel).run();
-      final newAuthModel = response.match((l) => throw l, (r) => r);
+  ) async {
+    final response =
+        await ref.read(authProvider.notifier).refresh(authModel).run();
+    final newAuthModel = response.match((l) => throw l, (r) => r);
 
-      final driveService = switch (newAuthModel.provider) {
-        AuthProviderType.oneDrive => OneDrive(),
-        AuthProviderType.dropBox => DropBox(),
-        AuthProviderType.googleDrive => GoogleDrive()
-      };
+    final driveService = switch (newAuthModel.provider) {
+      AuthProviderType.oneDrive => OneDrive(),
+      AuthProviderType.dropBox => DropBox(),
+      AuthProviderType.googleDrive => GoogleDrive()
+    };
 
-      // TODO: Check if SyncVault already exists and use it
-      final files = await driveService
-          .getAllItems(
-            root: '',
-            accessToken: newAuthModel.accessToken,
-            filter: none(),
-          )
-          .run();
+    // TODO: Check if SyncVault already exists and use it
 
-      final idResult = await driveService
-          .createFolder(
-            folderName: some(folderName),
-            accessToken: newAuthModel.accessToken,
-            parentId: some(newAuthModel.folderId),
-          )
-          .run();
+    final id = await driveService
+        .createFolder(
+          folderName: some(folderName),
+          accessToken: newAuthModel.accessToken,
+          parentId: some(newAuthModel.folderId),
+        )
+        .match((l) => throw l, (r) => r)
+        .run();
 
-      return idResult
-          .bindFuture((id) async {
-            final folderModel = FolderModel(
-              email: newAuthModel.email,
-              provider: newAuthModel.provider,
-              folderPath: folderPath,
-              folderName: folderName,
-              folderId: id,
-              isAutoSync: true,
-              isDeletionEnabled: false,
-              files: [],
-            );
+    final files = await driveService
+        .getAllItems(
+          root: id,
+          accessToken: newAuthModel.accessToken,
+          filter: none(),
+        )
+        .match((l) => throw l, (r) => r)
+        .run();
 
-            state = [...state, folderModel];
-            Hive.box('vault').put(
-              'folders',
-              jsonEncode(state.map((e) => e.toJson()).toList()),
-            );
-            return right('Success');
-          })
-          .match((l) => throw l, (r) => ())
-          .run();
-    }, (error, stackTrace) => error.segregateError());
+    final folderModel = FolderModel(
+      email: newAuthModel.email,
+      provider: newAuthModel.provider,
+      folderPath: folderPath,
+      folderName: folderName,
+      folderId: id,
+      isAutoSync: true,
+      isDeletionEnabled: false,
+      files: files,
+    );
+
+    Hive.box('vault').put(
+      'folders',
+      jsonEncode(state.map((e) => e.toJson()).toList()),
+    );
+    state = [...state, folderModel];
   }
 
   TaskEither<AppError, ()> upload(

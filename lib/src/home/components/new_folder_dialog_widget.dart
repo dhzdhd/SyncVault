@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 
 class NewFolderDialogWidget extends StatefulHookConsumerWidget {
-  const NewFolderDialogWidget({Key? key}) : super(key: key);
+  const NewFolderDialogWidget({super.key});
 
   @override
   ConsumerState<NewFolderDialogWidget> createState() =>
@@ -35,7 +36,18 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
   Widget build(BuildContext context) {
     final selectedProvider = useState<Option<AuthProviderModel>>(const None());
     final selectedFolder = useState<Option<String>>(const None());
-    final driveInfo = ref.watch(authProvider);
+    final authInfo = ref.watch(authProvider);
+    final createFolderController = ref.watch(createFolderControllerProvider);
+
+    ref.listen<AsyncValue>(
+      createFolderControllerProvider,
+      (prev, state) {
+        if (!state.isLoading && state.hasError) {
+          context
+              .showErrorSnackBar(state.error!.segregateError().toErrorString());
+        }
+      },
+    );
 
     return SimpleDialog(
       title: const Text('Sync a new folder'),
@@ -51,7 +63,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: DropdownButton<AuthProviderModel?>(
-            items: driveInfo
+            items: authInfo
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,
@@ -99,48 +111,48 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         Padding(
           padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
           child: ElevatedButton(
-            child: const Text('Submit'),
+            child: createFolderController.isLoading
+                ? const SizedBox.square(
+                    dimension: 20.0,
+                    child: CircularProgressIndicator(),
+                  )
+                : const Text('Submit'),
             onPressed: () async {
-              final Option<(AuthProviderModel, String, String)> content =
-                  selectedProvider.value.match(
-                () => none(),
-                (t) => selectedFolder.value.match(() => none(), (r) {
-                  final folderName = _controller.text;
-                  if (_controller.text.trim().isNotEmpty &&
-                      !ref
-                          .read(folderProvider)
-                          .any((element) => element.folderName == folderName)) {
-                    return some((t, r, folderName));
-                  } else {
-                    return none();
-                  }
-                }),
-              );
+              if (!createFolderController.isLoading) {
+                final Option<(AuthProviderModel, String, String)> content =
+                    selectedProvider.value.match(
+                  () => none(),
+                  (t) => selectedFolder.value.match(() => none(), (r) {
+                    final folderName = _controller.text;
+                    if (_controller.text.trim().isNotEmpty &&
+                        !ref.read(folderProvider).any(
+                            (element) => element.folderName == folderName)) {
+                      return some((t, r, folderName));
+                    } else {
+                      return none();
+                    }
+                  }),
+                );
 
-              content.match(
-                () => context.showErrorSnackBar(
-                  'One or both of the fields are not filled',
-                ),
-                (t) async {
-                  final result = await ref
-                      .read(folderProvider.notifier)
-                      .createFolder(t.$1, t.$2, t.$3)
-                      .run();
-                  if (context.mounted) {
-                    result.match(
-                      (l) => context.showErrorSnackBar(
-                        'Error in linking folder',
-                      ),
-                      (r) => context.showSuccessSnackBar(
-                        content: 'Successfully linked folder',
-                        action: none(),
-                      ),
-                    );
-                  }
-                },
-              );
+                content.match(
+                  () => context.showErrorSnackBar(
+                    'One or both of the fields are not filled',
+                  ),
+                  (t) async {
+                    await ref
+                        .read(createFolderControllerProvider.notifier)
+                        .createFolder(t.$1, t.$2, t.$3);
+                  },
+                );
 
-              if (context.mounted) Navigator.of(context).pop();
+                if (context.mounted) {
+                  context.showSuccessSnackBar(
+                    content: 'Successfully linked folder',
+                    action: none(),
+                  );
+                  Navigator.of(context).pop();
+                }
+              }
             },
           ),
         )
