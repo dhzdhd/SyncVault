@@ -114,7 +114,7 @@ class Folder extends _$Folder {
 
     final files = await driveService
         .getAllItems(
-          root: id,
+          root: some(id),
           accessToken: newAuthModel.accessToken,
           filter: none(),
         )

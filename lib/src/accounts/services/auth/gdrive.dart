@@ -98,7 +98,7 @@ final class GoogleDriveAuth implements AuthService {
       final folders = await GoogleDrive()
           .getAllItems(
             accessToken: accessToken,
-            root: 'SyncVault',
+            root: none(),
             filter: const Some(Filter.name('SyncVault')),
           )
           .run();

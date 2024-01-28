@@ -142,16 +142,16 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                     await ref
                         .read(createFolderControllerProvider.notifier)
                         .createFolder(t.$1, t.$2, t.$3);
+
+                    if (context.mounted) {
+                      context.showSuccessSnackBar(
+                        content: 'Successfully linked folder',
+                        action: none(),
+                      );
+                      Navigator.of(context).pop();
+                    }
                   },
                 );
-
-                if (context.mounted) {
-                  context.showSuccessSnackBar(
-                    content: 'Successfully linked folder',
-                    action: none(),
-                  );
-                  Navigator.of(context).pop();
-                }
               }
             },
           ),

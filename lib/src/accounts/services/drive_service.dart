@@ -23,7 +23,7 @@ abstract interface class DriveService {
   });
   TaskEither<AppError, List<CloudFileModel>> getAllItems({
     required String accessToken,
-    required String root,
+    required Option<String> root,
     required Option<Filter> filter,
     bool flatten,
   });

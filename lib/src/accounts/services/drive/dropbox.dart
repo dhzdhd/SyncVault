@@ -190,7 +190,7 @@ class DropBox implements DriveService {
   TaskEither<AppError, List<CloudFileModel>> getAllItems({
     required String accessToken,
     required Option<Filter> filter,
-    required String root,
+    required Option<String> root,
     bool flatten = true,
   }) {
     throw UnimplementedError();

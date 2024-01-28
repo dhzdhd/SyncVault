@@ -189,12 +189,17 @@ class OneDrive implements DriveService {
   @override
   TaskEither<AppError, List<CloudFileModel>> getAllItems({
     required String accessToken,
-    required String root,
+    required Option<String> root,
     required Option<Filter> filter,
     bool flatten = true,
   }) {
     // TODO: Implement root folder
-    final uri = Uri.https(apiHost, '$basePath/root/children');
+    final uri = Uri.https(
+        apiHost,
+        root.match(
+          () => '$basePath/root/children',
+          (t) => '$basePath/items/$t/children',
+        ));
     final authOptions = Options(headers: {
       'Authorization': 'Bearer $accessToken',
       'Content-Type': 'application/json'
@@ -207,7 +212,7 @@ class OneDrive implements DriveService {
         options: authOptions,
       );
 
-      // debugPrint(response.data.toString());
+      debugPrint(response.data.toString());
       final rawFiles = response.data!['value'] as List<dynamic>;
 
       for (final recItem in rawFiles) {

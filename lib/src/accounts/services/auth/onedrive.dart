@@ -9,7 +9,6 @@ import 'package:injectable/injectable.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
-import 'package:syncvault/src/accounts/models/filter.dart';
 import 'package:syncvault/src/accounts/services/auth_service.dart';
 import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
 import 'package:syncvault/errors.dart';
@@ -86,14 +85,6 @@ final class OneDriveAuth implements AuthService {
       );
 
       print(accessToken);
-      final folders = await OneDrive()
-          .getAllItems(
-            accessToken: accessToken,
-            root: 'SyncVault',
-            filter: const Some(Filter.name('SyncVault')),
-          )
-          .run();
-      folders.match((l) => throw l, (r) => print(r));
 
       final folderIdResult = await OneDrive()
           .createFolder(

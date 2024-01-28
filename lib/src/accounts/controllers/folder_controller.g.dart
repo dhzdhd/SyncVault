@@ -23,7 +23,7 @@ final createFolderControllerProvider =
 );
 
 typedef _$CreateFolderController = AutoDisposeAsyncNotifier<void>;
-String _$folderHash() => r'f01c4ba1cace544fa346516a6ff7c5c049e3043c';
+String _$folderHash() => r'27ee04c2d501f4fb88c3fd85484e08327d017dca';
 
 /// See also [Folder].
 @ProviderFor(Folder)
