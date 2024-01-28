@@ -366,30 +366,36 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: ConstrainedBox(
-                          constraints:
-                              const BoxConstraints(minWidth: double.infinity),
-                          child: Text(
-                            'Tree View',
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.bodyLarge,
+                      Visibility(
+                        visible: e.files.isNotEmpty,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: ConstrainedBox(
+                            constraints:
+                                const BoxConstraints(minWidth: double.infinity),
+                            child: Text(
+                              'Tree View',
+                              textAlign: TextAlign.left,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
                           ),
                         ),
                       ),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 200.0),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Ink(
-                            padding:
-                                const EdgeInsets.only(left: 16.0, right: 16.0),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).dialogBackgroundColor,
-                              borderRadius: BorderRadius.circular(10),
+                      Visibility(
+                        visible: e.files.isNotEmpty,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 150.0),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Ink(
+                              padding: const EdgeInsets.only(
+                                  left: 16.0, right: 16.0),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).dialogBackgroundColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: TreeWidget(files: e.files),
                             ),
-                            child: TreeWidget(files: e.files),
                           ),
                         ),
                       )
