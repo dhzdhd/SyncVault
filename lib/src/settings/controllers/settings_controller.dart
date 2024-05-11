@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hive/hive.dart';
+import 'package:syncvault/log.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,6 +24,7 @@ final darkTheme = ThemeData(
   ),
 );
 
+// TODO: Move all box updates to a settings repository
 @riverpod
 class Settings extends _$Settings {
   @override
@@ -45,6 +47,9 @@ class Settings extends _$Settings {
       return SettingsModel.fromJson(raw);
     } catch (err) {
       // TODO: Silently fails if box not working. Might have to refactor
+      debugLogger.e('SettingsModel failed to initialize');
+      fileLogger.e('SettingsModel failed to initialize');
+
       return defaultValue;
     }
   }

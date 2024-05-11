@@ -15,7 +15,6 @@ import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:logger/logger.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
@@ -50,7 +49,6 @@ void main() async {
   configureDependencies();
 
   GetIt.I.registerSingleton<Dio>(Dio());
-  GetIt.I.registerSingleton<Logger>(Logger(printer: PrettyPrinter()));
 
   await dotenv.load();
 

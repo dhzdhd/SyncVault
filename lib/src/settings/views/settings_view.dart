@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/helpers.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -12,6 +13,7 @@ class SettingsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
+    final settingsNotifier = ref.read(settingsProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,22 +40,15 @@ class SettingsView extends ConsumerWidget {
                         enableSearch: false,
                         enableFilter: false,
                         initialSelection: settings.themeMode,
-                        onSelected:
-                            ref.read(settingsProvider.notifier).updateThemeMode,
-                        dropdownMenuEntries: const [
-                          DropdownMenuEntry(
-                            value: ThemeMode.system,
-                            label: 'System Theme',
-                          ),
-                          DropdownMenuEntry(
-                            value: ThemeMode.light,
-                            label: 'Light Theme',
-                          ),
-                          DropdownMenuEntry(
-                            value: ThemeMode.dark,
-                            label: 'Dark Theme',
-                          )
-                        ],
+                        onSelected: settingsNotifier.updateThemeMode,
+                        dropdownMenuEntries: ThemeMode.values
+                            .map(
+                              (val) => DropdownMenuEntry(
+                                value: val,
+                                label: '${val.name.capitalize()} Theme',
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
                   ],
@@ -75,9 +70,7 @@ class SettingsView extends ConsumerWidget {
                         Switch(
                           value: settings.isSentryEnabled,
                           onChanged: (val) {
-                            ref
-                                .read(settingsProvider.notifier)
-                                .setSentry(none());
+                            settingsNotifier.setSentry(none());
                           },
                         )
                       ],
