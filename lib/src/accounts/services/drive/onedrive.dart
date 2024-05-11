@@ -242,9 +242,8 @@ class OneDrive implements DriveService {
             item.children.add(model);
           }
         } else {
-          throw HttpError(
-            message: 'Get all files could not be parsed',
-            stackTrace: '',
+          throw const HttpError(
+            'Get all files could not be parsed',
           );
         }
       }
@@ -280,9 +279,8 @@ class OneDrive implements DriveService {
               children: [],
             );
           } else {
-            throw HttpError(
-              message: 'Get all files could not be parsed',
-              stackTrace: '',
+            throw const HttpError(
+              'Get all files could not be parsed',
             );
           }
         }).toList();

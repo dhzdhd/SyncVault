@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
@@ -58,16 +59,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
           switch (event.type) {
             case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
               {
-                final result = await ref
-                    .read(folderProvider.notifier)
-                    .upload(
-                      folders[i],
-                      some(event.path),
-                    )
-                    .run();
-
-                result.match(
-                    (l) => debugPrint(l.message), (r) => debugPrint('Success'));
+                try {
+                  await ref.read(folderProvider.notifier).upload(
+                        folders[i],
+                        some(event.path),
+                      );
+                  debugPrint('Success');
+                } catch (e) {
+                  debugPrint(e.segregateError().message);
+                }
               }
             case ChangeType.REMOVE
                 when folders[i].isDeletionEnabled && folders[i].isAutoSync:
@@ -88,11 +88,21 @@ class _HomeViewState extends ConsumerState<HomeView> {
     }, [ref.watch(folderProvider)]);
 
     final folderInfo = ref.watch(folderProvider);
+    final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
     final progressVisibleList = useState(List.generate(
       folderInfo.length,
       (index) => false,
       growable: true,
     ));
+
+    ref.listen<AsyncValue>(
+      uploadDeleteControllerProvider,
+      (prev, state) {
+        if (!state.isLoading && state.hasError) {
+          context.showErrorSnackBar(state.error!.segregateError().message);
+        }
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -184,7 +194,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16.0),
                     child: Visibility(
-                      visible: progressVisibleList.value.elementAt(index),
+                      visible: uploadDeleteController.isLoading,
                       child: const SizedBox(
                         width: 20,
                         height: 20,
@@ -235,34 +245,33 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                       child: SizedBox(
                                         width: 50,
                                         child: TextButton(
-                                          child: const Icon(Icons.sync_rounded),
+                                          child: const Icon(Icons.cloud_upload),
                                           onPressed: () async {
-                                            progressVisibleList.value = [
-                                              ...progressVisibleList.value
-                                                ..removeAt(index)
-                                                ..insert(index, true)
-                                            ];
-                                            final result = await ref
-                                                .read(folderProvider.notifier)
-                                                .upload(e, none())
-                                                .run();
-                                            progressVisibleList.value = [
-                                              ...progressVisibleList.value
-                                                ..removeAt(index)
-                                                ..insert(index, false)
-                                            ];
+                                            // progressVisibleList.value = [
+                                            //   ...progressVisibleList.value
+                                            //     ..removeAt(index)
+                                            //     ..insert(index, true)
+                                            // ];
+                                            if (!uploadDeleteController
+                                                .isLoading) {
+                                              await ref
+                                                  .read(
+                                                    uploadDeleteControllerProvider
+                                                        .notifier,
+                                                  )
+                                                  .upload(e, none());
+                                              // progressVisibleList.value = [
+                                              //   ...progressVisibleList.value
+                                              //     ..removeAt(index)
+                                              //     ..insert(index, false)
+                                              // ];
 
-                                            if (context.mounted) {
-                                              result.match(
-                                                (l) =>
-                                                    context.showErrorSnackBar(
-                                                        l.message),
-                                                (r) =>
-                                                    context.showSuccessSnackBar(
+                                              if (context.mounted) {
+                                                context.showSuccessSnackBar(
                                                   content: 'Success',
                                                   action: none(),
-                                                ),
-                                              );
+                                                );
+                                              }
                                             }
                                           },
                                         ),

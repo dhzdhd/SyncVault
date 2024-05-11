@@ -37,6 +37,35 @@ class CreateFolderController extends _$CreateFolderController {
 }
 
 @riverpod
+class UploadDeleteController extends _$UploadDeleteController {
+  @override
+  FutureOr<List<String>> build() {
+    final folders = ref.watch(folderProvider);
+
+    return List.generate(
+      folders.length,
+      (index) => folders[index].folderId,
+    );
+  }
+
+  Future<void> upload(
+    FolderModel folderModel,
+    Option<String> filePath,
+  ) async {
+    final folderNotifier = ref.read(folderProvider.notifier);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() {
+      folderNotifier.upload(
+        folderModel,
+        filePath,
+      );
+      return Future.value([]);
+    });
+  }
+}
+
+@riverpod
 class Folder extends _$Folder {
   @override
   List<FolderModel> build() {
@@ -139,10 +168,10 @@ class Folder extends _$Folder {
     state = [...state, folderModel];
   }
 
-  TaskEither<AppError, ()> upload(
+  Future<void> upload(
     FolderModel folderModel,
     Option<String> filePath,
-  ) {
+  ) async {
     // Improvise
     final oldAuthModel = ref
         .read(authProvider)
@@ -153,30 +182,18 @@ class Folder extends _$Folder {
         )
         .first;
 
-    return TaskEither.tryCatch(
-      () async {
-        // final authModel = ref
-        //     .read(authProvider)
-        //     .where((element) => element.email == folderModel.email)
-        //     .first;
-
-        final response = await ref
-            .read(authProvider.notifier)
-            .refresh(oldAuthModel)
-            .flatMap(
-              (r) => switch (r.provider) {
-                AuthProviderType.oneDrive => OneDrive(),
-                AuthProviderType.dropBox => DropBox(),
-                AuthProviderType.googleDrive => GoogleDrive()
-              }
-                  .upload(folderModel, r, filePath),
-            )
-            .run();
-
-        return response.match((l) => throw l, (r) => ());
-      },
-      (error, stackTrace) => error.segregateError(),
-    );
+    await ref
+        .read(authProvider.notifier)
+        .refresh(oldAuthModel)
+        .flatMap(
+          (r) => switch (r.provider) {
+            AuthProviderType.oneDrive => OneDrive(),
+            AuthProviderType.dropBox => DropBox(),
+            AuthProviderType.googleDrive => GoogleDrive()
+          }
+              .upload(folderModel, r, filePath),
+        )
+        .run();
   }
 
   TaskEither<AppError, ()> delete(FolderModel model, Option<String> path) {

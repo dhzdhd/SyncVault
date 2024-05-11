@@ -86,9 +86,8 @@ class Auth extends _$Auth {
               element.provider == model.provider &&
               element.email == model.email,
         )) {
-          throw GeneralError(
-            message: 'The provider already exists',
-            stackTrace: '',
+          throw const GeneralError(
+            'The provider already exists',
           );
         }
 

@@ -253,9 +253,8 @@ class GoogleDrive implements DriveService {
               path: Uri.file(''),
             );
           } else {
-            throw HttpError(
-              message: 'Get all files could not be parsed',
-              stackTrace: '',
+            throw const HttpError(
+              'GDrive: Get all files could not be parsed',
             );
           }
         }).toList();

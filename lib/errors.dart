@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'errors.freezed.dart';
 
 extension ErrorSegregation on Object {
   AppError segregateError() {
@@ -6,47 +9,33 @@ extension ErrorSegregation on Object {
       return this as AppError;
     } else if (this is DioException) {
       final error = this as DioException;
-      return HttpError(
-        message: error.response.toString(),
-        stackTrace: error.stackTrace.toString(),
-      );
+      return HttpError(error.response.toString());
+    } else if (this is Exception) {
+      return GeneralError(toString());
     } else {
-      return GeneralError(
-        message: toString(),
-        stackTrace: (this as Error).stackTrace.toString(),
+      throw NoSuchMethodError.withInvocation(
+        this,
+        Invocation.method(
+          const Symbol('segregateError'),
+          null,
+        ),
       );
     }
   }
-
-  String toErrorString() {
-    if (this is AppError) {
-      return (this as AppError).message;
-    }
-    return '';
-  }
 }
 
-sealed class AppError implements Exception {
-  String get message;
-  String get stackTrace;
+@freezed
+sealed class AppError with _$AppError {
+  const factory AppError.http(String message) = HttpError;
+  const factory AppError.general(String message) = GeneralError;
 }
 
-class HttpError implements AppError {
-  @override
-  final String message;
+// sealed class AppError implements Exception {
+//   final String message;
+//   final String stackTrace;
 
-  @override
-  final String stackTrace;
+//   AppError({required this.message, required this.stackTrace});
 
-  HttpError({required this.message, required this.stackTrace});
-}
-
-class GeneralError implements AppError {
-  @override
-  final String message;
-
-  @override
-  final String stackTrace;
-
-  GeneralError({required this.message, required this.stackTrace});
-}
+//   String get message => message;
+//   String get stackTrace;
+// }
