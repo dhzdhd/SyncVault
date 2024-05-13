@@ -11,6 +11,7 @@ import 'package:syncvault/injectable.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/services/auth/onedrive.dart';
+import 'package:syncvault/src/accounts/services/drive/gdrive.dart';
 import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:workmanager/workmanager.dart';
@@ -28,15 +29,27 @@ void callbackDispatcher() {
     final authInfo = Auth.init();
     final folderInfo = Folder.init();
 
-    for (final i in folderInfo) {
-      if (i.isAutoSync) {
-        final authProvider =
-            authInfo.where((element) => element.email == i.email).first;
-        final res = await OneDriveAuth().refresh(authProvider).run();
-        final a = await res.bindFuture((r) async {
-          return await OneDrive().upload(i, r, none()).run();
+    for (final folderModel in folderInfo) {
+      if (folderModel.isAutoSync) {
+        final authProvider = authInfo
+            .where((element) => element.email == folderModel.email)
+            .first;
+
+        final authModel = await OneDriveAuth().refresh(authProvider).run();
+        final result = await authModel.bindFuture((model) async {
+          return await switch (model.provider) {
+            AuthProviderType.oneDrive =>
+              OneDrive().upload(folderModel, model, none()),
+            AuthProviderType.googleDrive =>
+              GoogleDrive().upload(folderModel, model, none()),
+            AuthProviderType.dropBox =>
+              OneDrive().upload(folderModel, model, none()),
+          }
+              .run();
         }).run();
-        a.match((l) => debugPrint(l.message), (r) => debugPrint('Success'));
+
+        result.match(
+            (l) => debugPrint(l.message), (r) => debugPrint('Success'));
       }
     }
 

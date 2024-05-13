@@ -17,7 +17,7 @@ extension SnackBarExtension on BuildContext {
     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
       content: content,
       state: SnackBarState.success,
-      action: action.toNullable(),
+      action: action,
     ));
   }
 
@@ -25,6 +25,7 @@ extension SnackBarExtension on BuildContext {
     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
       content: content,
       state: SnackBarState.error,
+      action: const None(),
     ));
   }
 
@@ -32,6 +33,7 @@ extension SnackBarExtension on BuildContext {
     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
       content: content,
       state: SnackBarState.warning,
+      action: const None(),
     ));
   }
 }

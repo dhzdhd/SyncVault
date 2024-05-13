@@ -11,9 +11,12 @@ class DeleteAccountDialogWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authNotifier = ref.read(authProvider.notifier);
+
     return AlertDialog(
       title: const Text('Delete account?'),
       content: Text(
+        // Change message depending on account containing linked folders.
         ref.watch(folderProvider).any(
                   (element) => element.email == model.email,
                 )
@@ -24,7 +27,7 @@ class DeleteAccountDialogWidget extends ConsumerWidget {
       actions: [
         TextButton(
             onPressed: () {
-              ref.read(authProvider.notifier).signOut(model);
+              authNotifier.signOut(model);
               if (context.mounted) {
                 Navigator.of(context).pop();
               }

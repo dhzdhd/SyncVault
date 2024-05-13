@@ -28,6 +28,7 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
         _ => const Text('Drive info'),
       },
       contentPadding: const EdgeInsets.all(24),
+      // TODO: Switch to native pattern matching
       children: driveInfoController.when(
         data: (model) {
           return [

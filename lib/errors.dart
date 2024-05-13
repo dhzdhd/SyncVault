@@ -29,13 +29,3 @@ sealed class AppError with _$AppError {
   const factory AppError.http(String message) = HttpError;
   const factory AppError.general(String message) = GeneralError;
 }
-
-// sealed class AppError implements Exception {
-//   final String message;
-//   final String stackTrace;
-
-//   AppError({required this.message, required this.stackTrace});
-
-//   String get message => message;
-//   String get stackTrace;
-// }

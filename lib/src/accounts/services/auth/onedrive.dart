@@ -6,6 +6,7 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
@@ -84,7 +85,7 @@ final class OneDriveAuth implements AuthService {
         (r) => r,
       );
 
-      print(accessToken);
+      debugLogger.d(accessToken);
 
       final folderIdResult = await OneDrive()
           .createFolder(
