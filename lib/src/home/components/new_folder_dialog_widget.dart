@@ -37,6 +37,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
     final selectedProvider = useState<Option<AuthProviderModel>>(const None());
     final selectedFolder = useState<Option<String>>(const None());
     final authInfo = ref.watch(authProvider);
+    final authInfoCopy = useState<List<AuthProviderModel>>(authInfo);
     final createFolderController = ref.watch(createFolderControllerProvider);
 
     ref.listen<AsyncValue>(
@@ -62,7 +63,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: DropdownButton<AuthProviderModel?>(
-            items: authInfo
+            items: authInfoCopy.value
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,

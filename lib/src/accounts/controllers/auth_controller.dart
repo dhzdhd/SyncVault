@@ -108,12 +108,12 @@ class Auth extends _$Auth {
     }
         .map(
       (r) {
-        state = [
-          ...state
-              .where((e) => e != model)
-              .sortBy(Order.by((a) => a.hashCode, Order.orderInt)),
-          r
-        ];
+        state = [...state, r].where((e) => e != model).sortBy(
+              Order.by(
+                (a) => DateTime.parse(a.createdAt),
+                Order.orderDate,
+              ),
+            );
         return r;
       },
     );
