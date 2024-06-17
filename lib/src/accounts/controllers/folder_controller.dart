@@ -13,6 +13,8 @@ import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
 
 part 'folder_controller.g.dart';
 
+const hiveFoldersKey = 'folders';
+
 @riverpod
 class CreateFolderController extends _$CreateFolderController {
   @override
@@ -74,7 +76,7 @@ class Folder extends _$Folder {
 
   static List<FolderModel> init() {
     final List<dynamic> raw =
-        jsonDecode(Hive.box('vault').get('folders', defaultValue: '[]'));
+        jsonDecode(Hive.box('vault').get(hiveFoldersKey, defaultValue: '[]'));
 
     try {
       return raw.map((e) => FolderModel.fromJson(e)).toList();
@@ -94,7 +96,7 @@ class Folder extends _$Folder {
         )
     ];
     Hive.box('vault').put(
-      'folders',
+      hiveFoldersKey,
       jsonEncode(state.map((e) => e.toJson()).toList()),
     );
   }
@@ -110,7 +112,7 @@ class Folder extends _$Folder {
         )
     ];
     Hive.box('vault').put(
-      'folders',
+      hiveFoldersKey,
       jsonEncode(state.map((e) => e.toJson()).toList()),
     );
   }
@@ -163,7 +165,7 @@ class Folder extends _$Folder {
 
     state = [...state, folderModel];
     Hive.box('vault').put(
-      'folders',
+      hiveFoldersKey,
       jsonEncode(state.map((e) => e.toJson()).toList()),
     );
   }
@@ -216,7 +218,7 @@ class Folder extends _$Folder {
         ..add(folderModel.copyWith(files: files))
     ];
     Hive.box('vault').put(
-      'folders',
+      hiveFoldersKey,
       jsonEncode(state.map((e) => e.toJson()).toList()),
     );
 
@@ -254,13 +256,22 @@ class Folder extends _$Folder {
         if (path.isNone()) {
           state = state.where((element) => element != model).toList();
           Hive.box('vault').put(
-            'folders',
+            hiveFoldersKey,
             jsonEncode(state.map((e) => e.toJson()).toList()),
           );
         }
 
         return ();
       });
+    }, (error, stackTrace) => error.segregateError());
+  }
+
+  TaskEither<AppError, ()> clearCache() {
+    return TaskEither.tryCatch(() async {
+      state = [];
+      await Hive.box('vault').delete(hiveFoldersKey);
+
+      return ();
     }, (error, stackTrace) => error.segregateError());
   }
 }

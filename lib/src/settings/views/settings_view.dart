@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -14,6 +15,7 @@ class SettingsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
+    final folderNotifier = ref.read(folderProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -74,11 +76,24 @@ class SettingsView extends ConsumerWidget {
                           },
                         )
                       ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            await folderNotifier.clearCache().run();
+                          },
+                          child: const Text('Clear local folder storage'),
+                        ),
+                      ),
                     )
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
