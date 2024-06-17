@@ -7,15 +7,15 @@ version: 0.3.0
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
-  flutter: ^3.16.7
+  flutter: ^3.22.2
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  dio: ^5.4.0
-  file_picker: ^6.1.1
+  dio: ^5.4.2
+  file_picker: ^8.0.5
   flutter_hooks: ^0.20.4
   flutter_svg: ^2.0.9
   flutter_web_auth_2: ^3.1.1
@@ -23,13 +23,13 @@ dependencies:
   freezed_annotation: ^2.4.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  hooks_riverpod: ^2.4.9
-  riverpod_annotation: ^2.3.3
-  json_annotation: ^4.8.1
+  hooks_riverpod: ^3.0.0-dev.3
+  riverpod_annotation: ^3.0.0-dev.3
+  json_annotation: ^4.9.0
   system_tray: ^2.0.3
   watcher: ^1.1.0
   window_manager: ^0.3.7
-  sentry_flutter: ^7.14.0
+  sentry_flutter: ^8.2.0
   url_launcher: ^6.2.3
   workmanager: ^0.5.2
   permission_handler: ^11.1.0
@@ -44,13 +44,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^3.0.1
-  build_runner: ^2.4.6
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.11
   freezed: ^2.3.4
   json_serializable: ^6.7.0
   custom_lint: ^0.5.8
-  riverpod_lint: ^2.1.1
-  riverpod_generator: ^2.2.3
+  riverpod_lint: ^3.0.0-dev.4
+  riverpod_generator: ^3.0.0-dev.11
   flutter_launcher_icons: ^0.13.1
   injectable_generator: ^2.4.1
 

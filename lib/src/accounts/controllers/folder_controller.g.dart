@@ -40,7 +40,7 @@ final uploadDeleteControllerProvider = AutoDisposeAsyncNotifierProvider<
 );
 
 typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<List<String>>;
-String _$folderHash() => r'167a083f42c4aef8d62aa406a620d23b2237c951';
+String _$folderHash() => r'ceb390e00316443086a2ea4af56419770057a86f';
 
 /// See also [Folder].
 @ProviderFor(Folder)
@@ -56,4 +56,4 @@ final folderProvider =
 
 typedef _$Folder = AutoDisposeNotifier<List<FolderModel>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

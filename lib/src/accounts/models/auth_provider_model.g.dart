@@ -11,7 +11,7 @@ _$AuthProviderModelImpl _$$AuthProviderModelImplFromJson(
     _$AuthProviderModelImpl(
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
-      expiresIn: json['expiresIn'] as int,
+      expiresIn: (json['expiresIn'] as num).toInt(),
       provider: $enumDecode(_$AuthProviderTypeEnumMap, json['provider']),
       name: json['name'] as String,
       email: json['email'] as String,

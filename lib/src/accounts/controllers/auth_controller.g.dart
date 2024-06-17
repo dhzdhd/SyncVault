@@ -35,9 +35,23 @@ class _SystemHash {
 const driveInfoControllerProvider = DriveInfoControllerFamily();
 
 /// See also [driveInfoController].
-class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
+class DriveInfoControllerFamily extends Family {
   /// See also [driveInfoController].
   const DriveInfoControllerFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'driveInfoControllerProvider';
 
   /// See also [driveInfoController].
   DriveInfoControllerProvider call(
@@ -48,6 +62,7 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
     );
   }
 
+  @visibleForOverriding
   @override
   DriveInfoControllerProvider getProviderOverride(
     covariant DriveInfoControllerProvider provider,
@@ -57,19 +72,27 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      FutureOr<DriveInfoModel> Function(DriveInfoControllerRef ref) create) {
+    return _$DriveInfoControllerFamilyOverride(this, create);
+  }
+}
+
+class _$DriveInfoControllerFamilyOverride implements FamilyOverride {
+  _$DriveInfoControllerFamilyOverride(this.overriddenFamily, this.create);
+
+  final FutureOr<DriveInfoModel> Function(DriveInfoControllerRef ref) create;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  final DriveInfoControllerFamily overriddenFamily;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'driveInfoControllerProvider';
+  DriveInfoControllerProvider getProviderOverride(
+    covariant DriveInfoControllerProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
 }
 
 /// See also [driveInfoController].
@@ -96,7 +119,7 @@ class DriveInfoControllerProvider
         );
 
   DriveInfoControllerProvider._internal(
-    super._createNotifier, {
+    super.create, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -109,7 +132,7 @@ class DriveInfoControllerProvider
 
   @override
   Override overrideWith(
-    FutureOr<DriveInfoModel> Function(DriveInfoControllerRef provider) create,
+    FutureOr<DriveInfoModel> Function(DriveInfoControllerRef ref) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -126,8 +149,27 @@ class DriveInfoControllerProvider
   }
 
   @override
+  (AuthProviderModel,) get argument {
+    return (model,);
+  }
+
+  @override
   AutoDisposeFutureProviderElement<DriveInfoModel> createElement() {
     return _DriveInfoControllerProviderElement(this);
+  }
+
+  DriveInfoControllerProvider _copyWith(
+    FutureOr<DriveInfoModel> Function(DriveInfoControllerRef ref) create,
+  ) {
+    return DriveInfoControllerProvider._internal(
+      (ref) => create(ref as DriveInfoControllerRef),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+      model: model,
+    );
   }
 
   @override
@@ -174,7 +216,7 @@ final authControllerProvider =
 );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'f232e9ce306d10fd100bf190c48d4c49646ba356';
+String _$authHash() => r'e5d40b1393ea4cdf79aad848b6cdc9cfbf7240e7';
 
 /// See also [Auth].
 @ProviderFor(Auth)
@@ -190,4 +232,4 @@ final authProvider =
 
 typedef _$Auth = AutoDisposeNotifier<List<AuthProviderModel>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
