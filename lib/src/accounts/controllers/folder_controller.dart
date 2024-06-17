@@ -176,7 +176,7 @@ class Folder extends _$Folder {
   ) async {
     // Improvise
     final oldAuthModel = ref
-        .read(authProvider)
+        .watch(authProvider)
         .where(
           (element) =>
               element.email == folderModel.email &&

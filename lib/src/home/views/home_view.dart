@@ -35,7 +35,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   void initState() {
-    final folders = ref.read(folderProvider).toList();
+    final folders = ref.watch(folderProvider).toList();
     _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
     super.initState();
   }
@@ -139,7 +139,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Sync new folder',
         onPressed: () async {
-          if (ref.read(authProvider).isEmpty) {
+          if (ref.watch(authProvider).isEmpty) {
             context.showErrorSnackBar('No accounts registered yet');
             return;
           }
@@ -358,19 +358,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               'Auto sync',
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
-                            // Spacer(),
                             SizedBox(
-                              // width: 10,
                               height: 30,
                               child: FittedBox(
                                 fit: BoxFit.fill,
                                 child: Switch(
                                   value: e.isAutoSync,
-                                  onChanged: (val) {
-                                    ref
-                                        .watch(folderProvider.notifier)
-                                        .toggleAutoSync(e);
-                                  },
+                                  onChanged: (val) =>
+                                      folderNotifier.toggleAutoSync(e),
                                 ),
                               ),
                             )
@@ -394,11 +389,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 fit: BoxFit.fill,
                                 child: Switch(
                                   value: e.isDeletionEnabled,
-                                  onChanged: (val) => {
-                                    ref
-                                        .watch(folderProvider.notifier)
-                                        .toggleDeletionOnSync(e)
-                                  },
+                                  onChanged: (val) =>
+                                      folderNotifier.toggleDeletionOnSync(e),
                                 ),
                               ),
                             )
