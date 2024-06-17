@@ -161,11 +161,11 @@ class Folder extends _$Folder {
       files: files,
     );
 
+    state = [...state, folderModel];
     Hive.box('vault').put(
       'folders',
       jsonEncode(state.map((e) => e.toJson()).toList()),
     );
-    state = [...state, folderModel];
   }
 
   Future<void> upload(
@@ -182,18 +182,48 @@ class Folder extends _$Folder {
         )
         .first;
 
-    await ref
-        .read(authProvider.notifier)
-        .refresh(oldAuthModel)
-        .flatMap(
-          (r) => switch (r.provider) {
-            AuthProviderType.oneDrive => OneDrive(),
-            AuthProviderType.dropBox => DropBox(),
-            AuthProviderType.googleDrive => GoogleDrive()
-          }
-              .upload(folderModel, r, filePath),
-        )
+    final newAuthModel =
+        (await ref.read(authProvider.notifier).refresh(oldAuthModel).run())
+            .match((l) => throw l, (r) => r);
+
+    final result = await switch (newAuthModel.provider) {
+      AuthProviderType.oneDrive => OneDrive(),
+      AuthProviderType.dropBox => DropBox(),
+      AuthProviderType.googleDrive => GoogleDrive()
+    }
+        .upload(folderModel, newAuthModel, filePath)
         .run();
+
+    final driveService = switch (newAuthModel.provider) {
+      AuthProviderType.oneDrive => OneDrive(),
+      AuthProviderType.dropBox => DropBox(),
+      AuthProviderType.googleDrive => GoogleDrive()
+    };
+
+    // TODO: Implement for particular folder
+    final files = await driveService
+        .getAllItems(
+          root: none(),
+          accessToken: newAuthModel.accessToken,
+          filter: none(),
+        )
+        .match((l) => throw l, (r) => r)
+        .run();
+
+    state = [
+      ...state
+        ..remove(folderModel)
+        ..add(folderModel.copyWith(files: files))
+    ];
+    Hive.box('vault').put(
+      'folders',
+      jsonEncode(state.map((e) => e.toJson()).toList()),
+    );
+
+    print(result);
+    if (result.isLeft()) {
+      throw result.getLeft().toNullable()!;
+    }
   }
 
   TaskEither<AppError, ()> delete(FolderModel model, Option<String> path) {

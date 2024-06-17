@@ -194,6 +194,7 @@ class OneDrive implements DriveService {
     bool flatten = true,
   }) {
     // TODO: Implement root folder
+    // TODO: Apply filter or make a getOneItem fn
     final uri = Uri.https(
         apiHost,
         root.match(
