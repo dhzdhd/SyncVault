@@ -231,86 +231,98 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                       Flexible(
                                         child: SizedBox(
                                           width: 50,
-                                          child: TextButton(
-                                            child:
-                                                const Icon(Icons.open_in_new),
-                                            onPressed: () async {
-                                              await launchUrl(
-                                                Uri.file(e.folderPath),
-                                              );
-                                            },
+                                          child: Tooltip(
+                                            message: 'Open in file manager',
+                                            child: TextButton(
+                                              child:
+                                                  const Icon(Icons.open_in_new),
+                                              onPressed: () async {
+                                                await launchUrl(
+                                                  Uri.file(e.folderPath),
+                                                );
+                                              },
+                                            ),
                                           ),
                                         ),
                                       ),
                                     Flexible(
                                       child: SizedBox(
                                         width: 50,
-                                        child: TextButton(
-                                          child: const Icon(Icons.cloud_upload),
-                                          onPressed: () async {
-                                            // progressVisibleList.value = [
-                                            //   ...progressVisibleList.value
-                                            //     ..removeAt(index)
-                                            //     ..insert(index, true)
-                                            // ];
-                                            if (!uploadDeleteController
-                                                .isLoading) {
-                                              await ref
-                                                  .read(
-                                                    uploadDeleteControllerProvider
-                                                        .notifier,
-                                                  )
-                                                  .upload(e, none());
+                                        child: Tooltip(
+                                          message: 'Sync',
+                                          child: TextButton(
+                                            child: const Icon(Icons.sync),
+                                            onPressed: () async {
                                               // progressVisibleList.value = [
                                               //   ...progressVisibleList.value
                                               //     ..removeAt(index)
-                                              //     ..insert(index, false)
+                                              //     ..insert(index, true)
                                               // ];
+                                              if (!uploadDeleteController
+                                                  .isLoading) {
+                                                await ref
+                                                    .read(
+                                                      uploadDeleteControllerProvider
+                                                          .notifier,
+                                                    )
+                                                    .upload(e, none());
+                                                // progressVisibleList.value = [
+                                                //   ...progressVisibleList.value
+                                                //     ..removeAt(index)
+                                                //     ..insert(index, false)
+                                                // ];
 
-                                              if (context.mounted) {
-                                                context.showSuccessSnackBar(
-                                                  content: 'Success',
-                                                  action: none(),
-                                                );
+                                                if (context.mounted) {
+                                                  context.showSuccessSnackBar(
+                                                    content: 'Success',
+                                                    action: none(),
+                                                  );
+                                                }
                                               }
-                                            }
-                                          },
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
                                     Flexible(
                                       child: SizedBox(
                                         width: 50,
-                                        child: TextButton(
-                                          child: const Icon(Icons.delete),
-                                          onPressed: () async {
-                                            final result = await folderNotifier
-                                                .delete(e, none())
-                                                .run();
+                                        child: Tooltip(
+                                          message: 'Delete',
+                                          child: TextButton(
+                                            child: const Icon(Icons.delete),
+                                            onPressed: () async {
+                                              final result =
+                                                  await folderNotifier
+                                                      .delete(e, none())
+                                                      .run();
 
-                                            print(result);
+                                              print(result);
 
-                                            if (context.mounted) {
-                                              result.match(
-                                                (l) =>
-                                                    context.showErrorSnackBar(
-                                                  l.message,
-                                                ),
-                                                (r) {
-                                                  context.showSuccessSnackBar(
-                                                    content: 'Deleted folder',
-                                                    action: none(),
-                                                  );
-                                                  progressVisibleList.value = [
-                                                    ...progressVisibleList.value
-                                                      ..removeAt(
-                                                        folderInfo.indexOf(e),
-                                                      )
-                                                  ];
-                                                },
-                                              );
-                                            }
-                                          },
+                                              if (context.mounted) {
+                                                result.match(
+                                                  (l) =>
+                                                      context.showErrorSnackBar(
+                                                    l.message,
+                                                  ),
+                                                  (r) {
+                                                    context.showSuccessSnackBar(
+                                                      content: 'Deleted folder',
+                                                      action: none(),
+                                                    );
+                                                    progressVisibleList.value =
+                                                        [
+                                                      ...progressVisibleList
+                                                          .value
+                                                        ..removeAt(
+                                                          folderInfo.indexOf(e),
+                                                        )
+                                                    ];
+                                                  },
+                                                );
+                                              }
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -319,6 +331,22 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               ),
                             ],
                           ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Account',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            Text(
+                              e.email,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            )
+                          ],
                         ),
                       ),
                       Padding(
