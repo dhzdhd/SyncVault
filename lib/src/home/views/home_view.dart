@@ -376,12 +376,33 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
+                              'Two way sync',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            SizedBox(
+                              height: 30,
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Switch(
+                                  value: e.isTwoWaySync,
+                                  onChanged: (val) =>
+                                      folderNotifier.toggleTwoWaySync(e),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
                               'Delete on sync',
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
-                            // Spacer(),
                             SizedBox(
-                              // width: 10,
                               height: 30,
                               child: FittedBox(
                                 fit: BoxFit.fill,

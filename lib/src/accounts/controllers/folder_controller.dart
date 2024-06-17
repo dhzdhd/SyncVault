@@ -109,6 +109,22 @@ class Folder extends _$Folder {
     );
   }
 
+  void toggleTwoWaySync(FolderModel model) {
+    final index = state.indexOf(model);
+    state = [
+      ...state
+        ..remove(model)
+        ..insert(
+          index,
+          model.copyWith(isTwoWaySync: !model.isTwoWaySync),
+        )
+    ];
+    Hive.box('vault').put(
+      hiveFoldersKey,
+      jsonEncode(state.map((e) => e.toJson()).toList()),
+    );
+  }
+
   Future<void> createFolder(
     AuthProviderModel authModel,
     String folderPath,
@@ -152,6 +168,7 @@ class Folder extends _$Folder {
       folderId: id,
       isAutoSync: true,
       isDeletionEnabled: false,
+      isTwoWaySync: false,
       files: files,
     );
 

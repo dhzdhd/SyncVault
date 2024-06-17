@@ -27,6 +27,7 @@ mixin _$FolderModel {
   String get folderId => throw _privateConstructorUsedError;
   bool get isAutoSync => throw _privateConstructorUsedError;
   bool get isDeletionEnabled => throw _privateConstructorUsedError;
+  bool get isTwoWaySync => throw _privateConstructorUsedError;
   List<CloudFileModel> get files => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,6 +50,7 @@ abstract class $FolderModelCopyWith<$Res> {
       String folderId,
       bool isAutoSync,
       bool isDeletionEnabled,
+      bool isTwoWaySync,
       List<CloudFileModel> files});
 }
 
@@ -72,6 +74,7 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
     Object? folderId = null,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
+    Object? isTwoWaySync = null,
     Object? files = null,
   }) {
     return _then(_value.copyWith(
@@ -103,6 +106,10 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
           ? _value.isDeletionEnabled
           : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      isTwoWaySync: null == isTwoWaySync
+          ? _value.isTwoWaySync
+          : isTwoWaySync // ignore: cast_nullable_to_non_nullable
+              as bool,
       files: null == files
           ? _value.files
           : files // ignore: cast_nullable_to_non_nullable
@@ -127,6 +134,7 @@ abstract class _$$FolderModelImplCopyWith<$Res>
       String folderId,
       bool isAutoSync,
       bool isDeletionEnabled,
+      bool isTwoWaySync,
       List<CloudFileModel> files});
 }
 
@@ -148,6 +156,7 @@ class __$$FolderModelImplCopyWithImpl<$Res>
     Object? folderId = null,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
+    Object? isTwoWaySync = null,
     Object? files = null,
   }) {
     return _then(_$FolderModelImpl(
@@ -179,6 +188,10 @@ class __$$FolderModelImplCopyWithImpl<$Res>
           ? _value.isDeletionEnabled
           : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      isTwoWaySync: null == isTwoWaySync
+          ? _value.isTwoWaySync
+          : isTwoWaySync // ignore: cast_nullable_to_non_nullable
+              as bool,
       files: null == files
           ? _value._files
           : files // ignore: cast_nullable_to_non_nullable
@@ -198,6 +211,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       required this.folderId,
       required this.isAutoSync,
       required this.isDeletionEnabled,
+      required this.isTwoWaySync,
       required final List<CloudFileModel> files})
       : _files = files;
 
@@ -218,6 +232,8 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
   final bool isAutoSync;
   @override
   final bool isDeletionEnabled;
+  @override
+  final bool isTwoWaySync;
   final List<CloudFileModel> _files;
   @override
   List<CloudFileModel> get files {
@@ -228,7 +244,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(email: $email, provider: $provider, folderPath: $folderPath, folderName: $folderName, folderId: $folderId, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, files: $files)';
+    return 'FolderModel(email: $email, provider: $provider, folderPath: $folderPath, folderName: $folderName, folderId: $folderId, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync, files: $files)';
   }
 
   @override
@@ -243,6 +259,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       ..add(DiagnosticsProperty('folderId', folderId))
       ..add(DiagnosticsProperty('isAutoSync', isAutoSync))
       ..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))
+      ..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync))
       ..add(DiagnosticsProperty('files', files));
   }
 
@@ -264,6 +281,8 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
                 other.isAutoSync == isAutoSync) &&
             (identical(other.isDeletionEnabled, isDeletionEnabled) ||
                 other.isDeletionEnabled == isDeletionEnabled) &&
+            (identical(other.isTwoWaySync, isTwoWaySync) ||
+                other.isTwoWaySync == isTwoWaySync) &&
             const DeepCollectionEquality().equals(other._files, _files));
   }
 
@@ -278,6 +297,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       folderId,
       isAutoSync,
       isDeletionEnabled,
+      isTwoWaySync,
       const DeepCollectionEquality().hash(_files));
 
   @JsonKey(ignore: true)
@@ -303,6 +323,7 @@ abstract class _FolderModel implements FolderModel {
       required final String folderId,
       required final bool isAutoSync,
       required final bool isDeletionEnabled,
+      required final bool isTwoWaySync,
       required final List<CloudFileModel> files}) = _$FolderModelImpl;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
@@ -322,6 +343,8 @@ abstract class _FolderModel implements FolderModel {
   bool get isAutoSync;
   @override
   bool get isDeletionEnabled;
+  @override
+  bool get isTwoWaySync;
   @override
   List<CloudFileModel> get files;
   @override

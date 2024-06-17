@@ -18,6 +18,7 @@ class FolderModel with _$FolderModel {
     required String folderId,
     required bool isAutoSync,
     required bool isDeletionEnabled,
+    required bool isTwoWaySync,
     required List<CloudFileModel> files,
   }) = _FolderModel;
 
