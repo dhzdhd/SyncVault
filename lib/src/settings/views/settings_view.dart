@@ -32,9 +32,12 @@ class SettingsView extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Theme',
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                     SizedBox(
                       child: DropdownMenu<ThemeMode>(
@@ -65,9 +68,12 @@ class SettingsView extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Enable Sentry monitoring',
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                         Switch(
                           value: settings.isSentryEnabled,
@@ -84,9 +90,34 @@ class SettingsView extends ConsumerWidget {
                         height: 50,
                         child: OutlinedButton(
                           onPressed: () async {
-                            await folderNotifier.clearCache().run();
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Are you sure'),
+                                actions: [
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      await folderNotifier.clearCache().run();
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    child: const Text('Yes'),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('No'),
+                                  )
+                                ],
+                              ),
+                            );
                           },
-                          child: const Text('Clear local folder storage'),
+                          child: const Text(
+                            'Clear local folder storage',
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ),
                       ),
                     )
