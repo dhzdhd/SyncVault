@@ -35,7 +35,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   void initState() {
-    final folders = ref.watch(folderProvider).toList();
+    final folders = ref.read(folderProvider).toList();
     _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
     super.initState();
   }
@@ -90,11 +90,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
     final folderInfo = ref.watch(folderProvider);
     final folderNotifier = ref.read(folderProvider.notifier);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
-    final progressVisibleList = useState(List.generate(
-      folderInfo.length,
-      (index) => false,
-      growable: true,
-    ));
+    // final progressVisibleList = useState(List.generate(
+    // folderInfo.length,
+    // (index) => false,
+    // growable: true,
+    // ));
+    final currentLoadingIndex = useState(0);
 
     ref.listen<AsyncValue>(
       uploadDeleteControllerProvider,
@@ -149,7 +150,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           //   print(await openAppSettings());
           // }
 
-          progressVisibleList.value = [...progressVisibleList.value, false];
+          // progressVisibleList.value = [...progressVisibleList.value, false];
           if (context.mounted) {
             await showDialog(
               context: context,
@@ -195,7 +196,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16.0),
                     child: Visibility(
-                      visible: uploadDeleteController.isLoading,
+                      visible: uploadDeleteController.isLoading &&
+                          currentLoadingIndex.value == index,
                       child: const SizedBox(
                         width: 20,
                         height: 20,
@@ -253,11 +255,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                           child: TextButton(
                                             child: const Icon(Icons.sync),
                                             onPressed: () async {
-                                              // progressVisibleList.value = [
-                                              //   ...progressVisibleList.value
-                                              //     ..removeAt(index)
-                                              //     ..insert(index, true)
-                                              // ];
+                                              if (uploadDeleteController
+                                                  .isLoading) {
+                                                return;
+                                              }
+                                              currentLoadingIndex.value = index;
+
                                               if (!uploadDeleteController
                                                   .isLoading) {
                                                 await ref
@@ -266,11 +269,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                           .notifier,
                                                     )
                                                     .upload(e, none());
-                                                // progressVisibleList.value = [
-                                                //   ...progressVisibleList.value
-                                                //     ..removeAt(index)
-                                                //     ..insert(index, false)
-                                                // ];
 
                                                 if (context.mounted) {
                                                   context.showSuccessSnackBar(
@@ -310,14 +308,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                       content: 'Deleted folder',
                                                       action: none(),
                                                     );
-                                                    progressVisibleList.value =
-                                                        [
-                                                      ...progressVisibleList
-                                                          .value
-                                                        ..removeAt(
-                                                          folderInfo.indexOf(e),
-                                                        )
-                                                    ];
+                                                    // progressVisibleList.value =
+                                                    //     [
+                                                    //   ...progressVisibleList
+                                                    //       .value
+                                                    //     ..removeAt(
+                                                    //       folderInfo.indexOf(e),
+                                                    //     )
+                                                    // ];
                                                   },
                                                 );
                                               }

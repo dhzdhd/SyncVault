@@ -41,14 +41,7 @@ class CreateFolderController extends _$CreateFolderController {
 @riverpod
 class UploadDeleteController extends _$UploadDeleteController {
   @override
-  FutureOr<List<String>> build() {
-    final folders = ref.watch(folderProvider);
-
-    return List.generate(
-      folders.length,
-      (index) => folders[index].folderId,
-    );
-  }
+  FutureOr<void> build() {}
 
   Future<void> upload(
     FolderModel folderModel,
@@ -57,13 +50,12 @@ class UploadDeleteController extends _$UploadDeleteController {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() {
-      folderNotifier.upload(
+    state = await AsyncValue.guard(
+      () => folderNotifier.upload(
         folderModel,
         filePath,
-      );
-      return Future.value([]);
-    });
+      ),
+    );
   }
 }
 

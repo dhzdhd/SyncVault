@@ -24,12 +24,12 @@ final createFolderControllerProvider =
 
 typedef _$CreateFolderController = AutoDisposeAsyncNotifier<void>;
 String _$uploadDeleteControllerHash() =>
-    r'00977017d81510a59e4f04d3452763535c7142da';
+    r'c76f9c141328adeb950e0cda6a16337559d8ba60';
 
 /// See also [UploadDeleteController].
 @ProviderFor(UploadDeleteController)
-final uploadDeleteControllerProvider = AutoDisposeAsyncNotifierProvider<
-    UploadDeleteController, List<String>>.internal(
+final uploadDeleteControllerProvider =
+    AutoDisposeAsyncNotifierProvider<UploadDeleteController, void>.internal(
   UploadDeleteController.new,
   name: r'uploadDeleteControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -39,8 +39,8 @@ final uploadDeleteControllerProvider = AutoDisposeAsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<List<String>>;
-String _$folderHash() => r'ceb390e00316443086a2ea4af56419770057a86f';
+typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<void>;
+String _$folderHash() => r'57ca065528f4e6fac705856497589e68af667eac';
 
 /// See also [Folder].
 @ProviderFor(Folder)
