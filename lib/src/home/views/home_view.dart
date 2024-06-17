@@ -88,6 +88,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     }, [ref.watch(folderProvider)]);
 
     final folderInfo = ref.watch(folderProvider);
+    final folderNotifier = ref.read(folderProvider.notifier);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
     final progressVisibleList = useState(List.generate(
       folderInfo.length,
@@ -283,10 +284,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                         child: TextButton(
                                           child: const Icon(Icons.delete),
                                           onPressed: () async {
-                                            final result = await ref
-                                                .read(folderProvider.notifier)
+                                            final result = await folderNotifier
                                                 .delete(e, none())
                                                 .run();
+
+                                            print(result);
 
                                             if (context.mounted) {
                                               result.match(

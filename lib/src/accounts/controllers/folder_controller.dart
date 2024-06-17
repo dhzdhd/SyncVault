@@ -228,7 +228,7 @@ class Folder extends _$Folder {
 
   TaskEither<AppError, ()> delete(FolderModel model, Option<String> path) {
     final oldAuthModel = ref
-        .read(authProvider)
+        .watch(authProvider)
         .where(
           (element) =>
               element.email == model.email &&

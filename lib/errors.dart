@@ -5,10 +5,13 @@ part 'errors.freezed.dart';
 
 extension ErrorSegregation on Object {
   AppError segregateError() {
+    // TODO: Log errors and return readable errors
     return switch (this) {
       AppError err => err,
       DioException err => HttpError(err.response.toString()),
+      StateError err => GeneralError(err.toString()),
       Exception err => GeneralError(err.toString()),
+      Error err => GeneralError(err.toString()),
       Object err => throw NoSuchMethodError.withInvocation(
           err,
           Invocation.method(

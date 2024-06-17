@@ -159,11 +159,13 @@ class OneDrive implements DriveService {
       'Authorization': 'Bearer ${authModel.accessToken}',
       'Content-Type': 'application/json'
     });
+    print(authModel.accessToken);
+    print(folderModel.folderId);
 
     return TaskEither.tryCatch(
       () async {
         final subPath = await path.match(
-          () => Future.value('items/${folderModel.folderId}'),
+          () => Future.value(folderModel.folderId),
           (t) async {
             final path =
                 Uri.file(t.replaceFirst(folderModel.folderPath, '')).path;
