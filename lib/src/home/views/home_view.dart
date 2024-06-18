@@ -90,11 +90,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
     final folderInfo = ref.watch(folderProvider);
     final folderNotifier = ref.read(folderProvider.notifier);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
-    // final progressVisibleList = useState(List.generate(
-    // folderInfo.length,
-    // (index) => false,
-    // growable: true,
-    // ));
     final currentLoadingIndex = useState(0);
 
     ref.listen<AsyncValue>(
@@ -150,7 +145,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
           //   print(await openAppSettings());
           // }
 
-          // progressVisibleList.value = [...progressVisibleList.value, false];
           if (context.mounted) {
             await showDialog(
               context: context,
@@ -308,14 +302,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                       content: 'Deleted folder',
                                                       action: none(),
                                                     );
-                                                    // progressVisibleList.value =
-                                                    //     [
-                                                    //   ...progressVisibleList
-                                                    //       .value
-                                                    //     ..removeAt(
-                                                    //       folderInfo.indexOf(e),
-                                                    //     )
-                                                    // ];
                                                   },
                                                 );
                                               }
