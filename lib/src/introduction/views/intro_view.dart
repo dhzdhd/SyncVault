@@ -23,6 +23,9 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
         done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w700)),
         back: const Text('Back'),
         showBackButton: true,
+        dotsDecorator: DotsDecorator(
+          activeColor: Theme.of(context).colorScheme.primary,
+        ),
         onDone: () {
           Navigator.of(context).popAndPushNamed('/home');
         },
@@ -44,7 +47,7 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
             footer: Center(
               child: FilledButton(
                 onPressed: () async {
-                  await Permission.accessMediaLocation
+                  await Permission.manageExternalStorage
                       .onDeniedCallback(() {})
                       .onGrantedCallback(() {})
                       .request();
@@ -58,7 +61,7 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
             body:
                 'SyncVault requires you to remove battery optimizations to operate normally.',
             image: const Center(
-              child: Icon(Icons.folder, size: 50.0),
+              child: Icon(Icons.battery_saver, size: 50.0),
             ),
             footer: Center(
               child: FilledButton(
@@ -77,7 +80,7 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
             body:
                 'SyncVault requires notification permissions to notify you during sync.',
             image: const Center(
-              child: Icon(Icons.folder, size: 50.0),
+              child: Icon(Icons.notifications, size: 50.0),
             ),
             footer: Center(
               child: FilledButton(
