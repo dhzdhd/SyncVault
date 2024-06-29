@@ -24,7 +24,7 @@ class HomeView extends StatefulHookConsumerWidget {
     super.key,
   });
 
-  static const routeName = '/';
+  static const routeName = '/home';
 
   @override
   ConsumerState<HomeView> createState() => _HomeViewState();
@@ -103,7 +103,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sync Vault'),
+        title: const Text('SyncVault'),
         actions: [
           if (Platform.isWindows)
             IconButton(
@@ -139,11 +139,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
             context.showErrorSnackBar('No accounts registered yet');
             return;
           }
-
-          // TODO: Open settings to enable all file access on Android
-          // if (Platform.isAndroid) {
-          //   print(await openAppSettings());
-          // }
 
           if (context.mounted) {
             await showDialog(

@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
+import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
+import 'package:syncvault/src/introduction/views/intro_view.dart';
 
 import 'home/views/home_view.dart';
 import 'settings/controllers/settings_controller.dart';
@@ -16,6 +20,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
+    final introSettings = ref.watch(introSettingsProvider);
 
     return MaterialApp(
       restorationScopeId: 'app',
@@ -42,7 +47,10 @@ class MyApp extends ConsumerWidget {
               SettingsView.routeName => const SettingsView(),
               HomeView.routeName => const HomeView(),
               AccountView.routeName => const AccountView(),
-              _ => const HomeView()
+              IntroductionView.routeName => const IntroductionView(),
+              _ => !introSettings.alreadyViewed && Platform.isAndroid
+                  ? const IntroductionView()
+                  : const HomeView()
             };
           },
         );
