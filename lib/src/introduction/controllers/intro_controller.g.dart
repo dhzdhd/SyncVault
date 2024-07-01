@@ -6,7 +6,24 @@ part of 'intro_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$introSettingsHash() => r'a897c8fcb753917eaaf1fc4bed6118c57454761e';
+String _$rCloneDownloadControllerHash() =>
+    r'b87325523c8dbdfa8419af85b75a33d9cd10b101';
+
+/// See also [RCloneDownloadController].
+@ProviderFor(RCloneDownloadController)
+final rCloneDownloadControllerProvider =
+    AutoDisposeAsyncNotifierProvider<RCloneDownloadController, int>.internal(
+  RCloneDownloadController.new,
+  name: r'rCloneDownloadControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$rCloneDownloadControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$RCloneDownloadController = AutoDisposeAsyncNotifier<int>;
+String _$introSettingsHash() => r'0d625c6bd9d4c334a5c1d8aa83be225344c8fcfb';
 
 /// See also [IntroSettings].
 @ProviderFor(IntroSettings)

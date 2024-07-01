@@ -70,7 +70,7 @@ void main() async {
     final systemTray = SystemTray();
 
     await systemTray.initSystemTray(
-      title: 'Sync Vault',
+      title: 'SyncVault',
       iconPath: 'assets/icons/icon.ico',
     );
 
