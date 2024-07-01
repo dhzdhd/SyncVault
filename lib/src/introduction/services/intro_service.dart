@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
@@ -49,6 +50,7 @@ class IntroService {
 
     final dir = await getApplicationDocumentsDirectory();
     final path = '${dir.path}/SyncVault/RClone.zip';
+    final unzippedPath = '${dir.path}/SyncVault/RClone';
 
     try {
       _dio.download(
@@ -64,7 +66,11 @@ class IntroService {
             return status! < 500;
           },
         ),
-      );
+      ).then((_) {
+        final inputStream = InputFileStream(path);
+        final archive = ZipDecoder().decodeBuffer(inputStream);
+        extractArchiveToDisk(archive, unzippedPath);
+      });
 
       yield* progressStreamController.stream.map((val) => Right(val));
     } catch (err) {
