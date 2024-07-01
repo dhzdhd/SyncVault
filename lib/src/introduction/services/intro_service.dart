@@ -6,6 +6,8 @@ import 'package:archive/archive_io.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
+import 'package:glob/glob.dart';
+import 'package:glob/list_local_fs.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
@@ -49,13 +51,18 @@ class IntroService {
     final progressStreamController = StreamController<int>();
 
     final dir = await getApplicationDocumentsDirectory();
-    final path = '${dir.path}/SyncVault/RClone.zip';
+    final downloadPath = switch (Platform.operatingSystem) {
+      'windows' => '${dir.path}/SyncVault/RClone.zip',
+      'android' => '${dir.path}/SyncVault/RClone.tgz',
+      _ => '',
+    };
     final unzippedPath = '${dir.path}/SyncVault/RClone';
+    final execPath = '${dir.path}/SyncVault';
 
     try {
       _dio.download(
         url,
-        path,
+        downloadPath,
         onReceiveProgress: (received, total) {
           progressStreamController.add(((received / total) * 100).round());
         },
@@ -66,10 +73,16 @@ class IntroService {
             return status! < 500;
           },
         ),
-      ).then((_) {
-        final inputStream = InputFileStream(path);
-        final archive = ZipDecoder().decodeBuffer(inputStream);
-        extractArchiveToDisk(archive, unzippedPath);
+      ).then((_) async {
+        await extractFileToDisk(downloadPath, unzippedPath, asyncWrite: true);
+        await File(downloadPath).delete();
+
+        final rCloneExecutable = Glob('**/rclone{.exe,*}')
+            .listSync(root: unzippedPath)
+            .first as File;
+        await rCloneExecutable.copy(execPath);
+
+        await File(unzippedPath).delete(recursive: true);
       });
 
       yield* progressStreamController.stream.map((val) => Right(val));

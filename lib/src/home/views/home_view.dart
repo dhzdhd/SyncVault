@@ -13,6 +13,7 @@ import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 import 'package:syncvault/src/home/components/tree_widget.dart';
+import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watcher/watcher.dart';
@@ -105,6 +106,18 @@ class _HomeViewState extends ConsumerState<HomeView> {
       appBar: AppBar(
         title: const Text('SyncVault'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.warning),
+            tooltip: 'Test RClone',
+            onPressed: () async {
+              final res = await RCloneAuthService()
+                  .authorize(
+                    driveProvider: DriveProvider.googleDrive,
+                  )
+                  .run();
+              print(res);
+            },
+          ),
           if (Platform.isWindows)
             IconButton(
               icon: const Icon(Icons.arrow_downward),
