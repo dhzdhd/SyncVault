@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/models/remote_folder_model.dart';
+import 'package:syncvault/src/introduction/services/intro_service.dart';
 
 enum DriveProvider {
   oneDrive('onedrive'),
@@ -18,11 +20,9 @@ enum DriveProvider {
 
 class RCloneAuthService {
   Future<RemoteFolderModel> check() async {
-    final docDir = await getApplicationDocumentsDirectory();
-    final rClonePath =
-        '${docDir.path}/SyncVault/RClone/rclone-v1.67.0-windows-amd64/rclone.exe';
+    final rCloneExec = await IntroService().getRCloneExec();
 
-    final res = await Process.run(rClonePath, ['authorize', 'drive']);
+    final res = await Process.run(rCloneExec.path, ['authorize', 'drive']);
     print(res.stdout);
 
     return RemoteFolderModel(provider: DriveProvider.googleDrive);
@@ -31,12 +31,29 @@ class RCloneAuthService {
   TaskEither<AppError, DriveProviderModel> authorize(
       {required DriveProvider driveProvider}) {
     return TaskEither.tryCatch(() async {
-      final docDir = await getApplicationDocumentsDirectory();
-      final rClonePath =
-          '${docDir.path}/SyncVault/RClone/rclone-v1.67.0-windows-amd64/rclone.exe';
+      // final rCloneExec = await IntroService().getRCloneExec();
+
+      // final ress = await Process.run(
+      //     'ls', ['-a', '/data/user/0/com.example.syncvault/'],
+      //     runInShell: true);
+      // print(ress.stdout);
+      // print('hi');
+
+      const channel = MethodChannel('com.example.syncvault/native_lib');
+      final path = await channel.invokeMethod('getNativeLibraryPath');
+      print(path);
+
+      // final res = await Process.run('ls', ['-a', path], runInShell: true);
+      // print(res.stdout);
+      // print(res.stderr);
 
       final res = await Process.run(
-          rClonePath, ['authorize', driveProvider.providerName]);
+        '$path/librclone.so',
+        ['authorize', '--auth-no-open-browser', driveProvider.providerName],
+      );
+
+      print(res.stdout);
+      print(res.stderr);
 
       final authJson = jsonDecode(RegExp(r'\{.+\}').stringMatch(res.stdout)!);
       if (authJson

@@ -17,7 +17,7 @@ import 'package:syncvault/src/introduction/models/intro_model.dart';
 class IntroService {
   final _dio = GetIt.I<Dio>();
   static const androidRCloneUrl =
-      'https://beta.rclone.org/v1.67.0/testbuilds/rclone-android-21-armv8a.gz';
+      'https://downloads.rclone.org/v1.67.0/rclone-v1.67.0-linux-arm.zip';
   static const windowsRCloneUrl =
       'https://downloads.rclone.org/v1.67.0/rclone-v1.67.0-windows-amd64.zip';
 
@@ -41,6 +41,18 @@ class IntroService {
     }
   }
 
+  Future<File> getRCloneExec() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final unzippedPath = '${dir.path}/SyncVault/RCloneDir';
+    return Glob('**/rclone*').listSync(root: unzippedPath)[0] as File;
+  }
+
+  Future<File> getRCloneOne() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final unzippedPath = '${dir.path}/SyncVault/RCloneDir';
+    return Glob('**/rclone.1').listSync(root: unzippedPath)[0] as File;
+  }
+
   Stream<Either<AppError, int>> downloadRClone() async* {
     final url = switch (Platform.operatingSystem) {
       'windows' => windowsRCloneUrl,
@@ -51,13 +63,8 @@ class IntroService {
     final progressStreamController = StreamController<int>();
 
     final dir = await getApplicationDocumentsDirectory();
-    final downloadPath = switch (Platform.operatingSystem) {
-      'windows' => '${dir.path}/SyncVault/RClone.zip',
-      'android' => '${dir.path}/SyncVault/RClone.tgz',
-      _ => '',
-    };
-    final unzippedPath = '${dir.path}/SyncVault/RClone';
-    final execPath = '${dir.path}/SyncVault';
+    final downloadPath = '${dir.path}/SyncVault/RCloneDir.zip';
+    final unzippedPath = '${dir.path}/SyncVault/RCloneDir';
 
     try {
       _dio.download(
@@ -77,10 +84,8 @@ class IntroService {
         await extractFileToDisk(downloadPath, unzippedPath, asyncWrite: true);
         await File(downloadPath).delete();
 
-        final rCloneExecutable = Glob('**/rclone{.exe,*}')
-            .listSync(root: unzippedPath)
-            .first as File;
-        await rCloneExecutable.copy(execPath);
+        final rCloneOne = await getRCloneOne();
+        await rCloneOne.delete();
 
         await File(unzippedPath).delete(recursive: true);
       });
