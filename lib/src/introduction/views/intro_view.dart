@@ -26,6 +26,7 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
     final rCloneDownloadProgress = ref.watch(rCloneDownloadControllerProvider);
     final rCloneDownloadControllerNotifier =
         ref.read(rCloneDownloadControllerProvider.notifier);
+    final introSettingsNotifier = ref.read(introSettingsProvider.notifier);
 
     ref.listen<AsyncValue>(
       rCloneDownloadControllerProvider,
@@ -46,6 +47,7 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
           activeColor: Theme.of(context).colorScheme.primary,
         ),
         onDone: () {
+          introSettingsNotifier.setAlreadyViewed(); // TODO: Handle error
           Navigator.of(context).popAndPushNamed('/home');
         },
         pages: [
@@ -117,48 +119,50 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
                 ),
               ),
             ),
-          PageViewModel(
-            title: 'Download RClone',
-            bodyWidget: Column(
-              children: [
-                const Text(
-                  'SyncVault requires you to download RClone which serves as the backend of the app.\nRClone is an open source software that syncs your files to cloud storage.',
-                  textAlign: TextAlign.center,
-                ),
-                TextButton(
-                  onPressed: () async {
-                    final res = await launchUrlString(
-                        'https://github.com/rclone/rclone');
-                    if (!res && context.mounted) {
-                      context.showErrorSnackBar('Failed to open URL');
-                    }
-                  },
-                  child: const Text('RClone Github page'),
-                )
-              ],
-            ),
-            image: const Center(
-              child: Icon(Icons.download, size: 50.0),
-            ),
-            footer: Center(
-              child: FilledButton(
-                onPressed: (rCloneDownloadProgress.isLoading ||
-                        (rCloneDownloadProgress.value != null &&
-                            rCloneDownloadProgress.value != 0))
-                    ? null
-                    : () async {
-                        await rCloneDownloadControllerNotifier.rCloneDownload();
-                      },
-                child: Text(rCloneDownloadProgress.isLoading ||
-                        rCloneDownloadProgress.value != null &&
-                            rCloneDownloadProgress.value != 0
-                    ? rCloneDownloadProgress.value == 100
-                        ? 'Complete'
-                        : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
-                    : 'Download RClone'),
+          if (!Platform.isAndroid)
+            PageViewModel(
+              title: 'Download RClone',
+              bodyWidget: Column(
+                children: [
+                  const Text(
+                    'SyncVault requires you to download RClone which serves as the backend of the app.\nRClone is an open source software that syncs your files to cloud storage.',
+                    textAlign: TextAlign.center,
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final res = await launchUrlString(
+                          'https://github.com/rclone/rclone');
+                      if (!res && context.mounted) {
+                        context.showErrorSnackBar('Failed to open URL');
+                      }
+                    },
+                    child: const Text('RClone Github page'),
+                  )
+                ],
               ),
-            ),
-          )
+              image: const Center(
+                child: Icon(Icons.download, size: 50.0),
+              ),
+              footer: Center(
+                child: FilledButton(
+                  onPressed: (rCloneDownloadProgress.isLoading ||
+                          (rCloneDownloadProgress.value != null &&
+                              rCloneDownloadProgress.value != 0))
+                      ? null
+                      : () async {
+                          await rCloneDownloadControllerNotifier
+                              .rCloneDownload();
+                        },
+                  child: Text(rCloneDownloadProgress.isLoading ||
+                          rCloneDownloadProgress.value != null &&
+                              rCloneDownloadProgress.value != 0
+                      ? rCloneDownloadProgress.value == 100
+                          ? 'Complete'
+                          : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
+                      : 'Download RClone'),
+                ),
+              ),
+            )
         ],
       ),
     );

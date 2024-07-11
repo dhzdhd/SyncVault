@@ -16,8 +16,6 @@ import 'package:syncvault/src/introduction/models/intro_model.dart';
 
 class IntroService {
   final _dio = GetIt.I<Dio>();
-  static const androidRCloneUrl =
-      'https://downloads.rclone.org/v1.67.0/rclone-v1.67.0-linux-arm.zip';
   static const windowsRCloneUrl =
       'https://downloads.rclone.org/v1.67.0/rclone-v1.67.0-windows-amd64.zip';
 
@@ -41,6 +39,13 @@ class IntroService {
     }
   }
 
+  Either<AppError, ()> setLocalStorage(IntroSettingsModel model) {
+    return Either.tryCatch(() {
+      Hive.box('vault').put('introSettings', jsonEncode(model.toJson()));
+      return ();
+    }, (err, stackTrace) => err.segregateError());
+  }
+
   Future<File> getRCloneExec() async {
     final dir = await getApplicationDocumentsDirectory();
     final unzippedPath = '${dir.path}/SyncVault/RCloneDir';
@@ -56,7 +61,6 @@ class IntroService {
   Stream<Either<AppError, int>> downloadRClone() async* {
     final url = switch (Platform.operatingSystem) {
       'windows' => windowsRCloneUrl,
-      'android' => androidRCloneUrl,
       _ => '',
     };
 

@@ -6,18 +6,6 @@ import 'package:syncvault/src/introduction/services/intro_service.dart';
 
 part 'intro_controller.g.dart';
 
-// @riverpod
-// Stream<Either<AppError, int>> rCloneDownloadController(
-//   RCloneDownloadControllerRef ref,
-// ) async* {
-//   final introSettingsNotifier = ref.read(introSettingsProvider.notifier);
-//   final stream = introSettingsNotifier.downloadRClone();
-
-//   await for (final progress in stream) {
-//     yield progress;
-//   }
-// }
-
 @riverpod
 class RCloneDownloadController extends _$RCloneDownloadController {
   @override
@@ -46,8 +34,9 @@ class IntroSettings extends _$IntroSettings {
     return _service.fetch();
   }
 
-  void setAlreadyViewed() {
-    // _service.put()
+  Either<AppError, ()> setAlreadyViewed() {
+    state = state.copyWith(alreadyViewed: true);
+    return _service.setLocalStorage(state);
   }
 
   Stream<Either<AppError, int>> downloadRClone() async* {
