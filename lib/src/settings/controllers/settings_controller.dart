@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:hive/hive.dart';
+import 'package:get_it/get_it.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,7 +25,10 @@ final darkTheme = ThemeData(
   ),
 );
 
+final _box = GetIt.I<Box<SettingsModel>>();
+
 // TODO: Move all box updates to a settings repository
+// TODO: https://ms3byoussef.medium.com/hive-in-flutter-a-detailed-guide-with-injectable-freezed-and-cubit-in-clean-architecture-c5c12ce8e00c
 @riverpod
 class Settings extends _$Settings {
   @override
@@ -36,16 +40,23 @@ class Settings extends _$Settings {
     final defaultValue = SettingsModel.defaultValue();
 
     try {
-      final Map<String, dynamic> raw = jsonDecode(
-        Hive.box('vault').get(
+      // final Map<String, dynamic> raw = jsonDecode(
+      // return _box.get(
+      //   'settings',
+      //   defaultValue: jsonEncode(defaultValue.toJson()),
+      // )!;
+      // );
+
+      // return SettingsModel.fromJson(raw);
+      return _box.get('settings', defaultValue: defaultValue)!;
+    } catch (err) {
+      print(
+        Hive.box('settings').get(
           'settings',
           defaultValue: jsonEncode(defaultValue.toJson()),
         ),
       );
-
-      return SettingsModel.fromJson(raw);
-    } catch (err) {
-      // TODO: Silently fails if box not working. Might have to refactor
+      // TODO: Fails if box not working. Might have to refactor
       debugLogger.e('SettingsModel failed to initialize');
       fileLogger.e('SettingsModel failed to initialize');
 
@@ -60,7 +71,19 @@ class Settings extends _$Settings {
         (t) => t,
       ),
     );
-    Hive.box('vault').put('settings', jsonEncode(state.toJson()));
+    // Hive.box('settings').put('settings', jsonEncode(state.toJson()));
+    _box.put('settings', state);
+  }
+
+  void setHideOnStartup({Option<bool> choice = const None()}) {
+    state = state.copyWith(
+      isHideOnStartup: choice.match(
+        () => !state.isHideOnStartup,
+        (t) => t,
+      ),
+    );
+    // Hive.box('settings').put('settings', jsonEncode(state.toJson()));
+    _box.put('settings', state);
   }
 
   void updateThemeMode(ThemeMode? newThemeMode) async {
@@ -69,6 +92,7 @@ class Settings extends _$Settings {
     }
 
     state = state.copyWith(themeMode: newThemeMode);
-    Hive.box('vault').put('settings', jsonEncode(state.toJson()));
+    // Hive.box('settings').put('settings', jsonEncode(state.toJson()));
+    _box.put('settings', state);
   }
 }

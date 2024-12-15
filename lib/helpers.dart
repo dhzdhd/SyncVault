@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/home/components/snackbar_widget.dart';
@@ -9,6 +11,13 @@ extension StringExtension on String {
     }
     return '';
   }
+}
+
+class PlatformExtension {
+  static bool get isDesktop =>
+      Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+
+  static bool get isMobile => Platform.isAndroid || Platform.isIOS;
 }
 
 extension SnackBarExtension on BuildContext {

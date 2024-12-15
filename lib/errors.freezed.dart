@@ -56,7 +56,9 @@ mixin _$AppError {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AppErrorCopyWith<AppError> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -79,6 +81,8 @@ class _$AppErrorCopyWithImpl<$Res, $Val extends AppError>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AppError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -112,6 +116,8 @@ class __$$HttpErrorImplCopyWithImpl<$Res>
       _$HttpErrorImpl _value, $Res Function(_$HttpErrorImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -150,7 +156,9 @@ class _$HttpErrorImpl implements HttpError {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$HttpErrorImplCopyWith<_$HttpErrorImpl> get copyWith =>
@@ -224,8 +232,11 @@ abstract class HttpError implements AppError {
 
   @override
   String get message;
+
+  /// Create a copy of AppError
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$HttpErrorImplCopyWith<_$HttpErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -249,6 +260,8 @@ class __$$GeneralErrorImplCopyWithImpl<$Res>
       _$GeneralErrorImpl _value, $Res Function(_$GeneralErrorImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -287,7 +300,9 @@ class _$GeneralErrorImpl implements GeneralError {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$GeneralErrorImplCopyWith<_$GeneralErrorImpl> get copyWith =>
@@ -361,8 +376,11 @@ abstract class GeneralError implements AppError {
 
   @override
   String get message;
+
+  /// Create a copy of AppError
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GeneralErrorImplCopyWith<_$GeneralErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

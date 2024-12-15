@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/injectable.dart';
@@ -13,6 +13,7 @@ import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/services/auth/onedrive.dart';
 import 'package:syncvault/src/accounts/services/drive/gdrive.dart';
 import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
+import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -65,6 +66,14 @@ void main() async {
 
   await dotenv.load();
 
+  await Hive.initFlutter();
+  await Hive.openBox('vault');
+
+  final settingsBox = await Hive.openBox<SettingsModel>('settings');
+  GetIt.I.registerSingleton<Box<SettingsModel>>(settingsBox);
+
+  final settings = Settings.init();
+
   if (Platform.isWindows) {
     final appWindow = AppWindow();
     final systemTray = SystemTray();
@@ -76,10 +85,8 @@ void main() async {
 
     final menu = Menu();
     await menu.buildFrom([
-      MenuItemLabel(
-        label: 'Show app',
-        onClicked: (menuItem) => appWindow.show(),
-      ),
+      MenuItemLabel(label: 'Show', onClicked: (menuItem) => appWindow.show()),
+      MenuItemLabel(label: 'Hide', onClicked: (menuItem) => appWindow.hide()),
       MenuItemLabel(label: 'Exit', onClicked: (menuItem) => appWindow.close())
     ]);
 
@@ -91,6 +98,11 @@ void main() async {
         Platform.isWindows ? systemTray.popUpContextMenu() : appWindow.show();
       }
     });
+
+    if (settings.isHideOnStartup) {
+      print('hide');
+      appWindow.hide();
+    }
   } else {
     Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     Workmanager().registerPeriodicTask(
@@ -101,11 +113,6 @@ void main() async {
       existingWorkPolicy: ExistingWorkPolicy.replace,
     );
   }
-
-  await Hive.initFlutter();
-  await Hive.openBox('vault');
-
-  final settings = Settings.init();
 
   if (settings.isSentryEnabled) {
     await SentryFlutter.init(

@@ -23,7 +23,7 @@ final rCloneDownloadControllerProvider =
 );
 
 typedef _$RCloneDownloadController = AutoDisposeAsyncNotifier<int>;
-String _$introSettingsHash() => r'0d625c6bd9d4c334a5c1d8aa83be225344c8fcfb';
+String _$introSettingsHash() => r'a46b4528d139006372a8917a53f33d49caec8133';
 
 /// See also [IntroSettings].
 @ProviderFor(IntroSettings)
@@ -40,4 +40,4 @@ final introSettingsProvider =
 
 typedef _$IntroSettings = AutoDisposeNotifier<IntroSettingsModel>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

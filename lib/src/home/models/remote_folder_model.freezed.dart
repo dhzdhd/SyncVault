@@ -23,8 +23,12 @@ mixin _$RemoteFolderModel {
 // required String email,
   DriveProvider get provider => throw _privateConstructorUsedError;
 
+  /// Serializes this RemoteFolderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RemoteFolderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RemoteFolderModelCopyWith<RemoteFolderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$RemoteFolderModelCopyWithImpl<$Res, $Val extends RemoteFolderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RemoteFolderModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,6 +87,8 @@ class __$$RemoteFolderModelImplCopyWithImpl<$Res>
       $Res Function(_$RemoteFolderModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RemoteFolderModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -121,11 +129,13 @@ class _$RemoteFolderModelImpl implements _RemoteFolderModel {
                 other.provider == provider));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, provider);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RemoteFolderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RemoteFolderModelImplCopyWith<_$RemoteFolderModelImpl> get copyWith =>
@@ -147,10 +157,14 @@ abstract class _RemoteFolderModel implements RemoteFolderModel {
   factory _RemoteFolderModel.fromJson(Map<String, dynamic> json) =
       _$RemoteFolderModelImpl.fromJson;
 
-  @override // required String email,
-  DriveProvider get provider;
+// required String email,
   @override
-  @JsonKey(ignore: true)
+  DriveProvider get provider;
+
+  /// Create a copy of RemoteFolderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RemoteFolderModelImplCopyWith<_$RemoteFolderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

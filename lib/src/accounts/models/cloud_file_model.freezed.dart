@@ -29,8 +29,12 @@ mixin _$CloudFileModel {
   Option<String> get parentId => throw _privateConstructorUsedError;
   List<CloudFileModel> get children => throw _privateConstructorUsedError;
 
+  /// Serializes this CloudFileModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CloudFileModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CloudFileModelCopyWith<CloudFileModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -60,6 +64,8 @@ class _$CloudFileModelCopyWithImpl<$Res, $Val extends CloudFileModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CloudFileModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -124,6 +130,8 @@ class __$$CloudFileModelImplCopyWithImpl<$Res>
       _$CloudFileModelImpl _value, $Res Function(_$CloudFileModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CloudFileModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -212,12 +220,14 @@ class _$CloudFileModelImpl implements _CloudFileModel {
             const DeepCollectionEquality().equals(other.children, children));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, isDirectory, path,
       parentId, const DeepCollectionEquality().hash(children));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CloudFileModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CloudFileModelImplCopyWith<_$CloudFileModelImpl> get copyWith =>
@@ -249,16 +259,19 @@ abstract class _CloudFileModel implements CloudFileModel {
   @override
   String get name;
   @override
-  bool get isDirectory;
-  @override // Relative to root folder defined in FolderModel
+  bool get isDirectory; // Relative to root folder defined in FolderModel
+  @override
   @UriConverter()
   Uri get path;
   @override
   Option<String> get parentId;
   @override
   List<CloudFileModel> get children;
+
+  /// Create a copy of CloudFileModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CloudFileModelImplCopyWith<_$CloudFileModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

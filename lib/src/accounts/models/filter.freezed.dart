@@ -78,6 +78,9 @@ class _$FilterCopyWithImpl<$Res, $Val extends Filter>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -97,6 +100,8 @@ class __$$DirectoryFilterImplCopyWithImpl<$Res>
       _$DirectoryFilterImpl _value, $Res Function(_$DirectoryFilterImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -135,7 +140,9 @@ class _$DirectoryFilterImpl implements DirectoryFilter {
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DirectoryFilterImplCopyWith<_$DirectoryFilterImpl> get copyWith =>
@@ -216,7 +223,10 @@ abstract class DirectoryFilter implements Filter {
 
   @override
   bool get value;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DirectoryFilterImplCopyWith<_$DirectoryFilterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -238,6 +248,8 @@ class __$$NameFilterImplCopyWithImpl<$Res>
       _$NameFilterImpl _value, $Res Function(_$NameFilterImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -276,7 +288,9 @@ class _$NameFilterImpl implements NameFilter {
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NameFilterImplCopyWith<_$NameFilterImpl> get copyWith =>
@@ -356,7 +370,10 @@ abstract class NameFilter implements Filter {
 
   @override
   String get value;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NameFilterImplCopyWith<_$NameFilterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -378,6 +395,8 @@ class __$$IDFilterImplCopyWithImpl<$Res>
       _$IDFilterImpl _value, $Res Function(_$IDFilterImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -416,7 +435,9 @@ class _$IDFilterImpl implements IDFilter {
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IDFilterImplCopyWith<_$IDFilterImpl> get copyWith =>
@@ -496,7 +517,10 @@ abstract class IDFilter implements Filter {
 
   @override
   String get value;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IDFilterImplCopyWith<_$IDFilterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

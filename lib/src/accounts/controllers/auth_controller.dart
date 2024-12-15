@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';

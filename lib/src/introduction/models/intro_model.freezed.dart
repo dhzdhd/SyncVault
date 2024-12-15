@@ -22,8 +22,12 @@ IntroSettingsModel _$IntroSettingsModelFromJson(Map<String, dynamic> json) {
 mixin _$IntroSettingsModel {
   bool get alreadyViewed => throw _privateConstructorUsedError;
 
+  /// Serializes this IntroSettingsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of IntroSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $IntroSettingsModelCopyWith<IntroSettingsModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,6 +51,8 @@ class _$IntroSettingsModelCopyWithImpl<$Res, $Val extends IntroSettingsModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of IntroSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -80,6 +86,8 @@ class __$$IntroSettingsModelImplCopyWithImpl<$Res>
       $Res Function(_$IntroSettingsModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of IntroSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -119,11 +127,13 @@ class _$IntroSettingsModelImpl implements _IntroSettingsModel {
                 other.alreadyViewed == alreadyViewed));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, alreadyViewed);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IntroSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IntroSettingsModelImplCopyWith<_$IntroSettingsModelImpl> get copyWith =>
@@ -147,8 +157,11 @@ abstract class _IntroSettingsModel implements IntroSettingsModel {
 
   @override
   bool get alreadyViewed;
+
+  /// Create a copy of IntroSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IntroSettingsModelImplCopyWith<_$IntroSettingsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

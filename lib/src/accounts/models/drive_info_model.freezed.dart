@@ -20,7 +20,9 @@ mixin _$DriveInfoModel {
   int get usedStorage => throw _privateConstructorUsedError;
   int get totalStorage => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DriveInfoModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DriveInfoModelCopyWith<DriveInfoModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,6 +46,8 @@ class _$DriveInfoModelCopyWithImpl<$Res, $Val extends DriveInfoModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DriveInfoModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -87,6 +91,8 @@ class __$$DriveInfoModelImplCopyWithImpl<$Res>
       _$DriveInfoModelImpl _value, $Res Function(_$DriveInfoModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DriveInfoModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -160,7 +166,9 @@ class _$DriveInfoModelImpl
   int get hashCode =>
       Object.hash(runtimeType, remainingStorage, usedStorage, totalStorage);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DriveInfoModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DriveInfoModelImplCopyWith<_$DriveInfoModelImpl> get copyWith =>
@@ -180,8 +188,11 @@ abstract class _DriveInfoModel implements DriveInfoModel {
   int get usedStorage;
   @override
   int get totalStorage;
+
+  /// Create a copy of DriveInfoModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DriveInfoModelImplCopyWith<_$DriveInfoModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

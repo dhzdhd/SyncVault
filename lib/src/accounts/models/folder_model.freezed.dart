@@ -30,8 +30,12 @@ mixin _$FolderModel {
   bool get isTwoWaySync => throw _privateConstructorUsedError;
   List<CloudFileModel> get files => throw _privateConstructorUsedError;
 
+  /// Serializes this FolderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FolderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FolderModelCopyWith<FolderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -64,6 +68,8 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FolderModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,6 +152,8 @@ class __$$FolderModelImplCopyWithImpl<$Res>
       _$FolderModelImpl _value, $Res Function(_$FolderModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FolderModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -286,7 +294,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
             const DeepCollectionEquality().equals(other._files, _files));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -300,7 +308,9 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       isTwoWaySync,
       const DeepCollectionEquality().hash(_files));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FolderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FolderModelImplCopyWith<_$FolderModelImpl> get copyWith =>
@@ -347,8 +357,11 @@ abstract class _FolderModel implements FolderModel {
   bool get isTwoWaySync;
   @override
   List<CloudFileModel> get files;
+
+  /// Create a copy of FolderModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FolderModelImplCopyWith<_$FolderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

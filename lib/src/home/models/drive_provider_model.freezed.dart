@@ -24,8 +24,12 @@ mixin _$DriveProviderModel {
   String get refreshToken => throw _privateConstructorUsedError;
   String get expiresIn => throw _privateConstructorUsedError;
 
+  /// Serializes this DriveProviderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DriveProviderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DriveProviderModelCopyWith<DriveProviderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$DriveProviderModelCopyWithImpl<$Res, $Val extends DriveProviderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DriveProviderModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,6 +98,8 @@ class __$$DriveProviderModelImplCopyWithImpl<$Res>
       $Res Function(_$DriveProviderModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DriveProviderModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -152,12 +160,14 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
                 other.expiresIn == expiresIn));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, accessToken, refreshToken, expiresIn);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DriveProviderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DriveProviderModelImplCopyWith<_$DriveProviderModelImpl> get copyWith =>
@@ -187,8 +197,11 @@ abstract class _DriveProviderModel implements DriveProviderModel {
   String get refreshToken;
   @override
   String get expiresIn;
+
+  /// Create a copy of DriveProviderModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DriveProviderModelImplCopyWith<_$DriveProviderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

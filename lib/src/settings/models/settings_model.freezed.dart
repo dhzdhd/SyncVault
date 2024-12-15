@@ -21,10 +21,15 @@ SettingsModel _$SettingsModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$SettingsModel {
   bool get isSentryEnabled => throw _privateConstructorUsedError;
+  bool get isHideOnStartup => throw _privateConstructorUsedError;
   ThemeMode get themeMode => throw _privateConstructorUsedError;
 
+  /// Serializes this SettingsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SettingsModelCopyWith<SettingsModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -35,7 +40,7 @@ abstract class $SettingsModelCopyWith<$Res> {
           SettingsModel value, $Res Function(SettingsModel) then) =
       _$SettingsModelCopyWithImpl<$Res, SettingsModel>;
   @useResult
-  $Res call({bool isSentryEnabled, ThemeMode themeMode});
+  $Res call({bool isSentryEnabled, bool isHideOnStartup, ThemeMode themeMode});
 }
 
 /// @nodoc
@@ -48,16 +53,23 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? isSentryEnabled = null,
+    Object? isHideOnStartup = null,
     Object? themeMode = null,
   }) {
     return _then(_value.copyWith(
       isSentryEnabled: null == isSentryEnabled
           ? _value.isSentryEnabled
           : isSentryEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isHideOnStartup: null == isHideOnStartup
+          ? _value.isHideOnStartup
+          : isHideOnStartup // ignore: cast_nullable_to_non_nullable
               as bool,
       themeMode: null == themeMode
           ? _value.themeMode
@@ -75,7 +87,7 @@ abstract class _$$SettingsModelImplCopyWith<$Res>
       __$$SettingsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isSentryEnabled, ThemeMode themeMode});
+  $Res call({bool isSentryEnabled, bool isHideOnStartup, ThemeMode themeMode});
 }
 
 /// @nodoc
@@ -86,16 +98,23 @@ class __$$SettingsModelImplCopyWithImpl<$Res>
       _$SettingsModelImpl _value, $Res Function(_$SettingsModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? isSentryEnabled = null,
+    Object? isHideOnStartup = null,
     Object? themeMode = null,
   }) {
     return _then(_$SettingsModelImpl(
       isSentryEnabled: null == isSentryEnabled
           ? _value.isSentryEnabled
           : isSentryEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isHideOnStartup: null == isHideOnStartup
+          ? _value.isHideOnStartup
+          : isHideOnStartup // ignore: cast_nullable_to_non_nullable
               as bool,
       themeMode: null == themeMode
           ? _value.themeMode
@@ -109,7 +128,9 @@ class __$$SettingsModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SettingsModelImpl implements _SettingsModel {
   const _$SettingsModelImpl(
-      {required this.isSentryEnabled, required this.themeMode});
+      {required this.isSentryEnabled,
+      required this.isHideOnStartup,
+      required this.themeMode});
 
   factory _$SettingsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SettingsModelImplFromJson(json);
@@ -117,11 +138,13 @@ class _$SettingsModelImpl implements _SettingsModel {
   @override
   final bool isSentryEnabled;
   @override
+  final bool isHideOnStartup;
+  @override
   final ThemeMode themeMode;
 
   @override
   String toString() {
-    return 'SettingsModel(isSentryEnabled: $isSentryEnabled, themeMode: $themeMode)';
+    return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, themeMode: $themeMode)';
   }
 
   @override
@@ -131,15 +154,20 @@ class _$SettingsModelImpl implements _SettingsModel {
             other is _$SettingsModelImpl &&
             (identical(other.isSentryEnabled, isSentryEnabled) ||
                 other.isSentryEnabled == isSentryEnabled) &&
+            (identical(other.isHideOnStartup, isHideOnStartup) ||
+                other.isHideOnStartup == isHideOnStartup) &&
             (identical(other.themeMode, themeMode) ||
                 other.themeMode == themeMode));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, isSentryEnabled, themeMode);
+  int get hashCode =>
+      Object.hash(runtimeType, isSentryEnabled, isHideOnStartup, themeMode);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SettingsModelImplCopyWith<_$SettingsModelImpl> get copyWith =>
@@ -156,6 +184,7 @@ class _$SettingsModelImpl implements _SettingsModel {
 abstract class _SettingsModel implements SettingsModel {
   const factory _SettingsModel(
       {required final bool isSentryEnabled,
+      required final bool isHideOnStartup,
       required final ThemeMode themeMode}) = _$SettingsModelImpl;
 
   factory _SettingsModel.fromJson(Map<String, dynamic> json) =
@@ -164,9 +193,14 @@ abstract class _SettingsModel implements SettingsModel {
   @override
   bool get isSentryEnabled;
   @override
-  ThemeMode get themeMode;
+  bool get isHideOnStartup;
   @override
-  @JsonKey(ignore: true)
+  ThemeMode get themeMode;
+
+  /// Create a copy of SettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SettingsModelImplCopyWith<_$SettingsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -29,8 +29,12 @@ mixin _$AuthProviderModel {
   String get createdAt => throw _privateConstructorUsedError;
   String get folderId => throw _privateConstructorUsedError;
 
+  /// Serializes this AuthProviderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AuthProviderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AuthProviderModelCopyWith<AuthProviderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,6 +66,8 @@ class _$AuthProviderModelCopyWithImpl<$Res, $Val extends AuthProviderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuthProviderModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -138,6 +144,8 @@ class __$$AuthProviderModelImplCopyWithImpl<$Res>
       $Res Function(_$AuthProviderModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthProviderModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -263,12 +271,14 @@ class _$AuthProviderModelImpl
                 other.folderId == folderId));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, accessToken, refreshToken,
       expiresIn, provider, name, email, createdAt, folderId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthProviderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AuthProviderModelImplCopyWith<_$AuthProviderModelImpl> get copyWith =>
@@ -313,8 +323,11 @@ abstract class _AuthProviderModel implements AuthProviderModel {
   String get createdAt;
   @override
   String get folderId;
+
+  /// Create a copy of AuthProviderModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AuthProviderModelImplCopyWith<_$AuthProviderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

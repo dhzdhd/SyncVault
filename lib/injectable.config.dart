@@ -8,33 +8,33 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:get_it/get_it.dart' as _i1;
-import 'package:injectable/injectable.dart' as _i2;
+import 'package:get_it/get_it.dart' as _i174;
+import 'package:injectable/injectable.dart' as _i526;
 
-import 'src/accounts/services/auth/dropbox.dart' as _i3;
-import 'src/accounts/services/auth/gdrive.dart' as _i4;
-import 'src/accounts/services/auth/onedrive.dart' as _i5;
-import 'src/accounts/services/drive/dropbox.dart' as _i6;
-import 'src/accounts/services/drive/gdrive.dart' as _i7;
-import 'src/accounts/services/drive/onedrive.dart' as _i8;
+import 'src/accounts/services/auth/dropbox.dart' as _i797;
+import 'src/accounts/services/auth/gdrive.dart' as _i432;
+import 'src/accounts/services/auth/onedrive.dart' as _i725;
+import 'src/accounts/services/drive/dropbox.dart' as _i464;
+import 'src/accounts/services/drive/gdrive.dart' as _i487;
+import 'src/accounts/services/drive/onedrive.dart' as _i660;
 
-extension GetItInjectableX on _i1.GetIt {
+extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
-  _i1.GetIt init({
+  _i174.GetIt init({
     String? environment,
-    _i2.EnvironmentFilter? environmentFilter,
+    _i526.EnvironmentFilter? environmentFilter,
   }) {
-    final gh = _i2.GetItHelper(
+    final gh = _i526.GetItHelper(
       this,
       environment,
       environmentFilter,
     );
-    gh.singleton<_i3.DropBoxAuth>(() => _i3.DropBoxAuth());
-    gh.singleton<_i4.GoogleDriveAuth>(() => _i4.GoogleDriveAuth());
-    gh.singleton<_i5.OneDriveAuth>(() => _i5.OneDriveAuth());
-    gh.singleton<_i6.DropBox>(() => _i6.DropBox());
-    gh.singleton<_i7.GoogleDrive>(() => _i7.GoogleDrive());
-    gh.singleton<_i8.OneDrive>(() => _i8.OneDrive());
+    gh.singleton<_i797.DropBoxAuth>(() => _i797.DropBoxAuth());
+    gh.singleton<_i432.GoogleDriveAuth>(() => _i432.GoogleDriveAuth());
+    gh.singleton<_i725.OneDriveAuth>(() => _i725.OneDriveAuth());
+    gh.singleton<_i464.DropBox>(() => _i464.DropBox());
+    gh.singleton<_i487.GoogleDrive>(() => _i487.GoogleDrive());
+    gh.singleton<_i660.OneDrive>(() => _i660.OneDrive());
     return this;
   }
 }

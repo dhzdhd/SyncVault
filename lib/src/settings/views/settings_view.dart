@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
-
 import '../controllers/settings_controller.dart';
 
 class SettingsView extends ConsumerWidget {
@@ -82,6 +81,28 @@ class SettingsView extends ConsumerWidget {
                         )
                       ],
                     ),
+                    if (PlatformExtension.isDesktop)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Hide on startup',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Switch(
+                              value: settings.isHideOnStartup,
+                              onChanged: (val) {
+                                settingsNotifier.setHideOnStartup();
+                              },
+                            )
+                          ],
+                        ),
+                      ),
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
                       child: SizedBox(
