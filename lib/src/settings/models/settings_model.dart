@@ -15,4 +15,7 @@ class SettingsModel with _$SettingsModel {
 
   factory SettingsModel.fromJson(Map<String, Object?> json) =>
       _$SettingsModelFromJson(json);
+
+  factory SettingsModel.defaultValue() =>
+      const SettingsModel(isSentryEnabled: false, themeMode: ThemeMode.system);
 }

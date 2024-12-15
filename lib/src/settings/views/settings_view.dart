@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
@@ -78,7 +77,7 @@ class SettingsView extends ConsumerWidget {
                         Switch(
                           value: settings.isSentryEnabled,
                           onChanged: (val) {
-                            settingsNotifier.setSentry(none());
+                            settingsNotifier.setSentry();
                           },
                         )
                       ],

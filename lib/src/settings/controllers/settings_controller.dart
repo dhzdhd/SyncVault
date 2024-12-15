@@ -33,8 +33,7 @@ class Settings extends _$Settings {
   }
 
   static SettingsModel init() {
-    const defaultValue =
-        SettingsModel(isSentryEnabled: false, themeMode: ThemeMode.system);
+    final defaultValue = SettingsModel.defaultValue();
 
     try {
       final Map<String, dynamic> raw = jsonDecode(
@@ -54,7 +53,7 @@ class Settings extends _$Settings {
     }
   }
 
-  void setSentry(Option<bool> choice) {
+  void setSentry({Option<bool> choice = const None()}) {
     state = state.copyWith(
       isSentryEnabled: choice.match(
         () => !state.isSentryEnabled,
@@ -65,7 +64,9 @@ class Settings extends _$Settings {
   }
 
   void updateThemeMode(ThemeMode? newThemeMode) async {
-    if (newThemeMode == state.themeMode || newThemeMode == null) return;
+    if (newThemeMode == state.themeMode || newThemeMode == null) {
+      return;
+    }
 
     state = state.copyWith(themeMode: newThemeMode);
     Hive.box('vault').put('settings', jsonEncode(state.toJson()));

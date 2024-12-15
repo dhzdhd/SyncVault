@@ -79,13 +79,12 @@ void main() async {
       MenuItemLabel(
         label: 'Show app',
         onClicked: (menuItem) => appWindow.show(),
-      )
+      ),
+      MenuItemLabel(label: 'Exit', onClicked: (menuItem) => appWindow.close())
     ]);
 
     await systemTray.setContextMenu(menu);
-
     systemTray.registerSystemTrayEventHandler((eventName) {
-      debugPrint('eventName: $eventName');
       if (eventName == kSystemTrayEventClick) {
         Platform.isWindows ? appWindow.show() : systemTray.popUpContextMenu();
       } else if (eventName == kSystemTrayEventRightClick) {
@@ -107,6 +106,7 @@ void main() async {
   await Hive.openBox('vault');
 
   final settings = Settings.init();
+
   if (settings.isSentryEnabled) {
     await SentryFlutter.init(
       (options) {
