@@ -3,8 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_webview_window
   permission_handler_windows
-  screen_retriever
+  screen_retriever_windows
   sentry_flutter
   system_tray
   url_launcher_windows

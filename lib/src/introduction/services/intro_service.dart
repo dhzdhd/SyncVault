@@ -85,7 +85,7 @@ class IntroService {
           },
         ),
       ).then((_) async {
-        await extractFileToDisk(downloadPath, unzippedPath, asyncWrite: true);
+        await extractFileToDisk(downloadPath, unzippedPath);
         await File(downloadPath).delete();
 
         final rCloneOne = await getRCloneOne();
