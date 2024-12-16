@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
@@ -31,6 +29,7 @@ final _box = GetIt.I<Box<SettingsModel>>();
 @riverpod
 class Settings extends _$Settings {
   static const settingsBox = 'settings_box';
+  static final defaultValue = SettingsModel.defaultValue();
 
   @override
   SettingsModel build() {
@@ -38,8 +37,6 @@ class Settings extends _$Settings {
   }
 
   static SettingsModel init() {
-    final defaultValue = SettingsModel.defaultValue();
-
     try {
       return _box.get('settings')!;
     } catch (err) {
@@ -77,6 +74,11 @@ class Settings extends _$Settings {
     }
 
     state = state.copyWith(themeMode: newThemeMode);
+    _box.put('settings', state);
+  }
+
+  void resetSettings() async {
+    state = defaultValue;
     _box.put('settings', state);
   }
 }

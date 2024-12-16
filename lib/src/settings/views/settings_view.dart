@@ -140,6 +140,44 @@ class SettingsView extends ConsumerWidget {
                           ),
                         ),
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Are you sure'),
+                                actions: [
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      settingsNotifier.resetSettings();
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    child: const Text('Yes'),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('No'),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Reset settings',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
                     )
                   ],
                 ),
