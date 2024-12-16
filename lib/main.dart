@@ -17,6 +17,7 @@ import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:syncvault/hive/hive_registrar.g.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
@@ -68,8 +69,9 @@ void main() async {
 
   await Hive.initFlutter();
   await Hive.openBox('vault');
+  Hive.registerAdapters();
 
-  final settingsBox = await Hive.openBox<SettingsModel>('settings');
+  final settingsBox = await Hive.openBox<SettingsModel>(Settings.settingsBox);
   GetIt.I.registerSingleton<Box<SettingsModel>>(settingsBox);
 
   final settings = Settings.init();

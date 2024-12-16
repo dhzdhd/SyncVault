@@ -46,3 +46,5 @@ app.*.map.json
 .env
 
 android/app/lib
+
+.sentry-native/

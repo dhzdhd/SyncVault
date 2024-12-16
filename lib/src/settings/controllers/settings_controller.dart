@@ -28,9 +28,10 @@ final darkTheme = ThemeData(
 final _box = GetIt.I<Box<SettingsModel>>();
 
 // TODO: Move all box updates to a settings repository
-// TODO: https://ms3byoussef.medium.com/hive-in-flutter-a-detailed-guide-with-injectable-freezed-and-cubit-in-clean-architecture-c5c12ce8e00c
 @riverpod
 class Settings extends _$Settings {
+  static const settingsBox = 'settings_box';
+
   @override
   SettingsModel build() {
     return init();
@@ -40,25 +41,11 @@ class Settings extends _$Settings {
     final defaultValue = SettingsModel.defaultValue();
 
     try {
-      // final Map<String, dynamic> raw = jsonDecode(
-      // return _box.get(
-      //   'settings',
-      //   defaultValue: jsonEncode(defaultValue.toJson()),
-      // )!;
-      // );
-
-      // return SettingsModel.fromJson(raw);
-      return _box.get('settings', defaultValue: defaultValue)!;
+      return _box.get('settings')!;
     } catch (err) {
-      print(
-        Hive.box('settings').get(
-          'settings',
-          defaultValue: jsonEncode(defaultValue.toJson()),
-        ),
-      );
-      // TODO: Fails if box not working. Might have to refactor
       debugLogger.e('SettingsModel failed to initialize');
-      fileLogger.e('SettingsModel failed to initialize');
+      // TODO: Fix file logger
+      // fileLogger.e('SettingsModel failed to initialize');
 
       return defaultValue;
     }
@@ -71,7 +58,6 @@ class Settings extends _$Settings {
         (t) => t,
       ),
     );
-    // Hive.box('settings').put('settings', jsonEncode(state.toJson()));
     _box.put('settings', state);
   }
 
@@ -82,7 +68,6 @@ class Settings extends _$Settings {
         (t) => t,
       ),
     );
-    // Hive.box('settings').put('settings', jsonEncode(state.toJson()));
     _box.put('settings', state);
   }
 
@@ -92,7 +77,6 @@ class Settings extends _$Settings {
     }
 
     state = state.copyWith(themeMode: newThemeMode);
-    // Hive.box('settings').put('settings', jsonEncode(state.toJson()));
     _box.put('settings', state);
   }
 }
