@@ -11,4 +11,7 @@ class IntroSettingsModel with _$IntroSettingsModel {
 
   factory IntroSettingsModel.fromJson(Map<String, Object?> json) =>
       _$IntroSettingsModelFromJson(json);
+
+  factory IntroSettingsModel.defaultValue() =>
+      const IntroSettingsModel(alreadyViewed: false);
 }

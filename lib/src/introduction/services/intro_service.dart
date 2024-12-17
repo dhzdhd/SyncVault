@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
@@ -15,25 +14,27 @@ import 'package:syncvault/log.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 
 class IntroService {
-  final _dio = GetIt.I<Dio>();
+  static const introSettingsBox = 'intro_settings_box';
+  static const introSettingsKey = 'intro_settings';
+
   static const windowsRCloneUrl =
       'https://downloads.rclone.org/v1.67.0/rclone-v1.67.0-windows-amd64.zip';
+  static const linuxRCloneUrl =
+      'https://downloads.rclone.org/v1.67.0/rclone-v1.67.0-linux-amd64.zip';
+  static const macOSRCloneUrl =
+      'https://downloads.rclone.org/v1.67.0/rclone-v1.67.0-osx-arm64.zip';
+
+  final _dio = GetIt.I<Dio>();
+  final _box = GetIt.I<Box<IntroSettingsModel>>();
 
   IntroSettingsModel fetch() {
-    const defaultValue = IntroSettingsModel(alreadyViewed: false);
+    final defaultValue = IntroSettingsModel.defaultValue();
 
     try {
-      final Map<String, dynamic> raw = jsonDecode(
-        Hive.box('vault').get(
-          'introSettings',
-          defaultValue: jsonEncode(defaultValue.toJson()),
-        ),
-      );
-
-      return IntroSettingsModel.fromJson(raw);
+      return _box.get(introSettingsKey, defaultValue: defaultValue)!;
     } catch (err) {
       debugLogger.e('SettingsModel failed to initialize');
-      fileLogger.e('SettingsModel failed to initialize');
+      // fileLogger.e('SettingsModel failed to initialize');
 
       return defaultValue;
     }
@@ -41,7 +42,7 @@ class IntroService {
 
   Either<AppError, ()> setLocalStorage(IntroSettingsModel model) {
     return Either.tryCatch(() {
-      Hive.box('vault').put('introSettings', jsonEncode(model.toJson()));
+      _box.put(introSettingsKey, model);
       return ();
     }, (err, stackTrace) => err.segregateError());
   }
@@ -59,18 +60,26 @@ class IntroService {
   }
 
   Stream<Either<AppError, int>> downloadRClone() async* {
-    final url = switch (Platform.operatingSystem) {
-      'windows' => windowsRCloneUrl,
-      _ => '',
-    };
-
+    late final String url;
     final progressStreamController = StreamController<int>();
 
-    final dir = await getApplicationDocumentsDirectory();
-    final downloadPath = '${dir.path}/SyncVault/RCloneDir.zip';
-    final unzippedPath = '${dir.path}/SyncVault/RCloneDir';
-
     try {
+      // Do not implement switch case over OS string as the string can change internally
+      // Instead, use the exposed getter to safeguard against such changes
+      if (Platform.isWindows) {
+        url = windowsRCloneUrl;
+      } else if (Platform.isMacOS) {
+        url = macOSRCloneUrl;
+      } else if (Platform.isLinux) {
+        url = linuxRCloneUrl;
+      } else {
+        throw UnimplementedError('Not implemented for current platform!');
+      }
+
+      final appDir = await getApplicationDocumentsDirectory();
+      final downloadPath = '${appDir.path}/SyncVault/RCloneDir.zip';
+      final unzippedPath = '${appDir.path}/SyncVault/RCloneDir';
+
       _dio.download(
         url,
         downloadPath,
@@ -88,9 +97,19 @@ class IntroService {
         await extractFileToDisk(downloadPath, unzippedPath);
         await File(downloadPath).delete();
 
+        // Delete similarly named rclone.1 file
         final rCloneOne = await getRCloneOne();
         await rCloneOne.delete();
 
+        // Move rclone executable outside
+        final rCloneExec = await getRCloneExec();
+        final lastSeparator =
+            rCloneExec.path.lastIndexOf(Platform.pathSeparator);
+        final execName = rCloneExec.path.substring(lastSeparator);
+        // Rename does not work at times across different file systems
+        await rCloneExec.copy('${appDir.path}/SyncVault/$execName');
+
+        // Cleanup
         await File(unzippedPath).delete(recursive: true);
       });
 

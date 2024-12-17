@@ -13,6 +13,7 @@ import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/services/auth/onedrive.dart';
 import 'package:syncvault/src/accounts/services/drive/gdrive.dart';
 import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
+import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:workmanager/workmanager.dart';
@@ -71,8 +72,12 @@ void main() async {
   await Hive.openBox('vault');
   Hive.registerAdapters();
 
-  final settingsBox = await Hive.openBox<SettingsModel>(Settings.settingsBox);
+  final settingsBox = await Hive.openBox<SettingsModel>('settings_box');
   GetIt.I.registerSingleton<Box<SettingsModel>>(settingsBox);
+
+  final introSettingsBox =
+      await Hive.openBox<IntroSettingsModel>('intro_settings_box');
+  GetIt.I.registerSingleton<Box<IntroSettingsModel>>(introSettingsBox);
 
   final settings = Settings.init();
 

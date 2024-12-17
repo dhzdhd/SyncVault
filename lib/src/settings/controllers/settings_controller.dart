@@ -23,13 +23,13 @@ final darkTheme = ThemeData(
   ),
 );
 
-final _box = GetIt.I<Box<SettingsModel>>();
-
 // TODO: Move all box updates to a settings repository
 @riverpod
 class Settings extends _$Settings {
-  static const settingsBox = 'settings_box';
+  static const settingsKey = 'settings';
+
   static final defaultValue = SettingsModel.defaultValue();
+  static final _box = GetIt.I<Box<SettingsModel>>();
 
   @override
   SettingsModel build() {
@@ -38,7 +38,7 @@ class Settings extends _$Settings {
 
   static SettingsModel init() {
     try {
-      return _box.get('settings')!;
+      return _box.get(settingsKey, defaultValue: defaultValue)!;
     } catch (err) {
       debugLogger.e('SettingsModel failed to initialize');
       // TODO: Fix file logger
@@ -55,7 +55,7 @@ class Settings extends _$Settings {
         (t) => t,
       ),
     );
-    _box.put('settings', state);
+    _box.put(settingsKey, state);
   }
 
   void setHideOnStartup({Option<bool> choice = const None()}) {
@@ -65,7 +65,7 @@ class Settings extends _$Settings {
         (t) => t,
       ),
     );
-    _box.put('settings', state);
+    _box.put(settingsKey, state);
   }
 
   void updateThemeMode(ThemeMode? newThemeMode) async {
@@ -74,11 +74,11 @@ class Settings extends _$Settings {
     }
 
     state = state.copyWith(themeMode: newThemeMode);
-    _box.put('settings', state);
+    _box.put(settingsKey, state);
   }
 
   void resetSettings() async {
     state = defaultValue;
-    _box.put('settings', state);
+    _box.put(settingsKey, state);
   }
 }

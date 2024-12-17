@@ -58,9 +58,9 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SettingsModel(
-      isSentryEnabled: fields[0] as bool,
-      isHideOnStartup: fields[1] as bool,
-      themeMode: fields[2] as ThemeMode,
+      isSentryEnabled: fields[3] as bool,
+      isHideOnStartup: fields[4] as bool,
+      themeMode: fields[5] as ThemeMode,
     );
   }
 
@@ -68,11 +68,11 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
   void write(BinaryWriter writer, SettingsModel obj) {
     writer
       ..writeByte(3)
-      ..writeByte(0)
+      ..writeByte(3)
       ..write(obj.isSentryEnabled)
-      ..writeByte(1)
+      ..writeByte(4)
       ..write(obj.isHideOnStartup)
-      ..writeByte(2)
+      ..writeByte(5)
       ..write(obj.themeMode);
   }
 
@@ -83,6 +83,40 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is SettingsModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class IntroSettingsModelAdapter extends TypeAdapter<IntroSettingsModel> {
+  @override
+  final int typeId = 2;
+
+  @override
+  IntroSettingsModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return IntroSettingsModel(
+      alreadyViewed: fields[0] as bool,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, IntroSettingsModel obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.alreadyViewed);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IntroSettingsModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

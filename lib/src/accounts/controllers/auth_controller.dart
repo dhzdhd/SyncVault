@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
@@ -35,7 +36,7 @@ class AuthController extends _$AuthController {
 
 @riverpod
 Future<DriveInfoModel> driveInfoController(
-  DriveInfoControllerRef ref,
+  Ref ref,
   AuthProviderModel model,
 ) async {
   final authNotifier = ref.read(authProvider.notifier);

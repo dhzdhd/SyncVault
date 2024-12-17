@@ -7,7 +7,7 @@ part of 'auth_controller.dart';
 // **************************************************************************
 
 String _$driveInfoControllerHash() =>
-    r'c53138202c6a43d5887c7a2e0a571b336658a4b3';
+    r'77e67cc0ca21648453e4ae03ede8fb04ff60b90f';
 
 /// Copied from Dart SDK
 class _SystemHash {

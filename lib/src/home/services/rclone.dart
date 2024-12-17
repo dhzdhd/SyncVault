@@ -17,62 +17,75 @@ enum DriveProvider {
   final String providerName;
 }
 
+// TODO:
+// rclone config create & rclone config file (to show location)
+// Authorize with rclone auth as give below
+// then, rclone update ...
+// rclone config show to show file, can convert to json too
 class RCloneAuthService {
   TaskEither<AppError, DriveProviderModel> authorize({
     required DriveProvider driveProvider,
   }) {
     return TaskEither.tryCatch(() async {
-      const channel = MethodChannel('com.example.syncvault/native_lib');
-      final path = await channel.invokeMethod('getNativeLibraryPath');
+      if (Platform.isAndroid) {
+        const channel = MethodChannel('com.example.syncvault/native_lib');
+        final path = await channel.invokeMethod('getNativeLibraryPath');
 
-      final process = await Process.start(
-        '$path/librclone.so',
-        ['authorize', '--auth-no-open-browser', driveProvider.providerName],
-        runInShell: true,
-      );
-
-      final output = StringBuffer();
-      final errorOutput = StringBuffer();
-      final urlPattern = RegExp(
-          r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
-
-      // Listen to stdout, stderr
-      process.stdout.transform(utf8.decoder).listen((data) {
-        output.write(data);
-      });
-      process.stderr.transform(utf8.decoder).listen((data) {
-        errorOutput.write(data);
-
-        // Match url with regex (url is in stderr for whatever reason)
-        final match = urlPattern.firstMatch(data);
-        if (match != null) {
-          final url = match.group(0);
-          if (url != null) {
-            launchUrlString(url);
-          }
-        }
-      });
-
-      // Wait for process to finish
-      await process.exitCode;
-
-      final authJson =
-          jsonDecode(RegExp(r'\{.+\}').stringMatch(output.toString())!);
-      if (authJson
-          case {
-            'access_token': String accessToken,
-            'refresh_token': String refreshToken,
-            'expiry': String expiresIn,
-          }) {
-        return DriveProviderModel(
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          expiresIn: expiresIn,
+        final process = await Process.start(
+          '$path/librclone.so',
+          ['authorize', '--auth-no-open-browser', driveProvider.providerName],
+          runInShell: true,
         );
+
+        final output = StringBuffer();
+        final errorOutput = StringBuffer();
+        final urlPattern = RegExp(
+            r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+
+        // Listen to stdout, stderr
+        process.stdout.transform(utf8.decoder).listen((data) {
+          output.write(data);
+        });
+        process.stderr.transform(utf8.decoder).listen((data) {
+          errorOutput.write(data);
+
+          // Match url with regex (url is in stderr for whatever reason)
+          final match = urlPattern.firstMatch(data);
+          if (match != null) {
+            final url = match.group(0);
+            if (url != null) {
+              launchUrlString(url);
+            }
+          }
+        });
+
+        // Wait for process to finish
+        await process.exitCode;
+
+        final authJson =
+            jsonDecode(RegExp(r'\{.+\}').stringMatch(output.toString())!);
+        if (authJson
+            case {
+              'access_token': String accessToken,
+              'refresh_token': String refreshToken,
+              'expiry': String expiresIn,
+            }) {
+          final model = DriveProviderModel(
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            expiresIn: expiresIn,
+          );
+          return model;
+        } else {
+          throw const GeneralError('Authorization response invalid');
+        }
       } else {
-        throw const GeneralError('Authorization response invalid');
+        throw UnimplementedError('Desktop & IOS not implemented yet');
       }
-    }, (err, stackTrace) => err.segregateError());
+    }, (err, stackTrace) {
+      print(stackTrace);
+      return err.segregateError();
+    });
   }
 }
 
