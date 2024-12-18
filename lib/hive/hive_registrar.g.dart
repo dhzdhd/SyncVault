@@ -7,6 +7,8 @@ import 'package:syncvault/hive/hive_adapters.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(DriveProviderAdapter());
+    registerAdapter(DriveProviderModelAdapter());
     registerAdapter(IntroSettingsModelAdapter());
     registerAdapter(SettingsModelAdapter());
     registerAdapter(ThemeModeAdapter());

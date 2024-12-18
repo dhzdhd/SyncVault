@@ -107,12 +107,18 @@ class AccountView extends ConsumerWidget {
                               onTap: () async {
                                 await Future.delayed(
                                   Duration.zero,
-                                  () => showDialog(
-                                    context: context,
-                                    builder: (ctx) => DriveInfoDialogWidget(
-                                      model: e,
-                                    ),
-                                  ),
+                                  () => {
+                                    if (context.mounted)
+                                      {
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) =>
+                                              DriveInfoDialogWidget(
+                                            model: e,
+                                          ),
+                                        )
+                                      }
+                                  },
                                 );
                               },
                             ),

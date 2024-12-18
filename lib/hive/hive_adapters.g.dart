@@ -120,3 +120,86 @@ class IntroSettingsModelAdapter extends TypeAdapter<IntroSettingsModel> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
+  @override
+  final int typeId = 3;
+
+  @override
+  DriveProviderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return DriveProviderModel(
+      provider: fields[0] as DriveProvider,
+      accessToken: fields[1] as String,
+      refreshToken: fields[2] as String,
+      expiresIn: fields[3] as String,
+      rCloneJson: (fields[4] as Map).cast<dynamic, dynamic>(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, DriveProviderModel obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.provider)
+      ..writeByte(1)
+      ..write(obj.accessToken)
+      ..writeByte(2)
+      ..write(obj.refreshToken)
+      ..writeByte(3)
+      ..write(obj.expiresIn)
+      ..writeByte(4)
+      ..write(obj.rCloneJson);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriveProviderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
+  @override
+  final int typeId = 4;
+
+  @override
+  DriveProvider read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return DriveProvider.oneDrive;
+      case 1:
+        return DriveProvider.googleDrive;
+      default:
+        return DriveProvider.oneDrive;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, DriveProvider obj) {
+    switch (obj) {
+      case DriveProvider.oneDrive:
+        writer.writeByte(0);
+      case DriveProvider.googleDrive:
+        writer.writeByte(1);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriveProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

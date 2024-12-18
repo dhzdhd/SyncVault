@@ -116,6 +116,39 @@ class SettingsView extends ConsumerWidget {
                                 title: const Text('Are you sure'),
                                 actions: [
                                   OutlinedButton(
+                                    onPressed:null,
+                                    child: const Text('Yes'),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('No'),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Download RClone',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Are you sure'),
+                                actions: [
+                                  OutlinedButton(
                                     onPressed: () async {
                                       await folderNotifier.clearCache().run();
                                       if (context.mounted) {
