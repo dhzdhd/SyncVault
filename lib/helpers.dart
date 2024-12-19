@@ -11,6 +11,17 @@ extension StringExtension on String {
     }
     return '';
   }
+
+  String format(Map<String, String> mappedValues) {
+    return replaceAllMapped(RegExp(r'{(.*?)}'), (match) {
+      final mapped = mappedValues[match[1]];
+      if (mapped == null) {
+        throw ArgumentError(
+            '$mappedValues does not contain the key "${match[1]}"');
+      }
+      return mapped;
+    });
+  }
 }
 
 class PlatformExtension {
