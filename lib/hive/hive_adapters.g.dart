@@ -132,6 +132,7 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return DriveProviderModel(
+      remoteName: fields[5] as String,
       provider: fields[0] as DriveProvider,
       accessToken: fields[1] as String,
       refreshToken: fields[2] as String,
@@ -143,7 +144,7 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
   @override
   void write(BinaryWriter writer, DriveProviderModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.provider)
       ..writeByte(1)
@@ -153,7 +154,9 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
       ..writeByte(3)
       ..write(obj.expiresIn)
       ..writeByte(4)
-      ..write(obj.rCloneJson);
+      ..write(obj.rCloneJson)
+      ..writeByte(5)
+      ..write(obj.remoteName);
   }
 
   @override

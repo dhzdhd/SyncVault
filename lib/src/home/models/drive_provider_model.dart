@@ -7,6 +7,7 @@ part 'drive_provider_model.g.dart';
 @freezed
 class DriveProviderModel with _$DriveProviderModel {
   const factory DriveProviderModel({
+    required String remoteName,
     required DriveProvider provider,
     required String accessToken,
     required String refreshToken,

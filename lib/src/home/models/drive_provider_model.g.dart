@@ -9,6 +9,7 @@ part of 'drive_provider_model.dart';
 _$DriveProviderModelImpl _$$DriveProviderModelImplFromJson(
         Map<String, dynamic> json) =>
     _$DriveProviderModelImpl(
+      remoteName: json['remoteName'] as String,
       provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
@@ -19,6 +20,7 @@ _$DriveProviderModelImpl _$$DriveProviderModelImplFromJson(
 Map<String, dynamic> _$$DriveProviderModelImplToJson(
         _$DriveProviderModelImpl instance) =>
     <String, dynamic>{
+      'remoteName': instance.remoteName,
       'provider': _$DriveProviderEnumMap[instance.provider]!,
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,

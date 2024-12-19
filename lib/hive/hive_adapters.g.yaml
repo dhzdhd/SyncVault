@@ -31,7 +31,7 @@ types:
         index: 0
   DriveProviderModel:
     typeId: 3
-    nextIndex: 5
+    nextIndex: 6
     fields:
       provider:
         index: 0
@@ -43,6 +43,8 @@ types:
         index: 3
       rCloneJson:
         index: 4
+      remoteName:
+        index: 5
   DriveProvider:
     typeId: 4
     nextIndex: 2

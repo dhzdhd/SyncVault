@@ -20,82 +20,111 @@ enum DriveProvider {
 }
 
 // TODO:
-// rclone config create & rclone config file (to show location)
 // Authorize with rclone auth as give below
-// then, rclone update ...
+// rclone config create & rclone config file (to show location)
 // rclone config show to show file, can convert to json too
 class RCloneAuthService {
-  TaskEither<AppError, DriveProviderModel> authorize({
-    required DriveProvider driveProvider,
-  }) {
+  TaskEither<AppError, String> getRCloneExec() {
     return TaskEither.tryCatch(() async {
-      late final String execPath;
-
       if (Platform.isAndroid) {
         const channel = MethodChannel('com.example.syncvault/native_lib');
         final path = await channel.invokeMethod('getNativeLibraryPath');
-        execPath = '$path/librclone.so';
+        return '$path/librclone.so';
       } else if (PlatformExtension.isDesktop) {
         final docDir = await getApplicationDocumentsDirectory();
         // TODO: Glob the rclone path for multiplatform support
-        execPath = '${docDir.path}/SyncVault/rclone.exe';
+        return '${docDir.path}/SyncVault/rclone.exe';
       } else if (Platform.isIOS) {
         throw UnimplementedError('RClone not implemented in iOS yet');
+      } else {
+        throw UnimplementedError('This platform is not supported yet');
       }
+    }, (err, stackTrace) => err.segregateError());
+  }
 
-      final process = await Process.start(
-        execPath,
-        ['authorize', '--auth-no-open-browser', driveProvider.providerName],
-        runInShell: true,
+  TaskEither<AppError, String> getConfig() {
+    return TaskEither<AppError, String>.Do(($) async {
+      final rCloneExec = await $(getRCloneExec());
+      final rCloneConfig = await $(
+        TaskEither.tryCatch(
+          () async {
+            final process = await Process.run(rCloneExec, ['config', 'file']);
+            return process.stdout.toString();
+          },
+          (err, stackTrace) => err.segregateError(),
+        ),
       );
 
-      final output = StringBuffer();
-      final errorOutput = StringBuffer();
-      final urlPattern = RegExp(
-          r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+      return rCloneConfig;
+    });
+  }
 
-      // Listen to stdout, stderr
-      process.stdout.transform(utf8.decoder).listen((data) {
-        output.write(data);
-      });
-      process.stderr.transform(utf8.decoder).listen((data) {
-        errorOutput.write(data);
+  TaskEither<AppError, DriveProviderModel> authorize({
+    required DriveProvider driveProvider,
+  }) {
+    return TaskEither<AppError, DriveProviderModel>.Do(($) async {
+      final execPath = await $(getRCloneExec());
 
-        // Match url with regex (url is in stderr for whatever reason)
-        final match = urlPattern.firstMatch(data);
-        if (match != null) {
-          final url = match.group(0);
-          if (url != null) {
-            launchUrlString(url);
+      final model = await $(
+        TaskEither.tryCatch(() async {
+          final process = await Process.start(
+            execPath,
+            ['authorize', '--auth-no-open-browser', driveProvider.providerName],
+            runInShell: true,
+          );
+
+          final output = StringBuffer();
+          final errorOutput = StringBuffer();
+          final urlPattern = RegExp(
+              r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+
+          // Listen to stdout, stderr
+          process.stdout.transform(utf8.decoder).listen((data) {
+            output.write(data);
+          });
+          process.stderr.transform(utf8.decoder).listen((data) {
+            errorOutput.write(data);
+
+            // Match url with regex (url is in stderr for whatever reason)
+            final match = urlPattern.firstMatch(data);
+            if (match != null) {
+              final url = match.group(0);
+              if (url != null) {
+                launchUrlString(url);
+              }
+            }
+          });
+
+          // Wait for process to finish
+          await process.exitCode;
+
+          final authJson =
+              jsonDecode(RegExp(r'\{.+\}').stringMatch(output.toString())!);
+          if (authJson
+              case {
+                'access_token': String accessToken,
+                'refresh_token': String refreshToken,
+                'expiry': String expiresIn,
+              }) {
+            final model = DriveProviderModel(
+              remoteName: '',
+              provider: driveProvider,
+              rCloneJson: authJson,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              expiresIn: expiresIn,
+            );
+
+            print(model);
+            return model;
+          } else {
+            throw const GeneralError('Authorization response invalid');
           }
-        }
-      });
-
-      // Wait for process to finish
-      await process.exitCode;
-
-      final authJson =
-          jsonDecode(RegExp(r'\{.+\}').stringMatch(output.toString())!);
-      if (authJson
-          case {
-            'access_token': String accessToken,
-            'refresh_token': String refreshToken,
-            'expiry': String expiresIn,
-          }) {
-        final model = DriveProviderModel(
-          provider: driveProvider,
-          rCloneJson: authJson,
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          expiresIn: expiresIn,
-        );
-        print(model);
-        return model;
-      } else {
-        throw const GeneralError('Authorization response invalid');
-      }
-    }, (err, stackTrace) {
-      return err.segregateError();
+        }, (err, stackTrace) {
+          return err.segregateError();
+        }),
+      );
+      return model;
     });
   }
 }

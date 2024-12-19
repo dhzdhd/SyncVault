@@ -111,8 +111,7 @@ void main() async {
     });
 
     if (settings.isHideOnStartup) {
-      print('hide');
-      appWindow.hide();
+      await appWindow.hide();
     }
   } else {
     Workmanager().initialize(callbackDispatcher, isInDebugMode: false);

@@ -110,11 +110,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
             icon: const Icon(Icons.warning),
             tooltip: 'Test RClone',
             onPressed: () async {
-              final res = await RCloneAuthService()
-                  .authorize(
-                    driveProvider: DriveProvider.googleDrive,
-                  )
-                  .run();
+              // final res = await RCloneAuthService()
+              //     .authorize(
+              //       driveProvider: DriveProvider.googleDrive,
+              //     )
+              //     .run();
+              final res = await RCloneAuthService().getConfig().run();
               print(res);
             },
           ),

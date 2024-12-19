@@ -20,6 +20,7 @@ DriveProviderModel _$DriveProviderModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DriveProviderModel {
+  String get remoteName => throw _privateConstructorUsedError;
   DriveProvider get provider => throw _privateConstructorUsedError;
   String get accessToken => throw _privateConstructorUsedError;
   String get refreshToken => throw _privateConstructorUsedError;
@@ -43,7 +44,8 @@ abstract class $DriveProviderModelCopyWith<$Res> {
       _$DriveProviderModelCopyWithImpl<$Res, DriveProviderModel>;
   @useResult
   $Res call(
-      {DriveProvider provider,
+      {String remoteName,
+      DriveProvider provider,
       String accessToken,
       String refreshToken,
       String expiresIn,
@@ -65,6 +67,7 @@ class _$DriveProviderModelCopyWithImpl<$Res, $Val extends DriveProviderModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? remoteName = null,
     Object? provider = null,
     Object? accessToken = null,
     Object? refreshToken = null,
@@ -72,6 +75,10 @@ class _$DriveProviderModelCopyWithImpl<$Res, $Val extends DriveProviderModel>
     Object? rCloneJson = null,
   }) {
     return _then(_value.copyWith(
+      remoteName: null == remoteName
+          ? _value.remoteName
+          : remoteName // ignore: cast_nullable_to_non_nullable
+              as String,
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
@@ -105,7 +112,8 @@ abstract class _$$DriveProviderModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {DriveProvider provider,
+      {String remoteName,
+      DriveProvider provider,
       String accessToken,
       String refreshToken,
       String expiresIn,
@@ -125,6 +133,7 @@ class __$$DriveProviderModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? remoteName = null,
     Object? provider = null,
     Object? accessToken = null,
     Object? refreshToken = null,
@@ -132,6 +141,10 @@ class __$$DriveProviderModelImplCopyWithImpl<$Res>
     Object? rCloneJson = null,
   }) {
     return _then(_$DriveProviderModelImpl(
+      remoteName: null == remoteName
+          ? _value.remoteName
+          : remoteName // ignore: cast_nullable_to_non_nullable
+              as String,
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
@@ -160,7 +173,8 @@ class __$$DriveProviderModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DriveProviderModelImpl implements _DriveProviderModel {
   const _$DriveProviderModelImpl(
-      {required this.provider,
+      {required this.remoteName,
+      required this.provider,
       required this.accessToken,
       required this.refreshToken,
       required this.expiresIn,
@@ -170,6 +184,8 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
   factory _$DriveProviderModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DriveProviderModelImplFromJson(json);
 
+  @override
+  final String remoteName;
   @override
   final DriveProvider provider;
   @override
@@ -188,7 +204,7 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
 
   @override
   String toString() {
-    return 'DriveProviderModel(provider: $provider, accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, rCloneJson: $rCloneJson)';
+    return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, rCloneJson: $rCloneJson)';
   }
 
   @override
@@ -196,6 +212,8 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DriveProviderModelImpl &&
+            (identical(other.remoteName, remoteName) ||
+                other.remoteName == remoteName) &&
             (identical(other.provider, provider) ||
                 other.provider == provider) &&
             (identical(other.accessToken, accessToken) ||
@@ -212,6 +230,7 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      remoteName,
       provider,
       accessToken,
       refreshToken,
@@ -237,7 +256,8 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
 
 abstract class _DriveProviderModel implements DriveProviderModel {
   const factory _DriveProviderModel(
-          {required final DriveProvider provider,
+          {required final String remoteName,
+          required final DriveProvider provider,
           required final String accessToken,
           required final String refreshToken,
           required final String expiresIn,
@@ -247,6 +267,8 @@ abstract class _DriveProviderModel implements DriveProviderModel {
   factory _DriveProviderModel.fromJson(Map<String, dynamic> json) =
       _$DriveProviderModelImpl.fromJson;
 
+  @override
+  String get remoteName;
   @override
   DriveProvider get provider;
   @override
