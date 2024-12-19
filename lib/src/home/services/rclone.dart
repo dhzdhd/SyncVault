@@ -3,16 +3,19 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/models/remote_folder_model.dart';
 import 'package:syncvault/src/home/services/rclone_template.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 enum DriveProvider {
   oneDrive('onedrive', 'assets/logos/onedrive.svg'),
-  googleDrive('drive', 'assets/logos/gdrive.svg');
+  googleDrive('drive', 'assets/logos/gdrive.svg'),
+  dropBox('dropbox', 'assets/logos/dropbox.svg');
 
   Option<String> template(String remoteName, String rCloneJson) {
     return Option.fromNullable(providerTemplate[this]).map(
@@ -28,6 +31,7 @@ enum DriveProvider {
   final String providerIcon;
 }
 
+@singleton
 class RCloneUtils {
   TaskEither<AppError, String> getRCloneExec() {
     return TaskEither.tryCatch(() async {
@@ -69,6 +73,7 @@ class RCloneUtils {
 // Authorize with rclone auth as give below
 // rclone config create & rclone config file (to show location)
 // rclone config show to show file, can convert to json too
+@singleton
 class RCloneAuthService {
   TaskEither<AppError, DriveProviderModel> authorize({
     required String remoteName,
@@ -80,6 +85,7 @@ class RCloneAuthService {
       final execPath = await $(utils.getRCloneExec());
       final configPath = await $(utils.getConfig());
 
+      // Authorize with rclone for given provider
       final model = await $(
         TaskEither.tryCatch(
           () async {
@@ -146,6 +152,7 @@ class RCloneAuthService {
         ),
       );
 
+      // Write rclone output to rclone config file
       await $(
         TaskEither.tryCatch(
           () async {
@@ -158,7 +165,10 @@ class RCloneAuthService {
                       'Unable to fetch template for given provider.'),
                 );
 
-            await rCloneConfig.writeAsString(toWrite, mode: FileMode.append);
+            await rCloneConfig.writeAsString(
+              '\n$toWrite',
+              mode: FileMode.append,
+            );
           },
           (err, stackTrace) => err.segregateError(),
         ),
@@ -169,4 +179,51 @@ class RCloneAuthService {
   }
 }
 
-class RCloneDriveService {}
+@singleton
+class RCloneDriveService {
+  TaskEither<AppError, ()> create(
+      {required DriveProviderModel model, required String folderName}) {
+    final utils = RCloneUtils();
+
+    return TaskEither<AppError, ()>.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+
+      final res = await $(TaskEither.tryCatch(() async {
+        final process = await Process.run(
+            execPath, ['mkdir', '${model.remoteName}:/SyncVault/$folderName']);
+        final output = process.stdout.toString().split('\n');
+
+        print(output);
+
+        return ();
+      }, (err, stackTrace) => err.segregateError()));
+
+      return res;
+    });
+  }
+
+  TaskEither<AppError, ()> upload(
+      {required DriveProviderModel providerModel,
+      required RemoteFolderModel folderModel,
+      required String localPath}) {
+    final utils = RCloneUtils();
+
+    return TaskEither<AppError, ()>.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+
+      final res = await $(TaskEither.tryCatch(() async {
+        final process = await Process.run(execPath, [
+          'sync',
+          localPath,
+        ]);
+        final output = process.stdout.toString().split('\n');
+
+        print(output);
+
+        return ();
+      }, (err, stackTrace) => err.segregateError()));
+
+      return res;
+    });
+  }
+}

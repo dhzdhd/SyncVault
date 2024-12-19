@@ -31,4 +31,5 @@ Map<String, dynamic> _$$DriveProviderModelImplToJson(
 const _$DriveProviderEnumMap = {
   DriveProvider.oneDrive: 'oneDrive',
   DriveProvider.googleDrive: 'googleDrive',
+  DriveProvider.dropBox: 'dropBox',
 };

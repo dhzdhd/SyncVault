@@ -9,16 +9,16 @@ part of 'remote_folder_model.dart';
 _$RemoteFolderModelImpl _$$RemoteFolderModelImplFromJson(
         Map<String, dynamic> json) =>
     _$RemoteFolderModelImpl(
-      provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
+      provider:
+          DriveProviderModel.fromJson(json['provider'] as Map<String, dynamic>),
+      folderPath: json['folderPath'] as String,
+      folderName: json['folderName'] as String,
     );
 
 Map<String, dynamic> _$$RemoteFolderModelImplToJson(
         _$RemoteFolderModelImpl instance) =>
     <String, dynamic>{
-      'provider': _$DriveProviderEnumMap[instance.provider]!,
+      'provider': instance.provider,
+      'folderPath': instance.folderPath,
+      'folderName': instance.folderName,
     };
-
-const _$DriveProviderEnumMap = {
-  DriveProvider.oneDrive: 'oneDrive',
-  DriveProvider.googleDrive: 'googleDrive',
-};

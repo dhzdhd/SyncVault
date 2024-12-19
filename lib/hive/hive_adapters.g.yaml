@@ -47,9 +47,11 @@ types:
         index: 5
   DriveProvider:
     typeId: 4
-    nextIndex: 2
+    nextIndex: 3
     fields:
       oneDrive:
         index: 0
       googleDrive:
         index: 1
+      dropBox:
+        index: 2

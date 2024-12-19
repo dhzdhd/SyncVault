@@ -1,0 +1,13 @@
+services:
+  minio:
+    container_name: syncvault-minio
+    image: quay.io/minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data/minio:/data
+    environment:
+      - MINIO_ROOT_USER=ROOTNAME
+      - MINIO_ROOT_PASSWORD=CHANGEME123
+    command: server /data --console-address ":9001"

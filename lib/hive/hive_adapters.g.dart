@@ -181,6 +181,8 @@ class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
         return DriveProvider.oneDrive;
       case 1:
         return DriveProvider.googleDrive;
+      case 2:
+        return DriveProvider.dropBox;
       default:
         return DriveProvider.oneDrive;
     }
@@ -193,6 +195,8 @@ class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
         writer.writeByte(0);
       case DriveProvider.googleDrive:
         writer.writeByte(1);
+      case DriveProvider.dropBox:
+        writer.writeByte(2);
     }
   }
 

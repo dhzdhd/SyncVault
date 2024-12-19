@@ -21,7 +21,9 @@ RemoteFolderModel _$RemoteFolderModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RemoteFolderModel {
 // required String email,
-  DriveProvider get provider => throw _privateConstructorUsedError;
+  DriveProviderModel get provider => throw _privateConstructorUsedError;
+  String get folderPath => throw _privateConstructorUsedError;
+  String get folderName => throw _privateConstructorUsedError;
 
   /// Serializes this RemoteFolderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +41,10 @@ abstract class $RemoteFolderModelCopyWith<$Res> {
           RemoteFolderModel value, $Res Function(RemoteFolderModel) then) =
       _$RemoteFolderModelCopyWithImpl<$Res, RemoteFolderModel>;
   @useResult
-  $Res call({DriveProvider provider});
+  $Res call(
+      {DriveProviderModel provider, String folderPath, String folderName});
+
+  $DriveProviderModelCopyWith<$Res> get provider;
 }
 
 /// @nodoc
@@ -58,13 +63,33 @@ class _$RemoteFolderModelCopyWithImpl<$Res, $Val extends RemoteFolderModel>
   @override
   $Res call({
     Object? provider = null,
+    Object? folderPath = null,
+    Object? folderName = null,
   }) {
     return _then(_value.copyWith(
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
-              as DriveProvider,
+              as DriveProviderModel,
+      folderPath: null == folderPath
+          ? _value.folderPath
+          : folderPath // ignore: cast_nullable_to_non_nullable
+              as String,
+      folderName: null == folderName
+          ? _value.folderName
+          : folderName // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
+  }
+
+  /// Create a copy of RemoteFolderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $DriveProviderModelCopyWith<$Res> get provider {
+    return $DriveProviderModelCopyWith<$Res>(_value.provider, (value) {
+      return _then(_value.copyWith(provider: value) as $Val);
+    });
   }
 }
 
@@ -76,7 +101,11 @@ abstract class _$$RemoteFolderModelImplCopyWith<$Res>
       __$$RemoteFolderModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DriveProvider provider});
+  $Res call(
+      {DriveProviderModel provider, String folderPath, String folderName});
+
+  @override
+  $DriveProviderModelCopyWith<$Res> get provider;
 }
 
 /// @nodoc
@@ -93,12 +122,22 @@ class __$$RemoteFolderModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? provider = null,
+    Object? folderPath = null,
+    Object? folderName = null,
   }) {
     return _then(_$RemoteFolderModelImpl(
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
-              as DriveProvider,
+              as DriveProviderModel,
+      folderPath: null == folderPath
+          ? _value.folderPath
+          : folderPath // ignore: cast_nullable_to_non_nullable
+              as String,
+      folderName: null == folderName
+          ? _value.folderName
+          : folderName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -106,18 +145,25 @@ class __$$RemoteFolderModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RemoteFolderModelImpl implements _RemoteFolderModel {
-  const _$RemoteFolderModelImpl({required this.provider});
+  const _$RemoteFolderModelImpl(
+      {required this.provider,
+      required this.folderPath,
+      required this.folderName});
 
   factory _$RemoteFolderModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$RemoteFolderModelImplFromJson(json);
 
 // required String email,
   @override
-  final DriveProvider provider;
+  final DriveProviderModel provider;
+  @override
+  final String folderPath;
+  @override
+  final String folderName;
 
   @override
   String toString() {
-    return 'RemoteFolderModel(provider: $provider)';
+    return 'RemoteFolderModel(provider: $provider, folderPath: $folderPath, folderName: $folderName)';
   }
 
   @override
@@ -126,12 +172,17 @@ class _$RemoteFolderModelImpl implements _RemoteFolderModel {
         (other.runtimeType == runtimeType &&
             other is _$RemoteFolderModelImpl &&
             (identical(other.provider, provider) ||
-                other.provider == provider));
+                other.provider == provider) &&
+            (identical(other.folderPath, folderPath) ||
+                other.folderPath == folderPath) &&
+            (identical(other.folderName, folderName) ||
+                other.folderName == folderName));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, provider);
+  int get hashCode =>
+      Object.hash(runtimeType, provider, folderPath, folderName);
 
   /// Create a copy of RemoteFolderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -151,15 +202,21 @@ class _$RemoteFolderModelImpl implements _RemoteFolderModel {
 }
 
 abstract class _RemoteFolderModel implements RemoteFolderModel {
-  const factory _RemoteFolderModel({required final DriveProvider provider}) =
-      _$RemoteFolderModelImpl;
+  const factory _RemoteFolderModel(
+      {required final DriveProviderModel provider,
+      required final String folderPath,
+      required final String folderName}) = _$RemoteFolderModelImpl;
 
   factory _RemoteFolderModel.fromJson(Map<String, dynamic> json) =
       _$RemoteFolderModelImpl.fromJson;
 
 // required String email,
   @override
-  DriveProvider get provider;
+  DriveProviderModel get provider;
+  @override
+  String get folderPath;
+  @override
+  String get folderName;
 
   /// Create a copy of RemoteFolderModel
   /// with the given fields replaced by the non-null parameter values.
