@@ -7,28 +7,57 @@ import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/models/remote_folder_model.dart';
 import 'package:syncvault/src/home/services/rclone_template.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 enum DriveProvider {
-  oneDrive('onedrive', 'assets/logos/onedrive.svg'),
-  googleDrive('drive', 'assets/logos/gdrive.svg'),
-  dropBox('dropbox', 'assets/logos/dropbox.svg');
+  oneDrive('onedrive', 'assets/logos/onedrive.svg', OAuth2),
+  googleDrive('drive', 'assets/logos/gdrive.svg', OAuth2),
+  dropBox('dropbox', 'assets/logos/dropbox.svg', OAuth2),
+  minio('s3', '', S3),
+  nextCloud('webdav', '', Webdav);
 
-  Option<String> template(String remoteName, String rCloneJson) {
-    return Option.fromNullable(providerTemplate[this]).map(
-      (t) => t.format(
-        {'remoteName': remoteName, 'rCloneJson': rCloneJson},
-      ),
-    );
+  Option<String> template({
+    required String remoteName,
+    required DriveProviderBackend backend,
+  }) {
+    // final a = switch (this.backend) {
+    //   OAuth2(:final rCloneJson) => '',
+    //   _ => '',
+    // };
+
+    return switch (backend) {
+      OAuth2(:final rCloneJson) =>
+        Option.fromNullable(providerTemplate[this]).map(
+          (t) => t.format({
+            'remoteName': remoteName,
+            'rCloneJson': rCloneJson.toString(),
+          }),
+        ),
+      S3() => Option.fromNullable(providerTemplate[this]).map(
+          (t) => t.format({}),
+        ),
+      Webdav(:final url, :final user, :final password) =>
+        Option.fromNullable(providerTemplate[this]).map(
+          (t) => t.format({
+            'remoteName': remoteName,
+            'url': url,
+            'user': user,
+            'password': password
+          }),
+        ),
+    };
   }
 
-  const DriveProvider(this.providerName, this.providerIcon);
+  const DriveProvider(this.providerName, this.providerIcon, this.backend);
 
   final String providerName;
   final String providerIcon;
+  final Type
+      backend; // TODO: Somehow relate to DriveProviderBackend without switch case
 }
 
 @singleton
@@ -124,7 +153,7 @@ class RCloneAuthService {
             // Wait for process to finish
             await process.exitCode;
 
-            final authJson =
+            final Map<String, String> authJson =
                 jsonDecode(RegExp(r'\{.+\}').stringMatch(output.toString())!);
             if (authJson
                 case {
@@ -133,12 +162,14 @@ class RCloneAuthService {
                   'expiry': String expiresIn,
                 }) {
               final model = DriveProviderModel(
-                remoteName: '',
+                remoteName: '', // TODO:
                 provider: driveProvider,
-                rCloneJson: authJson,
-                accessToken: accessToken,
-                refreshToken: refreshToken,
-                expiresIn: expiresIn,
+                backend: OAuth2(
+                  rCloneJson: authJson,
+                  accessToken: accessToken,
+                  refreshToken: refreshToken,
+                  expiresIn: expiresIn,
+                ),
               );
 
               return model;
@@ -159,7 +190,7 @@ class RCloneAuthService {
             final rCloneConfig = File(configPath);
 
             final toWrite = driveProvider
-                .template(model.remoteName, model.rCloneJson.toString())
+                .template(remoteName: model.remoteName, backend: model.backend)
                 .getOrElse(
                   () => throw const GeneralError(
                       'Unable to fetch template for given provider.'),
@@ -181,14 +212,14 @@ class RCloneAuthService {
 
 @singleton
 class RCloneDriveService {
-  TaskEither<AppError, ()> create(
+  TaskEither<AppError, RemoteFolderModel> create(
       {required DriveProviderModel model, required String folderName}) {
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, ()>.Do(($) async {
+    return TaskEither<AppError, RemoteFolderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
 
-      final res = await $(TaskEither.tryCatch(() async {
+      await $(TaskEither.tryCatch(() async {
         final process = await Process.run(
             execPath, ['mkdir', '${model.remoteName}:/SyncVault/$folderName']);
         final output = process.stdout.toString().split('\n');
@@ -198,7 +229,12 @@ class RCloneDriveService {
         return ();
       }, (err, stackTrace) => err.segregateError()));
 
-      return res;
+      final folderModel = RemoteFolderModel(
+        provider: model,
+        folderPath: '/SyncVault/$folderName',
+        folderName: folderName,
+      );
+      return folderModel;
     });
   }
 

@@ -1,0 +1,36 @@
+services:
+  db:
+    container_name: syncvault-nextcloud-db
+    image: mariadb:10.6
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=abc
+      - MYSQL_PASSWORD=abc
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  app:
+    container_name: syncvault-nextcloud
+    image: nextcloud
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    links:
+      - db
+    volumes:
+      - cloud:/var/www/html
+      - ./apache.conf:/usr/local/apache2/conf/httpd.conf
+    environment:
+      - MYSQL_PASSWORD=abc
+      - NEXTCLOUD_ADMIN_USER=abc
+      - NEXTCLOUD_ADMIN_PASSWORD=abc
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+
+volumes:
+  db:
+  cloud:

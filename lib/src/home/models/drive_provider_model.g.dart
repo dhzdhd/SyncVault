@@ -11,10 +11,8 @@ _$DriveProviderModelImpl _$$DriveProviderModelImplFromJson(
     _$DriveProviderModelImpl(
       remoteName: json['remoteName'] as String,
       provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
-      accessToken: json['accessToken'] as String,
-      refreshToken: json['refreshToken'] as String,
-      expiresIn: json['expiresIn'] as String,
-      rCloneJson: json['rCloneJson'] as Map<String, dynamic>,
+      backend: DriveProviderBackend.fromJson(
+          json['backend'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$DriveProviderModelImplToJson(
@@ -22,14 +20,13 @@ Map<String, dynamic> _$$DriveProviderModelImplToJson(
     <String, dynamic>{
       'remoteName': instance.remoteName,
       'provider': _$DriveProviderEnumMap[instance.provider]!,
-      'accessToken': instance.accessToken,
-      'refreshToken': instance.refreshToken,
-      'expiresIn': instance.expiresIn,
-      'rCloneJson': instance.rCloneJson,
+      'backend': instance.backend,
     };
 
 const _$DriveProviderEnumMap = {
   DriveProvider.oneDrive: 'oneDrive',
   DriveProvider.googleDrive: 'googleDrive',
   DriveProvider.dropBox: 'dropBox',
+  DriveProvider.minio: 'minio',
+  DriveProvider.nextCloud: 'nextCloud',
 };

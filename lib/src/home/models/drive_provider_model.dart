@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'drive_provider_model.freezed.dart';
@@ -9,10 +10,7 @@ class DriveProviderModel with _$DriveProviderModel {
   const factory DriveProviderModel({
     required String remoteName,
     required DriveProvider provider,
-    required String accessToken,
-    required String refreshToken,
-    required String expiresIn,
-    required Map<dynamic, dynamic> rCloneJson,
+    required DriveProviderBackend backend,
   }) = _DriveProviderModel;
 
   factory DriveProviderModel.fromJson(Map<String, Object?> json) =>

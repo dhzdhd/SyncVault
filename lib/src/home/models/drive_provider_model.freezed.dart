@@ -22,10 +22,7 @@ DriveProviderModel _$DriveProviderModelFromJson(Map<String, dynamic> json) {
 mixin _$DriveProviderModel {
   String get remoteName => throw _privateConstructorUsedError;
   DriveProvider get provider => throw _privateConstructorUsedError;
-  String get accessToken => throw _privateConstructorUsedError;
-  String get refreshToken => throw _privateConstructorUsedError;
-  String get expiresIn => throw _privateConstructorUsedError;
-  Map<dynamic, dynamic> get rCloneJson => throw _privateConstructorUsedError;
+  DriveProviderBackend get backend => throw _privateConstructorUsedError;
 
   /// Serializes this DriveProviderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,10 +43,9 @@ abstract class $DriveProviderModelCopyWith<$Res> {
   $Res call(
       {String remoteName,
       DriveProvider provider,
-      String accessToken,
-      String refreshToken,
-      String expiresIn,
-      Map<dynamic, dynamic> rCloneJson});
+      DriveProviderBackend backend});
+
+  $DriveProviderBackendCopyWith<$Res> get backend;
 }
 
 /// @nodoc
@@ -69,10 +65,7 @@ class _$DriveProviderModelCopyWithImpl<$Res, $Val extends DriveProviderModel>
   $Res call({
     Object? remoteName = null,
     Object? provider = null,
-    Object? accessToken = null,
-    Object? refreshToken = null,
-    Object? expiresIn = null,
-    Object? rCloneJson = null,
+    Object? backend = null,
   }) {
     return _then(_value.copyWith(
       remoteName: null == remoteName
@@ -83,23 +76,21 @@ class _$DriveProviderModelCopyWithImpl<$Res, $Val extends DriveProviderModel>
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
               as DriveProvider,
-      accessToken: null == accessToken
-          ? _value.accessToken
-          : accessToken // ignore: cast_nullable_to_non_nullable
-              as String,
-      refreshToken: null == refreshToken
-          ? _value.refreshToken
-          : refreshToken // ignore: cast_nullable_to_non_nullable
-              as String,
-      expiresIn: null == expiresIn
-          ? _value.expiresIn
-          : expiresIn // ignore: cast_nullable_to_non_nullable
-              as String,
-      rCloneJson: null == rCloneJson
-          ? _value.rCloneJson
-          : rCloneJson // ignore: cast_nullable_to_non_nullable
-              as Map<dynamic, dynamic>,
+      backend: null == backend
+          ? _value.backend
+          : backend // ignore: cast_nullable_to_non_nullable
+              as DriveProviderBackend,
     ) as $Val);
+  }
+
+  /// Create a copy of DriveProviderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $DriveProviderBackendCopyWith<$Res> get backend {
+    return $DriveProviderBackendCopyWith<$Res>(_value.backend, (value) {
+      return _then(_value.copyWith(backend: value) as $Val);
+    });
   }
 }
 
@@ -114,10 +105,10 @@ abstract class _$$DriveProviderModelImplCopyWith<$Res>
   $Res call(
       {String remoteName,
       DriveProvider provider,
-      String accessToken,
-      String refreshToken,
-      String expiresIn,
-      Map<dynamic, dynamic> rCloneJson});
+      DriveProviderBackend backend});
+
+  @override
+  $DriveProviderBackendCopyWith<$Res> get backend;
 }
 
 /// @nodoc
@@ -135,10 +126,7 @@ class __$$DriveProviderModelImplCopyWithImpl<$Res>
   $Res call({
     Object? remoteName = null,
     Object? provider = null,
-    Object? accessToken = null,
-    Object? refreshToken = null,
-    Object? expiresIn = null,
-    Object? rCloneJson = null,
+    Object? backend = null,
   }) {
     return _then(_$DriveProviderModelImpl(
       remoteName: null == remoteName
@@ -149,22 +137,10 @@ class __$$DriveProviderModelImplCopyWithImpl<$Res>
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
               as DriveProvider,
-      accessToken: null == accessToken
-          ? _value.accessToken
-          : accessToken // ignore: cast_nullable_to_non_nullable
-              as String,
-      refreshToken: null == refreshToken
-          ? _value.refreshToken
-          : refreshToken // ignore: cast_nullable_to_non_nullable
-              as String,
-      expiresIn: null == expiresIn
-          ? _value.expiresIn
-          : expiresIn // ignore: cast_nullable_to_non_nullable
-              as String,
-      rCloneJson: null == rCloneJson
-          ? _value._rCloneJson
-          : rCloneJson // ignore: cast_nullable_to_non_nullable
-              as Map<dynamic, dynamic>,
+      backend: null == backend
+          ? _value.backend
+          : backend // ignore: cast_nullable_to_non_nullable
+              as DriveProviderBackend,
     ));
   }
 }
@@ -175,11 +151,7 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
   const _$DriveProviderModelImpl(
       {required this.remoteName,
       required this.provider,
-      required this.accessToken,
-      required this.refreshToken,
-      required this.expiresIn,
-      required final Map<dynamic, dynamic> rCloneJson})
-      : _rCloneJson = rCloneJson;
+      required this.backend});
 
   factory _$DriveProviderModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DriveProviderModelImplFromJson(json);
@@ -189,22 +161,11 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
   @override
   final DriveProvider provider;
   @override
-  final String accessToken;
-  @override
-  final String refreshToken;
-  @override
-  final String expiresIn;
-  final Map<dynamic, dynamic> _rCloneJson;
-  @override
-  Map<dynamic, dynamic> get rCloneJson {
-    if (_rCloneJson is EqualUnmodifiableMapView) return _rCloneJson;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_rCloneJson);
-  }
+  final DriveProviderBackend backend;
 
   @override
   String toString() {
-    return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, rCloneJson: $rCloneJson)';
+    return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, backend: $backend)';
   }
 
   @override
@@ -216,26 +177,12 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
                 other.remoteName == remoteName) &&
             (identical(other.provider, provider) ||
                 other.provider == provider) &&
-            (identical(other.accessToken, accessToken) ||
-                other.accessToken == accessToken) &&
-            (identical(other.refreshToken, refreshToken) ||
-                other.refreshToken == refreshToken) &&
-            (identical(other.expiresIn, expiresIn) ||
-                other.expiresIn == expiresIn) &&
-            const DeepCollectionEquality()
-                .equals(other._rCloneJson, _rCloneJson));
+            (identical(other.backend, backend) || other.backend == backend));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      remoteName,
-      provider,
-      accessToken,
-      refreshToken,
-      expiresIn,
-      const DeepCollectionEquality().hash(_rCloneJson));
+  int get hashCode => Object.hash(runtimeType, remoteName, provider, backend);
 
   /// Create a copy of DriveProviderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -256,13 +203,9 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
 
 abstract class _DriveProviderModel implements DriveProviderModel {
   const factory _DriveProviderModel(
-          {required final String remoteName,
-          required final DriveProvider provider,
-          required final String accessToken,
-          required final String refreshToken,
-          required final String expiresIn,
-          required final Map<dynamic, dynamic> rCloneJson}) =
-      _$DriveProviderModelImpl;
+      {required final String remoteName,
+      required final DriveProvider provider,
+      required final DriveProviderBackend backend}) = _$DriveProviderModelImpl;
 
   factory _DriveProviderModel.fromJson(Map<String, dynamic> json) =
       _$DriveProviderModelImpl.fromJson;
@@ -272,13 +215,7 @@ abstract class _DriveProviderModel implements DriveProviderModel {
   @override
   DriveProvider get provider;
   @override
-  String get accessToken;
-  @override
-  String get refreshToken;
-  @override
-  String get expiresIn;
-  @override
-  Map<dynamic, dynamic> get rCloneJson;
+  DriveProviderBackend get backend;
 
   /// Create a copy of DriveProviderModel
   /// with the given fields replaced by the non-null parameter values.

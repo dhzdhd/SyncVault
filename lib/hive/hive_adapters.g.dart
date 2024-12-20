@@ -132,31 +132,22 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return DriveProviderModel(
-      remoteName: fields[5] as String,
-      provider: fields[0] as DriveProvider,
-      accessToken: fields[1] as String,
-      refreshToken: fields[2] as String,
-      expiresIn: fields[3] as String,
-      rCloneJson: (fields[4] as Map).cast<dynamic, dynamic>(),
+      remoteName: fields[6] as String,
+      provider: fields[7] as DriveProvider,
+      backend: fields[8] as DriveProviderBackend,
     );
   }
 
   @override
   void write(BinaryWriter writer, DriveProviderModel obj) {
     writer
-      ..writeByte(6)
-      ..writeByte(0)
-      ..write(obj.provider)
-      ..writeByte(1)
-      ..write(obj.accessToken)
-      ..writeByte(2)
-      ..write(obj.refreshToken)
       ..writeByte(3)
-      ..write(obj.expiresIn)
-      ..writeByte(4)
-      ..write(obj.rCloneJson)
-      ..writeByte(5)
-      ..write(obj.remoteName);
+      ..writeByte(6)
+      ..write(obj.remoteName)
+      ..writeByte(7)
+      ..write(obj.provider)
+      ..writeByte(8)
+      ..write(obj.backend);
   }
 
   @override
@@ -183,6 +174,10 @@ class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
         return DriveProvider.googleDrive;
       case 2:
         return DriveProvider.dropBox;
+      case 3:
+        return DriveProvider.minio;
+      case 4:
+        return DriveProvider.nextCloud;
       default:
         return DriveProvider.oneDrive;
     }
@@ -197,6 +192,10 @@ class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
         writer.writeByte(1);
       case DriveProvider.dropBox:
         writer.writeByte(2);
+      case DriveProvider.minio:
+        writer.writeByte(3);
+      case DriveProvider.nextCloud:
+        writer.writeByte(4);
     }
   }
 

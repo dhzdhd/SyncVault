@@ -31,23 +31,17 @@ types:
         index: 0
   DriveProviderModel:
     typeId: 3
-    nextIndex: 6
+    nextIndex: 9
     fields:
-      provider:
-        index: 0
-      accessToken:
-        index: 1
-      refreshToken:
-        index: 2
-      expiresIn:
-        index: 3
-      rCloneJson:
-        index: 4
       remoteName:
-        index: 5
+        index: 6
+      provider:
+        index: 7
+      backend:
+        index: 8
   DriveProvider:
     typeId: 4
-    nextIndex: 3
+    nextIndex: 5
     fields:
       oneDrive:
         index: 0
@@ -55,3 +49,7 @@ types:
         index: 1
       dropBox:
         index: 2
+      minio:
+        index: 3
+      nextCloud:
+        index: 4

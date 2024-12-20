@@ -6,4 +6,11 @@ type = onedrive
 token = {rCloneJson}
 drive_id =
 drive_type = personal''',
+  DriveProvider.nextCloud: '''[{remoteName}]
+type = webdav
+url = {url}
+vendor = nextcloud
+user = {email}
+pass = {password}
+'''
 };
