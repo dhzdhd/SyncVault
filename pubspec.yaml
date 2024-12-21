@@ -42,6 +42,10 @@ dependencies:
   glob: ^2.1.2
   hive_ce: ^2.8.0+2
   hive_ce_flutter: ^2.1.0
+  ini_v2:
+    git:
+      url: https://github.com/dhzdhd/ini_v2.git
+      ref: 02e44bb
 
 dev_dependencies:
   flutter_test:

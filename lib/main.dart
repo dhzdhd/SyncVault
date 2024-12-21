@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,9 +9,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/injectable.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
-import 'package:syncvault/src/accounts/services/auth/onedrive.dart';
-import 'package:syncvault/src/accounts/services/drive/gdrive.dart';
-import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';

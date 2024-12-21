@@ -13,6 +13,7 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/models/remote_folder_model.dart';
 import 'package:syncvault/src/home/services/rclone_template.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:ini_v2/ini.dart';
 
 enum DriveProvider {
   oneDrive('onedrive', 'assets/logos/onedrive.svg', OAuth2),
@@ -21,31 +22,12 @@ enum DriveProvider {
   minio('s3', '', S3),
   nextCloud('webdav', '', Webdav);
 
-  Option<String> template({
+  Option<Map<String, String>> template({
     required DriveProviderBackendPayload payload,
     required DriveProviderBackend backend,
   }) {
-    return switch (backend) {
-      OAuth2(:final rCloneJson) =>
-        Option.fromNullable(providerTemplate[this]).map(
-          (t) => t.format({
-            'remoteName': payload.remoteName,
-            'rCloneJson': rCloneJson.toString(),
-          }),
-        ),
-      S3() => Option.fromNullable(providerTemplate[this]).map(
-          (t) => t.format({}),
-        ),
-      Webdav(:final url, :final user, :final password) =>
-        Option.fromNullable(providerTemplate[this]).map(
-          (t) => t.format({
-            'remoteName': payload.remoteName,
-            'url': url,
-            'user': user,
-            'password': password
-          }),
-        ),
-    };
+    return Option.fromNullable(providerTemplate[this])
+        .map((func) => func(payload.remoteName, backend));
   }
 
   const DriveProvider(this.providerName, this.providerIcon, this.backend);
@@ -76,24 +58,32 @@ class RCloneUtils {
     }, (err, stackTrace) => err.segregateError());
   }
 
-  TaskEither<AppError, String> getConfig() {
+  TaskEither<AppError, File> getConfig() {
     return TaskEither.tryCatch(
       () async {
+        late final File configFile;
+
         if (PlatformExtension.isDesktop) {
           final docDir = await getApplicationDocumentsDirectory();
-          return '${docDir.path}/SyncVault/rclone.config';
+          configFile = File('${docDir.path}/SyncVault/rclone.conf');
         } else if (PlatformExtension.isMobile) {
-          return './rclone.config';
+          configFile = File('./rclone.conf');
         } else {
           throw const GeneralError('Platform not supported');
         }
+
+        if (!(await configFile.exists())) {
+          await configFile.create();
+        }
+
+        return configFile;
       },
       (err, stackTrace) => err.segregateError(),
     );
   }
 
   TaskEither<AppError, List<String>> getConfigArgs() {
-    return getConfig().map((file) => ['--config', file]);
+    return getConfig().map((file) => ['--config', file.path]);
   }
 }
 
@@ -111,7 +101,7 @@ class RCloneAuthService {
 
     return TaskEither<AppError, DriveProviderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
-      final configPath = await $(utils.getConfig());
+      final configFile = await $(utils.getConfig());
 
       // Authorize with rclone for given provider
       final model = switch (driveProvider.backend) {
@@ -192,8 +182,6 @@ class RCloneAuthService {
       await $(
         TaskEither.tryCatch(
           () async {
-            final rCloneConfig = File(configPath);
-
             final toWrite = driveProvider
                 .template(payload: payload, backend: model.backend)
                 .getOrElse(
@@ -201,11 +189,11 @@ class RCloneAuthService {
                       'Unable to fetch template for given provider.'),
                 );
 
-            // FIXME: Writing to config on windows crashes app
-            await rCloneConfig.writeAsString(
-              '\n$toWrite',
-              mode: FileMode.append,
-            );
+            final iniConfig =
+                Config.fromString(await configFile.readAsString());
+            iniConfig.add(model.remoteName, toWrite);
+
+            await configFile.writeAsString(iniConfig.toString());
           },
           (err, stackTrace) => err.segregateError(),
         ),
