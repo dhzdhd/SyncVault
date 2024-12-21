@@ -8,9 +8,7 @@ import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 
 class AccountView extends ConsumerWidget {
-  const AccountView({
-    super.key,
-  });
+  const AccountView({super.key});
 
   static const routeName = '/accounts';
 
@@ -50,14 +48,7 @@ class AccountView extends ConsumerWidget {
                             Tooltip(
                               message: e.provider.name.capitalize(),
                               child: SvgPicture.asset(
-                                switch (e.provider) {
-                                  AuthProviderType.oneDrive =>
-                                    'assets/logos/onedrive.svg',
-                                  AuthProviderType.dropBox =>
-                                    'assets/logos/dropbox.svg',
-                                  AuthProviderType.googleDrive =>
-                                    'assets/logos/gdrive.svg'
-                                },
+                                e.provider.providerIcon,
                                 width: MediaQuery.of(context).size.width < 500
                                     ? 50
                                     : 70,
@@ -72,7 +63,7 @@ class AccountView extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    e.name.capitalize(),
+                                    e.provider.name.capitalize(),
                                     style:
                                         MediaQuery.of(context).size.width < 500
                                             ? textTheme.titleLarge
@@ -81,7 +72,7 @@ class AccountView extends ConsumerWidget {
                                     maxLines: 1,
                                   ),
                                   Text(
-                                    e.email,
+                                    e.remoteName,
                                     style:
                                         MediaQuery.of(context).size.width < 500
                                             ? textTheme.bodyMedium

@@ -1,16 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
+import 'package:syncvault/src/home/services/rclone.dart';
 
-class NewAccountDialogWidget extends HookConsumerWidget {
+class NewAccountDialogWidget extends StatefulHookConsumerWidget {
   const NewAccountDialogWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selected = useState(AuthProviderType.oneDrive);
+  ConsumerState<NewAccountDialogWidget> createState() =>
+      _NewAccountDialogWidgetState();
+}
+
+class _NewAccountDialogWidgetState
+    extends ConsumerState<NewAccountDialogWidget> {
+  late final TextEditingController _remoteNameController;
+  late final TextEditingController _userController;
+  late final TextEditingController _passwordController;
+  late final TextEditingController _urlController;
+
+  @override
+  void initState() {
+    super.initState();
+    _remoteNameController = TextEditingController();
+    _urlController = TextEditingController();
+    _userController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _remoteNameController.dispose();
+    _urlController.dispose();
+    _userController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  bool validateControllers(List<TextEditingController> controllers) {
+    return controllers.all((val) => val.text.isNotEmpty);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = useState(DriveProvider.oneDrive);
     final authController = ref.watch(authControllerProvider);
 
     ref.listen<AsyncValue>(
@@ -26,30 +64,108 @@ class NewAccountDialogWidget extends HookConsumerWidget {
       title: const Text('Register a new drive account'),
       contentPadding: const EdgeInsets.all(24),
       children: [
-        DropdownButton<AuthProviderType>(
-          items: AuthProviderType.values
-              .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e.name.capitalize()),
-                  ))
+        TextField(
+          controller: _remoteNameController,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Unique remote name',
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        DropdownButton<DriveProvider>(
+          items: DriveProvider.values
+              .map(
+                (e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(e.name.capitalize()),
+                ),
+              )
               .toList(),
           value: selected.value,
           isExpanded: true,
-          onChanged: (AuthProviderType? e) {
+          onChanged: (DriveProvider? e) {
             selected.value = e!;
           },
         ),
+        ...(selected.value.backend == Webdav
+            ? [
+                const SizedBox(
+                  height: 16,
+                ),
+                TextField(
+                  controller: _urlController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Provider URL',
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                TextField(
+                  controller: _userController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'User',
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
+                ),
+              ]
+            : []),
         Padding(
           padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
           child: ElevatedButton(
             onPressed: () async {
               if (!authController.isLoading) {
-                await ref
-                    .read(authControllerProvider.notifier)
-                    .signIn(selected.value);
+                final valid = switch (selected.value.backend) {
+                  const (OAuth2) =>
+                    validateControllers([_remoteNameController]),
+                  const (S3) => validateControllers([_remoteNameController]),
+                  const (Webdav) => validateControllers([
+                      _remoteNameController,
+                      _urlController,
+                      _userController,
+                      _passwordController
+                    ]),
+                  _ => throw const GeneralError('Not valid')
+                };
 
-                if (context.mounted && !authController.isLoading) {
-                  Navigator.of(context).pop();
+                if (valid) {
+                  await ref.read(authControllerProvider.notifier).signIn(
+                        switch (selected.value.backend) {
+                          const (OAuth2) => OAuth2Payload(
+                              remoteName: _remoteNameController.text),
+                          const (S3) =>
+                            S3Payload(remoteName: _remoteNameController.text),
+                          const (Webdav) => WebdavPayload(
+                              remoteName: _remoteNameController.text,
+                              url: _urlController.text,
+                              user: _userController.text,
+                              password: _passwordController.text,
+                            ),
+                          _ => throw const GeneralError(
+                              'Backend not supported'), // TODO:
+                        },
+                        selected.value,
+                      );
+
+                  if (context.mounted && !authController.isLoading) {
+                    Navigator.of(context).pop();
+                  }
+                } else {
+                  throw const GeneralError('Fields are empty'); // TODO:
                 }
               }
             },

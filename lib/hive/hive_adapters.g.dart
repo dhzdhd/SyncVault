@@ -209,3 +209,222 @@ class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class OAuth2Adapter extends TypeAdapter<OAuth2> {
+  @override
+  final int typeId = 5;
+
+  @override
+  OAuth2 read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return OAuth2(
+      rCloneJson: (fields[0] as Map).cast<String, dynamic>(),
+      accessToken: fields[1] as String,
+      refreshToken: fields[2] as String,
+      expiresIn: fields[3] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, OAuth2 obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.rCloneJson)
+      ..writeByte(1)
+      ..write(obj.accessToken)
+      ..writeByte(2)
+      ..write(obj.refreshToken)
+      ..writeByte(3)
+      ..write(obj.expiresIn);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OAuth2Adapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class S3Adapter extends TypeAdapter<S3> {
+  @override
+  final int typeId = 6;
+
+  @override
+  S3 read(BinaryReader reader) {
+    return S3();
+  }
+
+  @override
+  void write(BinaryWriter writer, S3 obj) {
+    writer.writeByte(0);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is S3Adapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class WebdavAdapter extends TypeAdapter<Webdav> {
+  @override
+  final int typeId = 7;
+
+  @override
+  Webdav read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Webdav(
+      url: fields[0] as String,
+      user: fields[1] as String,
+      password: fields[2] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Webdav obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.url)
+      ..writeByte(1)
+      ..write(obj.user)
+      ..writeByte(2)
+      ..write(obj.password);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WebdavAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class OAuth2PayloadAdapter extends TypeAdapter<OAuth2Payload> {
+  @override
+  final int typeId = 8;
+
+  @override
+  OAuth2Payload read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return OAuth2Payload(
+      remoteName: fields[0] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, OAuth2Payload obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.remoteName);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OAuth2PayloadAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class S3PayloadAdapter extends TypeAdapter<S3Payload> {
+  @override
+  final int typeId = 9;
+
+  @override
+  S3Payload read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return S3Payload(
+      remoteName: fields[0] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, S3Payload obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.remoteName);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is S3PayloadAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class WebdavPayloadAdapter extends TypeAdapter<WebdavPayload> {
+  @override
+  final int typeId = 10;
+
+  @override
+  WebdavPayload read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return WebdavPayload(
+      remoteName: fields[0] as String,
+      url: fields[1] as String,
+      user: fields[2] as String,
+      password: fields[3] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, WebdavPayload obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.remoteName)
+      ..writeByte(1)
+      ..write(obj.url)
+      ..writeByte(2)
+      ..write(obj.user)
+      ..writeByte(3)
+      ..write(obj.password);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WebdavPayloadAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

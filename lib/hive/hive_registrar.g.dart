@@ -10,7 +10,13 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(DriveProviderAdapter());
     registerAdapter(DriveProviderModelAdapter());
     registerAdapter(IntroSettingsModelAdapter());
+    registerAdapter(OAuth2Adapter());
+    registerAdapter(OAuth2PayloadAdapter());
+    registerAdapter(S3Adapter());
+    registerAdapter(S3PayloadAdapter());
     registerAdapter(SettingsModelAdapter());
     registerAdapter(ThemeModeAdapter());
+    registerAdapter(WebdavAdapter());
+    registerAdapter(WebdavPayloadAdapter());
   }
 }

@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/models/remote_folder_model.dart';
 import 'package:syncvault/src/home/services/rclone_template.dart';
@@ -21,19 +22,14 @@ enum DriveProvider {
   nextCloud('webdav', '', Webdav);
 
   Option<String> template({
-    required String remoteName,
+    required DriveProviderBackendPayload payload,
     required DriveProviderBackend backend,
   }) {
-    // final a = switch (this.backend) {
-    //   OAuth2(:final rCloneJson) => '',
-    //   _ => '',
-    // };
-
     return switch (backend) {
       OAuth2(:final rCloneJson) =>
         Option.fromNullable(providerTemplate[this]).map(
           (t) => t.format({
-            'remoteName': remoteName,
+            'remoteName': payload.remoteName,
             'rCloneJson': rCloneJson.toString(),
           }),
         ),
@@ -43,7 +39,7 @@ enum DriveProvider {
       Webdav(:final url, :final user, :final password) =>
         Option.fromNullable(providerTemplate[this]).map(
           (t) => t.format({
-            'remoteName': remoteName,
+            'remoteName': payload.remoteName,
             'url': url,
             'user': user,
             'password': password
@@ -81,20 +77,23 @@ class RCloneUtils {
   }
 
   TaskEither<AppError, String> getConfig() {
-    return TaskEither<AppError, String>.Do(($) async {
-      final rCloneExec = await $(getRCloneExec());
-      final rCloneConfig = await $(
-        TaskEither.tryCatch(
-          () async {
-            final process = await Process.run(rCloneExec, ['config', 'file']);
-            return process.stdout.toString().split('\n').last;
-          },
-          (err, stackTrace) => err.segregateError(),
-        ),
-      );
+    return TaskEither.tryCatch(
+      () async {
+        if (PlatformExtension.isDesktop) {
+          final docDir = await getApplicationDocumentsDirectory();
+          return '${docDir.path}/SyncVault/rclone.config';
+        } else if (PlatformExtension.isMobile) {
+          return './rclone.config';
+        } else {
+          throw const GeneralError('Platform not supported');
+        }
+      },
+      (err, stackTrace) => err.segregateError(),
+    );
+  }
 
-      return rCloneConfig;
-    });
+  TaskEither<AppError, List<String>> getConfigArgs() {
+    return getConfig().map((file) => ['--config', file]);
   }
 }
 
@@ -105,7 +104,7 @@ class RCloneUtils {
 @singleton
 class RCloneAuthService {
   TaskEither<AppError, DriveProviderModel> authorize({
-    required String remoteName,
+    required DriveProviderBackendPayload payload,
     required DriveProvider driveProvider,
   }) {
     final utils = RCloneUtils();
@@ -115,73 +114,79 @@ class RCloneAuthService {
       final configPath = await $(utils.getConfig());
 
       // Authorize with rclone for given provider
-      final model = await $(
-        TaskEither.tryCatch(
-          () async {
-            final process = await Process.start(
-              execPath,
-              [
-                'authorize',
-                '--auth-no-open-browser',
-                driveProvider.providerName
-              ],
-              runInShell: true,
-            );
+      final model = switch (driveProvider.backend) {
+        const (OAuth2) => await $(
+            TaskEither.tryCatch(
+              () async {
+                final process = await Process.start(
+                  execPath,
+                  [
+                    'authorize',
+                    '--auth-no-open-browser',
+                    driveProvider.providerName
+                  ],
+                  runInShell: true,
+                );
 
-            final output = StringBuffer();
-            final errorOutput = StringBuffer();
-            final urlPattern = RegExp(
-                r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+                final output = StringBuffer();
+                final errorOutput = StringBuffer();
+                final urlPattern = RegExp(
+                    r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
 
-            // Listen to stdout, stderr
-            process.stdout.transform(utf8.decoder).listen((data) {
-              output.write(data);
-            });
-            process.stderr.transform(utf8.decoder).listen((data) {
-              errorOutput.write(data);
+                // Listen to stdout, stderr
+                process.stdout.transform(utf8.decoder).listen((data) {
+                  output.write(data);
+                });
+                process.stderr.transform(utf8.decoder).listen((data) {
+                  errorOutput.write(data);
 
-              // Match url with regex (url is in stderr for whatever reason)
-              final match = urlPattern.firstMatch(data);
-              if (match != null) {
-                final url = match.group(0);
-                if (url != null) {
-                  launchUrlString(url);
+                  // Match url with regex (url is in stderr for whatever reason)
+                  final match = urlPattern.firstMatch(data);
+                  if (match != null) {
+                    final url = match.group(0);
+                    if (url != null) {
+                      launchUrlString(url);
+                    }
+                  }
+                });
+
+                // Wait for process to finish
+                await process.exitCode;
+
+                final Map<String, dynamic> authJson = jsonDecode(
+                    RegExp(r'\{.+\}').stringMatch(output.toString())!);
+                if (authJson
+                    case {
+                      'access_token': String accessToken,
+                      'refresh_token': String refreshToken,
+                      'expiry': String expiresIn,
+                    }) {
+                  final model = DriveProviderModel(
+                    remoteName: payload.remoteName,
+                    provider: driveProvider,
+                    backend: OAuth2(
+                      rCloneJson: authJson,
+                      accessToken: accessToken,
+                      refreshToken: refreshToken,
+                      expiresIn: expiresIn,
+                    ),
+                  );
+
+                  return model;
+                } else {
+                  throw const GeneralError('Authorization response invalid');
                 }
-              }
-            });
-
-            // Wait for process to finish
-            await process.exitCode;
-
-            final Map<String, String> authJson =
-                jsonDecode(RegExp(r'\{.+\}').stringMatch(output.toString())!);
-            if (authJson
-                case {
-                  'access_token': String accessToken,
-                  'refresh_token': String refreshToken,
-                  'expiry': String expiresIn,
-                }) {
-              final model = DriveProviderModel(
-                remoteName: '', // TODO:
-                provider: driveProvider,
-                backend: OAuth2(
-                  rCloneJson: authJson,
-                  accessToken: accessToken,
-                  refreshToken: refreshToken,
-                  expiresIn: expiresIn,
-                ),
-              );
-
-              return model;
-            } else {
-              throw const GeneralError('Authorization response invalid');
-            }
-          },
-          (err, stackTrace) {
-            return err.segregateError();
-          },
-        ),
-      );
+              },
+              (err, stackTrace) {
+                return err.segregateError();
+              },
+            ),
+          ),
+        _ => DriveProviderModel(
+            remoteName: 'remoteName',
+            provider: driveProvider,
+            backend: const S3())
+      };
 
       // Write rclone output to rclone config file
       await $(
@@ -190,12 +195,13 @@ class RCloneAuthService {
             final rCloneConfig = File(configPath);
 
             final toWrite = driveProvider
-                .template(remoteName: model.remoteName, backend: model.backend)
+                .template(payload: payload, backend: model.backend)
                 .getOrElse(
                   () => throw const GeneralError(
                       'Unable to fetch template for given provider.'),
                 );
 
+            // FIXME: Writing to config on windows crashes app
             await rCloneConfig.writeAsString(
               '\n$toWrite',
               mode: FileMode.append,

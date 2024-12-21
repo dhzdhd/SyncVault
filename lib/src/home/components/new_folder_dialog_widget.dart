@@ -37,7 +37,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
     final selectedProvider = useState<Option<AuthProviderModel>>(const None());
     final selectedFolder = useState<Option<String>>(const None());
     final authInfo = ref.watch(authProvider);
-    final authInfoCopy = useState<List<AuthProviderModel>>(authInfo);
+    // final authInfoCopy = useState<List<AuthProviderModel>>(authInfo);
     final createFolderController = ref.watch(createFolderControllerProvider);
 
     ref.listen<AsyncValue>(
@@ -60,25 +60,25 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
             hintText: 'Name of folder',
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: DropdownButton<AuthProviderModel?>(
-            items: authInfoCopy.value
-                .map(
-                  (e) => DropdownMenuItem(
-                    value: e,
-                    child: Text('${e.provider.name.capitalize()} - ${e.email}'),
-                  ),
-                )
-                .toList(),
-            value: selectedProvider.value.toNullable(),
-            isExpanded: true,
-            hint: const Text('Enter provider account'),
-            onChanged: (AuthProviderModel? e) {
-              selectedProvider.value = Option.fromNullable(e);
-            },
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 16.0),
+        //   child: DropdownButton<AuthProviderModel?>(
+        //     items: authInfoCopy.value
+        //         .map(
+        //           (e) => DropdownMenuItem(
+        //             value: e,
+        //             child: Text('${e.provider.name.capitalize()} - ${e.email}'),
+        //           ),
+        //         )
+        //         .toList(),
+        //     value: selectedProvider.value.toNullable(),
+        //     isExpanded: true,
+        //     hint: const Text('Enter provider account'),
+        //     onChanged: (AuthProviderModel? e) {
+        //       selectedProvider.value = Option.fromNullable(e);
+        //     },
+        //   ),
+        // ),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: Row(

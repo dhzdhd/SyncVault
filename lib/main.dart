@@ -35,25 +35,25 @@ void callbackDispatcher() {
 
     for (final folderModel in folderInfo) {
       if (folderModel.isAutoSync) {
-        final authProvider = authInfo
-            .where((element) => element.email == folderModel.email)
-            .first;
+        // final authProvider = authInfo
+        //     .where((element) => element.email == folderModel.email)
+        //     .first;
 
-        final authModel = await OneDriveAuth().refresh(authProvider).run();
-        final result = await authModel.bindFuture((model) async {
-          return await switch (model.provider) {
-            AuthProviderType.oneDrive =>
-              OneDrive().upload(folderModel, model, none()),
-            AuthProviderType.googleDrive =>
-              GoogleDrive().upload(folderModel, model, none()),
-            AuthProviderType.dropBox =>
-              OneDrive().upload(folderModel, model, none()),
-          }
-              .run();
-        }).run();
+        // final authModel = await OneDriveAuth().refresh(authProvider).run();
+        // final result = await authModel.bindFuture((model) async {
+        //   return await switch (model.provider) {
+        //     AuthProviderType.oneDrive =>
+        //       OneDrive().upload(folderModel, model, none()),
+        //     AuthProviderType.googleDrive =>
+        //       GoogleDrive().upload(folderModel, model, none()),
+        //     AuthProviderType.dropBox =>
+        //       OneDrive().upload(folderModel, model, none()),
+        //   }
+        //       .run();
+        // }).run();
 
-        result.match(
-            (l) => debugPrint(l.message), (r) => debugPrint('Success'));
+        // result.match(
+        //     (l) => debugPrint(l.message), (r) => debugPrint('Success'));
       }
     }
 

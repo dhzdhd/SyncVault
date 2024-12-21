@@ -116,7 +116,7 @@ class SettingsView extends ConsumerWidget {
                                 title: const Text('Are you sure'),
                                 actions: [
                                   OutlinedButton(
-                                    onPressed:null,
+                                    onPressed: null,
                                     child: const Text('Yes'),
                                   ),
                                   FilledButton(
@@ -150,7 +150,7 @@ class SettingsView extends ConsumerWidget {
                                 actions: [
                                   OutlinedButton(
                                     onPressed: () async {
-                                      await folderNotifier.clearCache().run();
+                                      // await folderNotifier.clearCache().run();
                                       if (context.mounted) {
                                         Navigator.of(context).pop();
                                       }

@@ -36,7 +36,7 @@ DriveProviderBackend _$DriveProviderBackendFromJson(Map<String, dynamic> json) {
 mixin _$DriveProviderBackend {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Map<String, String> rCloneJson,
+    required TResult Function(Map<String, dynamic> rCloneJson,
             String accessToken, String refreshToken, String expiresIn)
         oauth2,
     required TResult Function() s3,
@@ -45,7 +45,7 @@ mixin _$DriveProviderBackend {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Map<String, String> rCloneJson, String accessToken,
+    TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
     TResult? Function()? s3,
@@ -54,7 +54,7 @@ mixin _$DriveProviderBackend {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Map<String, String> rCloneJson, String accessToken,
+    TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
     TResult Function()? s3,
@@ -118,7 +118,7 @@ abstract class _$$OAuth2ImplCopyWith<$Res> {
       __$$OAuth2ImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {Map<String, String> rCloneJson,
+      {Map<String, dynamic> rCloneJson,
       String accessToken,
       String refreshToken,
       String expiresIn});
@@ -146,7 +146,7 @@ class __$$OAuth2ImplCopyWithImpl<$Res>
       rCloneJson: null == rCloneJson
           ? _value._rCloneJson
           : rCloneJson // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>,
+              as Map<String, dynamic>,
       accessToken: null == accessToken
           ? _value.accessToken
           : accessToken // ignore: cast_nullable_to_non_nullable
@@ -167,7 +167,7 @@ class __$$OAuth2ImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$OAuth2Impl implements OAuth2 {
   const _$OAuth2Impl(
-      {required final Map<String, String> rCloneJson,
+      {required final Map<String, dynamic> rCloneJson,
       required this.accessToken,
       required this.refreshToken,
       required this.expiresIn,
@@ -178,9 +178,9 @@ class _$OAuth2Impl implements OAuth2 {
   factory _$OAuth2Impl.fromJson(Map<String, dynamic> json) =>
       _$$OAuth2ImplFromJson(json);
 
-  final Map<String, String> _rCloneJson;
+  final Map<String, dynamic> _rCloneJson;
   @override
-  Map<String, String> get rCloneJson {
+  Map<String, dynamic> get rCloneJson {
     if (_rCloneJson is EqualUnmodifiableMapView) return _rCloneJson;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_rCloneJson);
@@ -236,7 +236,7 @@ class _$OAuth2Impl implements OAuth2 {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Map<String, String> rCloneJson,
+    required TResult Function(Map<String, dynamic> rCloneJson,
             String accessToken, String refreshToken, String expiresIn)
         oauth2,
     required TResult Function() s3,
@@ -248,7 +248,7 @@ class _$OAuth2Impl implements OAuth2 {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Map<String, String> rCloneJson, String accessToken,
+    TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
     TResult? Function()? s3,
@@ -260,7 +260,7 @@ class _$OAuth2Impl implements OAuth2 {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Map<String, String> rCloneJson, String accessToken,
+    TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
     TResult Function()? s3,
@@ -317,14 +317,14 @@ class _$OAuth2Impl implements OAuth2 {
 
 abstract class OAuth2 implements DriveProviderBackend {
   const factory OAuth2(
-      {required final Map<String, String> rCloneJson,
+      {required final Map<String, dynamic> rCloneJson,
       required final String accessToken,
       required final String refreshToken,
       required final String expiresIn}) = _$OAuth2Impl;
 
   factory OAuth2.fromJson(Map<String, dynamic> json) = _$OAuth2Impl.fromJson;
 
-  Map<String, String> get rCloneJson;
+  Map<String, dynamic> get rCloneJson;
   String get accessToken;
   String get refreshToken;
   String get expiresIn;
@@ -382,7 +382,7 @@ class _$S3Impl implements S3 {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Map<String, String> rCloneJson,
+    required TResult Function(Map<String, dynamic> rCloneJson,
             String accessToken, String refreshToken, String expiresIn)
         oauth2,
     required TResult Function() s3,
@@ -394,7 +394,7 @@ class _$S3Impl implements S3 {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Map<String, String> rCloneJson, String accessToken,
+    TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
     TResult? Function()? s3,
@@ -406,7 +406,7 @@ class _$S3Impl implements S3 {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Map<String, String> rCloneJson, String accessToken,
+    TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
     TResult Function()? s3,
@@ -564,7 +564,7 @@ class _$WebdavImpl implements Webdav {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Map<String, String> rCloneJson,
+    required TResult Function(Map<String, dynamic> rCloneJson,
             String accessToken, String refreshToken, String expiresIn)
         oauth2,
     required TResult Function() s3,
@@ -576,7 +576,7 @@ class _$WebdavImpl implements Webdav {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Map<String, String> rCloneJson, String accessToken,
+    TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
     TResult? Function()? s3,
@@ -588,7 +588,7 @@ class _$WebdavImpl implements Webdav {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Map<String, String> rCloneJson, String accessToken,
+    TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
     TResult Function()? s3,

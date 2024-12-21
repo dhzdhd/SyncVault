@@ -7,7 +7,7 @@ part of 'drive_provider_backend.dart';
 // **************************************************************************
 
 _$OAuth2Impl _$$OAuth2ImplFromJson(Map<String, dynamic> json) => _$OAuth2Impl(
-      rCloneJson: Map<String, String>.from(json['rCloneJson'] as Map),
+      rCloneJson: json['rCloneJson'] as Map<String, dynamic>,
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
       expiresIn: json['expiresIn'] as String,

@@ -73,13 +73,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
             case ChangeType.REMOVE
                 when folders[i].isDeletionEnabled && folders[i].isAutoSync:
               {
-                final result = await ref
-                    .read(folderProvider.notifier)
-                    .delete(folders[i], some(event.path))
-                    .run();
+                // final result = await ref
+                //     .read(folderProvider.notifier)
+                //     .delete(folders[i], some(event.path))
+                //     .run();
 
-                result.match(
-                    (l) => debugPrint(l.message), (r) => debugPrint('Success'));
+                // result.match(
+                //     (l) => debugPrint(l.message), (r) => debugPrint('Success'));
               }
           }
         });
@@ -110,13 +110,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
             icon: const Icon(Icons.warning),
             tooltip: 'Test RClone',
             onPressed: () async {
-              final res = await RCloneAuthService()
-                  .authorize(
-                    remoteName: 'somethin',
-                    driveProvider: DriveProvider.googleDrive,
-                  )
-                  .run();
-              // final res = await RCloneAuthService().getConfig().run();
+              // final res = await RCloneAuthService()
+              //     .authorize(
+              //       remoteName: 'somethin',
+              //       driveProvider: DriveProvider.googleDrive,
+              //     )
+              //     .run();
+              final res = await RCloneUtils().getConfig().run();
               print(res);
             },
           ),
@@ -294,27 +294,27 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                           child: TextButton(
                                             child: const Icon(Icons.delete),
                                             onPressed: () async {
-                                              final result =
-                                                  await folderNotifier
-                                                      .delete(e, none())
-                                                      .run();
+                                              // final result =
+                                              //     await folderNotifier
+                                              //         .delete(e, none())
+                                              //         .run();
 
-                                              print(result);
+                                              // print(result);
 
-                                              if (context.mounted) {
-                                                result.match(
-                                                  (l) =>
-                                                      context.showErrorSnackBar(
-                                                    l.message,
-                                                  ),
-                                                  (r) {
-                                                    context.showSuccessSnackBar(
-                                                      content: 'Deleted folder',
-                                                      action: none(),
-                                                    );
-                                                  },
-                                                );
-                                              }
+                                              // if (context.mounted) {
+                                              //   result.match(
+                                              //     (l) =>
+                                              //         context.showErrorSnackBar(
+                                              //       l.message,
+                                              //     ),
+                                              //     (r) {
+                                              //       context.showSuccessSnackBar(
+                                              //         content: 'Deleted folder',
+                                              //         action: none(),
+                                              //       );
+                                              //     },
+                                              //   );
+                                              // }
                                             },
                                           ),
                                         ),

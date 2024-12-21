@@ -130,49 +130,49 @@ class Folder extends _$Folder {
     String folderPath,
     String folderName,
   ) async {
-    final response =
-        await ref.read(authProvider.notifier).refresh(authModel).run();
-    final newAuthModel = response.match((l) => throw l, (r) => r);
+    // final response =
+    //     await ref.read(authProvider.notifier).refresh(authModel).run();
+    // final newAuthModel = response.match((l) => throw l, (r) => r);
 
-    final driveService = switch (newAuthModel.provider) {
-      AuthProviderType.oneDrive => OneDrive(),
-      AuthProviderType.dropBox => DropBox(),
-      AuthProviderType.googleDrive => GoogleDrive()
-    };
+    // final driveService = switch (newAuthModel.provider) {
+    //   AuthProviderType.oneDrive => OneDrive(),
+    //   AuthProviderType.dropBox => DropBox(),
+    //   AuthProviderType.googleDrive => GoogleDrive()
+    // };
 
     // TODO: Check if SyncVault already exists and use it
 
-    final id = await driveService
-        .createFolder(
-          folderName: some(folderName),
-          accessToken: newAuthModel.accessToken,
-          parentId: some(newAuthModel.folderId),
-        )
-        .match((l) => throw l, (r) => r)
-        .run();
+    // final id = await driveService
+    //     .createFolder(
+    //       folderName: some(folderName),
+    //       accessToken: newAuthModel.accessToken,
+    //       parentId: some(newAuthModel.folderId),
+    //     )
+    //     .match((l) => throw l, (r) => r)
+    //     .run();
 
-    final files = await driveService
-        .getAllItems(
-          root: some(id),
-          accessToken: newAuthModel.accessToken,
-          filter: none(),
-        )
-        .match((l) => throw l, (r) => r)
-        .run();
+    // final files = await driveService
+    //     .getAllItems(
+    //       root: some(id),
+    //       accessToken: newAuthModel.accessToken,
+    //       filter: none(),
+    //     )
+    //     .match((l) => throw l, (r) => r)
+    //     .run();
 
-    final folderModel = FolderModel(
-      email: newAuthModel.email,
-      provider: newAuthModel.provider,
-      folderPath: folderPath,
-      folderName: folderName,
-      folderId: id,
-      isAutoSync: true,
-      isDeletionEnabled: false,
-      isTwoWaySync: false,
-      files: files,
-    );
+    // final folderModel = FolderModel(
+    //   email: newAuthModel.email,
+    //   provider: newAuthModel.provider,
+    //   folderPath: folderPath,
+    //   folderName: folderName,
+    //   folderId: id,
+    //   isAutoSync: true,
+    //   isDeletionEnabled: false,
+    //   isTwoWaySync: false,
+    //   files: files,
+    // );
 
-    state = [...state, folderModel];
+    // state = [...state, folderModel];
     Hive.box('vault').put(
       hiveFoldersKey,
       jsonEncode(state.map((e) => e.toJson()).toList()),
@@ -184,103 +184,103 @@ class Folder extends _$Folder {
     Option<String> filePath,
   ) async {
     // Improvise
-    final oldAuthModel = ref
-        .watch(authProvider)
-        .where(
-          (element) =>
-              element.email == folderModel.email &&
-              element.provider == folderModel.provider,
-        )
-        .first;
+    // final oldAuthModel = ref
+    //     .watch(authProvider)
+    //     .where(
+    //       (element) =>
+    //           element.email == folderModel.email &&
+    //           element.provider == folderModel.provider,
+    //     )
+    //     .first;
 
-    final newAuthModel =
-        (await ref.read(authProvider.notifier).refresh(oldAuthModel).run())
-            .match((l) => throw l, (r) => r);
+    // final newAuthModel =
+    //     (await ref.read(authProvider.notifier).refresh(oldAuthModel).run())
+    //         .match((l) => throw l, (r) => r);
 
-    final result = await switch (newAuthModel.provider) {
-      AuthProviderType.oneDrive => OneDrive(),
-      AuthProviderType.dropBox => DropBox(),
-      AuthProviderType.googleDrive => GoogleDrive()
-    }
-        .upload(folderModel, newAuthModel, filePath)
-        .run();
+    // final result = await switch (newAuthModel.provider) {
+    //   AuthProviderType.oneDrive => OneDrive(),
+    //   AuthProviderType.dropBox => DropBox(),
+    //   AuthProviderType.googleDrive => GoogleDrive()
+    // }
+    //     .upload(folderModel, newAuthModel, filePath)
+    //     .run();
 
-    final driveService = switch (newAuthModel.provider) {
-      AuthProviderType.oneDrive => OneDrive(),
-      AuthProviderType.dropBox => DropBox(),
-      AuthProviderType.googleDrive => GoogleDrive()
-    };
+    // final driveService = switch (newAuthModel.provider) {
+    //   AuthProviderType.oneDrive => OneDrive(),
+    //   AuthProviderType.dropBox => DropBox(),
+    //   AuthProviderType.googleDrive => GoogleDrive()
+    // };
 
-    // TODO: Implement for particular folder
-    final files = await driveService
-        .getAllItems(
-          root: none(),
-          accessToken: newAuthModel.accessToken,
-          filter: none(),
-        )
-        .match((l) => throw l, (r) => r)
-        .run();
+    // // TODO: Implement for particular folder
+    // final files = await driveService
+    //     .getAllItems(
+    //       root: none(),
+    //       accessToken: newAuthModel.accessToken,
+    //       filter: none(),
+    //     )
+    //     .match((l) => throw l, (r) => r)
+    //     .run();
 
-    state = [
-      ...state
-        ..remove(folderModel)
-        ..add(folderModel.copyWith(files: files))
-    ];
-    Hive.box('vault').put(
-      hiveFoldersKey,
-      jsonEncode(state.map((e) => e.toJson()).toList()),
-    );
+    // state = [
+    //   ...state
+    //     ..remove(folderModel)
+    //     ..add(folderModel.copyWith(files: files))
+    // ];
+    // Hive.box('vault').put(
+    //   hiveFoldersKey,
+    //   jsonEncode(state.map((e) => e.toJson()).toList()),
+    // );
 
-    print(result);
-    if (result.isLeft()) {
-      throw result.getLeft().toNullable()!;
-    }
+    // print(result);
+    // if (result.isLeft()) {
+    //   throw result.getLeft().toNullable()!;
+    // }
   }
 
-  TaskEither<AppError, ()> delete(FolderModel model, Option<String> path) {
-    final oldAuthModel = ref
-        .watch(authProvider)
-        .where(
-          (element) =>
-              element.email == model.email &&
-              element.provider == model.provider,
-        )
-        .first;
+  // TaskEither<AppError, ()> delete(FolderModel model, Option<String> path) {
+  //   final oldAuthModel = ref
+  //       .watch(authProvider)
+  //       .where(
+  //         (element) =>
+  //             element.email == model.email &&
+  //             element.provider == model.provider,
+  //       )
+  //       .first;
 
-    return TaskEither.tryCatch(() async {
-      final result = await ref
-          .read(authProvider.notifier)
-          .refresh(oldAuthModel)
-          .flatMap(
-            (r) => switch (model.provider) {
-              AuthProviderType.oneDrive => OneDrive(),
-              AuthProviderType.dropBox => DropBox(),
-              AuthProviderType.googleDrive => GoogleDrive()
-            }
-                .delete(folderModel: model, authModel: r, path: path),
-          )
-          .run();
+  //   return TaskEither.tryCatch(() async {
+  //     final result = await ref
+  //         .read(authProvider.notifier)
+  //         .refresh(oldAuthModel)
+  //         .flatMap(
+  //           (r) => switch (model.provider) {
+  //             AuthProviderType.oneDrive => OneDrive(),
+  //             AuthProviderType.dropBox => DropBox(),
+  //             AuthProviderType.googleDrive => GoogleDrive()
+  //           }
+  //               .delete(folderModel: model, authModel: r, path: path),
+  //         )
+  //         .run();
 
-      return result.match((l) => throw l, (r) {
-        if (path.isNone()) {
-          state = state.where((element) => element != model).toList();
-          Hive.box('vault').put(
-            hiveFoldersKey,
-            jsonEncode(state.map((e) => e.toJson()).toList()),
-          );
-        }
+  //     return result.match((l) => throw l, (r) {
+  //       if (path.isNone()) {
+  //         state = state.where((element) => element != model).toList();
+  //         Hive.box('vault').put(
+  //           hiveFoldersKey,
+  //           jsonEncode(state.map((e) => e.toJson()).toList()),
+  //         );
+  //       }
 
-        return ();
-      });
-    }, (error, stackTrace) => error.segregateError());
-  }
+  //       return ();
+  //     });
+  //   }, (error, stackTrace) => error.segregateError());
+  // }
 
-  TaskEither<AppError, ()> clearCache() {
-    return TaskEither.tryCatch(() async {
-      state = [];
-      await Hive.box('vault').delete(hiveFoldersKey);
+  // TaskEither<AppError, ()> clearCache() {
+  //   return TaskEither.tryCatch(() async {
+  //     state = [];
+  //     await Hive.box('vault').delete(hiveFoldersKey);
 
-      return ();
-    }, (error, stackTrace) => error.segregateError());
-  }
+  //     return ();
+  //   }, (error, stackTrace) => error.segregateError());
+  // }
 }

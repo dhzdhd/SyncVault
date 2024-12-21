@@ -7,7 +7,7 @@ part of 'auth_controller.dart';
 // **************************************************************************
 
 String _$driveInfoControllerHash() =>
-    r'77e67cc0ca21648453e4ae03ede8fb04ff60b90f';
+    r'e174789338ab7feb57ef9ccea64120138c54a9e5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -35,13 +35,13 @@ class _SystemHash {
 const driveInfoControllerProvider = DriveInfoControllerFamily();
 
 /// See also [driveInfoController].
-class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
+class DriveInfoControllerFamily extends Family<AsyncValue<String>> {
   /// See also [driveInfoController].
   const DriveInfoControllerFamily();
 
   /// See also [driveInfoController].
   DriveInfoControllerProvider call(
-    AuthProviderModel model,
+    DriveProviderModel model,
   ) {
     return DriveInfoControllerProvider(
       model,
@@ -73,11 +73,10 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
 }
 
 /// See also [driveInfoController].
-class DriveInfoControllerProvider
-    extends AutoDisposeFutureProvider<DriveInfoModel> {
+class DriveInfoControllerProvider extends AutoDisposeFutureProvider<String> {
   /// See also [driveInfoController].
   DriveInfoControllerProvider(
-    AuthProviderModel model,
+    DriveProviderModel model,
   ) : this._internal(
           (ref) => driveInfoController(
             ref as DriveInfoControllerRef,
@@ -105,11 +104,11 @@ class DriveInfoControllerProvider
     required this.model,
   }) : super.internal();
 
-  final AuthProviderModel model;
+  final DriveProviderModel model;
 
   @override
   Override overrideWith(
-    FutureOr<DriveInfoModel> Function(DriveInfoControllerRef provider) create,
+    FutureOr<String> Function(DriveInfoControllerRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -126,7 +125,7 @@ class DriveInfoControllerProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<DriveInfoModel> createElement() {
+  AutoDisposeFutureProviderElement<String> createElement() {
     return _DriveInfoControllerProviderElement(this);
   }
 
@@ -146,21 +145,21 @@ class DriveInfoControllerProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin DriveInfoControllerRef on AutoDisposeFutureProviderRef<DriveInfoModel> {
+mixin DriveInfoControllerRef on AutoDisposeFutureProviderRef<String> {
   /// The parameter `model` of this provider.
-  AuthProviderModel get model;
+  DriveProviderModel get model;
 }
 
 class _DriveInfoControllerProviderElement
-    extends AutoDisposeFutureProviderElement<DriveInfoModel>
+    extends AutoDisposeFutureProviderElement<String>
     with DriveInfoControllerRef {
   _DriveInfoControllerProviderElement(super.provider);
 
   @override
-  AuthProviderModel get model => (origin as DriveInfoControllerProvider).model;
+  DriveProviderModel get model => (origin as DriveInfoControllerProvider).model;
 }
 
-String _$authControllerHash() => r'1a450cb08f9c89ad4612d36261cb94ab4ab973a8';
+String _$authControllerHash() => r'5938ecc306f4c42894337f962428352898aa80cc';
 
 /// See also [AuthController].
 @ProviderFor(AuthController)
@@ -176,12 +175,12 @@ final authControllerProvider =
 );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'e5d40b1393ea4cdf79aad848b6cdc9cfbf7240e7';
+String _$authHash() => r'f4e9a6a45b0866c138452207d2777eeb6f917bdd';
 
 /// See also [Auth].
 @ProviderFor(Auth)
 final authProvider =
-    AutoDisposeNotifierProvider<Auth, List<AuthProviderModel>>.internal(
+    AutoDisposeNotifierProvider<Auth, List<DriveProviderModel>>.internal(
   Auth.new,
   name: r'authProvider',
   debugGetCreateSourceHash:
@@ -190,6 +189,6 @@ final authProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$Auth = AutoDisposeNotifier<List<AuthProviderModel>>;
+typedef _$Auth = AutoDisposeNotifier<List<DriveProviderModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
