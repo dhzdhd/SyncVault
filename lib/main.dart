@@ -9,6 +9,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/injectable.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
@@ -79,8 +80,8 @@ void main() async {
   final accountsBox = await Hive.openBox<DriveProviderModel>('accounts_box');
   GetIt.I.registerSingleton<Box<DriveProviderModel>>(accountsBox);
 
-  final foldersBox = await Hive.openBox<DriveProviderModel>('folders_box');
-  GetIt.I.registerSingleton<Box<DriveProviderModel>>(foldersBox);
+  final foldersBox = await Hive.openBox<FolderModel>('folders_box');
+  GetIt.I.registerSingleton<Box<FolderModel>>(foldersBox);
 
   final settings = Settings.init();
 

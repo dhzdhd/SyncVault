@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'folder_controller.g.dart';
 
-const hiveFoldersKey = 'folders';
+final _box = GetIt.I<Box<FolderModel>>();
 
 @riverpod
 class CreateFolderController extends _$CreateFolderController {
@@ -17,7 +20,7 @@ class CreateFolderController extends _$CreateFolderController {
 
   Future<void> createFolder(
     DriveProviderModel authModel,
-    String folderPath,
+    String parentPath,
     String folderName,
   ) async {
     final folderNotifier = ref.read(folderProvider.notifier);
@@ -26,7 +29,7 @@ class CreateFolderController extends _$CreateFolderController {
     state = await AsyncValue.guard(
       () => folderNotifier.createFolder(
         authModel,
-        folderPath,
+        parentPath,
         folderName,
       ),
     );
@@ -62,17 +65,10 @@ class Folder extends _$Folder {
   }
 
   static List<FolderModel> init() {
-    final List<dynamic> raw =
-        jsonDecode(Hive.box('vault').get(hiveFoldersKey, defaultValue: '[]'));
-
-    try {
-      return raw.map((e) => FolderModel.fromJson(e)).toList();
-    } catch (e) {
-      return [];
-    }
+    return _box.values.toList();
   }
 
-  void toggleAutoSync(FolderModel model) {
+  Future<void> toggleAutoSync(FolderModel model) async {
     final index = state.indexOf(model);
     state = [
       ...state
@@ -82,13 +78,11 @@ class Folder extends _$Folder {
           model.copyWith(isAutoSync: !model.isAutoSync),
         )
     ];
-    Hive.box('vault').put(
-      hiveFoldersKey,
-      jsonEncode(state.map((e) => e.toJson()).toList()),
-    );
+    // TODO: Update
+    await _box.add(model);
   }
 
-  void toggleDeletionOnSync(FolderModel model) {
+  Future<void> toggleDeletionOnSync(FolderModel model) async {
     final index = state.indexOf(model);
     state = [
       ...state
@@ -98,13 +92,12 @@ class Folder extends _$Folder {
           model.copyWith(isDeletionEnabled: !model.isDeletionEnabled),
         )
     ];
-    Hive.box('vault').put(
-      hiveFoldersKey,
-      jsonEncode(state.map((e) => e.toJson()).toList()),
-    );
+
+    // TODO: Update
+    await _box.add(model);
   }
 
-  void toggleTwoWaySync(FolderModel model) {
+  Future<void> toggleTwoWaySync(FolderModel model) async {
     final index = state.indexOf(model);
     state = [
       ...state
@@ -114,37 +107,26 @@ class Folder extends _$Folder {
           model.copyWith(isTwoWaySync: !model.isTwoWaySync),
         )
     ];
-    Hive.box('vault').put(
-      hiveFoldersKey,
-      jsonEncode(state.map((e) => e.toJson()).toList()),
-    );
+
+    // TODO: Update
+    await _box.add(model);
   }
 
   Future<void> createFolder(
     DriveProviderModel authModel,
-    String folderPath,
+    String parentPath,
     String folderName,
   ) async {
-    // final response =
-    //     await ref.read(authProvider.notifier).refresh(authModel).run();
-    // final newAuthModel = response.match((l) => throw l, (r) => r);
+    final driveService = RCloneDriveService();
 
-    // final driveService = switch (newAuthModel.provider) {
-    //   AuthProviderType.oneDrive => OneDrive(),
-    //   AuthProviderType.dropBox => DropBox(),
-    //   AuthProviderType.googleDrive => GoogleDrive()
-    // };
-
-    // TODO: Check if SyncVault already exists and use it
-
-    // final id = await driveService
-    //     .createFolder(
-    //       folderName: some(folderName),
-    //       accessToken: newAuthModel.accessToken,
-    //       parentId: some(newAuthModel.folderId),
-    //     )
-    //     .match((l) => throw l, (r) => r)
-    //     .run();
+    final model = await driveService
+        .create(
+          folderName: folderName,
+          parentPath: parentPath,
+          model: authModel,
+        )
+        .match((l) => throw l, (r) => r)
+        .run();
 
     // final files = await driveService
     //     .getAllItems(
@@ -155,23 +137,8 @@ class Folder extends _$Folder {
     //     .match((l) => throw l, (r) => r)
     //     .run();
 
-    // final folderModel = FolderModel(
-    //   email: newAuthModel.email,
-    //   provider: newAuthModel.provider,
-    //   folderPath: folderPath,
-    //   folderName: folderName,
-    //   folderId: id,
-    //   isAutoSync: true,
-    //   isDeletionEnabled: false,
-    //   isTwoWaySync: false,
-    //   files: files,
-    // );
-
-    // state = [...state, folderModel];
-    Hive.box('vault').put(
-      hiveFoldersKey,
-      jsonEncode(state.map((e) => e.toJson()).toList()),
-    );
+    state = [...state, model];
+    await _box.add(model);
   }
 
   Future<void> upload(
@@ -270,12 +237,12 @@ class Folder extends _$Folder {
   //   }, (error, stackTrace) => error.segregateError());
   // }
 
-  // TaskEither<AppError, ()> clearCache() {
-  //   return TaskEither.tryCatch(() async {
-  //     state = [];
-  //     await Hive.box('vault').delete(hiveFoldersKey);
+  TaskEither<AppError, ()> clearCache() {
+    return TaskEither.tryCatch(() async {
+      state = [];
+      await _box.clear();
 
-  //     return ();
-  //   }, (error, stackTrace) => error.segregateError());
-  // }
+      return ();
+    }, (error, stackTrace) => error.segregateError());
+  }
 }

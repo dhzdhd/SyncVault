@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -21,5 +22,6 @@ part 'hive_adapters.g.dart';
   AdapterSpec<OAuth2Payload>(),
   AdapterSpec<S3Payload>(),
   AdapterSpec<WebdavPayload>(),
+  AdapterSpec<FolderModel>()
 ])
 class HiveAdapters {}

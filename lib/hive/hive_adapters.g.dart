@@ -428,3 +428,55 @@ class WebdavPayloadAdapter extends TypeAdapter<WebdavPayload> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class FolderModelAdapter extends TypeAdapter<FolderModel> {
+  @override
+  final int typeId = 11;
+
+  @override
+  FolderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return FolderModel(
+      remoteName: fields[0] as String,
+      provider: fields[1] as DriveProvider,
+      folderPath: fields[2] as String,
+      folderName: fields[3] as String,
+      isAutoSync: fields[4] as bool,
+      isDeletionEnabled: fields[5] as bool,
+      isTwoWaySync: fields[6] as bool,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, FolderModel obj) {
+    writer
+      ..writeByte(7)
+      ..writeByte(0)
+      ..write(obj.remoteName)
+      ..writeByte(1)
+      ..write(obj.provider)
+      ..writeByte(2)
+      ..write(obj.folderPath)
+      ..writeByte(3)
+      ..write(obj.folderName)
+      ..writeByte(4)
+      ..write(obj.isAutoSync)
+      ..writeByte(5)
+      ..write(obj.isDeletionEnabled)
+      ..writeByte(6)
+      ..write(obj.isTwoWaySync);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FolderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

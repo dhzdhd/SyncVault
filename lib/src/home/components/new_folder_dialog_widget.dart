@@ -138,7 +138,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                   // TODO:
                   await ref
                       .read(createFolderControllerProvider.notifier)
-                      .createFolder(t.$1, t.$2, t.$3);
+                      .createFolder(t.$1, 'SyncVault/', t.$3);
 
                   if (context.mounted) {
                     context.showSuccessSnackBar(

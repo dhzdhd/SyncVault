@@ -9,6 +9,7 @@ extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(DriveProviderAdapter());
     registerAdapter(DriveProviderModelAdapter());
+    registerAdapter(FolderModelAdapter());
     registerAdapter(IntroSettingsModelAdapter());
     registerAdapter(OAuth2Adapter());
     registerAdapter(OAuth2PayloadAdapter());
