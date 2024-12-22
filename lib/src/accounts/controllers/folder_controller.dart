@@ -2,14 +2,9 @@ import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
-import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
-import 'package:syncvault/errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:syncvault/src/accounts/services/drive/dropbox.dart';
-import 'package:syncvault/src/accounts/services/drive/gdrive.dart';
-import 'package:syncvault/src/accounts/services/drive/onedrive.dart';
+import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 part 'folder_controller.g.dart';
 
@@ -21,7 +16,7 @@ class CreateFolderController extends _$CreateFolderController {
   FutureOr<void> build() {}
 
   Future<void> createFolder(
-    AuthProviderModel authModel,
+    DriveProviderModel authModel,
     String folderPath,
     String folderName,
   ) async {
@@ -126,7 +121,7 @@ class Folder extends _$Folder {
   }
 
   Future<void> createFolder(
-    AuthProviderModel authModel,
+    DriveProviderModel authModel,
     String folderPath,
     String folderName,
   ) async {

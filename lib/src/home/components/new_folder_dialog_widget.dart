@@ -7,7 +7,7 @@ import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
-import 'package:syncvault/src/accounts/models/auth_provider_model.dart';
+import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class NewFolderDialogWidget extends StatefulHookConsumerWidget {
   const NewFolderDialogWidget({super.key});
@@ -34,7 +34,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedProvider = useState<Option<AuthProviderModel>>(const None());
+    final selectedProvider = useState<Option<DriveProviderModel>>(const None());
     final selectedFolder = useState<Option<String>>(const None());
     final authInfo = ref.watch(authProvider);
     // final authInfoCopy = useState<List<AuthProviderModel>>(authInfo);
@@ -119,7 +119,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                 : const Text('Submit'),
             onPressed: () async {
               if (!createFolderController.isLoading) {
-                final Option<(AuthProviderModel, String, String)> content =
+                final Option<(DriveProviderModel, String, String)> content =
                     selectedProvider.value.match(
                   () => none(),
                   (t) => selectedFolder.value.match(() => none(), (r) {

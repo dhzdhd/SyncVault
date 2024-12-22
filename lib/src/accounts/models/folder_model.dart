@@ -2,8 +2,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/cloud_file_model.dart';
+import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'folder_model.freezed.dart';
 part 'folder_model.g.dart';
@@ -12,7 +12,7 @@ part 'folder_model.g.dart';
 class FolderModel with _$FolderModel {
   const factory FolderModel({
     required String email,
-    required AuthProviderType provider,
+    required DriveProvider provider,
     required String folderPath,
     required String folderName,
     required String folderId,

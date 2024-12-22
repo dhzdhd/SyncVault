@@ -177,14 +177,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       Tooltip(
                         message: e.provider.name.capitalize(),
                         child: SvgPicture.asset(
-                          switch (e.provider) {
-                            AuthProviderType.oneDrive =>
-                              'assets/logos/onedrive.svg',
-                            AuthProviderType.dropBox =>
-                              'assets/logos/dropbox.svg',
-                            AuthProviderType.googleDrive =>
-                              'assets/logos/gdrive.svg'
-                          },
+                          e.provider.providerIcon,
                           width: 25,
                         ),
                       ),

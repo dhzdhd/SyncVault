@@ -3,10 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:glob/glob.dart';
+import 'package:glob/list_local_fs.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/log.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -34,8 +37,8 @@ enum DriveProvider {
 
   final String providerName;
   final String providerIcon;
-  final Type
-      backend; // TODO: Somehow relate to DriveProviderBackend without switch case
+  // TODO: Somehow relate to DriveProviderBackend without switch case
+  final Type backend;
 }
 
 @singleton
@@ -48,38 +51,43 @@ class RCloneUtils {
         return '$path/librclone.so';
       } else if (PlatformExtension.isDesktop) {
         final docDir = await getApplicationDocumentsDirectory();
-        // TODO: Glob the rclone path for multiplatform support
-        return '${docDir.path}/SyncVault/rclone.exe';
+        // FIXME:
+        final file = Glob('rclone.exe')
+            .listSync(root: '${docDir.path}/SyncVault')[0] as File;
+        return file.path;
       } else if (Platform.isIOS) {
         throw UnimplementedError('RClone not implemented in iOS yet');
       } else {
         throw UnimplementedError('This platform is not supported yet');
       }
-    }, (err, stackTrace) => err.segregateError());
+    }, (err, stackTrace) {
+      debugLogger.e(stackTrace);
+      return err.segregateError();
+    });
   }
 
   TaskEither<AppError, File> getConfig() {
-    return TaskEither.tryCatch(
-      () async {
-        late final File configFile;
+    return TaskEither.tryCatch(() async {
+      late final File configFile;
 
-        if (PlatformExtension.isDesktop) {
-          final docDir = await getApplicationDocumentsDirectory();
-          configFile = File('${docDir.path}/SyncVault/rclone.conf');
-        } else if (PlatformExtension.isMobile) {
-          configFile = File('./rclone.conf');
-        } else {
-          throw const GeneralError('Platform not supported');
-        }
+      if (PlatformExtension.isDesktop) {
+        final docDir = await getApplicationDocumentsDirectory();
+        configFile = File('${docDir.path}/SyncVault/rclone.conf');
+      } else if (PlatformExtension.isMobile) {
+        configFile = File('./rclone.conf');
+      } else {
+        throw const GeneralError('Platform not supported');
+      }
 
-        if (!(await configFile.exists())) {
-          await configFile.create();
-        }
+      if (!(await configFile.exists())) {
+        await configFile.create(recursive: true);
+      }
 
-        return configFile;
-      },
-      (err, stackTrace) => err.segregateError(),
-    );
+      return configFile;
+    }, (err, stackTrace) {
+      debugLogger.e(stackTrace);
+      return err.segregateError();
+    });
   }
 
   TaskEither<AppError, List<String>> getConfigArgs() {
@@ -168,6 +176,7 @@ class RCloneAuthService {
                 }
               },
               (err, stackTrace) {
+                print(stackTrace);
                 return err.segregateError();
               },
             ),
@@ -175,7 +184,8 @@ class RCloneAuthService {
         _ => DriveProviderModel(
             remoteName: 'remoteName',
             provider: driveProvider,
-            backend: const S3())
+            backend: const S3(),
+          )
       };
 
       // Write rclone output to rclone config file

@@ -21,7 +21,7 @@ FolderModel _$FolderModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$FolderModel {
   String get email => throw _privateConstructorUsedError;
-  AuthProviderType get provider => throw _privateConstructorUsedError;
+  DriveProvider get provider => throw _privateConstructorUsedError;
   String get folderPath => throw _privateConstructorUsedError;
   String get folderName => throw _privateConstructorUsedError;
   String get folderId => throw _privateConstructorUsedError;
@@ -48,7 +48,7 @@ abstract class $FolderModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String email,
-      AuthProviderType provider,
+      DriveProvider provider,
       String folderPath,
       String folderName,
       String folderId,
@@ -91,7 +91,7 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
-              as AuthProviderType,
+              as DriveProvider,
       folderPath: null == folderPath
           ? _value.folderPath
           : folderPath // ignore: cast_nullable_to_non_nullable
@@ -134,7 +134,7 @@ abstract class _$$FolderModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String email,
-      AuthProviderType provider,
+      DriveProvider provider,
       String folderPath,
       String folderName,
       String folderId,
@@ -175,7 +175,7 @@ class __$$FolderModelImplCopyWithImpl<$Res>
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
-              as AuthProviderType,
+              as DriveProvider,
       folderPath: null == folderPath
           ? _value.folderPath
           : folderPath // ignore: cast_nullable_to_non_nullable
@@ -229,7 +229,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
   @override
   final String email;
   @override
-  final AuthProviderType provider;
+  final DriveProvider provider;
   @override
   final String folderPath;
   @override
@@ -327,7 +327,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
 abstract class _FolderModel implements FolderModel {
   const factory _FolderModel(
       {required final String email,
-      required final AuthProviderType provider,
+      required final DriveProvider provider,
       required final String folderPath,
       required final String folderName,
       required final String folderId,
@@ -342,7 +342,7 @@ abstract class _FolderModel implements FolderModel {
   @override
   String get email;
   @override
-  AuthProviderType get provider;
+  DriveProvider get provider;
   @override
   String get folderPath;
   @override

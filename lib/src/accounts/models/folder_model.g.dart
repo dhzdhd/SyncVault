@@ -9,7 +9,7 @@ part of 'folder_model.dart';
 _$FolderModelImpl _$$FolderModelImplFromJson(Map<String, dynamic> json) =>
     _$FolderModelImpl(
       email: json['email'] as String,
-      provider: $enumDecode(_$AuthProviderTypeEnumMap, json['provider']),
+      provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
       folderPath: json['folderPath'] as String,
       folderName: json['folderName'] as String,
       folderId: json['folderId'] as String,
@@ -24,7 +24,7 @@ _$FolderModelImpl _$$FolderModelImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$FolderModelImplToJson(_$FolderModelImpl instance) =>
     <String, dynamic>{
       'email': instance.email,
-      'provider': _$AuthProviderTypeEnumMap[instance.provider]!,
+      'provider': _$DriveProviderEnumMap[instance.provider]!,
       'folderPath': instance.folderPath,
       'folderName': instance.folderName,
       'folderId': instance.folderId,
@@ -34,8 +34,10 @@ Map<String, dynamic> _$$FolderModelImplToJson(_$FolderModelImpl instance) =>
       'files': instance.files,
     };
 
-const _$AuthProviderTypeEnumMap = {
-  AuthProviderType.oneDrive: 'oneDrive',
-  AuthProviderType.dropBox: 'dropBox',
-  AuthProviderType.googleDrive: 'googleDrive',
+const _$DriveProviderEnumMap = {
+  DriveProvider.oneDrive: 'oneDrive',
+  DriveProvider.googleDrive: 'googleDrive',
+  DriveProvider.dropBox: 'dropBox',
+  DriveProvider.minio: 'minio',
+  DriveProvider.nextCloud: 'nextCloud',
 };

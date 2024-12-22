@@ -9,12 +9,6 @@ import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'auth_controller.g.dart';
 
-enum AuthProviderType {
-  oneDrive,
-  dropBox,
-  googleDrive,
-}
-
 // The AsyncValue controller to provide states to UI
 @riverpod
 class AuthController extends _$AuthController {
@@ -73,6 +67,7 @@ class Auth extends _$Auth {
         }
 
         state = [...state, model];
+        // TODO: account box is redundant as rclone config exists
         await _box.put(model.remoteName, model);
       },
     );
