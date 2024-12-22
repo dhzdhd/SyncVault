@@ -71,9 +71,7 @@ class _NewAccountDialogWidgetState
             labelText: 'Unique remote name',
           ),
         ),
-        const SizedBox(
-          height: 16,
-        ),
+        const SizedBox(height: 16),
         DropdownButton<DriveProvider>(
           items: DriveProvider.values
               .map(
@@ -124,58 +122,55 @@ class _NewAccountDialogWidgetState
                 ),
               ]
             : []),
-        Padding(
-          padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
-          child: ElevatedButton(
-            onPressed: () async {
-              if (!authController.isLoading) {
-                final valid = switch (selected.value.backend) {
-                  const (OAuth2) =>
-                    validateControllers([_remoteNameController]),
-                  const (S3) => validateControllers([_remoteNameController]),
-                  const (Webdav) => validateControllers([
-                      _remoteNameController,
-                      _urlController,
-                      _userController,
-                      _passwordController
-                    ]),
-                  _ => throw const GeneralError('Not valid')
-                };
+        const SizedBox(height: 32),
+        ElevatedButton(
+          onPressed: () async {
+            if (!authController.isLoading) {
+              final valid = switch (selected.value.backend) {
+                const (OAuth2) => validateControllers([_remoteNameController]),
+                const (S3) => validateControllers([_remoteNameController]),
+                const (Webdav) => validateControllers([
+                    _remoteNameController,
+                    _urlController,
+                    _userController,
+                    _passwordController
+                  ]),
+                _ => throw const GeneralError('Not valid')
+              };
 
-                if (valid) {
-                  await ref.read(authControllerProvider.notifier).signIn(
-                        switch (selected.value.backend) {
-                          const (OAuth2) => OAuth2Payload(
-                              remoteName: _remoteNameController.text),
-                          const (S3) =>
-                            S3Payload(remoteName: _remoteNameController.text),
-                          const (Webdav) => WebdavPayload(
-                              remoteName: _remoteNameController.text,
-                              url: _urlController.text,
-                              user: _userController.text,
-                              password: _passwordController.text,
-                            ),
-                          _ => throw const GeneralError(
-                              'Backend not supported'), // TODO:
-                        },
-                        selected.value,
-                      );
+              if (valid) {
+                await ref.read(authControllerProvider.notifier).signIn(
+                      switch (selected.value.backend) {
+                        const (OAuth2) =>
+                          OAuth2Payload(remoteName: _remoteNameController.text),
+                        const (S3) =>
+                          S3Payload(remoteName: _remoteNameController.text),
+                        const (Webdav) => WebdavPayload(
+                            remoteName: _remoteNameController.text,
+                            url: _urlController.text,
+                            user: _userController.text,
+                            password: _passwordController.text,
+                          ),
+                        _ => throw const GeneralError(
+                            'Backend not supported'), // TODO:
+                      },
+                      selected.value,
+                    );
 
-                  if (context.mounted && !authController.isLoading) {
-                    Navigator.of(context).pop();
-                  }
-                } else {
-                  throw const GeneralError('Fields are empty'); // TODO:
+                if (context.mounted && !authController.isLoading) {
+                  Navigator.of(context).pop();
                 }
+              } else {
+                throw const GeneralError('Fields are empty'); // TODO:
               }
-            },
-            child: authController.isLoading
-                ? const SizedBox.square(
-                    dimension: 20.0,
-                    child: CircularProgressIndicator(),
-                  )
-                : const Text('Submit'),
-          ),
+            }
+          },
+          child: authController.isLoading
+              ? const SizedBox.square(
+                  dimension: 20.0,
+                  child: CircularProgressIndicator(),
+                )
+              : const Text('Submit'),
         )
       ],
     );

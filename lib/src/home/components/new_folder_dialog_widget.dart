@@ -37,7 +37,6 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
     final selectedProvider = useState<Option<DriveProviderModel>>(const None());
     final selectedFolder = useState<Option<String>>(const None());
     final authInfo = ref.watch(authProvider);
-    // final authInfoCopy = useState<List<AuthProviderModel>>(authInfo);
     final createFolderController = ref.watch(createFolderControllerProvider);
 
     ref.listen<AsyncValue>(
@@ -60,101 +59,97 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
             hintText: 'Name of folder',
           ),
         ),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 16.0),
-        //   child: DropdownButton<AuthProviderModel?>(
-        //     items: authInfoCopy.value
-        //         .map(
-        //           (e) => DropdownMenuItem(
-        //             value: e,
-        //             child: Text('${e.provider.name.capitalize()} - ${e.email}'),
-        //           ),
-        //         )
-        //         .toList(),
-        //     value: selectedProvider.value.toNullable(),
-        //     isExpanded: true,
-        //     hint: const Text('Enter provider account'),
-        //     onChanged: (AuthProviderModel? e) {
-        //       selectedProvider.value = Option.fromNullable(e);
-        //     },
-        //   ),
-        // ),
-        Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Tooltip(
-                  message:
-                      selectedFolder.value.toNullable() ?? 'Not selected yet',
-                  child: Text(
+        const SizedBox(height: 16),
+        DropdownButton<DriveProviderModel?>(
+          items: authInfo
+              .map(
+                (e) => DropdownMenuItem(
+                  value: e,
+                  child:
+                      Text('${e.provider.name.capitalize()} - ${e.remoteName}'),
+                ),
+              )
+              .toList(),
+          value: selectedProvider.value.toNullable(),
+          isExpanded: true,
+          hint: const Text('Enter provider account'),
+          onChanged: (DriveProviderModel? e) {
+            selectedProvider.value = Option.fromNullable(e);
+          },
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Tooltip(
+                message:
                     selectedFolder.value.toNullable() ?? 'Not selected yet',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
+                child: Text(
+                  selectedFolder.value.toNullable() ?? 'Not selected yet',
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.folder),
-                tooltip: 'Get directory',
-                onPressed: () async {
-                  final result = await FilePicker.platform.getDirectoryPath();
-                  selectedFolder.value = Option.fromNullable(result);
-                },
-              ),
-            ],
-          ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.folder),
+              tooltip: 'Get directory',
+              onPressed: () async {
+                final result = await FilePicker.platform.getDirectoryPath();
+                selectedFolder.value = Option.fromNullable(result);
+              },
+            ),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
-          child: ElevatedButton(
-            child: createFolderController.isLoading
-                ? const SizedBox.square(
-                    dimension: 20.0,
-                    child: CircularProgressIndicator(),
-                  )
-                : const Text('Submit'),
-            onPressed: () async {
-              if (!createFolderController.isLoading) {
-                final Option<(DriveProviderModel, String, String)> content =
-                    selectedProvider.value.match(
-                  () => none(),
-                  (t) => selectedFolder.value.match(() => none(), (r) {
-                    final folderName = _controller.text;
-                    if (_controller.text.trim().isNotEmpty &&
-                        !ref.read(folderProvider).any(
-                            (element) => element.folderName == folderName)) {
-                      return some((t, r, folderName));
-                    } else {
-                      return none();
-                    }
-                  }),
-                );
+        const SizedBox(height: 32),
+        ElevatedButton(
+          child: createFolderController.isLoading
+              ? const SizedBox.square(
+                  dimension: 20.0,
+                  child: CircularProgressIndicator(),
+                )
+              : const Text('Submit'),
+          onPressed: () async {
+            if (!createFolderController.isLoading) {
+              final Option<(DriveProviderModel, String, String)> content =
+                  selectedProvider.value.match(
+                () => none(),
+                (t) => selectedFolder.value.match(() => none(), (r) {
+                  final folderName = _controller.text;
+                  if (_controller.text.trim().isNotEmpty &&
+                      !ref
+                          .read(folderProvider)
+                          .any((element) => element.folderName == folderName)) {
+                    return some((t, r, folderName));
+                  } else {
+                    return none();
+                  }
+                }),
+              );
 
-                content.match(
-                  () => context.showErrorSnackBar(
-                    'One or both of the fields are not filled',
-                  ),
-                  (t) async {
-                    await ref
-                        .read(createFolderControllerProvider.notifier)
-                        .createFolder(t.$1, t.$2, t.$3);
+              content.match(
+                () => context.showErrorSnackBar(
+                  'One or both of the fields are not filled',
+                ),
+                (t) async {
+                  // TODO:
+                  await ref
+                      .read(createFolderControllerProvider.notifier)
+                      .createFolder(t.$1, t.$2, t.$3);
 
-                    if (context.mounted) {
-                      context.showSuccessSnackBar(
-                        content: 'Successfully linked folder',
-                        action: none(),
-                      );
-                      Navigator.of(context).pop();
-                    }
-                  },
-                );
-              }
-            },
-          ),
+                  if (context.mounted) {
+                    context.showSuccessSnackBar(
+                      content: 'Successfully linked folder',
+                    );
+                    Navigator.of(context).pop();
+                  }
+                },
+              );
+            }
+          },
         )
       ],
     );

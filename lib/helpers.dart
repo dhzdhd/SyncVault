@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/home/components/snackbar_widget.dart';
 
 extension StringExtension on String {
@@ -32,8 +31,7 @@ class PlatformExtension {
 }
 
 extension SnackBarExtension on BuildContext {
-  void showSuccessSnackBar(
-      {required String content, required Option<SnackBarAction> action}) {
+  void showSuccessSnackBar({required String content, SnackBarAction? action}) {
     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
       content: content,
       state: SnackBarState.success,
@@ -45,7 +43,6 @@ extension SnackBarExtension on BuildContext {
     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
       content: content,
       state: SnackBarState.error,
-      action: const None(),
     ));
   }
 
@@ -53,7 +50,6 @@ extension SnackBarExtension on BuildContext {
     ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
       content: content,
       state: SnackBarState.warning,
-      action: const None(),
     ));
   }
 }

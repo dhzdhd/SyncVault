@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart';
 
 enum SnackBarState {
   success,
@@ -10,7 +9,7 @@ enum SnackBarState {
 SnackBar snackBarWidget({
   required String content,
   required SnackBarState state,
-  required Option<SnackBarAction> action,
+  SnackBarAction? action,
 }) {
   return SnackBar(
     content: Text(
@@ -27,6 +26,6 @@ SnackBar snackBarWidget({
         : state == SnackBarState.error
             ? Colors.redAccent
             : Colors.amberAccent,
-    action: action.toNullable(),
+    action: action,
   );
 }

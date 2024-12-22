@@ -270,7 +270,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                 if (context.mounted) {
                                                   context.showSuccessSnackBar(
                                                     content: 'Success',
-                                                    action: none(),
                                                   );
                                                 }
                                               }
