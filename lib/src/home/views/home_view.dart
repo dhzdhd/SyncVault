@@ -329,7 +329,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                             Text(
-                              e.email,
+                              e.remoteName,
                               style: Theme.of(context).textTheme.bodyLarge,
                             )
                           ],
@@ -404,39 +404,39 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           ],
                         ),
                       ),
-                      Visibility(
-                        visible: e.files.isNotEmpty,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: ConstrainedBox(
-                            constraints:
-                                const BoxConstraints(minWidth: double.infinity),
-                            child: Text(
-                              'Tree View',
-                              textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: e.files.isNotEmpty,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxHeight: 150.0),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Ink(
-                              padding: const EdgeInsets.only(
-                                  left: 16.0, right: 16.0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).dialogBackgroundColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: TreeWidget(files: e.files),
-                            ),
-                          ),
-                        ),
-                      )
+                      // Visibility(
+                      //   visible: e.files.isNotEmpty,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.only(top: 8.0),
+                      //     child: ConstrainedBox(
+                      //       constraints:
+                      //           const BoxConstraints(minWidth: double.infinity),
+                      //       child: Text(
+                      //         'Tree View',
+                      //         textAlign: TextAlign.left,
+                      //         style: Theme.of(context).textTheme.bodyLarge,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // Visibility(
+                      //   visible: e.files.isNotEmpty,
+                      //   child: ConstrainedBox(
+                      //     constraints: const BoxConstraints(maxHeight: 150.0),
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.only(top: 8.0),
+                      //       child: Ink(
+                      //         padding: const EdgeInsets.only(
+                      //             left: 16.0, right: 16.0),
+                      //         decoration: BoxDecoration(
+                      //           color: Theme.of(context).dialogBackgroundColor,
+                      //           borderRadius: BorderRadius.circular(10),
+                      //         ),
+                      //         child: TreeWidget(files: e.files),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                 ),

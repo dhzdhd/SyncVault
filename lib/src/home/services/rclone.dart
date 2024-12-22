@@ -10,10 +10,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/log.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
-import 'package:syncvault/src/home/models/remote_folder_model.dart';
 import 'package:syncvault/src/home/services/rclone_template.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:ini_v2/ini.dart';
@@ -216,11 +216,11 @@ class RCloneAuthService {
 
 @singleton
 class RCloneDriveService {
-  TaskEither<AppError, RemoteFolderModel> create(
+  TaskEither<AppError, FolderModel> create(
       {required DriveProviderModel model, required String folderName}) {
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, RemoteFolderModel>.Do(($) async {
+    return TaskEither<AppError, FolderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
 
       await $(TaskEither.tryCatch(() async {
@@ -233,10 +233,14 @@ class RCloneDriveService {
         return ();
       }, (err, stackTrace) => err.segregateError()));
 
-      final folderModel = RemoteFolderModel(
-        provider: model,
+      final folderModel = FolderModel(
+        remoteName: model.remoteName,
+        provider: model.provider,
         folderPath: '/SyncVault/$folderName',
         folderName: folderName,
+        isAutoSync: false,
+        isDeletionEnabled: false,
+        isTwoWaySync: false,
       );
       return folderModel;
     });
@@ -244,7 +248,7 @@ class RCloneDriveService {
 
   TaskEither<AppError, ()> upload(
       {required DriveProviderModel providerModel,
-      required RemoteFolderModel folderModel,
+      required FolderModel folderModel,
       required String localPath}) {
     final utils = RCloneUtils();
 

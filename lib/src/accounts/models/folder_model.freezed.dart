@@ -20,15 +20,14 @@ FolderModel _$FolderModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$FolderModel {
-  String get email => throw _privateConstructorUsedError;
+  String get remoteName => throw _privateConstructorUsedError;
   DriveProvider get provider => throw _privateConstructorUsedError;
   String get folderPath => throw _privateConstructorUsedError;
-  String get folderName => throw _privateConstructorUsedError;
-  String get folderId => throw _privateConstructorUsedError;
+  String get folderName =>
+      throw _privateConstructorUsedError; // required String folderId,
   bool get isAutoSync => throw _privateConstructorUsedError;
   bool get isDeletionEnabled => throw _privateConstructorUsedError;
   bool get isTwoWaySync => throw _privateConstructorUsedError;
-  List<CloudFileModel> get files => throw _privateConstructorUsedError;
 
   /// Serializes this FolderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,15 +46,13 @@ abstract class $FolderModelCopyWith<$Res> {
       _$FolderModelCopyWithImpl<$Res, FolderModel>;
   @useResult
   $Res call(
-      {String email,
+      {String remoteName,
       DriveProvider provider,
       String folderPath,
       String folderName,
-      String folderId,
       bool isAutoSync,
       bool isDeletionEnabled,
-      bool isTwoWaySync,
-      List<CloudFileModel> files});
+      bool isTwoWaySync});
 }
 
 /// @nodoc
@@ -73,20 +70,18 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? email = null,
+    Object? remoteName = null,
     Object? provider = null,
     Object? folderPath = null,
     Object? folderName = null,
-    Object? folderId = null,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
     Object? isTwoWaySync = null,
-    Object? files = null,
   }) {
     return _then(_value.copyWith(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      remoteName: null == remoteName
+          ? _value.remoteName
+          : remoteName // ignore: cast_nullable_to_non_nullable
               as String,
       provider: null == provider
           ? _value.provider
@@ -100,10 +95,6 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
           ? _value.folderName
           : folderName // ignore: cast_nullable_to_non_nullable
               as String,
-      folderId: null == folderId
-          ? _value.folderId
-          : folderId // ignore: cast_nullable_to_non_nullable
-              as String,
       isAutoSync: null == isAutoSync
           ? _value.isAutoSync
           : isAutoSync // ignore: cast_nullable_to_non_nullable
@@ -116,10 +107,6 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
           ? _value.isTwoWaySync
           : isTwoWaySync // ignore: cast_nullable_to_non_nullable
               as bool,
-      files: null == files
-          ? _value.files
-          : files // ignore: cast_nullable_to_non_nullable
-              as List<CloudFileModel>,
     ) as $Val);
   }
 }
@@ -133,15 +120,13 @@ abstract class _$$FolderModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String email,
+      {String remoteName,
       DriveProvider provider,
       String folderPath,
       String folderName,
-      String folderId,
       bool isAutoSync,
       bool isDeletionEnabled,
-      bool isTwoWaySync,
-      List<CloudFileModel> files});
+      bool isTwoWaySync});
 }
 
 /// @nodoc
@@ -157,20 +142,18 @@ class __$$FolderModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? email = null,
+    Object? remoteName = null,
     Object? provider = null,
     Object? folderPath = null,
     Object? folderName = null,
-    Object? folderId = null,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
     Object? isTwoWaySync = null,
-    Object? files = null,
   }) {
     return _then(_$FolderModelImpl(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      remoteName: null == remoteName
+          ? _value.remoteName
+          : remoteName // ignore: cast_nullable_to_non_nullable
               as String,
       provider: null == provider
           ? _value.provider
@@ -184,10 +167,6 @@ class __$$FolderModelImplCopyWithImpl<$Res>
           ? _value.folderName
           : folderName // ignore: cast_nullable_to_non_nullable
               as String,
-      folderId: null == folderId
-          ? _value.folderId
-          : folderId // ignore: cast_nullable_to_non_nullable
-              as String,
       isAutoSync: null == isAutoSync
           ? _value.isAutoSync
           : isAutoSync // ignore: cast_nullable_to_non_nullable
@@ -200,10 +179,6 @@ class __$$FolderModelImplCopyWithImpl<$Res>
           ? _value.isTwoWaySync
           : isTwoWaySync // ignore: cast_nullable_to_non_nullable
               as bool,
-      files: null == files
-          ? _value._files
-          : files // ignore: cast_nullable_to_non_nullable
-              as List<CloudFileModel>,
     ));
   }
 }
@@ -212,47 +187,36 @@ class __$$FolderModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
   const _$FolderModelImpl(
-      {required this.email,
+      {required this.remoteName,
       required this.provider,
       required this.folderPath,
       required this.folderName,
-      required this.folderId,
       required this.isAutoSync,
       required this.isDeletionEnabled,
-      required this.isTwoWaySync,
-      required final List<CloudFileModel> files})
-      : _files = files;
+      required this.isTwoWaySync});
 
   factory _$FolderModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$FolderModelImplFromJson(json);
 
   @override
-  final String email;
+  final String remoteName;
   @override
   final DriveProvider provider;
   @override
   final String folderPath;
   @override
   final String folderName;
-  @override
-  final String folderId;
+// required String folderId,
   @override
   final bool isAutoSync;
   @override
   final bool isDeletionEnabled;
   @override
   final bool isTwoWaySync;
-  final List<CloudFileModel> _files;
-  @override
-  List<CloudFileModel> get files {
-    if (_files is EqualUnmodifiableListView) return _files;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_files);
-  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(email: $email, provider: $provider, folderPath: $folderPath, folderName: $folderName, folderId: $folderId, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync, files: $files)';
+    return 'FolderModel(remoteName: $remoteName, provider: $provider, folderPath: $folderPath, folderName: $folderName, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync)';
   }
 
   @override
@@ -260,15 +224,13 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'FolderModel'))
-      ..add(DiagnosticsProperty('email', email))
+      ..add(DiagnosticsProperty('remoteName', remoteName))
       ..add(DiagnosticsProperty('provider', provider))
       ..add(DiagnosticsProperty('folderPath', folderPath))
       ..add(DiagnosticsProperty('folderName', folderName))
-      ..add(DiagnosticsProperty('folderId', folderId))
       ..add(DiagnosticsProperty('isAutoSync', isAutoSync))
       ..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))
-      ..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync))
-      ..add(DiagnosticsProperty('files', files));
+      ..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync));
   }
 
   @override
@@ -276,37 +238,26 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FolderModelImpl &&
-            (identical(other.email, email) || other.email == email) &&
+            (identical(other.remoteName, remoteName) ||
+                other.remoteName == remoteName) &&
             (identical(other.provider, provider) ||
                 other.provider == provider) &&
             (identical(other.folderPath, folderPath) ||
                 other.folderPath == folderPath) &&
             (identical(other.folderName, folderName) ||
                 other.folderName == folderName) &&
-            (identical(other.folderId, folderId) ||
-                other.folderId == folderId) &&
             (identical(other.isAutoSync, isAutoSync) ||
                 other.isAutoSync == isAutoSync) &&
             (identical(other.isDeletionEnabled, isDeletionEnabled) ||
                 other.isDeletionEnabled == isDeletionEnabled) &&
             (identical(other.isTwoWaySync, isTwoWaySync) ||
-                other.isTwoWaySync == isTwoWaySync) &&
-            const DeepCollectionEquality().equals(other._files, _files));
+                other.isTwoWaySync == isTwoWaySync));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      email,
-      provider,
-      folderPath,
-      folderName,
-      folderId,
-      isAutoSync,
-      isDeletionEnabled,
-      isTwoWaySync,
-      const DeepCollectionEquality().hash(_files));
+  int get hashCode => Object.hash(runtimeType, remoteName, provider, folderPath,
+      folderName, isAutoSync, isDeletionEnabled, isTwoWaySync);
 
   /// Create a copy of FolderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -326,37 +277,31 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
 
 abstract class _FolderModel implements FolderModel {
   const factory _FolderModel(
-      {required final String email,
+      {required final String remoteName,
       required final DriveProvider provider,
       required final String folderPath,
       required final String folderName,
-      required final String folderId,
       required final bool isAutoSync,
       required final bool isDeletionEnabled,
-      required final bool isTwoWaySync,
-      required final List<CloudFileModel> files}) = _$FolderModelImpl;
+      required final bool isTwoWaySync}) = _$FolderModelImpl;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
       _$FolderModelImpl.fromJson;
 
   @override
-  String get email;
+  String get remoteName;
   @override
   DriveProvider get provider;
   @override
   String get folderPath;
   @override
-  String get folderName;
-  @override
-  String get folderId;
+  String get folderName; // required String folderId,
   @override
   bool get isAutoSync;
   @override
   bool get isDeletionEnabled;
   @override
   bool get isTwoWaySync;
-  @override
-  List<CloudFileModel> get files;
 
   /// Create a copy of FolderModel
   /// with the given fields replaced by the non-null parameter values.

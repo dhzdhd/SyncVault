@@ -2,7 +2,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
-import 'package:syncvault/src/accounts/models/cloud_file_model.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'folder_model.freezed.dart';
@@ -11,15 +10,15 @@ part 'folder_model.g.dart';
 @freezed
 class FolderModel with _$FolderModel {
   const factory FolderModel({
-    required String email,
+    required String remoteName,
     required DriveProvider provider,
     required String folderPath,
     required String folderName,
-    required String folderId,
+    // required String folderId,
     required bool isAutoSync,
     required bool isDeletionEnabled,
     required bool isTwoWaySync,
-    required List<CloudFileModel> files,
+    // required List<CloudFileModel> files,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>

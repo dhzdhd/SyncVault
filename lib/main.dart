@@ -79,6 +79,9 @@ void main() async {
   final accountsBox = await Hive.openBox<DriveProviderModel>('accounts_box');
   GetIt.I.registerSingleton<Box<DriveProviderModel>>(accountsBox);
 
+  final foldersBox = await Hive.openBox<DriveProviderModel>('folders_box');
+  GetIt.I.registerSingleton<Box<DriveProviderModel>>(foldersBox);
+
   final settings = Settings.init();
 
   if (Platform.isWindows) {
