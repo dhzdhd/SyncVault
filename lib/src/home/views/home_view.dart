@@ -280,27 +280,27 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                           child: TextButton(
                                             child: const Icon(Icons.delete),
                                             onPressed: () async {
-                                              // final result =
-                                              //     await folderNotifier
-                                              //         .delete(e, none())
-                                              //         .run();
+                                              if (uploadDeleteController
+                                                  .isLoading) {
+                                                return;
+                                              }
+                                              currentLoadingIndex.value = index;
 
-                                              // print(result);
+                                              if (!uploadDeleteController
+                                                  .isLoading) {
+                                                await ref
+                                                    .read(
+                                                      uploadDeleteControllerProvider
+                                                          .notifier,
+                                                    )
+                                                    .delete(e, none());
 
-                                              // if (context.mounted) {
-                                              //   result.match(
-                                              //     (l) =>
-                                              //         context.showErrorSnackBar(
-                                              //       l.message,
-                                              //     ),
-                                              //     (r) {
-                                              //       context.showSuccessSnackBar(
-                                              //         content: 'Deleted folder',
-                                              //         action: none(),
-                                              //       );
-                                              //     },
-                                              //   );
-                                              // }
+                                                if (context.mounted) {
+                                                  context.showSuccessSnackBar(
+                                                    content: 'Success',
+                                                  );
+                                                }
+                                              }
                                             },
                                           ),
                                         ),

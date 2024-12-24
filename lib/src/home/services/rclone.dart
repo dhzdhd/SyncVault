@@ -311,4 +311,31 @@ class RCloneDriveService {
       return res;
     });
   }
+
+  TaskEither<AppError, ()> delete({
+    required DriveProviderModel providerModel,
+    required FolderModel folderModel,
+  }) {
+    final utils = RCloneUtils();
+    // FIXME:
+
+    return TaskEither<AppError, ()>.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+
+      final res = await $(TaskEither.tryCatch(() async {
+        final process = await Process.run(execPath, [
+          'purge',
+          '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
+        ]);
+
+        if (process.stderr.toString().trim() != '') {
+          debugLogger.e(process.stderr.runtimeType);
+        }
+
+        return ();
+      }, (err, stackTrace) => err.segregateError()));
+
+      return res;
+    });
+  }
 }

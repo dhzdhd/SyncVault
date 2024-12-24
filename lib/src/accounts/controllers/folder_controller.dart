@@ -57,6 +57,21 @@ class UploadDeleteController extends _$UploadDeleteController {
       ),
     );
   }
+
+  Future<void> delete(
+    FolderModel folderModel,
+    Option<String> filePath,
+  ) async {
+    final folderNotifier = ref.read(folderProvider.notifier);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => folderNotifier.delete(
+        folderModel,
+        filePath,
+      ),
+    );
+  }
 }
 
 @riverpod
@@ -149,7 +164,7 @@ class Folder extends _$Folder {
     FolderModel folderModel,
     Option<String> filePath,
   ) async {
-    final providerModels = ref.read(authProvider);
+    final providerModels = ref.watch(authProvider);
     final providerModel = providerModels
         .filter((t) => t.remoteName == folderModel.remoteName)
         .first;
@@ -183,43 +198,19 @@ class Folder extends _$Folder {
     // );
   }
 
-  // TaskEither<AppError, ()> delete(FolderModel model, Option<String> path) {
-  //   final oldAuthModel = ref
-  //       .watch(authProvider)
-  //       .where(
-  //         (element) =>
-  //             element.email == model.email &&
-  //             element.provider == model.provider,
-  //       )
-  //       .first;
+  Future<void> delete(FolderModel model, Option<String> path) async {
+    // TODO: Implement per file
+    final providerModels = ref.watch(authProvider);
+    final providerModel =
+        providerModels.filter((t) => t.remoteName == model.remoteName).first;
 
-  //   return TaskEither.tryCatch(() async {
-  //     final result = await ref
-  //         .read(authProvider.notifier)
-  //         .refresh(oldAuthModel)
-  //         .flatMap(
-  //           (r) => switch (model.provider) {
-  //             AuthProviderType.oneDrive => OneDrive(),
-  //             AuthProviderType.dropBox => DropBox(),
-  //             AuthProviderType.googleDrive => GoogleDrive()
-  //           }
-  //               .delete(folderModel: model, authModel: r, path: path),
-  //         )
-  //         .run();
+    await RCloneDriveService()
+        .delete(providerModel: providerModel, folderModel: model)
+        .run();
 
-  //     return result.match((l) => throw l, (r) {
-  //       if (path.isNone()) {
-  //         state = state.where((element) => element != model).toList();
-  //         Hive.box('vault').put(
-  //           hiveFoldersKey,
-  //           jsonEncode(state.map((e) => e.toJson()).toList()),
-  //         );
-  //       }
-
-  //       return ();
-  //     });
-  //   }, (error, stackTrace) => error.segregateError());
-  // }
+    state = state.where((element) => element != model).toList();
+    // TODO: Change hive storage
+  }
 
   TaskEither<AppError, ()> clearCache() {
     return TaskEither.tryCatch(() async {
