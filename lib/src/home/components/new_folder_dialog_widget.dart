@@ -135,10 +135,10 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                   'One or both of the fields are not filled',
                 ),
                 (t) async {
-                  // TODO:
                   await ref
                       .read(createFolderControllerProvider.notifier)
-                      .createFolder(t.$1, 'SyncVault/', t.$3);
+                      .createFolder(
+                          authModel: t.$1, folderPath: t.$2, folderName: t.$3);
 
                   if (context.mounted) {
                     context.showSuccessSnackBar(

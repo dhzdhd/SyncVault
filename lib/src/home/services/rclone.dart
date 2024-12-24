@@ -218,8 +218,9 @@ class RCloneAuthService {
 class RCloneDriveService {
   TaskEither<AppError, FolderModel> create({
     required DriveProviderModel model,
-    String parentPath = 'SyncVault/',
+    required String folderPath,
     required String folderName,
+    String remoteParentPath = 'SyncVault/',
   }) {
     final utils = RCloneUtils();
 
@@ -231,7 +232,7 @@ class RCloneDriveService {
         final process = await Process.run(execPath, [
           ...configArgs,
           'mkdir',
-          '${model.remoteName}:/$parentPath$folderName'
+          '${model.remoteName}:/$remoteParentPath$folderName'
         ]);
         final output = process.stdout.toString().split('\n');
 
@@ -244,7 +245,7 @@ class RCloneDriveService {
       final folderModel = FolderModel(
         remoteName: model.remoteName,
         provider: model.provider,
-        folderPath: '/$parentPath$folderName',
+        folderPath: '/$remoteParentPath$folderName',
         folderName: folderName,
         isAutoSync: false,
         isDeletionEnabled: false,

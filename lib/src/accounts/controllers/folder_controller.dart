@@ -18,19 +18,22 @@ class CreateFolderController extends _$CreateFolderController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> createFolder(
-    DriveProviderModel authModel,
-    String parentPath,
-    String folderName,
-  ) async {
+  Future<void> createFolder({
+    required DriveProviderModel authModel,
+    required String folderPath,
+    required String folderName,
+    String remoteParentPath =
+        'SyncVault/', // TODO: Remove extra defaults in later calls
+  }) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () => folderNotifier.createFolder(
-        authModel,
-        parentPath,
-        folderName,
+        authModel: authModel,
+        folderName: folderName,
+        folderPath: folderPath,
+        remoteParentPath: remoteParentPath,
       ),
     );
   }
@@ -112,17 +115,19 @@ class Folder extends _$Folder {
     await _box.add(model);
   }
 
-  Future<void> createFolder(
-    DriveProviderModel authModel,
-    String parentPath,
-    String folderName,
-  ) async {
+  Future<void> createFolder({
+    required DriveProviderModel authModel,
+    required String folderPath,
+    required String folderName,
+    String remoteParentPath = 'SyncVault/',
+  }) async {
     final driveService = RCloneDriveService();
 
     final model = await driveService
         .create(
           folderName: folderName,
-          parentPath: parentPath,
+          folderPath: folderPath,
+          remoteParentPath: remoteParentPath,
           model: authModel,
         )
         .match((l) => throw l, (r) => r)
