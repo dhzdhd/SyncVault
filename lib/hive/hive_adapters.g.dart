@@ -444,6 +444,7 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       provider: fields[1] as DriveProvider,
       folderPath: fields[2] as String,
       folderName: fields[3] as String,
+      remoteParentPath: fields[7] as String,
       isAutoSync: fields[4] as bool,
       isDeletionEnabled: fields[5] as bool,
       isTwoWaySync: fields[6] as bool,
@@ -453,7 +454,7 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
   @override
   void write(BinaryWriter writer, FolderModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.remoteName)
       ..writeByte(1)
@@ -467,7 +468,9 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       ..writeByte(5)
       ..write(obj.isDeletionEnabled)
       ..writeByte(6)
-      ..write(obj.isTwoWaySync);
+      ..write(obj.isTwoWaySync)
+      ..writeByte(7)
+      ..write(obj.remoteParentPath);
   }
 
   @override

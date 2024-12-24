@@ -105,7 +105,7 @@ types:
         index: 3
   FolderModel:
     typeId: 11
-    nextIndex: 7
+    nextIndex: 8
     fields:
       remoteName:
         index: 0
@@ -121,3 +121,5 @@ types:
         index: 5
       isTwoWaySync:
         index: 6
+      remoteParentPath:
+        index: 7

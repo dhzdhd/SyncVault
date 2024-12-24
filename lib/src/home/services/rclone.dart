@@ -95,10 +95,6 @@ class RCloneUtils {
   }
 }
 
-// TODO:
-// Authorize with rclone auth as give below
-// rclone config create & rclone config file (to show location)
-// rclone config show to show file, can convert to json too
 @singleton
 class RCloneAuthService {
   TaskEither<AppError, DriveProviderModel> authorize({
@@ -225,6 +221,12 @@ class RCloneAuthService {
                       'Unable to fetch template for given provider.'),
                 );
 
+            // OneDrive requires drive ID which is not provided by rclone
+            if (model.provider == DriveProvider.oneDrive) {
+              // TODO: Fetch id from onedrive
+              toWrite['drive_id'] = '';
+            }
+
             final iniConfig =
                 Config.fromString(await configFile.readAsString());
             iniConfig.add(model.remoteName, toWrite);
@@ -260,20 +262,20 @@ class RCloneDriveService {
           'mkdir',
           '${model.remoteName}:/$remoteParentPath$folderName'
         ]);
-        final output = process.stdout.toString().split('\n');
 
-        print(process.stderr);
-        print(process.stdout);
+        if (process.stderr.toString().trim() != '') {
+          debugLogger.e(process.stderr.runtimeType);
+        }
 
         return ();
       }, (err, stackTrace) => err.segregateError()));
 
-      // TODO: Add parent path
       final folderModel = FolderModel(
         remoteName: model.remoteName,
         provider: model.provider,
         folderPath: folderPath,
         folderName: folderName,
+        remoteParentPath: remoteParentPath,
         isAutoSync: false,
         isDeletionEnabled: false,
         isTwoWaySync: false,
@@ -296,7 +298,7 @@ class RCloneDriveService {
         final process = await Process.run(execPath, [
           'sync',
           localPath,
-          '${folderModel.remoteName}:/SyncVault/${folderModel.folderName}' // TODO: Add remote parent path
+          '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
         ]);
 
         if (process.stderr.toString().trim() != '') {

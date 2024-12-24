@@ -14,7 +14,7 @@ class FolderModel with _$FolderModel {
     required DriveProvider provider,
     required String folderPath,
     required String folderName,
-    // required String folderId,
+    required String remoteParentPath,
     required bool isAutoSync,
     required bool isDeletionEnabled,
     required bool isTwoWaySync,

@@ -7,7 +7,7 @@ part of 'folder_controller.dart';
 // **************************************************************************
 
 String _$createFolderControllerHash() =>
-    r'7f3246646ca052231e4706b290d753c3f76c9c1e';
+    r'b513469fba662de0597f73ed22ff6f17563fff88';
 
 /// See also [CreateFolderController].
 @ProviderFor(CreateFolderController)
@@ -40,7 +40,7 @@ final uploadDeleteControllerProvider =
 );
 
 typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<void>;
-String _$folderHash() => r'04a40950bd747a5358d08bcc6ae8fe249bcd6de2';
+String _$folderHash() => r'0482450feb3134613cf0231fae9c14fb02823c29';
 
 /// See also [Folder].
 @ProviderFor(Folder)

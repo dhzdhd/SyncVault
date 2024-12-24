@@ -23,8 +23,8 @@ mixin _$FolderModel {
   String get remoteName => throw _privateConstructorUsedError;
   DriveProvider get provider => throw _privateConstructorUsedError;
   String get folderPath => throw _privateConstructorUsedError;
-  String get folderName =>
-      throw _privateConstructorUsedError; // required String folderId,
+  String get folderName => throw _privateConstructorUsedError;
+  String get remoteParentPath => throw _privateConstructorUsedError;
   bool get isAutoSync => throw _privateConstructorUsedError;
   bool get isDeletionEnabled => throw _privateConstructorUsedError;
   bool get isTwoWaySync => throw _privateConstructorUsedError;
@@ -50,6 +50,7 @@ abstract class $FolderModelCopyWith<$Res> {
       DriveProvider provider,
       String folderPath,
       String folderName,
+      String remoteParentPath,
       bool isAutoSync,
       bool isDeletionEnabled,
       bool isTwoWaySync});
@@ -74,6 +75,7 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
     Object? provider = null,
     Object? folderPath = null,
     Object? folderName = null,
+    Object? remoteParentPath = null,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
     Object? isTwoWaySync = null,
@@ -94,6 +96,10 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
       folderName: null == folderName
           ? _value.folderName
           : folderName // ignore: cast_nullable_to_non_nullable
+              as String,
+      remoteParentPath: null == remoteParentPath
+          ? _value.remoteParentPath
+          : remoteParentPath // ignore: cast_nullable_to_non_nullable
               as String,
       isAutoSync: null == isAutoSync
           ? _value.isAutoSync
@@ -124,6 +130,7 @@ abstract class _$$FolderModelImplCopyWith<$Res>
       DriveProvider provider,
       String folderPath,
       String folderName,
+      String remoteParentPath,
       bool isAutoSync,
       bool isDeletionEnabled,
       bool isTwoWaySync});
@@ -146,6 +153,7 @@ class __$$FolderModelImplCopyWithImpl<$Res>
     Object? provider = null,
     Object? folderPath = null,
     Object? folderName = null,
+    Object? remoteParentPath = null,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
     Object? isTwoWaySync = null,
@@ -166,6 +174,10 @@ class __$$FolderModelImplCopyWithImpl<$Res>
       folderName: null == folderName
           ? _value.folderName
           : folderName // ignore: cast_nullable_to_non_nullable
+              as String,
+      remoteParentPath: null == remoteParentPath
+          ? _value.remoteParentPath
+          : remoteParentPath // ignore: cast_nullable_to_non_nullable
               as String,
       isAutoSync: null == isAutoSync
           ? _value.isAutoSync
@@ -191,6 +203,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       required this.provider,
       required this.folderPath,
       required this.folderName,
+      required this.remoteParentPath,
       required this.isAutoSync,
       required this.isDeletionEnabled,
       required this.isTwoWaySync});
@@ -206,7 +219,8 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
   final String folderPath;
   @override
   final String folderName;
-// required String folderId,
+  @override
+  final String remoteParentPath;
   @override
   final bool isAutoSync;
   @override
@@ -216,7 +230,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(remoteName: $remoteName, provider: $provider, folderPath: $folderPath, folderName: $folderName, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync)';
+    return 'FolderModel(remoteName: $remoteName, provider: $provider, folderPath: $folderPath, folderName: $folderName, remoteParentPath: $remoteParentPath, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync)';
   }
 
   @override
@@ -228,6 +242,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       ..add(DiagnosticsProperty('provider', provider))
       ..add(DiagnosticsProperty('folderPath', folderPath))
       ..add(DiagnosticsProperty('folderName', folderName))
+      ..add(DiagnosticsProperty('remoteParentPath', remoteParentPath))
       ..add(DiagnosticsProperty('isAutoSync', isAutoSync))
       ..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))
       ..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync));
@@ -246,6 +261,8 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
                 other.folderPath == folderPath) &&
             (identical(other.folderName, folderName) ||
                 other.folderName == folderName) &&
+            (identical(other.remoteParentPath, remoteParentPath) ||
+                other.remoteParentPath == remoteParentPath) &&
             (identical(other.isAutoSync, isAutoSync) ||
                 other.isAutoSync == isAutoSync) &&
             (identical(other.isDeletionEnabled, isDeletionEnabled) ||
@@ -256,8 +273,16 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, remoteName, provider, folderPath,
-      folderName, isAutoSync, isDeletionEnabled, isTwoWaySync);
+  int get hashCode => Object.hash(
+      runtimeType,
+      remoteName,
+      provider,
+      folderPath,
+      folderName,
+      remoteParentPath,
+      isAutoSync,
+      isDeletionEnabled,
+      isTwoWaySync);
 
   /// Create a copy of FolderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -281,6 +306,7 @@ abstract class _FolderModel implements FolderModel {
       required final DriveProvider provider,
       required final String folderPath,
       required final String folderName,
+      required final String remoteParentPath,
       required final bool isAutoSync,
       required final bool isDeletionEnabled,
       required final bool isTwoWaySync}) = _$FolderModelImpl;
@@ -295,7 +321,9 @@ abstract class _FolderModel implements FolderModel {
   @override
   String get folderPath;
   @override
-  String get folderName; // required String folderId,
+  String get folderName;
+  @override
+  String get remoteParentPath;
   @override
   bool get isAutoSync;
   @override
