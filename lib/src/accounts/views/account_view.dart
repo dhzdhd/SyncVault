@@ -63,7 +63,7 @@ class AccountView extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    e.provider.name.capitalize(),
+                                    e.remoteName,
                                     style:
                                         MediaQuery.of(context).size.width < 500
                                             ? textTheme.titleLarge
@@ -72,7 +72,7 @@ class AccountView extends ConsumerWidget {
                                     maxLines: 1,
                                   ),
                                   Text(
-                                    e.remoteName,
+                                    e.provider.name.capitalize(),
                                     style:
                                         MediaQuery.of(context).size.width < 500
                                             ? textTheme.bodyMedium

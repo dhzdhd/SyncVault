@@ -23,7 +23,7 @@ enum DriveProvider {
   googleDrive('drive', 'assets/logos/gdrive.svg', OAuth2),
   dropBox('dropbox', 'assets/logos/dropbox.svg', OAuth2),
   minio('s3', '', S3),
-  nextCloud('webdav', '', Webdav);
+  nextCloud('webdav', 'assets/logos/nextcloud.svg', Webdav);
 
   Option<Map<String, String>> template({
     required DriveProviderBackendPayload payload,
@@ -268,10 +268,11 @@ class RCloneDriveService {
         return ();
       }, (err, stackTrace) => err.segregateError()));
 
+      // TODO: Add parent path
       final folderModel = FolderModel(
         remoteName: model.remoteName,
         provider: model.provider,
-        folderPath: '/$remoteParentPath$folderName',
+        folderPath: folderPath,
         folderName: folderName,
         isAutoSync: false,
         isDeletionEnabled: false,
@@ -281,10 +282,11 @@ class RCloneDriveService {
     });
   }
 
-  TaskEither<AppError, ()> upload(
-      {required DriveProviderModel providerModel,
-      required FolderModel folderModel,
-      required String localPath}) {
+  TaskEither<AppError, ()> upload({
+    required DriveProviderModel providerModel,
+    required FolderModel folderModel,
+    required String localPath,
+  }) {
     final utils = RCloneUtils();
 
     return TaskEither<AppError, ()>.Do(($) async {
@@ -294,10 +296,12 @@ class RCloneDriveService {
         final process = await Process.run(execPath, [
           'sync',
           localPath,
+          '${folderModel.remoteName}:/SyncVault/${folderModel.folderName}' // TODO: Add remote parent path
         ]);
-        final output = process.stdout.toString().split('\n');
 
-        print(output);
+        if (process.stderr.toString().trim() != '') {
+          debugLogger.e(process.stderr.runtimeType);
+        }
 
         return ();
       }, (err, stackTrace) => err.segregateError()));

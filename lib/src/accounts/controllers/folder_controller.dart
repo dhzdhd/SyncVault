@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -150,33 +149,18 @@ class Folder extends _$Folder {
     FolderModel folderModel,
     Option<String> filePath,
   ) async {
-    // Improvise
-    // final oldAuthModel = ref
-    //     .watch(authProvider)
-    //     .where(
-    //       (element) =>
-    //           element.email == folderModel.email &&
-    //           element.provider == folderModel.provider,
-    //     )
-    //     .first;
+    final providerModels = ref.read(authProvider);
+    final providerModel = providerModels
+        .filter((t) => t.remoteName == folderModel.remoteName)
+        .first;
 
-    // final newAuthModel =
-    //     (await ref.read(authProvider.notifier).refresh(oldAuthModel).run())
-    //         .match((l) => throw l, (r) => r);
-
-    // final result = await switch (newAuthModel.provider) {
-    //   AuthProviderType.oneDrive => OneDrive(),
-    //   AuthProviderType.dropBox => DropBox(),
-    //   AuthProviderType.googleDrive => GoogleDrive()
-    // }
-    //     .upload(folderModel, newAuthModel, filePath)
-    //     .run();
-
-    // final driveService = switch (newAuthModel.provider) {
-    //   AuthProviderType.oneDrive => OneDrive(),
-    //   AuthProviderType.dropBox => DropBox(),
-    //   AuthProviderType.googleDrive => GoogleDrive()
-    // };
+    await RCloneDriveService()
+        .upload(
+          providerModel: providerModel,
+          folderModel: folderModel,
+          localPath: folderModel.folderPath,
+        )
+        .run(); // TODO: Handle error
 
     // // TODO: Implement for particular folder
     // final files = await driveService
@@ -197,11 +181,6 @@ class Folder extends _$Folder {
     //   hiveFoldersKey,
     //   jsonEncode(state.map((e) => e.toJson()).toList()),
     // );
-
-    // print(result);
-    // if (result.isLeft()) {
-    //   throw result.getLeft().toNullable()!;
-    // }
   }
 
   // TaskEither<AppError, ()> delete(FolderModel model, Option<String> path) {
