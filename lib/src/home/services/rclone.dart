@@ -116,6 +116,8 @@ class RCloneAuthService {
         const (OAuth2) => await $(
             TaskEither.tryCatch(
               () async {
+                payload = payload as OAuth2Payload;
+
                 final process = await Process.start(
                   execPath,
                   [
@@ -176,16 +178,40 @@ class RCloneAuthService {
                 }
               },
               (err, stackTrace) {
-                print(stackTrace);
+                debugLogger.e(stackTrace);
                 return err.segregateError();
               },
             ),
           ),
-        _ => DriveProviderModel(
-            remoteName: 'remoteName',
-            provider: driveProvider,
-            backend: const S3(),
-          )
+        const (Webdav) => await $(
+            TaskEither.tryCatch(
+              () async {
+                final webdavPayload = payload as WebdavPayload;
+
+                final process = await Process.run(
+                    execPath, ['obscure', webdavPayload.password]);
+                final obscPassword = process.stdout;
+
+                final model = DriveProviderModel(
+                  remoteName: payload.remoteName,
+                  provider: driveProvider,
+                  backend: Webdav(
+                    url: webdavPayload.url,
+                    user: webdavPayload.user,
+                    password: obscPassword,
+                  ),
+                );
+
+                return model;
+              },
+              (err, stackTrace) {
+                debugLogger.e(stackTrace);
+                return err.segregateError();
+              },
+            ),
+          ),
+        // TODO: Do not throw in a Do()
+        _ => throw UnimplementedError('Selected provider does not work yet')
       };
 
       // Write rclone output to rclone config file

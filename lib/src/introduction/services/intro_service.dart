@@ -8,13 +8,14 @@ import 'package:get_it/get_it.dart';
 import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 
+@singleton
 class IntroService {
-  static const introSettingsBox = 'intro_settings_box';
   static const introSettingsKey = 'intro_settings';
 
   static const windowsRCloneUrl =
@@ -34,7 +35,7 @@ class IntroService {
       return _box.get(introSettingsKey, defaultValue: defaultValue)!;
     } catch (err) {
       debugLogger.e('SettingsModel failed to initialize');
-      // fileLogger.e('SettingsModel failed to initialize');
+      // fileLogger.e('SettingsModel failed to initialize');  // FIXME:
 
       return defaultValue;
     }
