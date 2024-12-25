@@ -110,7 +110,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             icon: const Icon(Icons.warning),
             tooltip: 'Test RClone',
             onPressed: () async {
-              final res = await RCloneUtils().getConfig().run();
+              final model = folderInfo.first;
+              final res =
+                  await RCloneDriveService().treeView(model: model).run();
               print(res);
             },
           ),

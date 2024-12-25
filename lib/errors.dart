@@ -6,9 +6,11 @@ part 'errors.freezed.dart';
 
 extension ErrorSegregation on Object {
   AppError segregateError() {
-    final error = this as Error;
-    debugLogger.e(error.toString());
-    debugLogger.e(error.stackTrace);
+    try {
+      final error = this as Error;
+      debugLogger.e(error.toString());
+      debugLogger.e(error.stackTrace);
+    } catch (err) {}
 
     // TODO: Log errors and return readable errors
     return switch (this) {

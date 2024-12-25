@@ -27,29 +27,29 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
 
-    final authInfo = Auth.init();
-    final folderInfo = Folder.init();
+    // final authInfo = Auth.init();
+    // final folderInfo = Folder.init();
 
-    for (final folderModel in folderInfo) {
-      if (folderModel.isAutoSync) {
-        final authModel = authInfo
-            .where((element) => element.remoteName == folderModel.remoteName)
-            .first;
+    // for (final folderModel in folderInfo) {
+    //   if (folderModel.isAutoSync) {
+    //     final authModel = authInfo
+    //         .where((element) => element.remoteName == folderModel.remoteName)
+    //         .first;
 
-        // final result = await RCloneDriveService()
-        //     .upload(
-        //       providerModel: authModel,
-        //       folderModel: folderModel,
-        //       localPath: '',
-        //     )
-        //     .run();
+    //     // final result = await RCloneDriveService()
+    //     //     .upload(
+    //     //       providerModel: authModel,
+    //     //       folderModel: folderModel,
+    //     //       localPath: '',
+    //     //     )
+    //     //     .run();
 
-        // result.match(
-        //   (l) => print(l.message),
-        //   (r) => print('Success'),
-        // );
-      }
-    }
+    //     // result.match(
+    //     //   (l) => print(l.message),
+    //     //   (r) => print('Success'),
+    //     // );
+    //   }
+    // }
 
     return Future.value(true);
   });
@@ -57,14 +57,12 @@ void callbackDispatcher() {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
 
   GetIt.I.registerSingleton<Dio>(Dio());
 
   await dotenv.load();
 
   await Hive.initFlutter();
-  await Hive.openBox('vault');
   Hive.registerAdapters();
 
   final docDir = await getApplicationDocumentsDirectory();
@@ -89,6 +87,8 @@ void main() async {
   GetIt.I.registerSingleton<Box<FolderModel>>(foldersBox);
 
   final settings = Settings.init();
+
+  configureDependencies();
 
   if (Platform.isWindows) {
     final appWindow = AppWindow();

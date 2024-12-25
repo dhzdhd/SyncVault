@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
 import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
 import 'package:injectable/injectable.dart';
@@ -17,6 +19,8 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/rclone_template.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:ini_v2/ini.dart';
+
+final _dio = GetIt.I<Dio>();
 
 enum DriveProvider {
   oneDrive('onedrive', 'assets/logos/onedrive.svg', OAuth2),
@@ -74,7 +78,8 @@ class RCloneUtils {
         final docDir = await getApplicationDocumentsDirectory();
         configFile = File('${docDir.path}/SyncVault/rclone.conf');
       } else if (PlatformExtension.isMobile) {
-        configFile = File('./rclone.conf');
+        final docDir = await getApplicationDocumentsDirectory();
+        configFile = File('${docDir.path}/SyncVault/rclone.conf');
       } else {
         throw const GeneralError('Platform not supported');
       }
@@ -223,8 +228,20 @@ class RCloneAuthService {
 
             // OneDrive requires drive ID which is not provided by rclone
             if (model.provider == DriveProvider.oneDrive) {
-              // TODO: Fetch id from onedrive
-              toWrite['drive_id'] = '';
+              final backend = model.backend as OAuth2;
+              final response =
+                  await _dio.get('https://graph.microsoft.com/v1.0/me/drive',
+                      options: Options(headers: {
+                        'Authorization': 'Bearer ${backend.accessToken}',
+                        'Content-Type': 'application/json',
+                      }));
+              if (response.statusCode != 200) {
+                throw const HttpError(
+                    'MS Graph API cannot be accessed right now.');
+              }
+
+              final driveId = response.data['id'];
+              toWrite['drive_id'] = driveId;
             }
 
             final iniConfig =
@@ -264,7 +281,7 @@ class RCloneDriveService {
         ]);
 
         if (process.stderr.toString().trim() != '') {
-          debugLogger.e(process.stderr.runtimeType);
+          debugLogger.e(process.stderr);
         }
 
         return ();
@@ -331,6 +348,51 @@ class RCloneDriveService {
         if (process.stderr.toString().trim() != '') {
           debugLogger.e(process.stderr.runtimeType);
         }
+
+        return ();
+      }, (err, stackTrace) => err.segregateError()));
+
+      return res;
+    });
+  }
+
+  TaskEither<AppError, ()> treeView({
+    required FolderModel model,
+  }) {
+    final utils = RCloneUtils();
+
+    return TaskEither<AppError, ()>.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+
+      final res = await $(TaskEither.tryCatch(() async {
+        final process = await Process.run(execPath, [
+          'tree',
+          '-a',
+          '--dirsfirst',
+          '--full-path',
+          '-s',
+          '-Q',
+          '${model.remoteName}:/${model.remoteParentPath}${model.folderName}'
+        ]);
+
+        if (process.stderr.toString().trim() != '') {
+          debugLogger.e(process.stderr.runtimeType);
+        }
+
+        final matches = [];
+        final output = process.stdout.toString();
+        final lines = output.split('\n');
+
+        // FIXME:
+        final regex = RegExp(r'.*\[(\d+)\].*"(\w*|/|\\)"', dotAll: true);
+        for (final line in lines) {
+          matches
+              .append(
+                  regex.allMatches(line).toList().map((t) => t.groups([1, 2])))
+              .toList();
+        }
+
+        print(matches);
 
         return ();
       }, (err, stackTrace) => err.segregateError()));
