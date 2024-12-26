@@ -30,11 +30,10 @@ enum DriveProvider {
   nextCloud('webdav', 'assets/logos/nextcloud.svg', Webdav);
 
   Option<Map<String, String>> template({
-    required DriveProviderBackendPayload payload,
     required DriveProviderBackend backend,
   }) {
     return Option.fromNullable(providerTemplate[this])
-        .map((func) => func(payload.remoteName, backend));
+        .map((func) => func(backend));
   }
 
   const DriveProvider(this.providerName, this.providerIcon, this.backend);
@@ -219,12 +218,11 @@ class RCloneAuthService {
       await $(
         TaskEither.tryCatch(
           () async {
-            final toWrite = driveProvider
-                .template(payload: payload, backend: model.backend)
-                .getOrElse(
-                  () => throw const GeneralError(
-                      'Unable to fetch template for given provider.'),
-                );
+            final toWrite =
+                driveProvider.template(backend: model.backend).getOrElse(
+                      () => throw const GeneralError(
+                          'Unable to fetch template for given provider.'),
+                    );
 
             // OneDrive requires drive ID which is not provided by rclone
             if (model.provider == DriveProvider.oneDrive) {
@@ -237,7 +235,7 @@ class RCloneAuthService {
                       }));
               if (response.statusCode != 200) {
                 throw const HttpError(
-                    'MS Graph API cannot be accessed right now.');
+                    'Microsoft Graph API cannot be accessed right now.');
               }
 
               final driveId = response.data['id'];

@@ -1,31 +1,26 @@
+import 'dart:convert';
+
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 
-final Map<DriveProvider,
-        Map<String, String> Function(String, DriveProviderBackend)>
+final Map<DriveProvider, Map<String, String> Function(DriveProviderBackend)>
     providerTemplate = {
-  DriveProvider.oneDrive: (String remoteName, DriveProviderBackend payload) => {
-        'remoteName': remoteName,
+  DriveProvider.oneDrive: (DriveProviderBackend payload) => {
         'type': 'onedrive',
-        'token': (payload as OAuth2).rCloneJson.toString(),
+        'token': jsonEncode((payload as OAuth2).rCloneJson),
         'drive_id': '',
         'drive_type': 'personal',
       },
-  DriveProvider.googleDrive:
-      (String remoteName, DriveProviderBackend payload) => {
-            'remoteName': remoteName,
-            'type': 'drive',
-            'token': (payload as OAuth2).rCloneJson.toString(),
-            'team_drive': '',
-          },
-  DriveProvider.dropBox: (String remoteName, DriveProviderBackend payload) => {
-        'remoteName': remoteName,
-        'type': 'dropbox',
-        'token': (payload as OAuth2).rCloneJson.toString(),
+  DriveProvider.googleDrive: (DriveProviderBackend payload) => {
+        'type': 'drive',
+        'token': jsonEncode((payload as OAuth2).rCloneJson),
+        'team_drive': '',
       },
-  DriveProvider.nextCloud: (String remoteName, DriveProviderBackend payload) =>
-      {
-        'remoteName': remoteName,
+  DriveProvider.dropBox: (DriveProviderBackend payload) => {
+        'type': 'dropbox',
+        'token': jsonEncode((payload as OAuth2).rCloneJson),
+      },
+  DriveProvider.nextCloud: (DriveProviderBackend payload) => {
         'type': 'webdav',
         'url': (payload as Webdav).url,
         'vendor': 'nextcloud',
