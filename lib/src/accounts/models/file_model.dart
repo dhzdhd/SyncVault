@@ -12,11 +12,11 @@ part 'file_model.g.dart';
 @freezed
 class FileModel with _$FileModel {
   const factory FileModel({
-    required Option<String> id,
     required String name,
+    required String size,
     @FileSystemEntityConverter() required FileSystemEntity file,
     @DirectoryConverter() required Directory parent,
-    required Option<String> childPath,
+    required List<FileModel> children,
   }) = _FileModel;
 
   factory FileModel.fromJson(Map<String, Object?> json) =>

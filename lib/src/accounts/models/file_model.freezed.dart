@@ -20,13 +20,13 @@ FileModel _$FileModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$FileModel {
-  Option<String> get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  String get size => throw _privateConstructorUsedError;
   @FileSystemEntityConverter()
   FileSystemEntity get file => throw _privateConstructorUsedError;
   @DirectoryConverter()
   Directory get parent => throw _privateConstructorUsedError;
-  Option<String> get childPath => throw _privateConstructorUsedError;
+  List<FileModel> get children => throw _privateConstructorUsedError;
 
   /// Serializes this FileModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,11 +44,11 @@ abstract class $FileModelCopyWith<$Res> {
       _$FileModelCopyWithImpl<$Res, FileModel>;
   @useResult
   $Res call(
-      {Option<String> id,
-      String name,
+      {String name,
+      String size,
       @FileSystemEntityConverter() FileSystemEntity file,
       @DirectoryConverter() Directory parent,
-      Option<String> childPath});
+      List<FileModel> children});
 }
 
 /// @nodoc
@@ -66,20 +66,20 @@ class _$FileModelCopyWithImpl<$Res, $Val extends FileModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? name = null,
+    Object? size = null,
     Object? file = null,
     Object? parent = null,
-    Object? childPath = null,
+    Object? children = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as Option<String>,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
               as String,
       file: null == file
           ? _value.file
@@ -89,10 +89,10 @@ class _$FileModelCopyWithImpl<$Res, $Val extends FileModel>
           ? _value.parent
           : parent // ignore: cast_nullable_to_non_nullable
               as Directory,
-      childPath: null == childPath
-          ? _value.childPath
-          : childPath // ignore: cast_nullable_to_non_nullable
-              as Option<String>,
+      children: null == children
+          ? _value.children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<FileModel>,
     ) as $Val);
   }
 }
@@ -106,11 +106,11 @@ abstract class _$$FileModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {Option<String> id,
-      String name,
+      {String name,
+      String size,
       @FileSystemEntityConverter() FileSystemEntity file,
       @DirectoryConverter() Directory parent,
-      Option<String> childPath});
+      List<FileModel> children});
 }
 
 /// @nodoc
@@ -126,20 +126,20 @@ class __$$FileModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? name = null,
+    Object? size = null,
     Object? file = null,
     Object? parent = null,
-    Object? childPath = null,
+    Object? children = null,
   }) {
     return _then(_$FileModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as Option<String>,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
               as String,
       file: null == file
           ? _value.file
@@ -149,10 +149,10 @@ class __$$FileModelImplCopyWithImpl<$Res>
           ? _value.parent
           : parent // ignore: cast_nullable_to_non_nullable
               as Directory,
-      childPath: null == childPath
-          ? _value.childPath
-          : childPath // ignore: cast_nullable_to_non_nullable
-              as Option<String>,
+      children: null == children
+          ? _value._children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<FileModel>,
     ));
   }
 }
@@ -161,31 +161,37 @@ class __$$FileModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
   const _$FileModelImpl(
-      {required this.id,
-      required this.name,
+      {required this.name,
+      required this.size,
       @FileSystemEntityConverter() required this.file,
       @DirectoryConverter() required this.parent,
-      required this.childPath});
+      required final List<FileModel> children})
+      : _children = children;
 
   factory _$FileModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$FileModelImplFromJson(json);
 
   @override
-  final Option<String> id;
-  @override
   final String name;
+  @override
+  final String size;
   @override
   @FileSystemEntityConverter()
   final FileSystemEntity file;
   @override
   @DirectoryConverter()
   final Directory parent;
+  final List<FileModel> _children;
   @override
-  final Option<String> childPath;
+  List<FileModel> get children {
+    if (_children is EqualUnmodifiableListView) return _children;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_children);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FileModel(id: $id, name: $name, file: $file, parent: $parent, childPath: $childPath)';
+    return 'FileModel(name: $name, size: $size, file: $file, parent: $parent, children: $children)';
   }
 
   @override
@@ -193,11 +199,11 @@ class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'FileModel'))
-      ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('size', size))
       ..add(DiagnosticsProperty('file', file))
       ..add(DiagnosticsProperty('parent', parent))
-      ..add(DiagnosticsProperty('childPath', childPath));
+      ..add(DiagnosticsProperty('children', children));
   }
 
   @override
@@ -205,18 +211,17 @@ class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FileModelImpl &&
-            (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.size, size) || other.size == size) &&
             (identical(other.file, file) || other.file == file) &&
             (identical(other.parent, parent) || other.parent == parent) &&
-            (identical(other.childPath, childPath) ||
-                other.childPath == childPath));
+            const DeepCollectionEquality().equals(other._children, _children));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, file, parent, childPath);
+  int get hashCode => Object.hash(runtimeType, name, size, file, parent,
+      const DeepCollectionEquality().hash(_children));
 
   /// Create a copy of FileModel
   /// with the given fields replaced by the non-null parameter values.
@@ -236,19 +241,19 @@ class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
 
 abstract class _FileModel implements FileModel {
   const factory _FileModel(
-      {required final Option<String> id,
-      required final String name,
+      {required final String name,
+      required final String size,
       @FileSystemEntityConverter() required final FileSystemEntity file,
       @DirectoryConverter() required final Directory parent,
-      required final Option<String> childPath}) = _$FileModelImpl;
+      required final List<FileModel> children}) = _$FileModelImpl;
 
   factory _FileModel.fromJson(Map<String, dynamic> json) =
       _$FileModelImpl.fromJson;
 
   @override
-  Option<String> get id;
-  @override
   String get name;
+  @override
+  String get size;
   @override
   @FileSystemEntityConverter()
   FileSystemEntity get file;
@@ -256,7 +261,7 @@ abstract class _FileModel implements FileModel {
   @DirectoryConverter()
   Directory get parent;
   @override
-  Option<String> get childPath;
+  List<FileModel> get children;
 
   /// Create a copy of FileModel
   /// with the given fields replaced by the non-null parameter values.

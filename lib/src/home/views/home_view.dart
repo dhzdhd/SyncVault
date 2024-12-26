@@ -8,6 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/models/file_model.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
@@ -89,15 +91,37 @@ class _HomeViewState extends ConsumerState<HomeView> {
     }, [ref.watch(folderProvider)]);
 
     final folderInfo = ref.watch(folderProvider);
+
+    // TODO: Perhaps put in controller? idk
+    // final List<Option<FileModel>> fileModels = List.generate(
+    //     folderInfo.length, (idx) => getFileModel(folderInfo[idx]));
+    final fileModels = [];
     final folderNotifier = ref.read(folderProvider.notifier);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
     final currentLoadingIndex = useState(0);
+
+    Future<Option<FileModel>> getFileModel(FolderModel folderModel) async {
+      final fileModel =
+          await RCloneDriveService().treeView(model: folderModel).run();
+      return fileModel.match((err) => none(), (t) => t);
+    }
 
     ref.listen<AsyncValue>(
       uploadDeleteControllerProvider,
       (prev, state) {
         if (!state.isLoading && state.hasError) {
           context.showErrorSnackBar(state.error!.segregateError().message);
+        }
+      },
+    );
+
+    ref.listen<AsyncValue>(
+      uploadDeleteControllerProvider,
+      (prev, state) async {
+        if (state.hasValue) {
+          for (final folder in folderInfo) {
+            fileModels.add(await getFileModel(folder));
+          }
         }
       },
     );
@@ -400,39 +424,44 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           ],
                         ),
                       ),
-                      // Visibility(
-                      //   visible: e.files.isNotEmpty,
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(top: 8.0),
-                      //     child: ConstrainedBox(
-                      //       constraints:
-                      //           const BoxConstraints(minWidth: double.infinity),
-                      //       child: Text(
-                      //         'Tree View',
-                      //         textAlign: TextAlign.left,
-                      //         style: Theme.of(context).textTheme.bodyLarge,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // Visibility(
-                      //   visible: e.files.isNotEmpty,
-                      //   child: ConstrainedBox(
-                      //     constraints: const BoxConstraints(maxHeight: 150.0),
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.only(top: 8.0),
-                      //       child: Ink(
-                      //         padding: const EdgeInsets.only(
-                      //             left: 16.0, right: 16.0),
-                      //         decoration: BoxDecoration(
-                      //           color: Theme.of(context).dialogBackgroundColor,
-                      //           borderRadius: BorderRadius.circular(10),
-                      //         ),
-                      //         child: TreeWidget(files: e.files),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // )
+                      Visibility(
+                        visible: fileModels[index].isSome(),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: ConstrainedBox(
+                            constraints:
+                                const BoxConstraints(minWidth: double.infinity),
+                            child: Text(
+                              'Tree View',
+                              textAlign: TextAlign.left,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (fileModels[index].isSome())
+                        Visibility(
+                          visible: fileModels[index].isSome(),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxHeight: 150.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Ink(
+                                padding: const EdgeInsets.only(
+                                    left: 16.0, right: 16.0),
+                                decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).dialogBackgroundColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: TreeWidget(
+                                    files: fileModels[index]
+                                        .toNullable()!
+                                        .children),
+                              ),
+                            ),
+                          ),
+                        )
                     ],
                   ),
                 ),
