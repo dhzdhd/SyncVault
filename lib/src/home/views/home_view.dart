@@ -8,8 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
-import 'package:syncvault/src/accounts/models/file_model.dart';
-import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
@@ -19,8 +17,7 @@ import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watcher/watcher.dart';
-
-import '../../settings/views/settings_view.dart';
+import 'package:syncvault/src/settings/views/settings_view.dart';
 
 class HomeView extends StatefulHookConsumerWidget {
   const HomeView({
@@ -57,8 +54,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
       final folders = ref.watch(folderProvider).toList();
 
       for (int i = 0; i < _watchers.length; i++) {
+        // TODO: Match watcher and folder by remote name instead of index
+        // Also add/delete watcher with folder
         _watchers[i].events.listen((event) async {
-          debugPrint(event.toString());
+          print(event.toString());
           switch (event.type) {
             case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
               {
@@ -91,37 +90,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
     }, [ref.watch(folderProvider)]);
 
     final folderInfo = ref.watch(folderProvider);
-
-    // TODO: Perhaps put in controller? idk
-    // final List<Option<FileModel>> fileModels = List.generate(
-    //     folderInfo.length, (idx) => getFileModel(folderInfo[idx]));
-    final fileModels = [];
     final folderNotifier = ref.read(folderProvider.notifier);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
     final currentLoadingIndex = useState(0);
-
-    Future<Option<FileModel>> getFileModel(FolderModel folderModel) async {
-      final fileModel =
-          await RCloneDriveService().treeView(model: folderModel).run();
-      return fileModel.match((err) => none(), (t) => t);
-    }
 
     ref.listen<AsyncValue>(
       uploadDeleteControllerProvider,
       (prev, state) {
         if (!state.isLoading && state.hasError) {
           context.showErrorSnackBar(state.error!.segregateError().message);
-        }
-      },
-    );
-
-    ref.listen<AsyncValue>(
-      uploadDeleteControllerProvider,
-      (prev, state) async {
-        if (state.hasValue) {
-          for (final folder in folderInfo) {
-            fileModels.add(await getFileModel(folder));
-          }
         }
       },
     );
