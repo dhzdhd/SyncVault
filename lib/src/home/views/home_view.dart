@@ -15,7 +15,6 @@ import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
-import 'package:syncvault/src/home/components/tree_widget.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -187,7 +186,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       ),
       body: Center(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 84),
           children: folderInfo
               .mapWithIndex(
                 (e, index) => ExpandableCardWidget(

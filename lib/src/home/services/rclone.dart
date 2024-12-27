@@ -189,6 +189,7 @@ class RCloneAuthService {
               () async {
                 final webdavPayload = payload as WebdavPayload;
 
+                // Password needs to be obscured by rclone for usage
                 final process = await Process.run(
                     execPath, ['obscure', webdavPayload.password]);
                 final obscPassword = process.stdout;
@@ -309,9 +310,11 @@ class RCloneDriveService {
 
     return TaskEither<AppError, ()>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
 
       final res = await $(TaskEither.tryCatch(() async {
         final process = await Process.run(execPath, [
+          ...configArgs,
           'sync',
           localPath,
           '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
@@ -337,9 +340,11 @@ class RCloneDriveService {
 
     return TaskEither<AppError, ()>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
 
       final res = await $(TaskEither.tryCatch(() async {
         final process = await Process.run(execPath, [
+          ...configArgs,
           'purge',
           '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
         ]);
@@ -362,9 +367,11 @@ class RCloneDriveService {
 
     return TaskEither<AppError, Option<FileModel>>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
 
       final Option<FileModel> fileModel = await $(TaskEither.tryCatch(() async {
         final process = await Process.run(execPath, [
+          ...configArgs,
           'tree',
           '-a',
           '--dirsfirst',
@@ -446,7 +453,6 @@ class RCloneDriveService {
           final fileEntity =
               isFile ? File(currentPath) : Directory(currentPath);
 
-          // Create and return the FileModel for the current path
           return FileModel(
             name: currentName,
             size: currentSize,

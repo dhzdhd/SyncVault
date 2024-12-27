@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
