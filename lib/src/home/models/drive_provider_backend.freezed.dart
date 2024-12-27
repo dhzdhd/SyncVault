@@ -22,6 +22,8 @@ DriveProviderBackend _$DriveProviderBackendFromJson(Map<String, dynamic> json) {
       return S3.fromJson(json);
     case 'webdav':
       return Webdav.fromJson(json);
+    case 'userPassword':
+      return UserPassword.fromJson(json);
 
     default:
       throw CheckedFromJsonException(
@@ -43,6 +45,7 @@ mixin _$DriveProviderBackend {
             String url, String accessKeyId, String secretAccessKey)
         s3,
     required TResult Function(String url, String user, String password) webdav,
+    required TResult Function(String username, String password) userPassword,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -53,6 +56,7 @@ mixin _$DriveProviderBackend {
     TResult? Function(String url, String accessKeyId, String secretAccessKey)?
         s3,
     TResult? Function(String url, String user, String password)? webdav,
+    TResult? Function(String username, String password)? userPassword,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -63,6 +67,7 @@ mixin _$DriveProviderBackend {
     TResult Function(String url, String accessKeyId, String secretAccessKey)?
         s3,
     TResult Function(String url, String user, String password)? webdav,
+    TResult Function(String username, String password)? userPassword,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -71,6 +76,7 @@ mixin _$DriveProviderBackend {
     required TResult Function(OAuth2 value) oauth2,
     required TResult Function(S3 value) s3,
     required TResult Function(Webdav value) webdav,
+    required TResult Function(UserPassword value) userPassword,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -78,6 +84,7 @@ mixin _$DriveProviderBackend {
     TResult? Function(OAuth2 value)? oauth2,
     TResult? Function(S3 value)? s3,
     TResult? Function(Webdav value)? webdav,
+    TResult? Function(UserPassword value)? userPassword,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -85,6 +92,7 @@ mixin _$DriveProviderBackend {
     TResult Function(OAuth2 value)? oauth2,
     TResult Function(S3 value)? s3,
     TResult Function(Webdav value)? webdav,
+    TResult Function(UserPassword value)? userPassword,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -247,6 +255,7 @@ class _$OAuth2Impl implements OAuth2 {
             String url, String accessKeyId, String secretAccessKey)
         s3,
     required TResult Function(String url, String user, String password) webdav,
+    required TResult Function(String username, String password) userPassword,
   }) {
     return oauth2(rCloneJson, accessToken, refreshToken, expiresIn);
   }
@@ -260,6 +269,7 @@ class _$OAuth2Impl implements OAuth2 {
     TResult? Function(String url, String accessKeyId, String secretAccessKey)?
         s3,
     TResult? Function(String url, String user, String password)? webdav,
+    TResult? Function(String username, String password)? userPassword,
   }) {
     return oauth2?.call(rCloneJson, accessToken, refreshToken, expiresIn);
   }
@@ -273,6 +283,7 @@ class _$OAuth2Impl implements OAuth2 {
     TResult Function(String url, String accessKeyId, String secretAccessKey)?
         s3,
     TResult Function(String url, String user, String password)? webdav,
+    TResult Function(String username, String password)? userPassword,
     required TResult orElse(),
   }) {
     if (oauth2 != null) {
@@ -287,6 +298,7 @@ class _$OAuth2Impl implements OAuth2 {
     required TResult Function(OAuth2 value) oauth2,
     required TResult Function(S3 value) s3,
     required TResult Function(Webdav value) webdav,
+    required TResult Function(UserPassword value) userPassword,
   }) {
     return oauth2(this);
   }
@@ -297,6 +309,7 @@ class _$OAuth2Impl implements OAuth2 {
     TResult? Function(OAuth2 value)? oauth2,
     TResult? Function(S3 value)? s3,
     TResult? Function(Webdav value)? webdav,
+    TResult? Function(UserPassword value)? userPassword,
   }) {
     return oauth2?.call(this);
   }
@@ -307,6 +320,7 @@ class _$OAuth2Impl implements OAuth2 {
     TResult Function(OAuth2 value)? oauth2,
     TResult Function(S3 value)? s3,
     TResult Function(Webdav value)? webdav,
+    TResult Function(UserPassword value)? userPassword,
     required TResult orElse(),
   }) {
     if (oauth2 != null) {
@@ -448,6 +462,7 @@ class _$S3Impl implements S3 {
             String url, String accessKeyId, String secretAccessKey)
         s3,
     required TResult Function(String url, String user, String password) webdav,
+    required TResult Function(String username, String password) userPassword,
   }) {
     return s3(url, accessKeyId, secretAccessKey);
   }
@@ -461,6 +476,7 @@ class _$S3Impl implements S3 {
     TResult? Function(String url, String accessKeyId, String secretAccessKey)?
         s3,
     TResult? Function(String url, String user, String password)? webdav,
+    TResult? Function(String username, String password)? userPassword,
   }) {
     return s3?.call(url, accessKeyId, secretAccessKey);
   }
@@ -474,6 +490,7 @@ class _$S3Impl implements S3 {
     TResult Function(String url, String accessKeyId, String secretAccessKey)?
         s3,
     TResult Function(String url, String user, String password)? webdav,
+    TResult Function(String username, String password)? userPassword,
     required TResult orElse(),
   }) {
     if (s3 != null) {
@@ -488,6 +505,7 @@ class _$S3Impl implements S3 {
     required TResult Function(OAuth2 value) oauth2,
     required TResult Function(S3 value) s3,
     required TResult Function(Webdav value) webdav,
+    required TResult Function(UserPassword value) userPassword,
   }) {
     return s3(this);
   }
@@ -498,6 +516,7 @@ class _$S3Impl implements S3 {
     TResult? Function(OAuth2 value)? oauth2,
     TResult? Function(S3 value)? s3,
     TResult? Function(Webdav value)? webdav,
+    TResult? Function(UserPassword value)? userPassword,
   }) {
     return s3?.call(this);
   }
@@ -508,6 +527,7 @@ class _$S3Impl implements S3 {
     TResult Function(OAuth2 value)? oauth2,
     TResult Function(S3 value)? s3,
     TResult Function(Webdav value)? webdav,
+    TResult Function(UserPassword value)? userPassword,
     required TResult orElse(),
   }) {
     if (s3 != null) {
@@ -647,6 +667,7 @@ class _$WebdavImpl implements Webdav {
             String url, String accessKeyId, String secretAccessKey)
         s3,
     required TResult Function(String url, String user, String password) webdav,
+    required TResult Function(String username, String password) userPassword,
   }) {
     return webdav(url, user, password);
   }
@@ -660,6 +681,7 @@ class _$WebdavImpl implements Webdav {
     TResult? Function(String url, String accessKeyId, String secretAccessKey)?
         s3,
     TResult? Function(String url, String user, String password)? webdav,
+    TResult? Function(String username, String password)? userPassword,
   }) {
     return webdav?.call(url, user, password);
   }
@@ -673,6 +695,7 @@ class _$WebdavImpl implements Webdav {
     TResult Function(String url, String accessKeyId, String secretAccessKey)?
         s3,
     TResult Function(String url, String user, String password)? webdav,
+    TResult Function(String username, String password)? userPassword,
     required TResult orElse(),
   }) {
     if (webdav != null) {
@@ -687,6 +710,7 @@ class _$WebdavImpl implements Webdav {
     required TResult Function(OAuth2 value) oauth2,
     required TResult Function(S3 value) s3,
     required TResult Function(Webdav value) webdav,
+    required TResult Function(UserPassword value) userPassword,
   }) {
     return webdav(this);
   }
@@ -697,6 +721,7 @@ class _$WebdavImpl implements Webdav {
     TResult? Function(OAuth2 value)? oauth2,
     TResult? Function(S3 value)? s3,
     TResult? Function(Webdav value)? webdav,
+    TResult? Function(UserPassword value)? userPassword,
   }) {
     return webdav?.call(this);
   }
@@ -707,6 +732,7 @@ class _$WebdavImpl implements Webdav {
     TResult Function(OAuth2 value)? oauth2,
     TResult Function(S3 value)? s3,
     TResult Function(Webdav value)? webdav,
+    TResult Function(UserPassword value)? userPassword,
     required TResult orElse(),
   }) {
     if (webdav != null) {
@@ -739,5 +765,199 @@ abstract class Webdav implements DriveProviderBackend {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WebdavImplCopyWith<_$WebdavImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UserPasswordImplCopyWith<$Res> {
+  factory _$$UserPasswordImplCopyWith(
+          _$UserPasswordImpl value, $Res Function(_$UserPasswordImpl) then) =
+      __$$UserPasswordImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String username, String password});
+}
+
+/// @nodoc
+class __$$UserPasswordImplCopyWithImpl<$Res>
+    extends _$DriveProviderBackendCopyWithImpl<$Res, _$UserPasswordImpl>
+    implements _$$UserPasswordImplCopyWith<$Res> {
+  __$$UserPasswordImplCopyWithImpl(
+      _$UserPasswordImpl _value, $Res Function(_$UserPasswordImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of DriveProviderBackend
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? username = null,
+    Object? password = null,
+  }) {
+    return _then(_$UserPasswordImpl(
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$UserPasswordImpl implements UserPassword {
+  const _$UserPasswordImpl(
+      {required this.username, required this.password, final String? $type})
+      : $type = $type ?? 'userPassword';
+
+  factory _$UserPasswordImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserPasswordImplFromJson(json);
+
+  @override
+  final String username;
+  @override
+  final String password;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
+
+  @override
+  String toString() {
+    return 'DriveProviderBackend.userPassword(username: $username, password: $password)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserPasswordImpl &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.password, password) ||
+                other.password == password));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, username, password);
+
+  /// Create a copy of DriveProviderBackend
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserPasswordImplCopyWith<_$UserPasswordImpl> get copyWith =>
+      __$$UserPasswordImplCopyWithImpl<_$UserPasswordImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(Map<String, dynamic> rCloneJson,
+            String accessToken, String refreshToken, String expiresIn)
+        oauth2,
+    required TResult Function(
+            String url, String accessKeyId, String secretAccessKey)
+        s3,
+    required TResult Function(String url, String user, String password) webdav,
+    required TResult Function(String username, String password) userPassword,
+  }) {
+    return userPassword(username, password);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
+            String refreshToken, String expiresIn)?
+        oauth2,
+    TResult? Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
+    TResult? Function(String url, String user, String password)? webdav,
+    TResult? Function(String username, String password)? userPassword,
+  }) {
+    return userPassword?.call(username, password);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
+            String refreshToken, String expiresIn)?
+        oauth2,
+    TResult Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
+    TResult Function(String url, String user, String password)? webdav,
+    TResult Function(String username, String password)? userPassword,
+    required TResult orElse(),
+  }) {
+    if (userPassword != null) {
+      return userPassword(username, password);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(OAuth2 value) oauth2,
+    required TResult Function(S3 value) s3,
+    required TResult Function(Webdav value) webdav,
+    required TResult Function(UserPassword value) userPassword,
+  }) {
+    return userPassword(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(OAuth2 value)? oauth2,
+    TResult? Function(S3 value)? s3,
+    TResult? Function(Webdav value)? webdav,
+    TResult? Function(UserPassword value)? userPassword,
+  }) {
+    return userPassword?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(OAuth2 value)? oauth2,
+    TResult Function(S3 value)? s3,
+    TResult Function(Webdav value)? webdav,
+    TResult Function(UserPassword value)? userPassword,
+    required TResult orElse(),
+  }) {
+    if (userPassword != null) {
+      return userPassword(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UserPasswordImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class UserPassword implements DriveProviderBackend {
+  const factory UserPassword(
+      {required final String username,
+      required final String password}) = _$UserPasswordImpl;
+
+  factory UserPassword.fromJson(Map<String, dynamic> json) =
+      _$UserPasswordImpl.fromJson;
+
+  String get username;
+  String get password;
+
+  /// Create a copy of DriveProviderBackend
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UserPasswordImplCopyWith<_$UserPasswordImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

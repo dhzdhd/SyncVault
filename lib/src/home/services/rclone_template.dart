@@ -20,6 +20,10 @@ final Map<DriveProvider, Map<String, String> Function(DriveProviderBackend)>
         'type': 'dropbox',
         'token': jsonEncode((payload as OAuth2).rCloneJson),
       },
+  DriveProvider.protonDrive: (DriveProviderBackend payload) => {
+        'username': (payload as UserPassword).username,
+        'password': payload.password
+      },
   DriveProvider.minio: (DriveProviderBackend payload) => {
         'type': 's3',
         'provider': 'Minio',

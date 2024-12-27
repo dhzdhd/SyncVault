@@ -51,3 +51,17 @@ Map<String, dynamic> _$$WebdavImplToJson(_$WebdavImpl instance) =>
       'password': instance.password,
       'runtimeType': instance.$type,
     };
+
+_$UserPasswordImpl _$$UserPasswordImplFromJson(Map<String, dynamic> json) =>
+    _$UserPasswordImpl(
+      username: json['username'] as String,
+      password: json['password'] as String,
+      $type: json['runtimeType'] as String?,
+    );
+
+Map<String, dynamic> _$$UserPasswordImplToJson(_$UserPasswordImpl instance) =>
+    <String, dynamic>{
+      'username': instance.username,
+      'password': instance.password,
+      'runtimeType': instance.$type,
+    };

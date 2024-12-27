@@ -8,8 +8,17 @@ sealed class DriveProviderBackendPayload with _$DriveProviderBackendPayload {
   const factory DriveProviderBackendPayload.oauth2({
     required String remoteName,
   }) = OAuth2Payload;
-  const factory DriveProviderBackendPayload.s3({required String remoteName}) =
-      S3Payload;
+  const factory DriveProviderBackendPayload.s3({
+    required String remoteName,
+    required String url,
+    required String accessKeyId,
+    required String secretAccessKey,
+  }) = S3Payload;
+  const factory DriveProviderBackendPayload.userPassword({
+    required String remoteName,
+    required String username,
+    required String password,
+  }) = UserPasswordPayload;
   const factory DriveProviderBackendPayload.webdav({
     required String remoteName,
     required String url,

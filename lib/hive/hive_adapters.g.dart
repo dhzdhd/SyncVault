@@ -178,6 +178,8 @@ class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
         return DriveProvider.minio;
       case 4:
         return DriveProvider.nextCloud;
+      case 5:
+        return DriveProvider.protonDrive;
       default:
         return DriveProvider.oneDrive;
     }
@@ -196,6 +198,8 @@ class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
         writer.writeByte(3);
       case DriveProvider.nextCloud:
         writer.writeByte(4);
+      case DriveProvider.protonDrive:
+        writer.writeByte(5);
     }
   }
 
@@ -379,15 +383,24 @@ class S3PayloadAdapter extends TypeAdapter<S3Payload> {
     };
     return S3Payload(
       remoteName: fields[0] as String,
+      url: fields[1] as String,
+      accessKeyId: fields[2] as String,
+      secretAccessKey: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, S3Payload obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.remoteName);
+      ..write(obj.remoteName)
+      ..writeByte(1)
+      ..write(obj.url)
+      ..writeByte(2)
+      ..write(obj.accessKeyId)
+      ..writeByte(3)
+      ..write(obj.secretAccessKey);
   }
 
   @override
@@ -495,6 +508,83 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is FolderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class UserPasswordAdapter extends TypeAdapter<UserPassword> {
+  @override
+  final int typeId = 12;
+
+  @override
+  UserPassword read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return UserPassword(
+      username: fields[0] as String,
+      password: fields[1] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, UserPassword obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.username)
+      ..writeByte(1)
+      ..write(obj.password);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserPasswordAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class UserPasswordPayloadAdapter extends TypeAdapter<UserPasswordPayload> {
+  @override
+  final int typeId = 13;
+
+  @override
+  UserPasswordPayload read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return UserPasswordPayload(
+      remoteName: fields[0] as String,
+      username: fields[1] as String,
+      password: fields[2] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, UserPasswordPayload obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.remoteName)
+      ..writeByte(1)
+      ..write(obj.username)
+      ..writeByte(2)
+      ..write(obj.password);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserPasswordPayloadAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

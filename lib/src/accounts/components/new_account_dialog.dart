@@ -87,55 +87,123 @@ class _NewAccountDialogWidgetState
             selected.value = e!;
           },
         ),
-        ...(selected.value.backend == Webdav
-            ? [
-                const SizedBox(
-                  height: 16,
+        ...switch (selected.value.backend) {
+          const (OAuth2) => [],
+          const (S3) => [
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: _urlController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Provider URL',
                 ),
-                TextField(
-                  controller: _urlController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Provider URL',
-                  ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: _userController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Access Key ID',
                 ),
-                const SizedBox(
-                  height: 16,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Secret Access Key',
                 ),
-                TextField(
-                  controller: _userController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'User',
-                  ),
+              ),
+            ],
+          const (UserPassword) => [
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: _userController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Username',
                 ),
-                const SizedBox(
-                  height: 16,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
                 ),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                  ),
+              ),
+            ],
+          const (Webdav) => [
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: _urlController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Provider URL',
                 ),
-              ]
-            : []),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: _userController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'User',
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
+                ),
+              ),
+            ],
+          _ => [],
+        },
         const SizedBox(height: 32),
         ElevatedButton(
           onPressed: () async {
             if (!authController.isLoading) {
               final valid = switch (selected.value.backend) {
                 const (OAuth2) => validateControllers([_remoteNameController]),
-                const (S3) => validateControllers([_remoteNameController]),
+                const (S3) => validateControllers([
+                    _remoteNameController,
+                    _urlController,
+                    _userController,
+                    _passwordController
+                  ]),
+                const (UserPassword) => validateControllers([
+                    _remoteNameController,
+                    _userController,
+                    _passwordController
+                  ]),
                 const (Webdav) => validateControllers([
                     _remoteNameController,
                     _urlController,
                     _userController,
                     _passwordController
                   ]),
-                _ => throw const GeneralError('Not valid')
+                _ => false
               };
 
               if (valid) {
@@ -143,8 +211,16 @@ class _NewAccountDialogWidgetState
                       switch (selected.value.backend) {
                         const (OAuth2) =>
                           OAuth2Payload(remoteName: _remoteNameController.text),
-                        const (S3) =>
-                          S3Payload(remoteName: _remoteNameController.text),
+                        const (UserPassword) => UserPasswordPayload(
+                            remoteName: _remoteNameController.text,
+                            username: _userController.text,
+                            password: _passwordController.text),
+                        const (S3) => S3Payload(
+                            remoteName: _remoteNameController.text,
+                            url: _urlController.text,
+                            accessKeyId: _userController.text,
+                            secretAccessKey: _passwordController.text,
+                          ),
                         const (Webdav) => WebdavPayload(
                             remoteName: _remoteNameController.text,
                             url: _urlController.text,

@@ -19,9 +19,11 @@ part 'hive_adapters.g.dart';
   AdapterSpec<OAuth2>(),
   AdapterSpec<S3>(),
   AdapterSpec<Webdav>(),
+  AdapterSpec<UserPassword>(),
   AdapterSpec<OAuth2Payload>(),
   AdapterSpec<S3Payload>(),
   AdapterSpec<WebdavPayload>(),
+  AdapterSpec<UserPasswordPayload>(),
   AdapterSpec<FolderModel>()
 ])
 class HiveAdapters {}

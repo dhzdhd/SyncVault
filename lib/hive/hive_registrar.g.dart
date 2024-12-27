@@ -17,6 +17,8 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(S3PayloadAdapter());
     registerAdapter(SettingsModelAdapter());
     registerAdapter(ThemeModeAdapter());
+    registerAdapter(UserPasswordAdapter());
+    registerAdapter(UserPasswordPayloadAdapter());
     registerAdapter(WebdavAdapter());
     registerAdapter(WebdavPayloadAdapter());
   }

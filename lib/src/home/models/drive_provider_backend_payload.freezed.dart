@@ -21,6 +21,8 @@ DriveProviderBackendPayload _$DriveProviderBackendPayloadFromJson(
       return OAuth2Payload.fromJson(json);
     case 's3':
       return S3Payload.fromJson(json);
+    case 'userPassword':
+      return UserPasswordPayload.fromJson(json);
     case 'webdav':
       return WebdavPayload.fromJson(json);
 
@@ -39,7 +41,12 @@ mixin _$DriveProviderBackendPayload {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String remoteName) oauth2,
-    required TResult Function(String remoteName) s3,
+    required TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)
+        s3,
+    required TResult Function(
+            String remoteName, String username, String password)
+        userPassword,
     required TResult Function(
             String remoteName, String url, String user, String password)
         webdav,
@@ -48,7 +55,11 @@ mixin _$DriveProviderBackendPayload {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String remoteName)? oauth2,
-    TResult? Function(String remoteName)? s3,
+    TResult? Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult? Function(String remoteName, String username, String password)?
+        userPassword,
     TResult? Function(
             String remoteName, String url, String user, String password)?
         webdav,
@@ -57,7 +68,11 @@ mixin _$DriveProviderBackendPayload {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String remoteName)? oauth2,
-    TResult Function(String remoteName)? s3,
+    TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult Function(String remoteName, String username, String password)?
+        userPassword,
     TResult Function(
             String remoteName, String url, String user, String password)?
         webdav,
@@ -68,6 +83,7 @@ mixin _$DriveProviderBackendPayload {
   TResult map<TResult extends Object?>({
     required TResult Function(OAuth2Payload value) oauth2,
     required TResult Function(S3Payload value) s3,
+    required TResult Function(UserPasswordPayload value) userPassword,
     required TResult Function(WebdavPayload value) webdav,
   }) =>
       throw _privateConstructorUsedError;
@@ -75,6 +91,7 @@ mixin _$DriveProviderBackendPayload {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(OAuth2Payload value)? oauth2,
     TResult? Function(S3Payload value)? s3,
+    TResult? Function(UserPasswordPayload value)? userPassword,
     TResult? Function(WebdavPayload value)? webdav,
   }) =>
       throw _privateConstructorUsedError;
@@ -82,6 +99,7 @@ mixin _$DriveProviderBackendPayload {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(OAuth2Payload value)? oauth2,
     TResult Function(S3Payload value)? s3,
+    TResult Function(UserPasswordPayload value)? userPassword,
     TResult Function(WebdavPayload value)? webdav,
     required TResult orElse(),
   }) =>
@@ -215,7 +233,12 @@ class _$OAuth2PayloadImpl implements OAuth2Payload {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String remoteName) oauth2,
-    required TResult Function(String remoteName) s3,
+    required TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)
+        s3,
+    required TResult Function(
+            String remoteName, String username, String password)
+        userPassword,
     required TResult Function(
             String remoteName, String url, String user, String password)
         webdav,
@@ -227,7 +250,11 @@ class _$OAuth2PayloadImpl implements OAuth2Payload {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String remoteName)? oauth2,
-    TResult? Function(String remoteName)? s3,
+    TResult? Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult? Function(String remoteName, String username, String password)?
+        userPassword,
     TResult? Function(
             String remoteName, String url, String user, String password)?
         webdav,
@@ -239,7 +266,11 @@ class _$OAuth2PayloadImpl implements OAuth2Payload {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String remoteName)? oauth2,
-    TResult Function(String remoteName)? s3,
+    TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult Function(String remoteName, String username, String password)?
+        userPassword,
     TResult Function(
             String remoteName, String url, String user, String password)?
         webdav,
@@ -256,6 +287,7 @@ class _$OAuth2PayloadImpl implements OAuth2Payload {
   TResult map<TResult extends Object?>({
     required TResult Function(OAuth2Payload value) oauth2,
     required TResult Function(S3Payload value) s3,
+    required TResult Function(UserPasswordPayload value) userPassword,
     required TResult Function(WebdavPayload value) webdav,
   }) {
     return oauth2(this);
@@ -266,6 +298,7 @@ class _$OAuth2PayloadImpl implements OAuth2Payload {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(OAuth2Payload value)? oauth2,
     TResult? Function(S3Payload value)? s3,
+    TResult? Function(UserPasswordPayload value)? userPassword,
     TResult? Function(WebdavPayload value)? webdav,
   }) {
     return oauth2?.call(this);
@@ -276,6 +309,7 @@ class _$OAuth2PayloadImpl implements OAuth2Payload {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(OAuth2Payload value)? oauth2,
     TResult Function(S3Payload value)? s3,
+    TResult Function(UserPasswordPayload value)? userPassword,
     TResult Function(WebdavPayload value)? webdav,
     required TResult orElse(),
   }) {
@@ -319,7 +353,11 @@ abstract class _$$S3PayloadImplCopyWith<$Res>
       __$$S3PayloadImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String remoteName});
+  $Res call(
+      {String remoteName,
+      String url,
+      String accessKeyId,
+      String secretAccessKey});
 }
 
 /// @nodoc
@@ -336,11 +374,26 @@ class __$$S3PayloadImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? remoteName = null,
+    Object? url = null,
+    Object? accessKeyId = null,
+    Object? secretAccessKey = null,
   }) {
     return _then(_$S3PayloadImpl(
       remoteName: null == remoteName
           ? _value.remoteName
           : remoteName // ignore: cast_nullable_to_non_nullable
+              as String,
+      url: null == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      accessKeyId: null == accessKeyId
+          ? _value.accessKeyId
+          : accessKeyId // ignore: cast_nullable_to_non_nullable
+              as String,
+      secretAccessKey: null == secretAccessKey
+          ? _value.secretAccessKey
+          : secretAccessKey // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -349,7 +402,12 @@ class __$$S3PayloadImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$S3PayloadImpl implements S3Payload {
-  const _$S3PayloadImpl({required this.remoteName, final String? $type})
+  const _$S3PayloadImpl(
+      {required this.remoteName,
+      required this.url,
+      required this.accessKeyId,
+      required this.secretAccessKey,
+      final String? $type})
       : $type = $type ?? 's3';
 
   factory _$S3PayloadImpl.fromJson(Map<String, dynamic> json) =>
@@ -357,13 +415,19 @@ class _$S3PayloadImpl implements S3Payload {
 
   @override
   final String remoteName;
+  @override
+  final String url;
+  @override
+  final String accessKeyId;
+  @override
+  final String secretAccessKey;
 
   @JsonKey(name: 'runtimeType')
   final String $type;
 
   @override
   String toString() {
-    return 'DriveProviderBackendPayload.s3(remoteName: $remoteName)';
+    return 'DriveProviderBackendPayload.s3(remoteName: $remoteName, url: $url, accessKeyId: $accessKeyId, secretAccessKey: $secretAccessKey)';
   }
 
   @override
@@ -372,12 +436,18 @@ class _$S3PayloadImpl implements S3Payload {
         (other.runtimeType == runtimeType &&
             other is _$S3PayloadImpl &&
             (identical(other.remoteName, remoteName) ||
-                other.remoteName == remoteName));
+                other.remoteName == remoteName) &&
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.accessKeyId, accessKeyId) ||
+                other.accessKeyId == accessKeyId) &&
+            (identical(other.secretAccessKey, secretAccessKey) ||
+                other.secretAccessKey == secretAccessKey));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, remoteName);
+  int get hashCode =>
+      Object.hash(runtimeType, remoteName, url, accessKeyId, secretAccessKey);
 
   /// Create a copy of DriveProviderBackendPayload
   /// with the given fields replaced by the non-null parameter values.
@@ -391,38 +461,51 @@ class _$S3PayloadImpl implements S3Payload {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String remoteName) oauth2,
-    required TResult Function(String remoteName) s3,
+    required TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)
+        s3,
+    required TResult Function(
+            String remoteName, String username, String password)
+        userPassword,
     required TResult Function(
             String remoteName, String url, String user, String password)
         webdav,
   }) {
-    return s3(remoteName);
+    return s3(remoteName, url, accessKeyId, secretAccessKey);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String remoteName)? oauth2,
-    TResult? Function(String remoteName)? s3,
+    TResult? Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult? Function(String remoteName, String username, String password)?
+        userPassword,
     TResult? Function(
             String remoteName, String url, String user, String password)?
         webdav,
   }) {
-    return s3?.call(remoteName);
+    return s3?.call(remoteName, url, accessKeyId, secretAccessKey);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String remoteName)? oauth2,
-    TResult Function(String remoteName)? s3,
+    TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult Function(String remoteName, String username, String password)?
+        userPassword,
     TResult Function(
             String remoteName, String url, String user, String password)?
         webdav,
     required TResult orElse(),
   }) {
     if (s3 != null) {
-      return s3(remoteName);
+      return s3(remoteName, url, accessKeyId, secretAccessKey);
     }
     return orElse();
   }
@@ -432,6 +515,7 @@ class _$S3PayloadImpl implements S3Payload {
   TResult map<TResult extends Object?>({
     required TResult Function(OAuth2Payload value) oauth2,
     required TResult Function(S3Payload value) s3,
+    required TResult Function(UserPasswordPayload value) userPassword,
     required TResult Function(WebdavPayload value) webdav,
   }) {
     return s3(this);
@@ -442,6 +526,7 @@ class _$S3PayloadImpl implements S3Payload {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(OAuth2Payload value)? oauth2,
     TResult? Function(S3Payload value)? s3,
+    TResult? Function(UserPasswordPayload value)? userPassword,
     TResult? Function(WebdavPayload value)? webdav,
   }) {
     return s3?.call(this);
@@ -452,6 +537,7 @@ class _$S3PayloadImpl implements S3Payload {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(OAuth2Payload value)? oauth2,
     TResult Function(S3Payload value)? s3,
+    TResult Function(UserPasswordPayload value)? userPassword,
     TResult Function(WebdavPayload value)? webdav,
     required TResult orElse(),
   }) {
@@ -470,19 +556,246 @@ class _$S3PayloadImpl implements S3Payload {
 }
 
 abstract class S3Payload implements DriveProviderBackendPayload {
-  const factory S3Payload({required final String remoteName}) = _$S3PayloadImpl;
+  const factory S3Payload(
+      {required final String remoteName,
+      required final String url,
+      required final String accessKeyId,
+      required final String secretAccessKey}) = _$S3PayloadImpl;
 
   factory S3Payload.fromJson(Map<String, dynamic> json) =
       _$S3PayloadImpl.fromJson;
 
   @override
   String get remoteName;
+  String get url;
+  String get accessKeyId;
+  String get secretAccessKey;
 
   /// Create a copy of DriveProviderBackendPayload
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$S3PayloadImplCopyWith<_$S3PayloadImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UserPasswordPayloadImplCopyWith<$Res>
+    implements $DriveProviderBackendPayloadCopyWith<$Res> {
+  factory _$$UserPasswordPayloadImplCopyWith(_$UserPasswordPayloadImpl value,
+          $Res Function(_$UserPasswordPayloadImpl) then) =
+      __$$UserPasswordPayloadImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String remoteName, String username, String password});
+}
+
+/// @nodoc
+class __$$UserPasswordPayloadImplCopyWithImpl<$Res>
+    extends _$DriveProviderBackendPayloadCopyWithImpl<$Res,
+        _$UserPasswordPayloadImpl>
+    implements _$$UserPasswordPayloadImplCopyWith<$Res> {
+  __$$UserPasswordPayloadImplCopyWithImpl(_$UserPasswordPayloadImpl _value,
+      $Res Function(_$UserPasswordPayloadImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of DriveProviderBackendPayload
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? remoteName = null,
+    Object? username = null,
+    Object? password = null,
+  }) {
+    return _then(_$UserPasswordPayloadImpl(
+      remoteName: null == remoteName
+          ? _value.remoteName
+          : remoteName // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$UserPasswordPayloadImpl implements UserPasswordPayload {
+  const _$UserPasswordPayloadImpl(
+      {required this.remoteName,
+      required this.username,
+      required this.password,
+      final String? $type})
+      : $type = $type ?? 'userPassword';
+
+  factory _$UserPasswordPayloadImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserPasswordPayloadImplFromJson(json);
+
+  @override
+  final String remoteName;
+  @override
+  final String username;
+  @override
+  final String password;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
+
+  @override
+  String toString() {
+    return 'DriveProviderBackendPayload.userPassword(remoteName: $remoteName, username: $username, password: $password)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserPasswordPayloadImpl &&
+            (identical(other.remoteName, remoteName) ||
+                other.remoteName == remoteName) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.password, password) ||
+                other.password == password));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, remoteName, username, password);
+
+  /// Create a copy of DriveProviderBackendPayload
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserPasswordPayloadImplCopyWith<_$UserPasswordPayloadImpl> get copyWith =>
+      __$$UserPasswordPayloadImplCopyWithImpl<_$UserPasswordPayloadImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String remoteName) oauth2,
+    required TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)
+        s3,
+    required TResult Function(
+            String remoteName, String username, String password)
+        userPassword,
+    required TResult Function(
+            String remoteName, String url, String user, String password)
+        webdav,
+  }) {
+    return userPassword(remoteName, username, password);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String remoteName)? oauth2,
+    TResult? Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult? Function(String remoteName, String username, String password)?
+        userPassword,
+    TResult? Function(
+            String remoteName, String url, String user, String password)?
+        webdav,
+  }) {
+    return userPassword?.call(remoteName, username, password);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String remoteName)? oauth2,
+    TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult Function(String remoteName, String username, String password)?
+        userPassword,
+    TResult Function(
+            String remoteName, String url, String user, String password)?
+        webdav,
+    required TResult orElse(),
+  }) {
+    if (userPassword != null) {
+      return userPassword(remoteName, username, password);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(OAuth2Payload value) oauth2,
+    required TResult Function(S3Payload value) s3,
+    required TResult Function(UserPasswordPayload value) userPassword,
+    required TResult Function(WebdavPayload value) webdav,
+  }) {
+    return userPassword(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(OAuth2Payload value)? oauth2,
+    TResult? Function(S3Payload value)? s3,
+    TResult? Function(UserPasswordPayload value)? userPassword,
+    TResult? Function(WebdavPayload value)? webdav,
+  }) {
+    return userPassword?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(OAuth2Payload value)? oauth2,
+    TResult Function(S3Payload value)? s3,
+    TResult Function(UserPasswordPayload value)? userPassword,
+    TResult Function(WebdavPayload value)? webdav,
+    required TResult orElse(),
+  }) {
+    if (userPassword != null) {
+      return userPassword(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UserPasswordPayloadImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class UserPasswordPayload implements DriveProviderBackendPayload {
+  const factory UserPasswordPayload(
+      {required final String remoteName,
+      required final String username,
+      required final String password}) = _$UserPasswordPayloadImpl;
+
+  factory UserPasswordPayload.fromJson(Map<String, dynamic> json) =
+      _$UserPasswordPayloadImpl.fromJson;
+
+  @override
+  String get remoteName;
+  String get username;
+  String get password;
+
+  /// Create a copy of DriveProviderBackendPayload
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UserPasswordPayloadImplCopyWith<_$UserPasswordPayloadImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -596,7 +909,12 @@ class _$WebdavPayloadImpl implements WebdavPayload {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String remoteName) oauth2,
-    required TResult Function(String remoteName) s3,
+    required TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)
+        s3,
+    required TResult Function(
+            String remoteName, String username, String password)
+        userPassword,
     required TResult Function(
             String remoteName, String url, String user, String password)
         webdav,
@@ -608,7 +926,11 @@ class _$WebdavPayloadImpl implements WebdavPayload {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String remoteName)? oauth2,
-    TResult? Function(String remoteName)? s3,
+    TResult? Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult? Function(String remoteName, String username, String password)?
+        userPassword,
     TResult? Function(
             String remoteName, String url, String user, String password)?
         webdav,
@@ -620,7 +942,11 @@ class _$WebdavPayloadImpl implements WebdavPayload {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String remoteName)? oauth2,
-    TResult Function(String remoteName)? s3,
+    TResult Function(String remoteName, String url, String accessKeyId,
+            String secretAccessKey)?
+        s3,
+    TResult Function(String remoteName, String username, String password)?
+        userPassword,
     TResult Function(
             String remoteName, String url, String user, String password)?
         webdav,
@@ -637,6 +963,7 @@ class _$WebdavPayloadImpl implements WebdavPayload {
   TResult map<TResult extends Object?>({
     required TResult Function(OAuth2Payload value) oauth2,
     required TResult Function(S3Payload value) s3,
+    required TResult Function(UserPasswordPayload value) userPassword,
     required TResult Function(WebdavPayload value) webdav,
   }) {
     return webdav(this);
@@ -647,6 +974,7 @@ class _$WebdavPayloadImpl implements WebdavPayload {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(OAuth2Payload value)? oauth2,
     TResult? Function(S3Payload value)? s3,
+    TResult? Function(UserPasswordPayload value)? userPassword,
     TResult? Function(WebdavPayload value)? webdav,
   }) {
     return webdav?.call(this);
@@ -657,6 +985,7 @@ class _$WebdavPayloadImpl implements WebdavPayload {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(OAuth2Payload value)? oauth2,
     TResult Function(S3Payload value)? s3,
+    TResult Function(UserPasswordPayload value)? userPassword,
     TResult Function(WebdavPayload value)? webdav,
     required TResult orElse(),
   }) {

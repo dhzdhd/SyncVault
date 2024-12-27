@@ -21,6 +21,10 @@ sealed class DriveProviderBackend with _$DriveProviderBackend {
     required String user,
     required String password,
   }) = Webdav;
+  const factory DriveProviderBackend.userPassword({
+    required String username,
+    required String password,
+  }) = UserPassword;
 
   factory DriveProviderBackend.fromJson(Map<String, Object?> json) =>
       _$DriveProviderBackendFromJson(json);

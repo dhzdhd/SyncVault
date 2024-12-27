@@ -21,12 +21,36 @@ Map<String, dynamic> _$$OAuth2PayloadImplToJson(_$OAuth2PayloadImpl instance) =>
 _$S3PayloadImpl _$$S3PayloadImplFromJson(Map<String, dynamic> json) =>
     _$S3PayloadImpl(
       remoteName: json['remoteName'] as String,
+      url: json['url'] as String,
+      accessKeyId: json['accessKeyId'] as String,
+      secretAccessKey: json['secretAccessKey'] as String,
       $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$S3PayloadImplToJson(_$S3PayloadImpl instance) =>
     <String, dynamic>{
       'remoteName': instance.remoteName,
+      'url': instance.url,
+      'accessKeyId': instance.accessKeyId,
+      'secretAccessKey': instance.secretAccessKey,
+      'runtimeType': instance.$type,
+    };
+
+_$UserPasswordPayloadImpl _$$UserPasswordPayloadImplFromJson(
+        Map<String, dynamic> json) =>
+    _$UserPasswordPayloadImpl(
+      remoteName: json['remoteName'] as String,
+      username: json['username'] as String,
+      password: json['password'] as String,
+      $type: json['runtimeType'] as String?,
+    );
+
+Map<String, dynamic> _$$UserPasswordPayloadImplToJson(
+        _$UserPasswordPayloadImpl instance) =>
+    <String, dynamic>{
+      'remoteName': instance.remoteName,
+      'username': instance.username,
+      'password': instance.password,
       'runtimeType': instance.$type,
     };
 

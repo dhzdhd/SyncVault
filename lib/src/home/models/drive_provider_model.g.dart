@@ -27,6 +27,7 @@ const _$DriveProviderEnumMap = {
   DriveProvider.oneDrive: 'oneDrive',
   DriveProvider.googleDrive: 'googleDrive',
   DriveProvider.dropBox: 'dropBox',
+  DriveProvider.protonDrive: 'protonDrive',
   DriveProvider.minio: 'minio',
   DriveProvider.nextCloud: 'nextCloud',
 };
