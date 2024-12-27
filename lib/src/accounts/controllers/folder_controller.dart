@@ -1,8 +1,10 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -72,6 +74,14 @@ class UploadDeleteController extends _$UploadDeleteController {
       ),
     );
   }
+}
+
+@riverpod
+Future<Option<FileModel>> treeView(Ref ref, FolderModel folderModel) async {
+  return RCloneDriveService()
+      .treeView(model: folderModel)
+      .match((l) => throw l, (r) => r)
+      .run();
 }
 
 @riverpod

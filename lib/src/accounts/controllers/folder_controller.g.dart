@@ -6,6 +6,157 @@ part of 'folder_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$treeViewHash() => r'db2c11df99380dda253ad536a68c2d46a956cbf8';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// See also [treeView].
+@ProviderFor(treeView)
+const treeViewProvider = TreeViewFamily();
+
+/// See also [treeView].
+class TreeViewFamily extends Family<AsyncValue<Option<FileModel>>> {
+  /// See also [treeView].
+  const TreeViewFamily();
+
+  /// See also [treeView].
+  TreeViewProvider call(
+    FolderModel folderModel,
+  ) {
+    return TreeViewProvider(
+      folderModel,
+    );
+  }
+
+  @override
+  TreeViewProvider getProviderOverride(
+    covariant TreeViewProvider provider,
+  ) {
+    return call(
+      provider.folderModel,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'treeViewProvider';
+}
+
+/// See also [treeView].
+class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
+  /// See also [treeView].
+  TreeViewProvider(
+    FolderModel folderModel,
+  ) : this._internal(
+          (ref) => treeView(
+            ref as TreeViewRef,
+            folderModel,
+          ),
+          from: treeViewProvider,
+          name: r'treeViewProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$treeViewHash,
+          dependencies: TreeViewFamily._dependencies,
+          allTransitiveDependencies: TreeViewFamily._allTransitiveDependencies,
+          folderModel: folderModel,
+        );
+
+  TreeViewProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.folderModel,
+  }) : super.internal();
+
+  final FolderModel folderModel;
+
+  @override
+  Override overrideWith(
+    FutureOr<Option<FileModel>> Function(TreeViewRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: TreeViewProvider._internal(
+        (ref) => create(ref as TreeViewRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        folderModel: folderModel,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Option<FileModel>> createElement() {
+    return _TreeViewProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TreeViewProvider && other.folderModel == folderModel;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, folderModel.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin TreeViewRef on AutoDisposeFutureProviderRef<Option<FileModel>> {
+  /// The parameter `folderModel` of this provider.
+  FolderModel get folderModel;
+}
+
+class _TreeViewProviderElement
+    extends AutoDisposeFutureProviderElement<Option<FileModel>>
+    with TreeViewRef {
+  _TreeViewProviderElement(super.provider);
+
+  @override
+  FolderModel get folderModel => (origin as TreeViewProvider).folderModel;
+}
+
 String _$createFolderControllerHash() =>
     r'b513469fba662de0597f73ed22ff6f17563fff88';
 

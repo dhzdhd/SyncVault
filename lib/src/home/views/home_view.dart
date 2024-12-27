@@ -14,6 +14,7 @@ import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
+import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
 import 'package:syncvault/src/home/components/tree_widget.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:system_tray/system_tray.dart';
@@ -223,6 +224,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     ),
                   ),
                   child: Column(
+                    spacing: 8.0,
                     children: [
                       Container(
                         decoration: BoxDecoration(
@@ -339,129 +341,93 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Account',
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                            Text(
-                              e.remoteName,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Auto sync',
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                            SizedBox(
-                              height: 30,
-                              child: FittedBox(
-                                fit: BoxFit.fill,
-                                child: Switch(
-                                  value: e.isAutoSync,
-                                  onChanged: (val) =>
-                                      folderNotifier.toggleAutoSync(e),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Two way sync',
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                            SizedBox(
-                              height: 30,
-                              child: FittedBox(
-                                fit: BoxFit.fill,
-                                child: Switch(
-                                  value: e.isTwoWaySync,
-                                  onChanged: (val) =>
-                                      folderNotifier.toggleTwoWaySync(e),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Delete on sync',
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                            SizedBox(
-                              height: 30,
-                              child: FittedBox(
-                                fit: BoxFit.fill,
-                                child: Switch(
-                                  value: e.isDeletionEnabled,
-                                  onChanged: (val) =>
-                                      folderNotifier.toggleDeletionOnSync(e),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: fileModels[index].isSome(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: ConstrainedBox(
-                            constraints:
-                                const BoxConstraints(minWidth: double.infinity),
-                            child: Text(
-                              'Tree View',
-                              textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Account',
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                        ),
+                          Text(
+                            e.remoteName,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          )
+                        ],
                       ),
-                      if (fileModels[index].isSome())
-                        Visibility(
-                          visible: fileModels[index].isSome(),
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxHeight: 150.0),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Ink(
-                                padding: const EdgeInsets.only(
-                                    left: 16.0, right: 16.0),
-                                decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).dialogBackgroundColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: TreeWidget(
-                                    files: fileModels[index]
-                                        .toNullable()!
-                                        .children),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Auto sync',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          SizedBox(
+                            height: 30,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Switch(
+                                value: e.isAutoSync,
+                                onChanged: (val) =>
+                                    folderNotifier.toggleAutoSync(e),
                               ),
                             ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Two way sync',
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                        )
+                          SizedBox(
+                            height: 30,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Switch(
+                                value: e.isTwoWaySync,
+                                onChanged: (val) =>
+                                    folderNotifier.toggleTwoWaySync(e),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Delete on sync',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          SizedBox(
+                            height: 30,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Switch(
+                                value: e.isDeletionEnabled,
+                                onChanged: (val) =>
+                                    folderNotifier.toggleDeletionOnSync(e),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (ctx) => TreeViewSheetWidget(
+                                folderModel: e,
+                              ),
+                            );
+                          },
+                          child: const Text('Tree view'),
+                        ),
+                      )
                     ],
                   ),
                 ),
