@@ -11,7 +11,11 @@ sealed class DriveProviderBackend with _$DriveProviderBackend {
     required String refreshToken,
     required String expiresIn,
   }) = OAuth2;
-  const factory DriveProviderBackend.s3() = S3;
+  const factory DriveProviderBackend.s3({
+    required String url,
+    required String accessKeyId,
+    required String secretAccessKey,
+  }) = S3;
   const factory DriveProviderBackend.webdav({
     required String url,
     required String user,

@@ -259,12 +259,27 @@ class S3Adapter extends TypeAdapter<S3> {
 
   @override
   S3 read(BinaryReader reader) {
-    return S3();
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return S3(
+      url: fields[0] as String,
+      accessKeyId: fields[1] as String,
+      secretAccessKey: fields[2] as String,
+    );
   }
 
   @override
   void write(BinaryWriter writer, S3 obj) {
-    writer.writeByte(0);
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.url)
+      ..writeByte(1)
+      ..write(obj.accessKeyId)
+      ..writeByte(2)
+      ..write(obj.secretAccessKey);
   }
 
   @override

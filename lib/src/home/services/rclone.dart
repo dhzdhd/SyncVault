@@ -469,7 +469,6 @@ class RCloneDriveService {
 
         return none();
       }, (err, stackTrace) => err.segregateError()));
-
       return fileModel;
     });
   }

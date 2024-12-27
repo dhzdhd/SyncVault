@@ -8,8 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/injectable.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
-import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
-import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import '../controllers/settings_controller.dart';
 
 class SettingsView extends ConsumerWidget {
@@ -13,7 +12,6 @@ class SettingsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
-    final folderNotifier = ref.read(folderProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -115,9 +113,9 @@ class SettingsView extends ConsumerWidget {
                               builder: (context) => AlertDialog(
                                 title: const Text('Are you sure'),
                                 actions: [
-                                  OutlinedButton(
+                                  const OutlinedButton(
                                     onPressed: null,
-                                    child: const Text('Yes'),
+                                    child: Text('Yes'),
                                   ),
                                   FilledButton(
                                     onPressed: () {
@@ -129,6 +127,7 @@ class SettingsView extends ConsumerWidget {
                               ),
                             );
                           },
+                          // TODO:
                           child: const Text(
                             'Download RClone',
                             style: TextStyle(fontSize: 18),

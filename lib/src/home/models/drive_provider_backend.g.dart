@@ -24,10 +24,16 @@ Map<String, dynamic> _$$OAuth2ImplToJson(_$OAuth2Impl instance) =>
     };
 
 _$S3Impl _$$S3ImplFromJson(Map<String, dynamic> json) => _$S3Impl(
+      url: json['url'] as String,
+      accessKeyId: json['accessKeyId'] as String,
+      secretAccessKey: json['secretAccessKey'] as String,
       $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$S3ImplToJson(_$S3Impl instance) => <String, dynamic>{
+      'url': instance.url,
+      'accessKeyId': instance.accessKeyId,
+      'secretAccessKey': instance.secretAccessKey,
       'runtimeType': instance.$type,
     };
 

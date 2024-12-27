@@ -20,6 +20,14 @@ final Map<DriveProvider, Map<String, String> Function(DriveProviderBackend)>
         'type': 'dropbox',
         'token': jsonEncode((payload as OAuth2).rCloneJson),
       },
+  DriveProvider.minio: (DriveProviderBackend payload) => {
+        'type': 's3',
+        'provider': 'Minio',
+        'access_key_id': (payload as S3).accessKeyId,
+        'secret_access_key': payload.secretAccessKey,
+        'endpoint': payload.url,
+        'acl': 'bucket-owner-full-control'
+      },
   DriveProvider.nextCloud: (DriveProviderBackend payload) => {
         'type': 'webdav',
         'url': (payload as Webdav).url,

@@ -67,8 +67,14 @@ types:
         index: 3
   S3:
     typeId: 6
-    nextIndex: 0
-    fields: {}
+    nextIndex: 3
+    fields:
+      url:
+        index: 0
+      accessKeyId:
+        index: 1
+      secretAccessKey:
+        index: 2
   Webdav:
     typeId: 7
     nextIndex: 3

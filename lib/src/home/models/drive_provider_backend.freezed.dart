@@ -39,7 +39,9 @@ mixin _$DriveProviderBackend {
     required TResult Function(Map<String, dynamic> rCloneJson,
             String accessToken, String refreshToken, String expiresIn)
         oauth2,
-    required TResult Function() s3,
+    required TResult Function(
+            String url, String accessKeyId, String secretAccessKey)
+        s3,
     required TResult Function(String url, String user, String password) webdav,
   }) =>
       throw _privateConstructorUsedError;
@@ -48,7 +50,8 @@ mixin _$DriveProviderBackend {
     TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
-    TResult? Function()? s3,
+    TResult? Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
     TResult? Function(String url, String user, String password)? webdav,
   }) =>
       throw _privateConstructorUsedError;
@@ -57,7 +60,8 @@ mixin _$DriveProviderBackend {
     TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
-    TResult Function()? s3,
+    TResult Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
     TResult Function(String url, String user, String password)? webdav,
     required TResult orElse(),
   }) =>
@@ -239,7 +243,9 @@ class _$OAuth2Impl implements OAuth2 {
     required TResult Function(Map<String, dynamic> rCloneJson,
             String accessToken, String refreshToken, String expiresIn)
         oauth2,
-    required TResult Function() s3,
+    required TResult Function(
+            String url, String accessKeyId, String secretAccessKey)
+        s3,
     required TResult Function(String url, String user, String password) webdav,
   }) {
     return oauth2(rCloneJson, accessToken, refreshToken, expiresIn);
@@ -251,7 +257,8 @@ class _$OAuth2Impl implements OAuth2 {
     TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
-    TResult? Function()? s3,
+    TResult? Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
     TResult? Function(String url, String user, String password)? webdav,
   }) {
     return oauth2?.call(rCloneJson, accessToken, refreshToken, expiresIn);
@@ -263,7 +270,8 @@ class _$OAuth2Impl implements OAuth2 {
     TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
-    TResult Function()? s3,
+    TResult Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
     TResult Function(String url, String user, String password)? webdav,
     required TResult orElse(),
   }) {
@@ -340,6 +348,8 @@ abstract class OAuth2 implements DriveProviderBackend {
 abstract class _$$S3ImplCopyWith<$Res> {
   factory _$$S3ImplCopyWith(_$S3Impl value, $Res Function(_$S3Impl) then) =
       __$$S3ImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String url, String accessKeyId, String secretAccessKey});
 }
 
 /// @nodoc
@@ -351,33 +361,82 @@ class __$$S3ImplCopyWithImpl<$Res>
 
   /// Create a copy of DriveProviderBackend
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? url = null,
+    Object? accessKeyId = null,
+    Object? secretAccessKey = null,
+  }) {
+    return _then(_$S3Impl(
+      url: null == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      accessKeyId: null == accessKeyId
+          ? _value.accessKeyId
+          : accessKeyId // ignore: cast_nullable_to_non_nullable
+              as String,
+      secretAccessKey: null == secretAccessKey
+          ? _value.secretAccessKey
+          : secretAccessKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$S3Impl implements S3 {
-  const _$S3Impl({final String? $type}) : $type = $type ?? 's3';
+  const _$S3Impl(
+      {required this.url,
+      required this.accessKeyId,
+      required this.secretAccessKey,
+      final String? $type})
+      : $type = $type ?? 's3';
 
   factory _$S3Impl.fromJson(Map<String, dynamic> json) =>
       _$$S3ImplFromJson(json);
+
+  @override
+  final String url;
+  @override
+  final String accessKeyId;
+  @override
+  final String secretAccessKey;
 
   @JsonKey(name: 'runtimeType')
   final String $type;
 
   @override
   String toString() {
-    return 'DriveProviderBackend.s3()';
+    return 'DriveProviderBackend.s3(url: $url, accessKeyId: $accessKeyId, secretAccessKey: $secretAccessKey)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$S3Impl);
+        (other.runtimeType == runtimeType &&
+            other is _$S3Impl &&
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.accessKeyId, accessKeyId) ||
+                other.accessKeyId == accessKeyId) &&
+            (identical(other.secretAccessKey, secretAccessKey) ||
+                other.secretAccessKey == secretAccessKey));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, url, accessKeyId, secretAccessKey);
+
+  /// Create a copy of DriveProviderBackend
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$S3ImplCopyWith<_$S3Impl> get copyWith =>
+      __$$S3ImplCopyWithImpl<_$S3Impl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -385,10 +444,12 @@ class _$S3Impl implements S3 {
     required TResult Function(Map<String, dynamic> rCloneJson,
             String accessToken, String refreshToken, String expiresIn)
         oauth2,
-    required TResult Function() s3,
+    required TResult Function(
+            String url, String accessKeyId, String secretAccessKey)
+        s3,
     required TResult Function(String url, String user, String password) webdav,
   }) {
-    return s3();
+    return s3(url, accessKeyId, secretAccessKey);
   }
 
   @override
@@ -397,10 +458,11 @@ class _$S3Impl implements S3 {
     TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
-    TResult? Function()? s3,
+    TResult? Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
     TResult? Function(String url, String user, String password)? webdav,
   }) {
-    return s3?.call();
+    return s3?.call(url, accessKeyId, secretAccessKey);
   }
 
   @override
@@ -409,12 +471,13 @@ class _$S3Impl implements S3 {
     TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
-    TResult Function()? s3,
+    TResult Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
     TResult Function(String url, String user, String password)? webdav,
     required TResult orElse(),
   }) {
     if (s3 != null) {
-      return s3();
+      return s3(url, accessKeyId, secretAccessKey);
     }
     return orElse();
   }
@@ -462,9 +525,22 @@ class _$S3Impl implements S3 {
 }
 
 abstract class S3 implements DriveProviderBackend {
-  const factory S3() = _$S3Impl;
+  const factory S3(
+      {required final String url,
+      required final String accessKeyId,
+      required final String secretAccessKey}) = _$S3Impl;
 
   factory S3.fromJson(Map<String, dynamic> json) = _$S3Impl.fromJson;
+
+  String get url;
+  String get accessKeyId;
+  String get secretAccessKey;
+
+  /// Create a copy of DriveProviderBackend
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$S3ImplCopyWith<_$S3Impl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -567,7 +643,9 @@ class _$WebdavImpl implements Webdav {
     required TResult Function(Map<String, dynamic> rCloneJson,
             String accessToken, String refreshToken, String expiresIn)
         oauth2,
-    required TResult Function() s3,
+    required TResult Function(
+            String url, String accessKeyId, String secretAccessKey)
+        s3,
     required TResult Function(String url, String user, String password) webdav,
   }) {
     return webdav(url, user, password);
@@ -579,7 +657,8 @@ class _$WebdavImpl implements Webdav {
     TResult? Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
-    TResult? Function()? s3,
+    TResult? Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
     TResult? Function(String url, String user, String password)? webdav,
   }) {
     return webdav?.call(url, user, password);
@@ -591,7 +670,8 @@ class _$WebdavImpl implements Webdav {
     TResult Function(Map<String, dynamic> rCloneJson, String accessToken,
             String refreshToken, String expiresIn)?
         oauth2,
-    TResult Function()? s3,
+    TResult Function(String url, String accessKeyId, String secretAccessKey)?
+        s3,
     TResult Function(String url, String user, String password)? webdav,
     required TResult orElse(),
   }) {
