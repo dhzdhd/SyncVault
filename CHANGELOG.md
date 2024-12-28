@@ -12,16 +12,27 @@ For currently known issues, check the [GitHub issues tab](https://github.com/dhz
 ### Additions
 
 - Added RClone as the primary backend and deprecated the old implementation.
-- Added tree view per folder.
-- Added two way sync option per folder (Not yet implemented).
-- Added logo and icons
-- Added clear local folder cache to settings (Use for debugging purposes only)
-- Added account information to each folder card
+- Added new introduction screen to setup permissions (Android) or download RClone (Windows).
+- Added new providers - Minio, NextCloud, ProtonDrive.
+- Added hide and exit options to system tray on Windows.
+- Added reset settings and clear local storage buttons to settings.
+- (Dev only) Added Docker compose files to quickly spin up Nextcloud and Minio instances for testing.
+
+### Fixes / Improvements
+
+- Improved tree view implementation; moved it from folder card to a bottom sheet (UI still needs improvement).
+- Moved all hive box files (.lock & .hive files) from Documents to the SyncVault folder in Documents to avoid clutter.
+- Improved padding of list views in both the home page and accounts page to avoid UI blocking by floating button.
+- Improved the drive provider names. 
 
 ### Temporary removals (due to new backend)
 
 - Drive information dialog does not work.
-
+- RClone download in settings page does not work.
+- Minio folder creation does not work as intended (as it does support nested file paths, only buckets).
+- None of the switches in the expanded cards in home page work (auto sync, two way sync, delete on sync).
+- Folder deletion does not work as intended.
+- New accounts (remotes) are not yet automatically detected by supplied rclone config file.
 
 ## 0.4.0 | 18-06-2024 (Prerelease)
 

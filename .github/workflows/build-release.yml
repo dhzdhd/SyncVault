@@ -22,10 +22,6 @@ jobs:
         with:
           channel: "stable"
 
-      - name: Create env file
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
-
       - name: Build Android apps
         run: |
           flutter pub get
@@ -52,10 +48,6 @@ jobs:
         with:
           channel: "stable"
 
-      - name: Create env file
-        run: |
-          Write-Output "${{ secrets.ENV_FILE }}" | Out-File .env
-
       - name: Build Windows
         run: |
           flutter config --enable-windows-desktop
@@ -73,7 +65,7 @@ jobs:
     needs: [build-android, build-windows]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get all build outputs
         uses: actions/download-artifact@v3

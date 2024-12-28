@@ -11,15 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-
-      - name: Create env file
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Install dependencies
         run: flutter pub get
