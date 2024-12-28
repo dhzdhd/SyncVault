@@ -2,26 +2,19 @@
 
 ## About
 
-A cross-platform (Windows and Android) app to sync your local files in the background with the drive of your choice.
-Linux support is also planned.
-
-## Note for android users
-
-SyncVault supports only media files (.png, .jpg, etc) by default.
-To enable support for all types, do the following
-
-- Go to `Settings` > `Apps` > `Special app access` > `All files access` > `syncvault`
-- Enable `Allow access to manage all files`
+A cross-platform (Windows, Android, MacOS and Linux) app to sync your local files in the background with the drive of your choice using [RClone](https://rclone.org/).
+Linux and MacOS builds are planned.
 
 ## Support
 
-- Windows
+- Windows & Android
   - OneDrive
+  - Google Drive
   - Dropbox
-  - Google Drive
-- Android
-  - OneDrive
-  - Google Drive
+  - Minio
+  - Nextcloud
+  - Proton Drive
+- Linux, MacOS - no build yet
 
 ## Status
 

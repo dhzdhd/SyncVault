@@ -5,10 +5,6 @@ For currently known issues, check the [GitHub issues tab](https://github.com/dhz
 
 ## 0.5.1 | 28-12-2024 (Prerelease)
 
-### Note
-
-- OneDrive & Google Drive will be given the most importance from this build onwards to finalize the workflow.
-
 ### Additions
 
 - Added RClone as the primary backend and deprecated the old implementation.
