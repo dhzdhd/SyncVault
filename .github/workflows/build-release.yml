@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: win
-          path: build\windows\runner\Release\*
+          path: build\windows\x64\runner\Release\*
 
   release:
     runs-on: ubuntu-latest
