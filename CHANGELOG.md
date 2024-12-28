@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
-## 0.5.0 | 28-12-2024 (Prerelease)
+## 0.5.1 | 28-12-2024 (Prerelease)
 
 ### Note
 
@@ -23,7 +23,7 @@ For currently known issues, check the [GitHub issues tab](https://github.com/dhz
 - Improved tree view implementation; moved it from folder card to a bottom sheet (UI still needs improvement).
 - Moved all hive box files (.lock & .hive files) from Documents to the SyncVault folder in Documents to avoid clutter.
 - Improved padding of list views in both the home page and accounts page to avoid UI blocking by floating button.
-- Improved the drive provider names. 
+- Improved the drive provider names.
 
 ### Temporary removals (due to new backend)
 
