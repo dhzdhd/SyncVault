@@ -31,7 +31,8 @@ class AccountView extends ConsumerWidget {
         },
         child: const Icon(Icons.add),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 64.0),
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: authInfo
@@ -72,7 +73,7 @@ class AccountView extends ConsumerWidget {
                                     maxLines: 1,
                                   ),
                                   Text(
-                                    e.provider.name.capitalize(),
+                                    e.provider.providerName,
                                     style:
                                         MediaQuery.of(context).size.width < 500
                                             ? textTheme.bodyMedium

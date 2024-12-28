@@ -5,12 +5,14 @@ import 'package:path_provider/path_provider.dart';
 
 final debugLogger = Logger();
 final fileLogger = Logger(
-  printer: PrettyPrinter(printTime: true, colors: false),
+  printer:
+      PrettyPrinter(dateTimeFormat: DateTimeFormat.dateAndTime, colors: false),
   filter: CustomLogFilter(),
   output: FileLogOutput(),
 );
 final sentryLogger = Logger(
-  printer: PrettyPrinter(printTime: true, colors: false),
+  printer:
+      PrettyPrinter(dateTimeFormat: DateTimeFormat.dateAndTime, colors: false),
   filter: CustomLogFilter(),
   output: SentryLogOutput(),
 );

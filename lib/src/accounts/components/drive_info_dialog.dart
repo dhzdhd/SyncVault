@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class DriveInfoDialogWidget extends HookConsumerWidget {
@@ -19,14 +18,14 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final driveInfoController = ref.watch(driveInfoControllerProvider(model));
+    // final driveInfoController = ref.watch(driveInfoControllerProvider(model));
 
-    return SimpleDialog(
+    return const SimpleDialog(
       // title: switch (driveInfoController) {
       //   AsyncError() => const Text('Error'),
       //   _ => const Text('Drive info'),
       // },
-      contentPadding: const EdgeInsets.all(24),
+      contentPadding: EdgeInsets.all(24),
       // TODO: Switch to native pattern matching
       // children: driveInfoController.when(
       //   data: (model) {

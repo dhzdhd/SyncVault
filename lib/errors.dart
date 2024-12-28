@@ -10,7 +10,9 @@ extension ErrorSegregation on Object {
       final error = this as Error;
       debugLogger.e(error.toString());
       debugLogger.e(error.stackTrace);
-    } catch (err) {}
+    } catch (err) {
+      debugLogger.i('Error passed cannot be type cast to Error');
+    }
 
     // TODO: Log errors and return readable errors
     return switch (this) {

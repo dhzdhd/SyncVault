@@ -77,7 +77,7 @@ class _NewAccountDialogWidgetState
               .map(
                 (e) => DropdownMenuItem(
                   value: e,
-                  child: Text(e.name.capitalize()),
+                  child: Text(e.providerName),
                 ),
               )
               .toList(),

@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
+## 0.5.0 | 28-12-2024 (Prerelease)
+
+### Note
+
+- OneDrive & Google Drive will be given the most importance from this build onwards to finalize the workflow.
+
+### Additions
+
+- Added RClone as the primary backend and deprecated the old implementation.
+- Added tree view per folder.
+- Added two way sync option per folder (Not yet implemented).
+- Added logo and icons
+- Added clear local folder cache to settings (Use for debugging purposes only)
+- Added account information to each folder card
+
+### Temporary removals (due to new backend)
+
+- Drive information dialog does not work.
+
+
 ## 0.4.0 | 18-06-2024 (Prerelease)
 
 ### Note

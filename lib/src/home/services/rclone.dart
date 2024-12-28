@@ -30,7 +30,7 @@ enum DriveProvider {
   // TODO: Change logo (make bigger)
   protonDrive('Proton Drive', 'assets/logos/protondrive.svg', UserPassword),
   minio('Minio', 'assets/logos/minio.svg', S3),
-  nextCloud('Webdav', 'assets/logos/nextcloud.svg', Webdav);
+  nextCloud('NextCloud', 'assets/logos/nextcloud.svg', Webdav);
 
   Option<Map<String, String>> template({
     required DriveProviderBackend backend,
@@ -326,6 +326,7 @@ class RCloneDriveService {
       final configArgs = await $(utils.getConfigArgs());
 
       await $(TaskEither.tryCatch(() async {
+        // TODO: S3 only allows bucket name, not path
         final process = await Process.run(execPath, [
           ...configArgs,
           'mkdir',
