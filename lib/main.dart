@@ -14,7 +14,6 @@ import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:workmanager/workmanager.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:syncvault/hive/hive_registrar.g.dart';
 
 import 'src/app.dart';
@@ -57,8 +56,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   GetIt.I.registerSingleton<Dio>(Dio());
-
-  await dotenv.load();
 
   await Hive.initFlutter();
   Hive.registerAdapters();
