@@ -41,7 +41,7 @@ enum DriveProvider {
   }
 
   const DriveProvider(
-      this.displayName, this.providerName, this.providerIcon, this.backend);
+      this.providerName, this.displayName, this.providerIcon, this.backend);
 
   final String providerName;
   final String displayName;
@@ -124,6 +124,7 @@ class RCloneAuthService {
               () async {
                 payload = payload as OAuth2Payload;
 
+                print(driveProvider.providerName);
                 final process = await Process.start(
                   execPath,
                   [
