@@ -24,13 +24,14 @@ import 'package:ini_v2/ini.dart';
 final _dio = GetIt.I<Dio>();
 
 enum DriveProvider {
-  oneDrive('OneDrive', 'assets/logos/onedrive.svg', OAuth2),
-  googleDrive('Google Drive', 'assets/logos/gdrive.svg', OAuth2),
-  dropBox('Dropbox', 'assets/logos/dropbox.svg', OAuth2),
+  oneDrive('onedrive', 'OneDrive', 'assets/logos/onedrive.svg', OAuth2),
+  googleDrive('drive', 'Google Drive', 'assets/logos/gdrive.svg', OAuth2),
+  dropBox('dropbox', 'Dropbox', 'assets/logos/dropbox.svg', OAuth2),
   // TODO: Change logo (make bigger)
-  protonDrive('Proton Drive', 'assets/logos/protondrive.svg', UserPassword),
-  minio('Minio', 'assets/logos/minio.svg', S3),
-  nextCloud('NextCloud', 'assets/logos/nextcloud.svg', Webdav);
+  protonDrive('protondrive', 'Proton Drive', 'assets/logos/protondrive.svg',
+      UserPassword),
+  minio('s3', 'Minio', 'assets/logos/minio.svg', S3),
+  nextCloud('webdav', 'NextCloud', 'assets/logos/nextcloud.svg', Webdav);
 
   Option<Map<String, String>> template({
     required DriveProviderBackend backend,
@@ -39,9 +40,11 @@ enum DriveProvider {
         .map((func) => func(backend));
   }
 
-  const DriveProvider(this.providerName, this.providerIcon, this.backend);
+  const DriveProvider(
+      this.displayName, this.providerName, this.providerIcon, this.backend);
 
   final String providerName;
+  final String displayName;
   final String providerIcon;
   // TODO: Somehow relate to DriveProviderBackend without switch case
   final Type backend;
@@ -156,6 +159,8 @@ class RCloneAuthService {
                 // Wait for process to finish
                 await process.exitCode;
 
+                print(output);
+                print(errorOutput);
                 final Map<String, dynamic> authJson = jsonDecode(
                     RegExp(r'\{.+\}').stringMatch(output.toString())!);
                 if (authJson

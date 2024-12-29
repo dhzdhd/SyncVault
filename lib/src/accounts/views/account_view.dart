@@ -73,7 +73,7 @@ class AccountView extends ConsumerWidget {
                                     maxLines: 1,
                                   ),
                                   Text(
-                                    e.provider.providerName,
+                                    e.provider.displayName,
                                     style:
                                         MediaQuery.of(context).size.width < 500
                                             ? textTheme.bodyMedium

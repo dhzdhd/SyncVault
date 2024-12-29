@@ -172,7 +172,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Tooltip(
-                        message: e.provider.providerName,
+                        message: e.provider.displayName,
                         child: SvgPicture.asset(
                           e.provider.providerIcon,
                           width: 25,
