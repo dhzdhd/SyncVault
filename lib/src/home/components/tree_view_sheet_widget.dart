@@ -3,6 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/home/components/tree_widget.dart';
 
 class TreeViewSheetWidget extends ConsumerWidget {
@@ -14,27 +15,45 @@ class TreeViewSheetWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final treeState = ref.watch(treeViewProvider(folderModel));
 
-    return switch (treeState) {
-      AsyncError() => const Text('Error'),
-      AsyncLoading() => const Text('Loading'),
-      AsyncData(:final value) => switch (value) {
-          Some(:final value) => SizedBox(
-              height: 200,
-              width: 2500,
-              child: Center(
-                child: Column(
+    return SizedBox.expand(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: switch (treeState) {
+          AsyncError() => const Center(
+              child: Text(
+                'Error',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+          AsyncLoading() => const Center(
+              child: CircularProgressWidget(
+                size: 300,
+                isInfinite: true,
+              ),
+            ),
+          AsyncData(:final value) => switch (value) {
+              Some(:final value) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Flexible(child: TreeWidget(files: value.children)),
+                    Flexible(child: TreeWidget(file: value)),
                   ],
                 ),
+              None() => const Center(
+                  child: Text(
+                    'No data found',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
+            },
+          _ => const Center(
+              child: Text(
+                'Error',
+                style: TextStyle(fontSize: 24),
               ),
-            ),
-          None() => const Text('Error')
+            ), // TODO: Why are 3 states not exhausting AsyncValue?
         },
-      _ =>
-        const Text('bruh'), // TODO: Why are 3 states not exhausting AsyncValue?
-    };
+      ),
+    );
   }
 }

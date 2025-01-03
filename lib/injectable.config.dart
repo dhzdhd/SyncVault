@@ -25,10 +25,10 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
-    gh.singleton<_i748.IntroService>(() => _i748.IntroService());
     gh.singleton<_i379.RCloneUtils>(() => _i379.RCloneUtils());
     gh.singleton<_i379.RCloneAuthService>(() => _i379.RCloneAuthService());
     gh.singleton<_i379.RCloneDriveService>(() => _i379.RCloneDriveService());
+    gh.singleton<_i748.IntroService>(() => _i748.IntroService());
     return this;
   }
 }

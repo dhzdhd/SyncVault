@@ -1,55 +1,43 @@
+import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
 
-class TreeWidget extends ConsumerStatefulWidget {
-  const TreeWidget({super.key, required this.files});
+typedef Tuple = (String name, String size, bool isFolder);
 
-  final List<FileModel> files;
+class TreeWidget extends ConsumerWidget {
+  const TreeWidget({super.key, required this.file});
 
-  @override
-  ConsumerState<TreeWidget> createState() => _TreeWidgetState();
-}
+  final FileModel file;
 
-class _TreeWidgetState extends ConsumerState<TreeWidget> {
-  late final TreeController<FileModel> _treeController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _treeController = TreeController<FileModel>(
-      roots: widget.files,
-      childrenProvider: (FileModel node) => node.children,
+  TreeNode<Tuple> wrapWithTreeNode(FileModel fileModel) {
+    final treeNode = TreeNode(
+      data: (fileModel.name, fileModel.size, fileModel.children.isNotEmpty),
+      key: fileModel.hashCode.toString(),
     );
+
+    final children = fileModel.children.map((x) => wrapWithTreeNode(x));
+    return treeNode..addAll(children);
   }
 
   @override
-  void dispose() {
-    _treeController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedTreeView<FileModel>(
-      treeController: _treeController,
-      nodeBuilder: (BuildContext context, TreeEntry<FileModel> entry) {
-        return InkWell(
-          onTap: () => _treeController.toggleExpansion(entry.node),
-          child: TreeIndentation(
-            entry: entry,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-              child: Text(
-                entry.node.name,
-                style: Theme.of(context).textTheme.bodyLarge,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return CustomScrollView(
+      slivers: [
+        SliverTreeView.simpleTyped<Tuple, TreeNode<Tuple>>(
+          tree: wrapWithTreeNode(file),
+          showRootNode: false,
+          builder: (context, node) {
+            return ListTile(
+              leading: Icon(
+                node.data!.$3 ? Icons.folder : Icons.file_copy,
               ),
-            ),
-          ),
-        );
-      },
+              title: Text(node.data!.$1),
+              subtitle: Text('${node.data!.$2} bytes'),
+            );
+          },
+        ),
+      ],
     );
   }
 }
