@@ -3,6 +3,7 @@ import 'package:hive_ce/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
@@ -27,7 +28,7 @@ class AuthController extends _$AuthController {
 }
 
 @riverpod
-Future<String> driveInfoController(
+Future<DriveInfoModel> driveInfoController(
   Ref ref,
   DriveProviderModel model,
 ) async {
@@ -79,15 +80,11 @@ class Auth extends _$Auth {
     await _box.delete(model.remoteName);
   }
 
-  Future<String> getDriveInfo(
+  Future<DriveInfoModel> getDriveInfo(
     DriveProviderModel model,
   ) async {
-    // TODO: Create union or use drive info model itself with nullable fields
-    return switch (model.provider) {
-      DriveProvider.dropBox => '',
-      DriveProvider.oneDrive => '',
-      DriveProvider.googleDrive => '',
-      _ => '',
-    };
+    final result = await RCloneAuthService().driveInfo(model: model).run();
+
+    return result.match((err) => throw err, (t) => t);
   }
 }

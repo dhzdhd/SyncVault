@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class DriveInfoDialogWidget extends HookConsumerWidget {
@@ -16,117 +19,132 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
     }
   }
 
+  double getPercent(DriveInfoModel driveInfoModel) {
+    return driveInfoModel.usedStorage.isSome() &&
+            driveInfoModel.totalStorage.isSome()
+        ? driveInfoModel.usedStorage.toNullable()! /
+            (driveInfoModel.totalStorage.toNullable()! + 0.0001)
+        : 0;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final driveInfoController = ref.watch(driveInfoControllerProvider(model));
+    final driveInfoController = ref.watch(driveInfoControllerProvider(model));
 
-    return const SimpleDialog(
-      // title: switch (driveInfoController) {
-      //   AsyncError() => const Text('Error'),
-      //   _ => const Text('Drive info'),
-      // },
-      contentPadding: EdgeInsets.all(24),
-      // TODO: Switch to native pattern matching
-      // children: driveInfoController.when(
-      //   data: (model) {
-      //     return [
-      //       Padding(
-      //         padding: const EdgeInsets.only(bottom: 16.0),
-      //         child: Center(
-      //           child: Stack(
-      //             children: [
-      //               SizedBox(
-      //                 width: 100,
-      //                 height: 100,
-      //                 child: Center(
-      //                   child: Text(
-      //                     '${(model.usedStorage / model.totalStorage * 100).toStringAsFixed(2)} %\nused',
-      //                     textAlign: TextAlign.center,
-      //                     style: const TextStyle(
-      //                       fontWeight: FontWeight.w600,
-      //                       fontSize: 17,
-      //                     ),
-      //                   ),
-      //                 ),
-      //               ),
-      //               SizedBox(
-      //                 width: 100,
-      //                 height: 100,
-      //                 child: CircularProgressIndicator(
-      //                   backgroundColor:
-      //                       Theme.of(context).scaffoldBackgroundColor,
-      //                   value: model.usedStorage / model.totalStorage,
-      //                 ),
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //       Card(
-      //         child: Padding(
-      //           padding: const EdgeInsets.all(8.0),
-      //           child: Column(
-      //             children: [
-      //               Text(
-      //                 'Storage used',
-      //                 style: Theme.of(context).textTheme.titleMedium,
-      //               ),
-      //               Text(
-      //                 getSize(model.usedStorage),
-      //                 style: Theme.of(context).textTheme.headlineSmall,
-      //               )
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //       Card(
-      //         child: Padding(
-      //           padding: const EdgeInsets.all(8.0),
-      //           child: Column(
-      //             children: [
-      //               Text(
-      //                 'Storage remaining',
-      //                 style: Theme.of(context).textTheme.titleMedium,
-      //               ),
-      //               Text(
-      //                 getSize(model.remainingStorage),
-      //                 style: Theme.of(context).textTheme.headlineSmall,
-      //               )
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //       Card(
-      //         child: Padding(
-      //           padding: const EdgeInsets.all(8.0),
-      //           child: Column(
-      //             children: [
-      //               Text(
-      //                 'Total storage',
-      //                 style: Theme.of(context).textTheme.titleMedium,
-      //               ),
-      //               Text(
-      //                 getSize(model.totalStorage),
-      //                 style: Theme.of(context).textTheme.headlineSmall,
-      //               )
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     ];
-      //   },
-      //   loading: () => [
-      //     const Center(
-      //       child: CircularProgressIndicator(),
-      //     )
-      //   ],
-      //   error: (e, st) => [
-      //     Padding(
-      //       padding: const EdgeInsets.all(8.0),
-      //       child: Text(e.segregateError().message),
-      //     ),
-      //   ],
-      // ),
+    return SimpleDialog(
+      title: switch (driveInfoController) {
+        AsyncError() => const Text('Error'),
+        _ => const Text('Drive info'),
+      },
+      contentPadding: const EdgeInsets.all(24),
+      children: switch (driveInfoController) {
+        AsyncData(:final value) => [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Center(
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: Center(
+                        child: Text(
+                          // Avoid zero div error
+                          '${(getPercent(value) * 100).toStringAsFixed(2)} %\nused',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 100,
+                      height: 100,
+                      // TODO: Use custom progress widget
+                      child: CircularProgressIndicator(
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                        value:
+                            // Avoid zero div error
+                            getPercent(value),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: value.usedStorage.isSome(),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Storage used',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        getSize(value.usedStorage.toNullable() ?? 0),
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: value.remainingStorage.isSome(),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Storage remaining',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        getSize(value.remainingStorage.toNullable() ?? 0),
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: value.totalStorage.isSome(),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Total storage',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        getSize(value.totalStorage.toNullable() ?? 0),
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        AsyncError(:final error) => [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(error.segregateError().message),
+            ),
+          ],
+        AsyncLoading() => [],
+        _ => [], // TODO:
+      },
     );
   }
 }

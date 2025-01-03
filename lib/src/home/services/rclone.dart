@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/log.dart';
+import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
@@ -313,6 +314,22 @@ class RCloneAuthService {
       );
 
       return model;
+    });
+  }
+
+  var _a = 4;
+  TaskEither<AppError, DriveInfoModel> driveInfo(
+      {required DriveProviderModel model}) {
+    return TaskEither<AppError, DriveInfoModel>.Do(($) async {
+      return await $(TaskEither.tryCatch(
+        () async {
+          return DriveInfoModel(
+              remainingStorage: some(0),
+              usedStorage: some(0),
+              totalStorage: some(0));
+        },
+        (err, stackTrace) => err.segregateError(),
+      ));
     });
   }
 }

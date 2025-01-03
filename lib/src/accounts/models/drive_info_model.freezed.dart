@@ -16,9 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$DriveInfoModel {
-  int get remainingStorage => throw _privateConstructorUsedError;
-  int get usedStorage => throw _privateConstructorUsedError;
-  int get totalStorage => throw _privateConstructorUsedError;
+  Option<double> get remainingStorage => throw _privateConstructorUsedError;
+  Option<double> get usedStorage => throw _privateConstructorUsedError;
+  Option<double> get totalStorage => throw _privateConstructorUsedError;
 
   /// Create a copy of DriveInfoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -33,7 +33,10 @@ abstract class $DriveInfoModelCopyWith<$Res> {
           DriveInfoModel value, $Res Function(DriveInfoModel) then) =
       _$DriveInfoModelCopyWithImpl<$Res, DriveInfoModel>;
   @useResult
-  $Res call({int remainingStorage, int usedStorage, int totalStorage});
+  $Res call(
+      {Option<double> remainingStorage,
+      Option<double> usedStorage,
+      Option<double> totalStorage});
 }
 
 /// @nodoc
@@ -59,15 +62,15 @@ class _$DriveInfoModelCopyWithImpl<$Res, $Val extends DriveInfoModel>
       remainingStorage: null == remainingStorage
           ? _value.remainingStorage
           : remainingStorage // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Option<double>,
       usedStorage: null == usedStorage
           ? _value.usedStorage
           : usedStorage // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Option<double>,
       totalStorage: null == totalStorage
           ? _value.totalStorage
           : totalStorage // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Option<double>,
     ) as $Val);
   }
 }
@@ -80,7 +83,10 @@ abstract class _$$DriveInfoModelImplCopyWith<$Res>
       __$$DriveInfoModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int remainingStorage, int usedStorage, int totalStorage});
+  $Res call(
+      {Option<double> remainingStorage,
+      Option<double> usedStorage,
+      Option<double> totalStorage});
 }
 
 /// @nodoc
@@ -104,15 +110,15 @@ class __$$DriveInfoModelImplCopyWithImpl<$Res>
       remainingStorage: null == remainingStorage
           ? _value.remainingStorage
           : remainingStorage // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Option<double>,
       usedStorage: null == usedStorage
           ? _value.usedStorage
           : usedStorage // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Option<double>,
       totalStorage: null == totalStorage
           ? _value.totalStorage
           : totalStorage // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Option<double>,
     ));
   }
 }
@@ -128,11 +134,11 @@ class _$DriveInfoModelImpl
       required this.totalStorage});
 
   @override
-  final int remainingStorage;
+  final Option<double> remainingStorage;
   @override
-  final int usedStorage;
+  final Option<double> usedStorage;
   @override
-  final int totalStorage;
+  final Option<double> totalStorage;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -178,16 +184,16 @@ class _$DriveInfoModelImpl
 
 abstract class _DriveInfoModel implements DriveInfoModel {
   const factory _DriveInfoModel(
-      {required final int remainingStorage,
-      required final int usedStorage,
-      required final int totalStorage}) = _$DriveInfoModelImpl;
+      {required final Option<double> remainingStorage,
+      required final Option<double> usedStorage,
+      required final Option<double> totalStorage}) = _$DriveInfoModelImpl;
 
   @override
-  int get remainingStorage;
+  Option<double> get remainingStorage;
   @override
-  int get usedStorage;
+  Option<double> get usedStorage;
   @override
-  int get totalStorage;
+  Option<double> get totalStorage;
 
   /// Create a copy of DriveInfoModel
   /// with the given fields replaced by the non-null parameter values.

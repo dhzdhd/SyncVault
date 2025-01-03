@@ -7,7 +7,7 @@ part of 'auth_controller.dart';
 // **************************************************************************
 
 String _$driveInfoControllerHash() =>
-    r'e174789338ab7feb57ef9ccea64120138c54a9e5';
+    r'd64cf2eb4fdae981c745650d7bae50e588c15f3c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -35,7 +35,7 @@ class _SystemHash {
 const driveInfoControllerProvider = DriveInfoControllerFamily();
 
 /// See also [driveInfoController].
-class DriveInfoControllerFamily extends Family<AsyncValue<String>> {
+class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
   /// See also [driveInfoController].
   const DriveInfoControllerFamily();
 
@@ -73,7 +73,8 @@ class DriveInfoControllerFamily extends Family<AsyncValue<String>> {
 }
 
 /// See also [driveInfoController].
-class DriveInfoControllerProvider extends AutoDisposeFutureProvider<String> {
+class DriveInfoControllerProvider
+    extends AutoDisposeFutureProvider<DriveInfoModel> {
   /// See also [driveInfoController].
   DriveInfoControllerProvider(
     DriveProviderModel model,
@@ -108,7 +109,7 @@ class DriveInfoControllerProvider extends AutoDisposeFutureProvider<String> {
 
   @override
   Override overrideWith(
-    FutureOr<String> Function(DriveInfoControllerRef provider) create,
+    FutureOr<DriveInfoModel> Function(DriveInfoControllerRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -125,7 +126,7 @@ class DriveInfoControllerProvider extends AutoDisposeFutureProvider<String> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<String> createElement() {
+  AutoDisposeFutureProviderElement<DriveInfoModel> createElement() {
     return _DriveInfoControllerProviderElement(this);
   }
 
@@ -145,13 +146,13 @@ class DriveInfoControllerProvider extends AutoDisposeFutureProvider<String> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin DriveInfoControllerRef on AutoDisposeFutureProviderRef<String> {
+mixin DriveInfoControllerRef on AutoDisposeFutureProviderRef<DriveInfoModel> {
   /// The parameter `model` of this provider.
   DriveProviderModel get model;
 }
 
 class _DriveInfoControllerProviderElement
-    extends AutoDisposeFutureProviderElement<String>
+    extends AutoDisposeFutureProviderElement<DriveInfoModel>
     with DriveInfoControllerRef {
   _DriveInfoControllerProviderElement(super.provider);
 
@@ -175,7 +176,7 @@ final authControllerProvider =
 );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'f4e9a6a45b0866c138452207d2777eeb6f917bdd';
+String _$authHash() => r'521bf23849673eae56964d362c9a36050fad2238';
 
 /// See also [Auth].
 @ProviderFor(Auth)
