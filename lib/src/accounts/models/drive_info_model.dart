@@ -9,8 +9,8 @@ part 'drive_info_model.freezed.dart';
 @freezed
 class DriveInfoModel with _$DriveInfoModel {
   const factory DriveInfoModel({
-    required Option<double> remainingStorage,
-    required Option<double> usedStorage,
-    required Option<double> totalStorage,
+    required Option<int> remainingStorage,
+    required Option<int> usedStorage,
+    required Option<int> totalStorage,
   }) = _DriveInfoModel;
 }

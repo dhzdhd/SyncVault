@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
+import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class DriveInfoDialogWidget extends HookConsumerWidget {
@@ -50,7 +51,7 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
                       child: Center(
                         child: Text(
                           // Avoid zero div error
-                          '${(getPercent(value) * 100).toStringAsFixed(2)} %\nused',
+                          '${(getPercent(value) * 100).toStringAsFixed(0)}%\nused',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
@@ -142,7 +143,9 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
               child: Text(error.segregateError().message),
             ),
           ],
-        AsyncLoading() => [],
+        AsyncLoading() => [
+            const CircularProgressWidget(size: 300, isInfinite: true)
+          ],
         _ => [], // TODO:
       },
     );

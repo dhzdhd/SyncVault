@@ -85,6 +85,12 @@ class Auth extends _$Auth {
   ) async {
     final result = await RCloneAuthService().driveInfo(model: model).run();
 
-    return result.match((err) => throw err, (t) => t);
+    return result.match(
+      (err) => throw err,
+      (t) => t.match(
+        () => throw const GeneralError('Could not fetch drive info'),
+        (s) => s,
+      ),
+    );
   }
 }

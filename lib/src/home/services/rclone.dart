@@ -317,16 +317,44 @@ class RCloneAuthService {
     });
   }
 
-  var _a = 4;
-  TaskEither<AppError, DriveInfoModel> driveInfo(
+  TaskEither<AppError, Option<DriveInfoModel>> driveInfo(
       {required DriveProviderModel model}) {
-    return TaskEither<AppError, DriveInfoModel>.Do(($) async {
+    final utils = RCloneUtils();
+
+    return TaskEither<AppError, Option<DriveInfoModel>>.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
+
       return await $(TaskEither.tryCatch(
         () async {
-          return DriveInfoModel(
-              remainingStorage: some(0),
-              usedStorage: some(0),
-              totalStorage: some(0));
+          final process = await Process.run(
+            execPath,
+            [
+              ...configArgs,
+              'about',
+              '--json',
+              '--full',
+              '${model.remoteName}:'
+            ],
+          );
+
+          if (process.stderr.toString().trim().isNotEmpty) {
+            debugLogger.e(process.stderr.toString());
+          }
+
+          final output = process.stdout.toString();
+
+          if (output.trim().isEmpty) {
+            return none();
+          }
+
+          final json = jsonDecode(output);
+
+          return some(DriveInfoModel(
+            remainingStorage: Option.fromNullable(json['free']),
+            usedStorage: Option.fromNullable(json['used']),
+            totalStorage: Option.fromNullable(json['total']),
+          ));
         },
         (err, stackTrace) => err.segregateError(),
       ));
@@ -356,7 +384,7 @@ class RCloneDriveService {
           '${model.remoteName}:/$remoteParentPath$folderName'
         ]);
 
-        if (process.stderr.toString().trim() != '') {
+        if (process.stderr.toString().trim().isNotEmpty) {
           debugLogger.e(process.stderr);
         }
 
@@ -396,8 +424,8 @@ class RCloneDriveService {
           '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
         ]);
 
-        if (process.stderr.toString().trim() != '') {
-          debugLogger.e(process.stderr.runtimeType);
+        if (process.stderr.toString().trim().isNotEmpty) {
+          debugLogger.e(process.stderr.toString());
         }
 
         return ();
@@ -425,8 +453,8 @@ class RCloneDriveService {
           '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
         ]);
 
-        if (process.stderr.toString().trim() != '') {
-          debugLogger.e(process.stderr.runtimeType);
+        if (process.stderr.toString().trim().isNotEmpty) {
+          debugLogger.e(process.stderr.toString());
         }
 
         return ();
@@ -457,8 +485,8 @@ class RCloneDriveService {
           '${model.remoteName}:/${model.remoteParentPath}${model.folderName}'
         ]);
 
-        if (process.stderr.toString().trim() != '') {
-          debugLogger.e(process.stderr.runtimeType);
+        if (process.stderr.toString().trim().isNotEmpty) {
+          debugLogger.e(process.stderr.toString());
         }
 
         final List<List<String>> matches = [];

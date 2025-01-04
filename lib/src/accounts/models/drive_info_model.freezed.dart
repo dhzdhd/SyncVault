@@ -16,9 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$DriveInfoModel {
-  Option<double> get remainingStorage => throw _privateConstructorUsedError;
-  Option<double> get usedStorage => throw _privateConstructorUsedError;
-  Option<double> get totalStorage => throw _privateConstructorUsedError;
+  Option<int> get remainingStorage => throw _privateConstructorUsedError;
+  Option<int> get usedStorage => throw _privateConstructorUsedError;
+  Option<int> get totalStorage => throw _privateConstructorUsedError;
 
   /// Create a copy of DriveInfoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -34,9 +34,9 @@ abstract class $DriveInfoModelCopyWith<$Res> {
       _$DriveInfoModelCopyWithImpl<$Res, DriveInfoModel>;
   @useResult
   $Res call(
-      {Option<double> remainingStorage,
-      Option<double> usedStorage,
-      Option<double> totalStorage});
+      {Option<int> remainingStorage,
+      Option<int> usedStorage,
+      Option<int> totalStorage});
 }
 
 /// @nodoc
@@ -62,15 +62,15 @@ class _$DriveInfoModelCopyWithImpl<$Res, $Val extends DriveInfoModel>
       remainingStorage: null == remainingStorage
           ? _value.remainingStorage
           : remainingStorage // ignore: cast_nullable_to_non_nullable
-              as Option<double>,
+              as Option<int>,
       usedStorage: null == usedStorage
           ? _value.usedStorage
           : usedStorage // ignore: cast_nullable_to_non_nullable
-              as Option<double>,
+              as Option<int>,
       totalStorage: null == totalStorage
           ? _value.totalStorage
           : totalStorage // ignore: cast_nullable_to_non_nullable
-              as Option<double>,
+              as Option<int>,
     ) as $Val);
   }
 }
@@ -84,9 +84,9 @@ abstract class _$$DriveInfoModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {Option<double> remainingStorage,
-      Option<double> usedStorage,
-      Option<double> totalStorage});
+      {Option<int> remainingStorage,
+      Option<int> usedStorage,
+      Option<int> totalStorage});
 }
 
 /// @nodoc
@@ -110,15 +110,15 @@ class __$$DriveInfoModelImplCopyWithImpl<$Res>
       remainingStorage: null == remainingStorage
           ? _value.remainingStorage
           : remainingStorage // ignore: cast_nullable_to_non_nullable
-              as Option<double>,
+              as Option<int>,
       usedStorage: null == usedStorage
           ? _value.usedStorage
           : usedStorage // ignore: cast_nullable_to_non_nullable
-              as Option<double>,
+              as Option<int>,
       totalStorage: null == totalStorage
           ? _value.totalStorage
           : totalStorage // ignore: cast_nullable_to_non_nullable
-              as Option<double>,
+              as Option<int>,
     ));
   }
 }
@@ -134,11 +134,11 @@ class _$DriveInfoModelImpl
       required this.totalStorage});
 
   @override
-  final Option<double> remainingStorage;
+  final Option<int> remainingStorage;
   @override
-  final Option<double> usedStorage;
+  final Option<int> usedStorage;
   @override
-  final Option<double> totalStorage;
+  final Option<int> totalStorage;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -184,16 +184,16 @@ class _$DriveInfoModelImpl
 
 abstract class _DriveInfoModel implements DriveInfoModel {
   const factory _DriveInfoModel(
-      {required final Option<double> remainingStorage,
-      required final Option<double> usedStorage,
-      required final Option<double> totalStorage}) = _$DriveInfoModelImpl;
+      {required final Option<int> remainingStorage,
+      required final Option<int> usedStorage,
+      required final Option<int> totalStorage}) = _$DriveInfoModelImpl;
 
   @override
-  Option<double> get remainingStorage;
+  Option<int> get remainingStorage;
   @override
-  Option<double> get usedStorage;
+  Option<int> get usedStorage;
   @override
-  Option<double> get totalStorage;
+  Option<int> get totalStorage;
 
   /// Create a copy of DriveInfoModel
   /// with the given fields replaced by the non-null parameter values.

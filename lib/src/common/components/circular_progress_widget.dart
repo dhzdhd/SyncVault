@@ -35,32 +35,25 @@ class _CircularProgressWidgetState extends State<CircularProgressWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: widget.size,
-          height: widget.size,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              CircularProgressIndicator(
-                value: widget.isInfinite ? null : controller.value,
-                strokeWidth: 3.0,
-              ),
-              Visibility(
-                visible: !widget.isInfinite,
-                child: Text(
-                  '${(controller.value * 100).toInt()}%',
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              )
-            ],
+    return SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CircularProgressIndicator(
+            value: widget.isInfinite ? null : controller.value,
+            strokeWidth: 3.0,
           ),
-        ),
-        const SizedBox(height: 20),
-      ],
+          Visibility(
+            visible: !widget.isInfinite,
+            child: Text(
+              '${(controller.value * 100).toInt()}%',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
