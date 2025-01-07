@@ -1,0 +1,5 @@
+*.png binary
+*.svg binary
+*.ai binary
+*.ico binary
+* eol=crlf
