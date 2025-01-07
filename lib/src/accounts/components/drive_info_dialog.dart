@@ -140,7 +140,7 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
         AsyncError(:final error) => [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(error.segregateError().message),
+              child: Text(error.handleError().message),
             ),
           ],
         AsyncLoading() => [

@@ -43,7 +43,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
       createFolderControllerProvider,
       (prev, state) {
         if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(state.error!.segregateError().message);
+          context.showErrorSnackBar(state.error!.handleError().message);
         }
       },
     );

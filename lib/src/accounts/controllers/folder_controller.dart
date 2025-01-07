@@ -228,6 +228,6 @@ class Folder extends _$Folder {
       await _box.clear();
 
       return ();
-    }, (error, stackTrace) => error.segregateError());
+    }, (error, stackTrace) => error.handleError());
   }
 }

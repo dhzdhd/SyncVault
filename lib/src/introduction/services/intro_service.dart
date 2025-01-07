@@ -45,7 +45,7 @@ class IntroService {
     return Either.tryCatch(() {
       _box.put(introSettingsKey, model);
       return ();
-    }, (err, stackTrace) => err.segregateError());
+    }, (err, stackTrace) => err.handleError());
   }
 
   Future<File> getRCloneExec() async {
@@ -117,7 +117,7 @@ class IntroService {
 
       yield* progressStreamController.stream.map((val) => Right(val));
     } catch (err) {
-      yield Left(err.segregateError());
+      yield Left(err.handleError());
     } finally {
       progressStreamController.close();
     }

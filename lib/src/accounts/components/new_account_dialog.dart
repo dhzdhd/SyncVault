@@ -55,7 +55,7 @@ class _NewAccountDialogWidgetState
       authControllerProvider,
       (prev, state) {
         if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(state.error!.segregateError().message);
+          context.showErrorSnackBar(state.error!.handleError().message);
         }
       },
     );

@@ -8,7 +8,6 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
-import 'package:syncvault/helpers.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
@@ -26,7 +25,6 @@ enum DriveProvider {
   oneDrive('onedrive', 'OneDrive', 'assets/logos/onedrive.svg', OAuth2),
   googleDrive('drive', 'Google Drive', 'assets/logos/gdrive.svg', OAuth2),
   dropBox('dropbox', 'Dropbox', 'assets/logos/dropbox.svg', OAuth2),
-  // TODO: Change logo (make bigger)
   protonDrive('protondrive', 'Proton Drive', 'assets/logos/protondrive.svg',
       UserPassword),
   minio('s3', 'Minio', 'assets/logos/minio.svg', S3),
@@ -69,24 +67,14 @@ class RCloneUtils {
         throw UnimplementedError('This platform is not supported yet');
       }
     }, (err, stackTrace) {
-      debugLogger.e(stackTrace);
-      return err.segregateError();
+      return err.handleError();
     });
   }
 
   TaskEither<AppError, File> getConfig() {
     return TaskEither.tryCatch(() async {
-      late final File configFile;
-
-      if (PlatformExtension.isDesktop) {
-        final docDir = await getApplicationDocumentsDirectory();
-        configFile = File('${docDir.path}/SyncVault/rclone.conf');
-      } else if (PlatformExtension.isMobile) {
-        final docDir = await getApplicationDocumentsDirectory();
-        configFile = File('${docDir.path}/SyncVault/rclone.conf');
-      } else {
-        throw const GeneralError('Platform not supported');
-      }
+      final docDir = await getApplicationDocumentsDirectory();
+      final configFile = File('${docDir.path}/SyncVault/rclone.conf');
 
       if (!(await configFile.exists())) {
         await configFile.create(recursive: true);
@@ -94,8 +82,7 @@ class RCloneUtils {
 
       return configFile;
     }, (err, stackTrace) {
-      debugLogger.e(stackTrace);
-      return err.segregateError();
+      return err.handleError();
     });
   }
 
@@ -187,7 +174,7 @@ class RCloneAuthService {
               },
               (err, stackTrace) {
                 debugLogger.e(stackTrace);
-                return err.segregateError();
+                return err.handleError();
               },
             ),
           ),
@@ -210,7 +197,7 @@ class RCloneAuthService {
               },
               (err, stackTrace) {
                 debugLogger.e(stackTrace);
-                return err.segregateError();
+                return err.handleError();
               },
             ),
           ),
@@ -237,7 +224,7 @@ class RCloneAuthService {
               },
               (err, stackTrace) {
                 debugLogger.e(stackTrace);
-                return err.segregateError();
+                return err.handleError();
               },
             ),
           ),
@@ -265,7 +252,7 @@ class RCloneAuthService {
               },
               (err, stackTrace) {
                 debugLogger.e(stackTrace);
-                return err.segregateError();
+                return err.handleError();
               },
             ),
           ),
@@ -307,7 +294,7 @@ class RCloneAuthService {
 
             await configFile.writeAsString(iniConfig.toString());
           },
-          (err, stackTrace) => err.segregateError(),
+          (err, stackTrace) => err.handleError(),
         ),
       );
 
@@ -354,7 +341,7 @@ class RCloneAuthService {
             totalStorage: Option.fromNullable(json['total']),
           ));
         },
-        (err, stackTrace) => err.segregateError(),
+        (err, stackTrace) => err.handleError(),
       ));
     });
   }
@@ -387,7 +374,7 @@ class RCloneDriveService {
         }
 
         return ();
-      }, (err, stackTrace) => err.segregateError()));
+      }, (err, stackTrace) => err.handleError()));
 
       final folderModel = FolderModel(
         remoteName: model.remoteName,
@@ -427,7 +414,7 @@ class RCloneDriveService {
         }
 
         return ();
-      }, (err, stackTrace) => err.segregateError()));
+      }, (err, stackTrace) => err.handleError()));
 
       return res;
     });
@@ -456,7 +443,7 @@ class RCloneDriveService {
         }
 
         return ();
-      }, (err, stackTrace) => err.segregateError()));
+      }, (err, stackTrace) => err.handleError()));
 
       return res;
     });
@@ -570,7 +557,7 @@ class RCloneDriveService {
         }
 
         return none();
-      }, (err, stackTrace) => err.segregateError()));
+      }, (err, stackTrace) => err.handleError()));
       return fileModel;
     });
   }

@@ -68,7 +68,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       );
                   debugPrint('Success');
                 } catch (e) {
-                  debugPrint(e.segregateError().message);
+                  debugPrint(e.handleError().message);
                 }
               }
             case ChangeType.REMOVE
@@ -98,7 +98,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       uploadDeleteControllerProvider,
       (prev, state) {
         if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(state.error!.segregateError().message);
+          context.showErrorSnackBar(state.error!.handleError().message);
         }
       },
     );

@@ -5,14 +5,12 @@ import 'package:path_provider/path_provider.dart';
 
 final debugLogger = Logger();
 final fileLogger = Logger(
-  printer:
-      PrettyPrinter(dateTimeFormat: DateTimeFormat.dateAndTime, colors: false),
+  printer: SimplePrinter(printTime: true, colors: false),
   filter: CustomLogFilter(),
   output: FileLogOutput(),
 );
 final sentryLogger = Logger(
-  printer:
-      PrettyPrinter(dateTimeFormat: DateTimeFormat.dateAndTime, colors: false),
+  printer: SimplePrinter(printTime: true, colors: false),
   filter: CustomLogFilter(),
   output: SentryLogOutput(),
 );
@@ -31,11 +29,10 @@ final class FileLogOutput extends LogOutput {
     final dateString = '${date.day}-${date.month}-${date.year}';
 
     final docDir = await getApplicationDocumentsDirectory();
-    final dirUri = Uri.file('${docDir.uri.path}/SyncVault/logs/');
-    final dir = await Directory.fromUri(dirUri).create(recursive: true);
+    final dir = await Directory('${docDir.path}/SyncVault/logs/')
+        .create(recursive: true);
 
-    final fileUri = Uri.file('${dir.uri.path}$dateString.log');
-    final file = File.fromUri(fileUri);
+    final file = await File('${dir.path}/$dateString.log').create();
 
     for (final line in [...event.lines, '\n']) {
       await file.writeAsString(line, mode: FileMode.append);
