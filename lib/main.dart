@@ -1,15 +1,22 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:syncvault/helpers.dart';
 import 'package:syncvault/injectable.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:system_tray/system_tray.dart';
@@ -24,8 +31,8 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
 
-    // final authInfo = Auth.init();
-    // final folderInfo = Folder.init();
+    final authInfo = Auth.init();
+    final folderInfo = Folder.init();
 
     // for (final folderModel in folderInfo) {
     //   if (folderModel.isAutoSync) {
@@ -50,6 +57,52 @@ void callbackDispatcher() {
 
     return Future.value(true);
   });
+}
+
+void backgroundTask(RootIsolateToken rootIsolateToken) async {
+  BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
+
+  final docDir = await getApplicationDocumentsDirectory();
+  final boxPath = '${docDir.path}/SyncVault/hive';
+
+  final accountsBox =
+      await Hive.openBox<DriveProviderModel>('accounts_box', path: boxPath);
+  GetIt.I.registerSingleton<Box<DriveProviderModel>>(accountsBox);
+
+  final foldersBox =
+      await Hive.openBox<FolderModel>('folders_box', path: boxPath);
+  GetIt.I.registerSingleton<Box<FolderModel>>(foldersBox);
+
+  final authInfo = Auth.init();
+  final folderInfo = Folder.init();
+  final driveService = RCloneDriveService();
+
+  for (final folderModel in folderInfo) {
+    Directory(folderModel.folderPath).watch().listen((event) async {
+      final providerModel = authInfo
+          .filter((model) => model.remoteName == folderModel.remoteName)
+          .first;
+
+      switch (event.type) {
+        case FileSystemEvent.create:
+          {
+            final result = await driveService
+                .upload(
+                  providerModel: providerModel,
+                  folderModel: folderModel,
+                  localPath: event.path,
+                )
+                .run();
+            result.match(
+              (e) => print(e),
+              (t) {},
+            );
+          }
+      }
+    });
+  }
+
+  for (int i = 0; i < 10; i++) print('hi');
 }
 
 void main() async {
@@ -84,6 +137,10 @@ void main() async {
   final settings = Settings.init();
 
   configureDependencies();
+
+  // if (PlatformExtension.isDesktop) {
+  //   Isolate.spawn<RootIsolateToken>(backgroundTask, RootIsolateToken.instance!);
+  // }
 
   if (Platform.isWindows) {
     final appWindow = AppWindow();

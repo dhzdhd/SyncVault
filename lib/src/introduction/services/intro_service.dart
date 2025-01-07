@@ -107,6 +107,7 @@ class IntroService {
         final lastSeparator =
             rCloneExec.path.lastIndexOf(Platform.pathSeparator);
         final execName = rCloneExec.path.substring(lastSeparator);
+
         // Rename does not work at times across different file systems
         await rCloneExec.copy('${appDir.path}/SyncVault/$execName');
 

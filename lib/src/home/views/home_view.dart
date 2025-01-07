@@ -224,7 +224,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    if (Platform.isWindows)
+                                    if (PlatformExtension.isDesktop)
                                       Flexible(
                                         child: SizedBox(
                                           width: 50,
