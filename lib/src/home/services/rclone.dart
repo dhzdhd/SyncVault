@@ -5,8 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
-import 'package:glob/glob.dart';
-import 'package:glob/list_local_fs.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
@@ -59,12 +57,12 @@ class RCloneUtils {
         const channel = MethodChannel('com.example.syncvault/native_lib');
         final path = await channel.invokeMethod('getNativeLibraryPath');
         return '$path/librclone.so';
-      } else if (PlatformExtension.isDesktop) {
+      } else if (Platform.isWindows) {
         final docDir = await getApplicationDocumentsDirectory();
-        // FIXME:
-        final file = Glob('rclone*')
-            .listSync(root: '${docDir.path}/SyncVault')[0] as File;
-        return file.path;
+        return File('${docDir.path}/SyncVault/rclone.exe').path;
+      } else if (Platform.isLinux || Platform.isMacOS) {
+        final docDir = await getApplicationDocumentsDirectory();
+        return File('${docDir.path}/SyncVault/rclone').path;
       } else if (Platform.isIOS) {
         throw UnimplementedError('RClone not implemented in iOS yet');
       } else {
