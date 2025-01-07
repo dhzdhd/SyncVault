@@ -62,7 +62,7 @@ class RCloneUtils {
       } else if (PlatformExtension.isDesktop) {
         final docDir = await getApplicationDocumentsDirectory();
         // FIXME:
-        final file = Glob('rclone.exe')
+        final file = Glob('rclone*')
             .listSync(root: '${docDir.path}/SyncVault')[0] as File;
         return file.path;
       } else if (Platform.isIOS) {

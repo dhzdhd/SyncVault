@@ -113,7 +113,7 @@ void main() async {
     if (settings.isHideOnStartup) {
       await appWindow.hide();
     }
-  } else {
+  } else if (Platform.isAndroid) {
     Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     Workmanager().registerPeriodicTask(
       'task-sync',
