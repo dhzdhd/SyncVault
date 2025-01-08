@@ -29,7 +29,7 @@ class CreateFolderController extends _$CreateFolderController {
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.createFolder(
+      () => folderNotifier.create(
         authModel: authModel,
         folderName: folderName,
         folderPath: folderPath,
@@ -59,18 +59,12 @@ class UploadDeleteController extends _$UploadDeleteController {
     );
   }
 
-  Future<void> delete(
-    FolderModel folderModel,
-    Option<String> filePath,
-  ) async {
+  Future<void> delete(FolderModel folderModel, bool deleteRemote) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.delete(
-        folderModel,
-        filePath,
-      ),
+      () => folderNotifier.delete(folderModel, deleteRemote),
     );
   }
 }
@@ -139,7 +133,7 @@ class Folder extends _$Folder {
     await _box.addAll(state);
   }
 
-  Future<void> createFolder({
+  Future<void> create({
     required DriveProviderModel authModel,
     required String folderPath,
     required String folderName,
@@ -159,8 +153,7 @@ class Folder extends _$Folder {
 
     state = [...state, model];
 
-    await _box.clear();
-    await _box.addAll(state);
+    await _box.add(model);
   }
 
   Future<void> upload(
@@ -183,18 +176,18 @@ class Folder extends _$Folder {
     // TODO: Implement per file
   }
 
-  Future<void> delete(FolderModel model, Option<String> path) async {
-    // TODO: Implement per file
-    final providerModels = ref.watch(authProvider);
-    final providerModel =
-        providerModels.filter((t) => t.remoteName == model.remoteName).first;
+  Future<void> delete(FolderModel model, bool deleteRemote) async {
+    if (deleteRemote) {
+      final providerModels = ref.watch(authProvider);
+      final providerModel =
+          providerModels.filter((t) => t.remoteName == model.remoteName).first;
 
-    await RCloneDriveService()
-        .delete(providerModel: providerModel, folderModel: model)
-        .run();
+      await RCloneDriveService()
+          .delete(providerModel: providerModel, folderModel: model)
+          .run();
+    }
 
     state = state.where((element) => element != model).toList();
-
     await _box.clear();
     await _box.addAll(state);
   }

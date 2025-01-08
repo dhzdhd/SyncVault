@@ -11,6 +11,7 @@ import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/src/home/components/delete_folder_dialog.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
@@ -292,20 +293,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                   .isLoading) {
                                                 return;
                                               }
+                                              // TODO: Perhaps make loadingIndex an array
                                               currentLoadingIndex.value = index;
 
-                                              if (!uploadDeleteController
-                                                  .isLoading) {
-                                                await ref
-                                                    .read(
-                                                      uploadDeleteControllerProvider
-                                                          .notifier,
-                                                    )
-                                                    .delete(e, none());
-
+                                              if (context.mounted) {
                                                 if (context.mounted) {
-                                                  context.showSuccessSnackBar(
-                                                    content: 'Success',
+                                                  await showDialog(
+                                                    context: context,
+                                                    builder: (ctx) =>
+                                                        DeleteFolderDialogWidget(
+                                                            model: e),
                                                   );
                                                 }
                                               }
