@@ -2,7 +2,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
@@ -105,8 +104,9 @@ class Folder extends _$Folder {
           model.copyWith(isAutoSync: !model.isAutoSync),
         )
     ];
-    // TODO: Update
-    await _box.add(model);
+
+    await _box.clear();
+    await _box.addAll(state);
   }
 
   Future<void> toggleDeletionOnSync(FolderModel model) async {
@@ -120,8 +120,8 @@ class Folder extends _$Folder {
         )
     ];
 
-    // TODO: Update
-    await _box.add(model);
+    await _box.clear();
+    await _box.addAll(state);
   }
 
   Future<void> toggleTwoWaySync(FolderModel model) async {
@@ -135,8 +135,8 @@ class Folder extends _$Folder {
         )
     ];
 
-    // TODO: Update
-    await _box.add(model);
+    await _box.clear();
+    await _box.addAll(state);
   }
 
   Future<void> createFolder({
@@ -157,17 +157,10 @@ class Folder extends _$Folder {
         .match((l) => throw l, (r) => r)
         .run();
 
-    // final files = await driveService
-    //     .getAllItems(
-    //       root: some(id),
-    //       accessToken: newAuthModel.accessToken,
-    //       filter: none(),
-    //     )
-    //     .match((l) => throw l, (r) => r)
-    //     .run();
-
     state = [...state, model];
-    await _box.add(model);
+
+    await _box.clear();
+    await _box.addAll(state);
   }
 
   Future<void> upload(
@@ -185,27 +178,9 @@ class Folder extends _$Folder {
           folderModel: folderModel,
           localPath: folderModel.folderPath,
         )
-        .run(); // TODO: Handle error
+        .run();
 
-    // // TODO: Implement for particular folder
-    // final files = await driveService
-    //     .getAllItems(
-    //       root: none(),
-    //       accessToken: newAuthModel.accessToken,
-    //       filter: none(),
-    //     )
-    //     .match((l) => throw l, (r) => r)
-    //     .run();
-
-    // state = [
-    //   ...state
-    //     ..remove(folderModel)
-    //     ..add(folderModel.copyWith(files: files))
-    // ];
-    // Hive.box('vault').put(
-    //   hiveFoldersKey,
-    //   jsonEncode(state.map((e) => e.toJson()).toList()),
-    // );
+    // TODO: Implement per file
   }
 
   Future<void> delete(FolderModel model, Option<String> path) async {
@@ -219,21 +194,16 @@ class Folder extends _$Folder {
         .run();
 
     state = state.where((element) => element != model).toList();
-    // TODO: Change hive storage
+
+    await _box.clear();
+    await _box.addAll(state);
   }
 
-  TaskEither<AppError, ()> clearCache() {
-    return TaskEither.tryCatch(
-      () async {
-        state = [];
-        await _box.clear();
+  Future<()> clearCache() async {
+    state = [];
+    await _box.clear();
+    await _box.flush();
 
-        return ();
-      },
-      (error, stackTrace) => error.handleError(
-        'Failed to clear local storage',
-        stackTrace,
-      ),
-    );
+    return ();
   }
 }

@@ -27,8 +27,6 @@ import 'src/settings/controllers/settings_controller.dart';
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await Hive.initFlutter();
-
     // final authInfo = Auth.init();
     // final folderInfo = Folder.init();
 

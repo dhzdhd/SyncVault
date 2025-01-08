@@ -120,6 +120,17 @@ class RCloneAuthService {
     return TaskEither<AppError, DriveProviderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
       final configFile = await $(utils.getConfig());
+      final rCloneConfig = await $(utils.getIniConfig());
+
+      await $(TaskEither.tryCatch(
+        () async {
+          if (rCloneConfig.hasSection(payload.remoteName)) {
+            throw const AppError.general('Remote already exists');
+          }
+        },
+        (err, stackTrace) =>
+            err.handleError('Remote already exists', stackTrace),
+      ));
 
       // Authorize with rclone for given provider
       final model = switch (driveProvider.backend) {
@@ -164,10 +175,9 @@ class RCloneAuthService {
                 // Wait for process to finish
                 await process.exitCode;
 
-                print(output);
-                print(errorOutput);
                 final Map<String, dynamic> authJson = jsonDecode(
-                    RegExp(r'\{.+\}').stringMatch(output.toString())!);
+                  RegExp(r'\{.+\}').stringMatch(output.toString())!,
+                );
                 if (authJson
                     case {
                       'access_token': String accessToken,
@@ -299,6 +309,7 @@ class RCloneAuthService {
               toWrite['drive_id'] = driveId;
             }
 
+            // TODO: Refactor to getIniConfig
             final iniConfig =
                 Config.fromString(await configFile.readAsString());
             iniConfig.add(model.remoteName, toWrite);
