@@ -105,9 +105,38 @@ jobs:
           path: |
             build/linux/x64/release/bundle/*
 
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+
+      - name: Build macOS
+        run: |
+          flutter config --enable-macos-desktop
+          flutter pub get
+          pod install --project-directory=macos
+          flutter build macos --release
+
+      - name: Save macOS app
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: build/macos/Build/Products/Release/*.app
+
   release:
     runs-on: ubuntu-latest
-    needs: [build-android, build-windows, build-linux]
+    needs: [build-android, build-windows, build-linux, build-macos]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -122,6 +151,9 @@ jobs:
 
       - name: Zip Linux bundle
         run: tar -czvf SyncVault-${{ github.ref_name }}-linux.tar.gz exec/linux
+
+      - name: Zip macOS app
+        run: tar -czvf SyncVault-${{ github.ref_name }}-macos.tar.gz exec/macos
 
       - name: Display structure of downloaded files
         run: tree exec/
@@ -138,7 +170,7 @@ jobs:
             exec/android/flutter-apk/*
             SyncVault-${{ github.ref_name }}-windows.zip
             SyncVault-${{ github.ref_name }}-linux.tar.gz
-            exec/win/ExCode.msix
+            SyncVault-${{ github.ref_name }}-macos.tar.gz
           body_path: CHANGELOG.md
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
