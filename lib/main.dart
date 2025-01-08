@@ -108,6 +108,7 @@ void main() async {
 
   GetIt.I.registerSingleton<Dio>(Dio());
 
+  // Hive stuff
   await Hive.initFlutter();
   Hive.registerAdapters();
 
@@ -140,7 +141,10 @@ void main() async {
   //   Isolate.spawn<RootIsolateToken>(backgroundTask, RootIsolateToken.instance!);
   // }
 
-  if (Platform.isWindows) {
+  // FIXME: Segfault when calling initSystemTray on Linux
+  // Move to https://github.com/leanflutter/tray_manager
+  if (Platform.isWindows || Platform.isMacOS) {
+    // System tray
     final appWindow = AppWindow();
     final systemTray = SystemTray();
 
@@ -169,6 +173,7 @@ void main() async {
       await appWindow.hide();
     }
   } else if (Platform.isAndroid) {
+    // Work manager
     Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     Workmanager().registerPeriodicTask(
       'task-sync',
@@ -183,7 +188,7 @@ void main() async {
     await SentryFlutter.init(
       (options) {
         options.dsn =
-            'https://6f9773aae01846168e9cd2b1e62adde3@o4504764245344256.ingest.sentry.io/4505318015696896';
+            'https://6f9773aae01846168e9cd2b1e62adde3@o4504764245344256.ingest.us.sentry.io/4505318015696896';
         options.tracesSampleRate = 1.0;
       },
       appRunner: () => runApp(
