@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:syncvault/helpers.dart';
 import 'package:syncvault/injectable.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
@@ -31,8 +29,8 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
 
-    final authInfo = Auth.init();
-    final folderInfo = Folder.init();
+    // final authInfo = Auth.init();
+    // final folderInfo = Folder.init();
 
     // for (final folderModel in folderInfo) {
     //   if (folderModel.isAutoSync) {

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
+## 0.6.0 | 08-01-2025 (Prerelease)
+
+### Additions
+
+- Added new Linux build (needs testing).
+- Added file logs (visit `<documents_folder>/SyncVault/logs`).
+- Reimplemented provider information dialog.
+
+### Fixes / Improvements
+
+- Improved tree view UI.
+- (Dev only) Fixed MacOS debug builds.
+
+### Temporary removals (due to new backend)
+
+- RClone download in settings page does not work.
+- Minio folder creation does not work as intended (as it does support nested file paths, only buckets).
+- None of the switches in the expanded cards in home page work (auto sync, two way sync, delete on sync).
+- Folder deletion does not work as intended.
+- New accounts (remotes) are not yet automatically detected by supplied rclone config file.
+
 ## 0.5.4 | 28-12-2024 (Prerelease)
 
 ### Additions
