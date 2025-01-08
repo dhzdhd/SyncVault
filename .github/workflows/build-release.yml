@@ -118,10 +118,10 @@ jobs:
           path: exec/
 
       - name: Zip Windows programs
-        run: 7z a -tZip ExCode-win.zip exec/win
+        run: 7z a -tZip SyncVault-${{ github.ref_name }}-windows.zip exec/win
 
       - name: Zip Linux bundle
-        run: tar -czvf Excode-linux.tar.gz exec/linux
+        run: tar -czvf SyncVault-${{ github.ref_name }}-linux.tar.gz exec/linux
 
       - name: Display structure of downloaded files
         run: tree exec/
@@ -136,8 +136,8 @@ jobs:
           files: |
             exec/android/bundle/release/app-release.aab
             exec/android/flutter-apk/*
-            ExCode-win.zip
-            ExCode-linux.tar.gz
+            SyncVault-${{ github.ref_name }}-windows.zip
+            SyncVault-${{ github.ref_name }}-linux.tar.gz
             exec/win/ExCode.msix
           body_path: CHANGELOG.md
           token: ${{ secrets.GITHUB_TOKEN }}
