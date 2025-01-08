@@ -43,7 +43,10 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
       createFolderControllerProvider,
       (prev, state) {
         if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(state.error!.handleError().message);
+          context.showErrorSnackBar(state.error!
+              .handleError('Create folder controller failed',
+                  state.stackTrace ?? StackTrace.empty)
+              .message);
         }
       },
     );

@@ -55,7 +55,12 @@ class _NewAccountDialogWidgetState
       authControllerProvider,
       (prev, state) {
         if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(state.error!.handleError().message);
+          context.showErrorSnackBar(
+            state.error!
+                .handleError('Auth controller failed',
+                    state.stackTrace ?? StackTrace.empty)
+                .message,
+          );
         }
       },
     );

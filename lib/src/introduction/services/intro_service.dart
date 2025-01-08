@@ -45,7 +45,9 @@ class IntroService {
     return Either.tryCatch(() {
       _box.put(introSettingsKey, model);
       return ();
-    }, (err, stackTrace) => err.handleError());
+    },
+        (err, stackTrace) => err.handleError(
+            'Failed to store intro settings model locally', stackTrace));
   }
 
   Future<File> getRCloneExec() async {
@@ -116,8 +118,8 @@ class IntroService {
       });
 
       yield* progressStreamController.stream.map((val) => Right(val));
-    } catch (err) {
-      yield Left(err.handleError());
+    } catch (err, stackTrace) {
+      yield Left(err.handleError('Failed to download RClone', stackTrace));
     } finally {
       progressStreamController.close();
     }

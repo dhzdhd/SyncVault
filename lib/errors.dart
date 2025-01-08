@@ -5,21 +5,13 @@ import 'package:syncvault/log.dart';
 part 'errors.freezed.dart';
 
 extension ErrorSegregation on Object {
-  AppError handleError() {
-    try {
-      if (this is Error) {
-        final error = this as Error;
-        debugLogger.e('Error',
-            error: error, stackTrace: error.stackTrace, time: DateTime.now());
-        fileLogger.e('Error',
-            error: error, stackTrace: error.stackTrace, time: DateTime.now());
-      } else if (this is AppError) {
-        final error = this as AppError;
-        debugLogger.e(error.message, error: error, time: DateTime.now());
-        fileLogger.e(error.message, error: error, time: DateTime.now());
-      }
-    } catch (err) {
-      debugLogger.i('Error passed cannot be type cast to Error');
+  AppError handleError(String message, StackTrace stackTrace) {
+    if (this is Error || this is AppError) {
+      debugLogger.e(message,
+          error: this, stackTrace: stackTrace, time: DateTime.now());
+      fileLogger.e(message,
+          error: this, stackTrace: stackTrace, time: DateTime.now());
+      sentryLogger.e(message, stackTrace: stackTrace, time: DateTime.now());
     }
 
     // TODO: Log errors and return readable errors

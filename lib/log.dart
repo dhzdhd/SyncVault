@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 final debugLogger = Logger();
 final fileLogger = Logger(
@@ -10,7 +11,6 @@ final fileLogger = Logger(
   output: FileLogOutput(),
 );
 final sentryLogger = Logger(
-  printer: SimplePrinter(printTime: true, colors: false),
   filter: CustomLogFilter(),
   output: SentryLogOutput(),
 );
@@ -43,6 +43,9 @@ final class FileLogOutput extends LogOutput {
 final class SentryLogOutput extends LogOutput {
   @override
   void output(OutputEvent event) async {
-    throw UnimplementedError();
+    await Sentry.captureException(
+      event.origin.error,
+      stackTrace: event.origin.stackTrace,
+    );
   }
 }

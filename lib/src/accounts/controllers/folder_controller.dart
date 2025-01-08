@@ -223,11 +223,17 @@ class Folder extends _$Folder {
   }
 
   TaskEither<AppError, ()> clearCache() {
-    return TaskEither.tryCatch(() async {
-      state = [];
-      await _box.clear();
+    return TaskEither.tryCatch(
+      () async {
+        state = [];
+        await _box.clear();
 
-      return ();
-    }, (error, stackTrace) => error.handleError());
+        return ();
+      },
+      (error, stackTrace) => error.handleError(
+        'Failed to clear local storage',
+        stackTrace,
+      ),
+    );
   }
 }

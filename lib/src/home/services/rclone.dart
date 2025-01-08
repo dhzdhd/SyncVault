@@ -50,25 +50,26 @@ enum DriveProvider {
 @singleton
 class RCloneUtils {
   TaskEither<AppError, String> getRCloneExec() {
-    return TaskEither.tryCatch(() async {
-      if (Platform.isAndroid) {
-        const channel = MethodChannel('com.example.syncvault/native_lib');
-        final path = await channel.invokeMethod('getNativeLibraryPath');
-        return '$path/librclone.so';
-      } else if (Platform.isWindows) {
-        final docDir = await getApplicationDocumentsDirectory();
-        return File('${docDir.path}/SyncVault/rclone.exe').path;
-      } else if (Platform.isLinux || Platform.isMacOS) {
-        final docDir = await getApplicationDocumentsDirectory();
-        return File('${docDir.path}/SyncVault/rclone').path;
-      } else if (Platform.isIOS) {
-        throw UnimplementedError('RClone not implemented in iOS yet');
-      } else {
-        throw UnimplementedError('This platform is not supported yet');
-      }
-    }, (err, stackTrace) {
-      return err.handleError();
-    });
+    return TaskEither.tryCatch(
+      () async {
+        if (Platform.isAndroid) {
+          const channel = MethodChannel('com.example.syncvault/native_lib');
+          final path = await channel.invokeMethod('getNativeLibraryPath');
+          return '$path/librclone.so';
+        } else if (Platform.isWindows) {
+          final docDir = await getApplicationDocumentsDirectory();
+          return File('${docDir.path}/SyncVault/rclone.exe').path;
+        } else if (Platform.isLinux || Platform.isMacOS) {
+          final docDir = await getApplicationDocumentsDirectory();
+          return File('${docDir.path}/SyncVault/rclone').path;
+        } else if (Platform.isIOS) {
+          throw UnimplementedError('RClone not implemented in iOS yet');
+        } else {
+          throw UnimplementedError('This platform is not supported yet');
+        }
+      },
+      (err, stackTrace) => err.handleError(err.toString(), stackTrace),
+    );
   }
 
   TaskEither<AppError, File> getConfig() {
@@ -82,12 +83,29 @@ class RCloneUtils {
 
       return configFile;
     }, (err, stackTrace) {
-      return err.handleError();
+      return err.handleError('Failed to get rclone config file', stackTrace);
     });
   }
 
   TaskEither<AppError, List<String>> getConfigArgs() {
     return getConfig().map((file) => ['--config', file.path]);
+  }
+
+  TaskEither<AppError, Config> getIniConfig() {
+    return TaskEither<AppError, Config>.Do(($) async {
+      final configFile = await $(getConfig());
+
+      return await $(
+        TaskEither<AppError, Config>.tryCatch(
+          () async {
+            final raw = await configFile.readAsString();
+            return Config.fromString(raw);
+          },
+          (err, stackTrace) =>
+              err.handleError('Failed to read ini file', stackTrace),
+        ),
+      );
+    });
   }
 }
 
@@ -172,10 +190,8 @@ class RCloneAuthService {
                   throw const GeneralError('Authorization response invalid');
                 }
               },
-              (err, stackTrace) {
-                debugLogger.e(stackTrace);
-                return err.handleError();
-              },
+              (err, stackTrace) =>
+                  err.handleError('OAuth2 auth failed', stackTrace),
             ),
           ),
         const (S3) => await $(
@@ -195,10 +211,8 @@ class RCloneAuthService {
 
                 return model;
               },
-              (err, stackTrace) {
-                debugLogger.e(stackTrace);
-                return err.handleError();
-              },
+              (err, stackTrace) =>
+                  err.handleError('S3 auth failed', stackTrace),
             ),
           ),
         const (UserPassword) => await $(
@@ -222,10 +236,8 @@ class RCloneAuthService {
 
                 return model;
               },
-              (err, stackTrace) {
-                debugLogger.e(stackTrace);
-                return err.handleError();
-              },
+              (err, stackTrace) =>
+                  err.handleError('UserPassword auth failed', stackTrace),
             ),
           ),
         const (Webdav) => await $(
@@ -250,10 +262,8 @@ class RCloneAuthService {
 
                 return model;
               },
-              (err, stackTrace) {
-                debugLogger.e(stackTrace);
-                return err.handleError();
-              },
+              (err, stackTrace) =>
+                  err.handleError('Webdav auth failed', stackTrace),
             ),
           ),
         // TODO: Do not throw in a Do()
@@ -267,7 +277,8 @@ class RCloneAuthService {
             final toWrite =
                 driveProvider.template(backend: model.backend).getOrElse(
                       () => throw const GeneralError(
-                          'Unable to fetch template for given provider.'),
+                        'Unable to fetch template for given provider.',
+                      ),
                     );
 
             // OneDrive requires drive ID which is not provided by rclone
@@ -294,7 +305,8 @@ class RCloneAuthService {
 
             await configFile.writeAsString(iniConfig.toString());
           },
-          (err, stackTrace) => err.handleError(),
+          (err, stackTrace) =>
+              err.handleError('Failed to write output to config', stackTrace),
         ),
       );
 
@@ -341,7 +353,8 @@ class RCloneAuthService {
             totalStorage: Option.fromNullable(json['total']),
           ));
         },
-        (err, stackTrace) => err.handleError(),
+        (err, stackTrace) =>
+            err.handleError('Failed to get drive information', stackTrace),
       ));
     });
   }
@@ -361,20 +374,28 @@ class RCloneDriveService {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
-      await $(TaskEither.tryCatch(() async {
-        // TODO: S3 only allows bucket name, not path
-        final process = await Process.run(execPath, [
-          ...configArgs,
-          'mkdir',
-          '${model.remoteName}:/$remoteParentPath$folderName'
-        ]);
+      await $(
+        TaskEither.tryCatch(
+          () async {
+            // TODO: S3 only allows bucket name, not path
+            final process = await Process.run(execPath, [
+              ...configArgs,
+              'mkdir',
+              '${model.remoteName}:/$remoteParentPath$folderName'
+            ]);
 
-        if (process.stderr.toString().trim().isNotEmpty) {
-          debugLogger.e(process.stderr);
-        }
+            if (process.stderr.toString().trim().isNotEmpty) {
+              debugLogger.e(process.stderr);
+            }
 
-        return ();
-      }, (err, stackTrace) => err.handleError()));
+            return ();
+          },
+          (err, stackTrace) => err.handleError(
+            'Failed to create directory in remote',
+            stackTrace,
+          ),
+        ),
+      );
 
       final folderModel = FolderModel(
         remoteName: model.remoteName,
@@ -401,20 +422,26 @@ class RCloneDriveService {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
-      final res = await $(TaskEither.tryCatch(() async {
-        final process = await Process.run(execPath, [
-          ...configArgs,
-          'sync',
-          localPath,
-          '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
-        ]);
+      final res = await $(
+        TaskEither.tryCatch(
+          () async {
+            final process = await Process.run(execPath, [
+              ...configArgs,
+              'sync',
+              localPath,
+              '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
+            ]);
 
-        if (process.stderr.toString().trim().isNotEmpty) {
-          debugLogger.e(process.stderr.toString());
-        }
+            if (process.stderr.toString().trim().isNotEmpty) {
+              debugLogger.e(process.stderr.toString());
+            }
 
-        return ();
-      }, (err, stackTrace) => err.handleError()));
+            return ();
+          },
+          (err, stackTrace) =>
+              err.handleError('Failed to upload files', stackTrace),
+        ),
+      );
 
       return res;
     });
@@ -431,19 +458,25 @@ class RCloneDriveService {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
-      final res = await $(TaskEither.tryCatch(() async {
-        final process = await Process.run(execPath, [
-          ...configArgs,
-          'purge',
-          '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
-        ]);
+      final res = await $(
+        TaskEither.tryCatch(
+          () async {
+            final process = await Process.run(execPath, [
+              ...configArgs,
+              'purge',
+              '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
+            ]);
 
-        if (process.stderr.toString().trim().isNotEmpty) {
-          debugLogger.e(process.stderr.toString());
-        }
+            if (process.stderr.toString().trim().isNotEmpty) {
+              debugLogger.e(process.stderr.toString());
+            }
 
-        return ();
-      }, (err, stackTrace) => err.handleError()));
+            return ();
+          },
+          (err, stackTrace) =>
+              err.handleError('Failed to delete remote', stackTrace),
+        ),
+      );
 
       return res;
     });
@@ -458,106 +491,112 @@ class RCloneDriveService {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
-      final Option<FileModel> fileModel = await $(TaskEither.tryCatch(() async {
-        final process = await Process.run(execPath, [
-          ...configArgs,
-          'tree',
-          '-a',
-          '--dirsfirst',
-          '--full-path',
-          '-s',
-          '-Q',
-          '${model.remoteName}:/${model.remoteParentPath}${model.folderName}'
-        ]);
+      final Option<FileModel> fileModel = await $(TaskEither.tryCatch(
+        () async {
+          final process = await Process.run(execPath, [
+            ...configArgs,
+            'tree',
+            '-a',
+            '--dirsfirst',
+            '--full-path',
+            '-s',
+            '-Q',
+            '${model.remoteName}:/${model.remoteParentPath}${model.folderName}'
+          ]);
 
-        if (process.stderr.toString().trim().isNotEmpty) {
-          debugLogger.e(process.stderr.toString());
-        }
-
-        final List<List<String>> matches = [];
-        final output = process.stdout.toString();
-        final lines = output.split('\n');
-
-        // String is of the pattern - <garbage value> [     123]  "<path>"
-        final regex = RegExp(r'\[\s*(\d+)\s*\]\s*\"([^\"]+)\"', dotAll: true);
-        for (final line in lines) {
-          final matched = regex
-              .allMatches(line)
-              .toList()
-              .map((t) => t.groups([1, 2]))
-              .firstOrNull;
-          if (matched != [] && matched != null) {
-            matches.add([matched[0]!, matched[1]!.replaceAll('\\', '/')]);
+          if (process.stderr.toString().trim().isNotEmpty) {
+            debugLogger.e(process.stderr.toString());
           }
-        }
 
-        final done = [];
-        FileModel buildFileTree(
-          List<List<String>> paths,
-          String currentPath,
-          String currentSize,
-          Option<Directory> parent,
-        ) {
-          // Get the name of the current path
-          final currentSegments =
-              currentPath.split('/').where((seg) => seg.isNotEmpty).toList();
-          final currentName =
-              currentSegments.isEmpty ? '/' : currentSegments.last;
+          final List<List<String>> matches = [];
+          final output = process.stdout.toString();
+          final lines = output.split('\n');
 
-          // Find direct children of the current path
-          final childrenPaths = paths.where((path) {
-            final segments =
-                path[1].split('/').where((seg) => seg.isNotEmpty).toList();
-            return segments.length > currentSegments.length &&
-                List.generate(currentSegments.length, (i) => segments[i])
-                        .join('/') ==
-                    currentSegments.join('/');
-          }).toList();
-
-          // Create child nodes recursively
-          final List<FileModel> children = [];
-          for (final childPath in childrenPaths) {
-            final segments =
-                childPath[1].split('/').where((seg) => seg.isNotEmpty).toList();
-            final size = childPath[0];
-            final childFullPath = segments.join('/');
-
-            if (!done.contains(childFullPath)) {
-              done.add(childFullPath);
-              children.add(buildFileTree(
-                  paths, childFullPath, size, some(Directory(currentPath))));
+          // String is of the pattern - <garbage value> [     123]  "<path>"
+          final regex = RegExp(r'\[\s*(\d+)\s*\]\s*\"([^\"]+)\"', dotAll: true);
+          for (final line in lines) {
+            final matched = regex
+                .allMatches(line)
+                .toList()
+                .map((t) => t.groups([1, 2]))
+                .firstOrNull;
+            if (matched != [] && matched != null) {
+              matches.add([matched[0]!, matched[1]!.replaceAll('\\', '/')]);
             }
           }
 
-          // Determine if the current node is a file or directory
-          final isFile = !paths.any((path) {
-            final segments =
-                path[1].split('/').where((seg) => seg.isNotEmpty).toList();
-            return segments.length > currentSegments.length &&
-                List.generate(currentSegments.length, (i) => segments[i])
-                        .join('/') ==
-                    currentSegments.join('/');
-          });
+          final done = [];
+          FileModel buildFileTree(
+            List<List<String>> paths,
+            String currentPath,
+            String currentSize,
+            Option<Directory> parent,
+          ) {
+            // Get the name of the current path
+            final currentSegments =
+                currentPath.split('/').where((seg) => seg.isNotEmpty).toList();
+            final currentName =
+                currentSegments.isEmpty ? '/' : currentSegments.last;
 
-          final fileEntity =
-              isFile ? File(currentPath) : Directory(currentPath);
+            // Find direct children of the current path
+            final childrenPaths = paths.where((path) {
+              final segments =
+                  path[1].split('/').where((seg) => seg.isNotEmpty).toList();
+              return segments.length > currentSegments.length &&
+                  List.generate(currentSegments.length, (i) => segments[i])
+                          .join('/') ==
+                      currentSegments.join('/');
+            }).toList();
 
-          return FileModel(
-            name: currentName,
-            size: currentSize,
-            file: fileEntity,
-            parent: parent.toNullable() ?? Directory(''),
-            children: children,
-          );
-        }
+            // Create child nodes recursively
+            final List<FileModel> children = [];
+            for (final childPath in childrenPaths) {
+              final segments = childPath[1]
+                  .split('/')
+                  .where((seg) => seg.isNotEmpty)
+                  .toList();
+              final size = childPath[0];
+              final childFullPath = segments.join('/');
 
-        if (matches.isNotEmpty) {
-          final model = buildFileTree(matches, '/', '0', none());
-          return some(model);
-        }
+              if (!done.contains(childFullPath)) {
+                done.add(childFullPath);
+                children.add(buildFileTree(
+                    paths, childFullPath, size, some(Directory(currentPath))));
+              }
+            }
 
-        return none();
-      }, (err, stackTrace) => err.handleError()));
+            // Determine if the current node is a file or directory
+            final isFile = !paths.any((path) {
+              final segments =
+                  path[1].split('/').where((seg) => seg.isNotEmpty).toList();
+              return segments.length > currentSegments.length &&
+                  List.generate(currentSegments.length, (i) => segments[i])
+                          .join('/') ==
+                      currentSegments.join('/');
+            });
+
+            final fileEntity =
+                isFile ? File(currentPath) : Directory(currentPath);
+
+            return FileModel(
+              name: currentName,
+              size: currentSize,
+              file: fileEntity,
+              parent: parent.toNullable() ?? Directory(''),
+              children: children,
+            );
+          }
+
+          if (matches.isNotEmpty) {
+            final model = buildFileTree(matches, '/', '0', none());
+            return some(model);
+          }
+
+          return none();
+        },
+        (err, stackTrace) =>
+            err.handleError('Failed to get file tree', stackTrace),
+      ));
       return fileModel;
     });
   }
