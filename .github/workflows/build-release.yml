@@ -125,7 +125,7 @@ jobs:
         run: |
           flutter config --enable-macos-desktop
           flutter pub get
-          cd macos && pod install && cd ..
+          pod install --project-directory=macos
           flutter build macos --release
 
       - name: Save macOS app
@@ -153,7 +153,7 @@ jobs:
         run: tar -czvf SyncVault-${{ github.ref_name }}-linux.tar.gz exec/linux
 
       - name: Zip macOS app
-        run: tar -czvf SyncVault-macos.tar.gz exec/macos
+        run: tar -czvf SyncVault-${{ github.ref_name }}-macos.tar.gz exec/macos
 
       - name: Display structure of downloaded files
         run: tree exec/
@@ -168,9 +168,9 @@ jobs:
           files: |
             exec/android/bundle/release/app-release.aab
             exec/android/flutter-apk/*
-            ExCode-win.zip
-            ExCode-linux.tar.gz
-            exec/win/ExCode.msix
+            SyncVault-${{ github.ref_name }}-windows.zip
+            SyncVault-${{ github.ref_name }}-linux.tar.gz
+            SyncVault-${{ github.ref_name }}-macos.tar.gz
           body_path: CHANGELOG.md
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
