@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
+import 'package:syncvault/src/common/services/rclone.dart';
 import '../controllers/settings_controller.dart';
 
 class SettingsView extends ConsumerWidget {
@@ -133,35 +134,39 @@ class SettingsView extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: OutlinedButton(
-                        onPressed: () async {
-                          final config =
-                              await RCloneUtils().getIniConfig().run();
-                          config.match((e) => {}, (ini) async {
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => SimpleDialog(
-                                title: const Text('Config'),
-                                children: ini
-                                    .sections()
-                                    .map(
-                                      (section) => ListTile(
-                                        title: Text(section),
-                                        subtitle:
-                                            Text(ini.items(section).toString()),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            );
-                          });
-                        },
-                        child: const Text(
-                          'Show RClone config',
-                          style: TextStyle(fontSize: 18),
+                    // Visible only in debug mode
+                    Visibility(
+                      visible: kDebugMode,
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            final config =
+                                await RCloneUtils().getIniConfig().run();
+                            config.match((e) => {}, (ini) async {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => SimpleDialog(
+                                  title: const Text('Config'),
+                                  children: ini
+                                      .sections()
+                                      .map(
+                                        (section) => ListTile(
+                                          title: Text(section),
+                                          subtitle: Text(
+                                              ini.items(section).toString()),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              );
+                            });
+                          },
+                          child: const Text(
+                            'Show RClone config',
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ),
                       ),
                     ),

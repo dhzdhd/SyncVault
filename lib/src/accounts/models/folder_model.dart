@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
+import 'package:syncvault/src/common/models/drive_provider.dart';
 
 part 'folder_model.freezed.dart';
 part 'folder_model.g.dart';

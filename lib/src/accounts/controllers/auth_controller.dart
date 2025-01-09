@@ -4,9 +4,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
+import 'package:syncvault/src/accounts/services/rclone.dart';
+import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'auth_controller.g.dart';
 

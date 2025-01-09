@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
 
 final Map<DriveProvider, Map<String, String> Function(DriveProviderBackend)>
     providerTemplate = {

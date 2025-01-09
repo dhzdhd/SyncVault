@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'drive_provider_model.freezed.dart';
 part 'drive_provider_model.g.dart';

@@ -5,9 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
 
 class NewAccountDialogWidget extends StatefulHookConsumerWidget {
   const NewAccountDialogWidget({super.key});
