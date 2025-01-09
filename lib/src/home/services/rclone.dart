@@ -175,8 +175,11 @@ class RCloneAuthService {
                 // Wait for process to finish
                 await process.exitCode;
 
+                final match =
+                    RegExp(r'\{.+\}').stringMatch(output.toString()) ?? '';
                 final Map<String, dynamic> authJson = jsonDecode(
-                  RegExp(r'\{.+\}').stringMatch(output.toString())!,
+                  // FIXME: This probably breaks on android release builds
+                  match,
                 );
                 if (authJson
                     case {
