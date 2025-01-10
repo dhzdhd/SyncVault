@@ -50,3 +50,5 @@ android/app/lib
 .sentry-native/
 
 provider_tests/data
+
+!lib/
