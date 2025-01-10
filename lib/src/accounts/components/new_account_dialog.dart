@@ -7,7 +7,6 @@ import 'package:syncvault/helpers.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
-import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
 
 class NewAccountDialogWidget extends StatefulHookConsumerWidget {
   const NewAccountDialogWidget({super.key});
@@ -92,7 +91,7 @@ class _NewAccountDialogWidgetState
             selected.value = e!;
           },
         ),
-        ...switch (selected.value.backend) {
+        ...switch (selected.value.backendType) {
           const (OAuth2) => [],
           const (S3) => [
               const SizedBox(
@@ -189,7 +188,7 @@ class _NewAccountDialogWidgetState
         ElevatedButton(
           onPressed: () async {
             if (!authController.isLoading) {
-              final valid = switch (selected.value.backend) {
+              final valid = switch (selected.value.backendType) {
                 const (OAuth2) => validateControllers([_remoteNameController]),
                 const (S3) => validateControllers([
                     _remoteNameController,
@@ -213,21 +212,24 @@ class _NewAccountDialogWidgetState
 
               if (valid) {
                 await ref.read(authControllerProvider.notifier).signIn(
-                      switch (selected.value.backend) {
-                        const (OAuth2) =>
-                          OAuth2Payload(remoteName: _remoteNameController.text),
-                        const (UserPassword) => UserPasswordPayload(
-                            remoteName: _remoteNameController.text,
+                      switch (selected.value.backendType) {
+                        // Create defaults for OAuth2 as OAuth2 requires additional user auth
+                        const (OAuth2) => const OAuth2(
+                            rCloneJson: {},
+                            accessToken: '',
+                            refreshToken: '',
+                            expiresIn: '',
+                          ),
+                        const (UserPassword) => UserPassword(
                             username: _userController.text,
-                            password: _passwordController.text),
-                        const (S3) => S3Payload(
-                            remoteName: _remoteNameController.text,
+                            password: _passwordController.text,
+                          ),
+                        const (S3) => S3(
                             url: _urlController.text,
                             accessKeyId: _userController.text,
                             secretAccessKey: _passwordController.text,
                           ),
-                        const (Webdav) => WebdavPayload(
-                            remoteName: _remoteNameController.text,
+                        const (Webdav) => Webdav(
                             url: _urlController.text,
                             user: _userController.text,
                             password: _passwordController.text,
@@ -236,6 +238,7 @@ class _NewAccountDialogWidgetState
                             'Backend not supported'), // TODO:
                       },
                       selected.value,
+                      _remoteNameController.text,
                     );
 
                 if (context.mounted && !authController.isLoading) {

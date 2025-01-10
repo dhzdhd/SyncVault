@@ -20,11 +20,10 @@ enum DriveProvider {
   }
 
   const DriveProvider(
-      this.providerName, this.displayName, this.providerIcon, this.backend);
+      this.providerName, this.displayName, this.providerIcon, this.backendType);
 
   final String providerName;
   final String displayName;
   final String providerIcon;
-  // TODO: Somehow relate to DriveProviderBackend without switch case
-  final Type backend;
+  final Type backendType;
 }

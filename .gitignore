@@ -45,10 +45,6 @@ app.*.map.json
 
 .env
 
-android/app/lib
-
 .sentry-native/
 
 provider_tests/data
-
-!lib/

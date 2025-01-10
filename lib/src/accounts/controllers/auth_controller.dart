@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/rclone.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
-import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 part 'auth_controller.g.dart';
@@ -17,13 +17,13 @@ class AuthController extends _$AuthController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> signIn(
-      DriveProviderBackendPayload payload, DriveProvider provider) async {
+  Future<void> signIn(DriveProviderBackend backend, DriveProvider provider,
+      String remoteName) async {
     final authNotifier = ref.read(authProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => authNotifier.signIn(payload, provider),
+      () => authNotifier.signIn(backend, provider, remoteName),
     );
   }
 }
@@ -40,7 +40,7 @@ Future<DriveInfoModel> driveInfoController(
 
 final _box = GetIt.I<Box<DriveProviderModel>>();
 
-// The actual repository to handle backend API calls
+// The actual service to handle backend API calls
 // Called from the controller
 @riverpod
 class Auth extends _$Auth {
@@ -53,10 +53,11 @@ class Auth extends _$Auth {
     return _box.values.toList();
   }
 
-  Future<void> signIn(
-      DriveProviderBackendPayload payload, DriveProvider provider) async {
+  Future<void> signIn(DriveProviderBackend backend, DriveProvider provider,
+      String remoteName) async {
     final service = await RCloneAuthService()
-        .authorize(payload: payload, driveProvider: provider)
+        .authorize(
+            backend: backend, driveProvider: provider, remoteName: remoteName)
         .run();
 
     service.match(
@@ -75,7 +76,7 @@ class Auth extends _$Auth {
     );
   }
 
-  // TODO: Add functionality to delete folders
+  // TODO: Add functionality to delete folders & remove corresponding rclone config
   Future<void> signOut(DriveProviderModel model) async {
     state = state.where((element) => element != model).toList();
     await _box.delete(model.remoteName);

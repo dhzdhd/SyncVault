@@ -5,38 +5,38 @@ import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 
 final Map<DriveProvider, Map<String, String> Function(DriveProviderBackend)>
     providerTemplate = {
-  DriveProvider.oneDrive: (DriveProviderBackend payload) => {
+  DriveProvider.oneDrive: (DriveProviderBackend backend) => {
         'type': 'onedrive',
-        'token': jsonEncode((payload as OAuth2).rCloneJson),
+        'token': jsonEncode((backend as OAuth2).rCloneJson),
         'drive_id': '',
         'drive_type': 'personal',
       },
-  DriveProvider.googleDrive: (DriveProviderBackend payload) => {
+  DriveProvider.googleDrive: (DriveProviderBackend backend) => {
         'type': 'drive',
-        'token': jsonEncode((payload as OAuth2).rCloneJson),
+        'token': jsonEncode((backend as OAuth2).rCloneJson),
         'team_drive': '',
       },
-  DriveProvider.dropBox: (DriveProviderBackend payload) => {
+  DriveProvider.dropBox: (DriveProviderBackend backend) => {
         'type': 'dropbox',
-        'token': jsonEncode((payload as OAuth2).rCloneJson),
+        'token': jsonEncode((backend as OAuth2).rCloneJson),
       },
-  DriveProvider.protonDrive: (DriveProviderBackend payload) => {
-        'username': (payload as UserPassword).username,
-        'password': payload.password
+  DriveProvider.protonDrive: (DriveProviderBackend backend) => {
+        'username': (backend as UserPassword).username,
+        'password': backend.password
       },
-  DriveProvider.minio: (DriveProviderBackend payload) => {
+  DriveProvider.minio: (DriveProviderBackend backend) => {
         'type': 's3',
         'provider': 'Minio',
-        'access_key_id': (payload as S3).accessKeyId,
-        'secret_access_key': payload.secretAccessKey,
-        'endpoint': payload.url,
+        'access_key_id': (backend as S3).accessKeyId,
+        'secret_access_key': backend.secretAccessKey,
+        'endpoint': backend.url,
         'acl': 'bucket-owner-full-control'
       },
-  DriveProvider.nextCloud: (DriveProviderBackend payload) => {
+  DriveProvider.nextCloud: (DriveProviderBackend backend) => {
         'type': 'webdav',
-        'url': (payload as Webdav).url,
+        'url': (backend as Webdav).url,
         'vendor': 'nextcloud',
-        'user': payload.user,
-        'pass': payload.password,
+        'user': backend.user,
+        'pass': backend.password,
       },
 };

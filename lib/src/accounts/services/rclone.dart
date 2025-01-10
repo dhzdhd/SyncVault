@@ -11,7 +11,6 @@ import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
-import 'package:syncvault/src/home/models/drive_provider_backend_payload.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:ini_v2/ini.dart';
@@ -21,8 +20,9 @@ final _dio = GetIt.I<Dio>();
 @singleton
 class RCloneAuthService {
   TaskEither<AppError, DriveProviderModel> authorize({
-    required DriveProviderBackendPayload payload,
+    required DriveProviderBackend backend,
     required DriveProvider driveProvider,
+    required String remoteName,
   }) {
     final utils = RCloneUtils();
 
@@ -33,7 +33,7 @@ class RCloneAuthService {
 
       await $(TaskEither.tryCatch(
         () async {
-          if (rCloneConfig.hasSection(payload.remoteName)) {
+          if (rCloneConfig.hasSection(remoteName)) {
             throw const AppError.general('Remote already exists');
           }
         },
@@ -42,13 +42,10 @@ class RCloneAuthService {
       ));
 
       // Authorize with rclone for given provider
-      final model = switch (driveProvider.backend) {
-        const (OAuth2) => await $(
+      final model = switch (backend) {
+        OAuth2() => await $(
             TaskEither.tryCatch(
               () async {
-                payload = payload as OAuth2Payload;
-
-                print(driveProvider.providerName);
                 final process = await Process.start(
                   execPath,
                   [
@@ -86,10 +83,7 @@ class RCloneAuthService {
 
                 final match =
                     RegExp(r'\{.+\}').stringMatch(output.toString()) ?? '';
-                final Map<String, dynamic> authJson = jsonDecode(
-                  // FIXME: This probably breaks on android release builds
-                  match,
-                );
+                final Map<String, dynamic> authJson = jsonDecode(match);
                 if (authJson
                     case {
                       'access_token': String accessToken,
@@ -97,7 +91,7 @@ class RCloneAuthService {
                       'expiry': String expiresIn,
                     }) {
                   final model = DriveProviderModel(
-                    remoteName: payload.remoteName,
+                    remoteName: remoteName,
                     provider: driveProvider,
                     backend: OAuth2(
                       rCloneJson: authJson,
@@ -116,18 +110,16 @@ class RCloneAuthService {
                   err.handleError('OAuth2 auth failed', stackTrace),
             ),
           ),
-        const (S3) => await $(
+        S3(:final url, :final accessKeyId, :final secretAccessKey) => await $(
             TaskEither.tryCatch(
               () async {
-                final s3Payload = payload as S3Payload;
-
                 final model = DriveProviderModel(
-                  remoteName: payload.remoteName,
+                  remoteName: remoteName,
                   provider: driveProvider,
                   backend: S3(
-                    url: s3Payload.url,
-                    accessKeyId: s3Payload.accessKeyId,
-                    secretAccessKey: s3Payload.secretAccessKey,
+                    url: url,
+                    accessKeyId: accessKeyId,
+                    secretAccessKey: secretAccessKey,
                   ),
                 );
 
@@ -137,21 +129,19 @@ class RCloneAuthService {
                   err.handleError('S3 auth failed', stackTrace),
             ),
           ),
-        const (UserPassword) => await $(
+        UserPassword(:final password, :final username) => await $(
             TaskEither.tryCatch(
               () async {
-                final userPassPayload = payload as UserPasswordPayload;
-
                 // Password needs to be obscured by rclone for usage
-                final process = await Process.run(
-                    execPath, ['obscure', userPassPayload.password]);
+                final process =
+                    await Process.run(execPath, ['obscure', password]);
                 final obscPassword = process.stdout;
 
                 final model = DriveProviderModel(
-                  remoteName: payload.remoteName,
+                  remoteName: remoteName,
                   provider: driveProvider,
                   backend: UserPassword(
-                    username: userPassPayload.username,
+                    username: username,
                     password: obscPassword,
                   ),
                 );
@@ -162,22 +152,20 @@ class RCloneAuthService {
                   err.handleError('UserPassword auth failed', stackTrace),
             ),
           ),
-        const (Webdav) => await $(
+        Webdav(:final password, :final url, :final user) => await $(
             TaskEither.tryCatch(
               () async {
-                final webdavPayload = payload as WebdavPayload;
-
                 // Password needs to be obscured by rclone for usage
-                final process = await Process.run(
-                    execPath, ['obscure', webdavPayload.password]);
+                final process =
+                    await Process.run(execPath, ['obscure', password]);
                 final obscPassword = process.stdout;
 
                 final model = DriveProviderModel(
-                  remoteName: payload.remoteName,
+                  remoteName: remoteName,
                   provider: driveProvider,
                   backend: Webdav(
-                    url: webdavPayload.url,
-                    user: webdavPayload.user,
+                    url: url,
+                    user: user,
                     password: obscPassword,
                   ),
                 );
@@ -188,8 +176,6 @@ class RCloneAuthService {
                   err.handleError('Webdav auth failed', stackTrace),
             ),
           ),
-        // TODO: Do not throw in a Do()
-        _ => throw UnimplementedError('Selected provider does not work yet')
       };
 
       // Write rclone output to rclone config file

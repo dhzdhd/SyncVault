@@ -160,7 +160,7 @@ class _DriveInfoControllerProviderElement
   DriveProviderModel get model => (origin as DriveInfoControllerProvider).model;
 }
 
-String _$authControllerHash() => r'5938ecc306f4c42894337f962428352898aa80cc';
+String _$authControllerHash() => r'8a2dbd46accb0e08729a46fee9955a36717557a3';
 
 /// See also [AuthController].
 @ProviderFor(AuthController)
@@ -176,7 +176,7 @@ final authControllerProvider =
 );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'0da9407f3ee71ca171274ba4fc22b3d2083e1a2a';
+String _$authHash() => r'96108d07c1a752d3b13ba2c8e1bd13f3e10d4ff8';
 
 /// See also [Auth].
 @ProviderFor(Auth)
