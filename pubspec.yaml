@@ -47,6 +47,7 @@ dependencies:
       url: https://github.com/dhzdhd/ini_v2.git
       ref: 02e44bb
   animated_tree_view: ^2.1.0
+  googleapis: ^13.2.0
 
 dev_dependencies:
   flutter_test:

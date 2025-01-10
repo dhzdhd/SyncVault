@@ -57,16 +57,16 @@ types:
         index: 5
   OAuth2:
     typeId: 5
-    nextIndex: 4
+    nextIndex: 5
     fields:
-      rCloneJson:
-        index: 0
       accessToken:
         index: 1
       refreshToken:
         index: 2
       expiresIn:
         index: 3
+      authJson:
+        index: 4
   S3:
     typeId: 6
     nextIndex: 3

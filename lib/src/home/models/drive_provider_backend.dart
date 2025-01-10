@@ -6,7 +6,7 @@ part 'drive_provider_backend.g.dart';
 @freezed
 sealed class DriveProviderBackend with _$DriveProviderBackend {
   const factory DriveProviderBackend.oauth2({
-    required Map<String, dynamic> rCloneJson,
+    required Map<String, dynamic> authJson,
     required String accessToken,
     required String refreshToken,
     required String expiresIn,

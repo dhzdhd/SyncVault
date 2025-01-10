@@ -215,7 +215,7 @@ class _NewAccountDialogWidgetState
                       switch (selected.value.backendType) {
                         // Create defaults for OAuth2 as OAuth2 requires additional user auth
                         const (OAuth2) => const OAuth2(
-                            rCloneJson: {},
+                            authJson: {},
                             accessToken: '',
                             refreshToken: '',
                             expiresIn: '',

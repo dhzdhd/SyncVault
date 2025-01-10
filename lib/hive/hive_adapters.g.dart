@@ -225,7 +225,7 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return OAuth2(
-      rCloneJson: (fields[0] as Map).cast<String, dynamic>(),
+      authJson: (fields[4] as Map).cast<String, dynamic>(),
       accessToken: fields[1] as String,
       refreshToken: fields[2] as String,
       expiresIn: fields[3] as String,
@@ -236,14 +236,14 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
   void write(BinaryWriter writer, OAuth2 obj) {
     writer
       ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.rCloneJson)
       ..writeByte(1)
       ..write(obj.accessToken)
       ..writeByte(2)
       ..write(obj.refreshToken)
       ..writeByte(3)
-      ..write(obj.expiresIn);
+      ..write(obj.expiresIn)
+      ..writeByte(4)
+      ..write(obj.authJson);
   }
 
   @override

@@ -94,7 +94,7 @@ class RCloneAuthService {
                     remoteName: remoteName,
                     provider: driveProvider,
                     backend: OAuth2(
-                      rCloneJson: authJson,
+                      authJson: authJson,
                       accessToken: accessToken,
                       refreshToken: refreshToken,
                       expiresIn: expiresIn,
