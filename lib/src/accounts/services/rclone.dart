@@ -8,6 +8,7 @@ import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
+import 'package:syncvault/src/accounts/services/common.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
@@ -18,7 +19,8 @@ import 'package:ini_v2/ini.dart';
 final _dio = GetIt.I<Dio>();
 
 @singleton
-class RCloneAuthService {
+class RCloneAuthService implements AuthService {
+  @override
   TaskEither<AppError, DriveProviderModel> authorize({
     required DriveProviderBackend backend,
     required DriveProvider driveProvider,
@@ -223,8 +225,10 @@ class RCloneAuthService {
     });
   }
 
-  TaskEither<AppError, Option<DriveInfoModel>> driveInfo(
-      {required DriveProviderModel model}) {
+  @override
+  TaskEither<AppError, Option<DriveInfoModel>> driveInfo({
+    required DriveProviderModel model,
+  }) {
     final utils = RCloneUtils();
 
     return TaskEither<AppError, Option<DriveInfoModel>>.Do(($) async {

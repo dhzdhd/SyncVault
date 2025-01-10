@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 
@@ -252,7 +253,7 @@ class _NewAccountDialogWidgetState
           child: authController.isLoading
               ? const SizedBox.square(
                   dimension: 20.0,
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressWidget(size: 300, isInfinite: true),
                 )
               : const Text('Submit'),
         )

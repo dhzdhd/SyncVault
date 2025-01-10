@@ -123,6 +123,7 @@ void main() async {
   );
   GetIt.I.registerSingleton<Box<IntroSettingsModel>>(introSettingsBox);
 
+  // FIXME: On fail, somehow migrate or create a default []
   final accountsBox =
       await Hive.openBox<DriveProviderModel>('accounts_box', path: boxPath);
   GetIt.I.registerSingleton<Box<DriveProviderModel>>(accountsBox);

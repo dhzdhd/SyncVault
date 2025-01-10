@@ -7,6 +7,7 @@ import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class NewFolderDialogWidget extends StatefulHookConsumerWidget {
@@ -112,7 +113,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
           child: createFolderController.isLoading
               ? const SizedBox.square(
                   dimension: 20.0,
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressWidget(size: 300, isInfinite: true),
                 )
               : const Text('Submit'),
           onPressed: () async {

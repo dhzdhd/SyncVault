@@ -11,6 +11,7 @@ import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
+import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/home/components/delete_folder_dialog.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
@@ -200,7 +201,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       child: const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(),
+                        child:
+                            CircularProgressWidget(size: 300, isInfinite: true),
                       ),
                     ),
                   ),
