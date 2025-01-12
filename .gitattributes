@@ -2,4 +2,5 @@
 *.svg binary
 *.ai binary
 *.ico binary
+*.so binary
 * eol=crlf
