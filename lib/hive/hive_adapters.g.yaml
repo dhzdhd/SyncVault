@@ -33,7 +33,7 @@ types:
         index: 0
   DriveProviderModel:
     typeId: 3
-    nextIndex: 9
+    nextIndex: 12
     fields:
       remoteName:
         index: 6
@@ -41,6 +41,12 @@ types:
         index: 7
       backend:
         index: 8
+      createdAt:
+        index: 9
+      updatedAt:
+        index: 10
+      isRCloneBackend:
+        index: 11
   DriveProvider:
     typeId: 4
     nextIndex: 6
@@ -109,8 +115,6 @@ types:
         index: 6
       remoteParentPath:
         index: 7
-      isRCloneBackend:
-        index: 8
   UserPassword:
     typeId: 12
     nextIndex: 2

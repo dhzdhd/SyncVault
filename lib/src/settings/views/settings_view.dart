@@ -106,6 +106,7 @@ class SettingsView extends ConsumerWidget {
                         ],
                       ),
                     if (!Platform.isIOS)
+                      // IOS only supports manual
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

@@ -72,14 +72,36 @@ class AccountView extends ConsumerWidget {
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
-                                  Text(
-                                    e.provider.displayName,
-                                    style:
-                                        MediaQuery.of(context).size.width < 500
-                                            ? textTheme.bodyMedium
-                                            : textTheme.bodyLarge,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                                  Row(
+                                    spacing: 6,
+                                    children: [
+                                      Text(
+                                        e.provider.displayName,
+                                        style:
+                                            MediaQuery.of(context).size.width <
+                                                    500
+                                                ? textTheme.bodyMedium
+                                                : textTheme.bodyLarge,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondaryContainer,
+                                        ),
+                                        padding: const EdgeInsets.only(
+                                            left: 6, right: 6),
+                                        child: Text(
+                                          e.isRCloneBackend
+                                              ? 'RClone'
+                                              : 'Manual',
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ],
                               ),

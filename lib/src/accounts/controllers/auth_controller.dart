@@ -1,13 +1,16 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
+import 'package:syncvault/src/accounts/services/providers/google_auth.dart';
 import 'package:syncvault/src/accounts/services/rclone.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/settings/controllers/settings_controller.dart';
 
 part 'auth_controller.g.dart';
 
@@ -53,22 +56,36 @@ class Auth extends _$Auth {
     return _box.values.toList();
   }
 
-  Future<void> signIn(DriveProviderBackend backend, DriveProvider provider,
-      String remoteName) async {
-    final service = await RCloneAuthService()
-        .authorize(
-            backend: backend, driveProvider: provider, remoteName: remoteName)
-        .run();
+  Future<void> signIn(
+    DriveProviderBackend backend,
+    DriveProvider provider,
+    String remoteName,
+  ) async {
+    late final Either<AppError, DriveProviderModel> service;
+    final settings = ref.watch(settingsProvider);
+
+    if (state.any((element) => element.remoteName == remoteName)) {
+      throw const GeneralError(
+        'The provider already exists',
+      );
+    }
+
+    if (settings.isRCloneDefault) {
+      service = await RCloneAuthService()
+          .authorize(
+              backend: backend, driveProvider: provider, remoteName: remoteName)
+          .run();
+    } else {
+      // TODO: Segregate by provider
+      service = await GoogleAuthService()
+          .authorize(
+              backend: backend, driveProvider: provider, remoteName: remoteName)
+          .run();
+    }
 
     service.match(
       (l) => throw l,
       (model) async {
-        if (state.any((element) => element.remoteName == model.remoteName)) {
-          throw const GeneralError(
-            'The provider already exists',
-          );
-        }
-
         state = [...state, model];
         // TODO: account box is redundant as rclone config exists
         await _box.put(model.remoteName, model);
@@ -85,7 +102,13 @@ class Auth extends _$Auth {
   Future<DriveInfoModel> getDriveInfo(
     DriveProviderModel model,
   ) async {
-    final result = await RCloneAuthService().driveInfo(model: model).run();
+    late final Either<AppError, Option<DriveInfoModel>> result;
+    if (model.isRCloneBackend) {
+      result = await RCloneAuthService().driveInfo(model: model).run();
+    } else {
+      // TODO: Segregate by provider
+      result = await GoogleAuthService().driveInfo(model: model).run();
+    }
 
     return result.match(
       (err) => throw err,

@@ -23,6 +23,9 @@ mixin _$DriveProviderModel {
   String get remoteName => throw _privateConstructorUsedError;
   DriveProvider get provider => throw _privateConstructorUsedError;
   DriveProviderBackend get backend => throw _privateConstructorUsedError;
+  String get createdAt => throw _privateConstructorUsedError;
+  String get updatedAt => throw _privateConstructorUsedError;
+  bool get isRCloneBackend => throw _privateConstructorUsedError;
 
   /// Serializes this DriveProviderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,7 +46,10 @@ abstract class $DriveProviderModelCopyWith<$Res> {
   $Res call(
       {String remoteName,
       DriveProvider provider,
-      DriveProviderBackend backend});
+      DriveProviderBackend backend,
+      String createdAt,
+      String updatedAt,
+      bool isRCloneBackend});
 
   $DriveProviderBackendCopyWith<$Res> get backend;
 }
@@ -66,6 +72,9 @@ class _$DriveProviderModelCopyWithImpl<$Res, $Val extends DriveProviderModel>
     Object? remoteName = null,
     Object? provider = null,
     Object? backend = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? isRCloneBackend = null,
   }) {
     return _then(_value.copyWith(
       remoteName: null == remoteName
@@ -80,6 +89,18 @@ class _$DriveProviderModelCopyWithImpl<$Res, $Val extends DriveProviderModel>
           ? _value.backend
           : backend // ignore: cast_nullable_to_non_nullable
               as DriveProviderBackend,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      isRCloneBackend: null == isRCloneBackend
+          ? _value.isRCloneBackend
+          : isRCloneBackend // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -105,7 +126,10 @@ abstract class _$$DriveProviderModelImplCopyWith<$Res>
   $Res call(
       {String remoteName,
       DriveProvider provider,
-      DriveProviderBackend backend});
+      DriveProviderBackend backend,
+      String createdAt,
+      String updatedAt,
+      bool isRCloneBackend});
 
   @override
   $DriveProviderBackendCopyWith<$Res> get backend;
@@ -127,6 +151,9 @@ class __$$DriveProviderModelImplCopyWithImpl<$Res>
     Object? remoteName = null,
     Object? provider = null,
     Object? backend = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? isRCloneBackend = null,
   }) {
     return _then(_$DriveProviderModelImpl(
       remoteName: null == remoteName
@@ -141,6 +168,18 @@ class __$$DriveProviderModelImplCopyWithImpl<$Res>
           ? _value.backend
           : backend // ignore: cast_nullable_to_non_nullable
               as DriveProviderBackend,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      isRCloneBackend: null == isRCloneBackend
+          ? _value.isRCloneBackend
+          : isRCloneBackend // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -151,7 +190,10 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
   const _$DriveProviderModelImpl(
       {required this.remoteName,
       required this.provider,
-      required this.backend});
+      required this.backend,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.isRCloneBackend});
 
   factory _$DriveProviderModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DriveProviderModelImplFromJson(json);
@@ -162,10 +204,16 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
   final DriveProvider provider;
   @override
   final DriveProviderBackend backend;
+  @override
+  final String createdAt;
+  @override
+  final String updatedAt;
+  @override
+  final bool isRCloneBackend;
 
   @override
   String toString() {
-    return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, backend: $backend)';
+    return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
   }
 
   @override
@@ -177,12 +225,19 @@ class _$DriveProviderModelImpl implements _DriveProviderModel {
                 other.remoteName == remoteName) &&
             (identical(other.provider, provider) ||
                 other.provider == provider) &&
-            (identical(other.backend, backend) || other.backend == backend));
+            (identical(other.backend, backend) || other.backend == backend) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.isRCloneBackend, isRCloneBackend) ||
+                other.isRCloneBackend == isRCloneBackend));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, remoteName, provider, backend);
+  int get hashCode => Object.hash(runtimeType, remoteName, provider, backend,
+      createdAt, updatedAt, isRCloneBackend);
 
   /// Create a copy of DriveProviderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -205,7 +260,10 @@ abstract class _DriveProviderModel implements DriveProviderModel {
   const factory _DriveProviderModel(
       {required final String remoteName,
       required final DriveProvider provider,
-      required final DriveProviderBackend backend}) = _$DriveProviderModelImpl;
+      required final DriveProviderBackend backend,
+      required final String createdAt,
+      required final String updatedAt,
+      required final bool isRCloneBackend}) = _$DriveProviderModelImpl;
 
   factory _DriveProviderModel.fromJson(Map<String, dynamic> json) =
       _$DriveProviderModelImpl.fromJson;
@@ -216,6 +274,12 @@ abstract class _DriveProviderModel implements DriveProviderModel {
   DriveProvider get provider;
   @override
   DriveProviderBackend get backend;
+  @override
+  String get createdAt;
+  @override
+  String get updatedAt;
+  @override
+  bool get isRCloneBackend;
 
   /// Create a copy of DriveProviderModel
   /// with the given fields replaced by the non-null parameter values.

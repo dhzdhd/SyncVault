@@ -138,19 +138,28 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
       remoteName: fields[6] as String,
       provider: fields[7] as DriveProvider,
       backend: fields[8] as DriveProviderBackend,
+      createdAt: fields[9] as String,
+      updatedAt: fields[10] as String,
+      isRCloneBackend: fields[11] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, DriveProviderModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(6)
       ..writeByte(6)
       ..write(obj.remoteName)
       ..writeByte(7)
       ..write(obj.provider)
       ..writeByte(8)
-      ..write(obj.backend);
+      ..write(obj.backend)
+      ..writeByte(9)
+      ..write(obj.createdAt)
+      ..writeByte(10)
+      ..write(obj.updatedAt)
+      ..writeByte(11)
+      ..write(obj.isRCloneBackend);
   }
 
   @override
@@ -359,14 +368,13 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       isAutoSync: fields[4] as bool,
       isDeletionEnabled: fields[5] as bool,
       isTwoWaySync: fields[6] as bool,
-      isRCloneBackend: fields[8] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, FolderModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.remoteName)
       ..writeByte(1)
@@ -382,9 +390,7 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       ..writeByte(6)
       ..write(obj.isTwoWaySync)
       ..writeByte(7)
-      ..write(obj.remoteParentPath)
-      ..writeByte(8)
-      ..write(obj.isRCloneBackend);
+      ..write(obj.remoteParentPath);
   }
 
   @override

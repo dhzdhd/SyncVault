@@ -20,4 +20,7 @@ abstract interface class ManualAuthService extends AuthService {
   TaskEither<AppError, DriveProviderModel> refresh({
     required DriveProviderModel model,
   });
+  TaskEither<AppError, Map<String, dynamic>> getUserInfo({
+    required String accessToken,
+  });
 }

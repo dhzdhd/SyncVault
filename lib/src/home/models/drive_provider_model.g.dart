@@ -13,6 +13,9 @@ _$DriveProviderModelImpl _$$DriveProviderModelImplFromJson(
       provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
       backend: DriveProviderBackend.fromJson(
           json['backend'] as Map<String, dynamic>),
+      createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String,
+      isRCloneBackend: json['isRCloneBackend'] as bool,
     );
 
 Map<String, dynamic> _$$DriveProviderModelImplToJson(
@@ -21,6 +24,9 @@ Map<String, dynamic> _$$DriveProviderModelImplToJson(
       'remoteName': instance.remoteName,
       'provider': _$DriveProviderEnumMap[instance.provider]!,
       'backend': instance.backend,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'isRCloneBackend': instance.isRCloneBackend,
     };
 
 const _$DriveProviderEnumMap = {

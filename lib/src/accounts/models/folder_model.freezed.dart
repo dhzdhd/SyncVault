@@ -28,7 +28,6 @@ mixin _$FolderModel {
   bool get isAutoSync => throw _privateConstructorUsedError;
   bool get isDeletionEnabled => throw _privateConstructorUsedError;
   bool get isTwoWaySync => throw _privateConstructorUsedError;
-  bool get isRCloneBackend => throw _privateConstructorUsedError;
 
   /// Serializes this FolderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,8 +53,7 @@ abstract class $FolderModelCopyWith<$Res> {
       String remoteParentPath,
       bool isAutoSync,
       bool isDeletionEnabled,
-      bool isTwoWaySync,
-      bool isRCloneBackend});
+      bool isTwoWaySync});
 }
 
 /// @nodoc
@@ -81,7 +79,6 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
     Object? isTwoWaySync = null,
-    Object? isRCloneBackend = null,
   }) {
     return _then(_value.copyWith(
       remoteName: null == remoteName
@@ -116,10 +113,6 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
           ? _value.isTwoWaySync
           : isTwoWaySync // ignore: cast_nullable_to_non_nullable
               as bool,
-      isRCloneBackend: null == isRCloneBackend
-          ? _value.isRCloneBackend
-          : isRCloneBackend // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -140,8 +133,7 @@ abstract class _$$FolderModelImplCopyWith<$Res>
       String remoteParentPath,
       bool isAutoSync,
       bool isDeletionEnabled,
-      bool isTwoWaySync,
-      bool isRCloneBackend});
+      bool isTwoWaySync});
 }
 
 /// @nodoc
@@ -165,7 +157,6 @@ class __$$FolderModelImplCopyWithImpl<$Res>
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
     Object? isTwoWaySync = null,
-    Object? isRCloneBackend = null,
   }) {
     return _then(_$FolderModelImpl(
       remoteName: null == remoteName
@@ -200,10 +191,6 @@ class __$$FolderModelImplCopyWithImpl<$Res>
           ? _value.isTwoWaySync
           : isTwoWaySync // ignore: cast_nullable_to_non_nullable
               as bool,
-      isRCloneBackend: null == isRCloneBackend
-          ? _value.isRCloneBackend
-          : isRCloneBackend // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -219,8 +206,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       required this.remoteParentPath,
       required this.isAutoSync,
       required this.isDeletionEnabled,
-      required this.isTwoWaySync,
-      required this.isRCloneBackend});
+      required this.isTwoWaySync});
 
   factory _$FolderModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$FolderModelImplFromJson(json);
@@ -241,12 +227,10 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
   final bool isDeletionEnabled;
   @override
   final bool isTwoWaySync;
-  @override
-  final bool isRCloneBackend;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(remoteName: $remoteName, provider: $provider, folderPath: $folderPath, folderName: $folderName, remoteParentPath: $remoteParentPath, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync, isRCloneBackend: $isRCloneBackend)';
+    return 'FolderModel(remoteName: $remoteName, provider: $provider, folderPath: $folderPath, folderName: $folderName, remoteParentPath: $remoteParentPath, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync)';
   }
 
   @override
@@ -261,8 +245,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       ..add(DiagnosticsProperty('remoteParentPath', remoteParentPath))
       ..add(DiagnosticsProperty('isAutoSync', isAutoSync))
       ..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))
-      ..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync))
-      ..add(DiagnosticsProperty('isRCloneBackend', isRCloneBackend));
+      ..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync));
   }
 
   @override
@@ -285,9 +268,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
             (identical(other.isDeletionEnabled, isDeletionEnabled) ||
                 other.isDeletionEnabled == isDeletionEnabled) &&
             (identical(other.isTwoWaySync, isTwoWaySync) ||
-                other.isTwoWaySync == isTwoWaySync) &&
-            (identical(other.isRCloneBackend, isRCloneBackend) ||
-                other.isRCloneBackend == isRCloneBackend));
+                other.isTwoWaySync == isTwoWaySync));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -301,8 +282,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
       remoteParentPath,
       isAutoSync,
       isDeletionEnabled,
-      isTwoWaySync,
-      isRCloneBackend);
+      isTwoWaySync);
 
   /// Create a copy of FolderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -329,8 +309,7 @@ abstract class _FolderModel implements FolderModel {
       required final String remoteParentPath,
       required final bool isAutoSync,
       required final bool isDeletionEnabled,
-      required final bool isTwoWaySync,
-      required final bool isRCloneBackend}) = _$FolderModelImpl;
+      required final bool isTwoWaySync}) = _$FolderModelImpl;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
       _$FolderModelImpl.fromJson;
@@ -351,8 +330,6 @@ abstract class _FolderModel implements FolderModel {
   bool get isDeletionEnabled;
   @override
   bool get isTwoWaySync;
-  @override
-  bool get isRCloneBackend;
 
   /// Create a copy of FolderModel
   /// with the given fields replaced by the non-null parameter values.

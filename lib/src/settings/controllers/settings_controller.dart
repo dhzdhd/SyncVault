@@ -42,7 +42,6 @@ class Settings extends _$Settings {
     } catch (err) {
       debugLogger.e('SettingsModel failed to initialize');
       // TODO: Fix file logger
-      // fileLogger.e('SettingsModel failed to initialize');
 
       return defaultValue;
     }
@@ -70,7 +69,7 @@ class Settings extends _$Settings {
 
   void setRCloneDefaultBackend({Option<bool> choice = const None()}) {
     state = state.copyWith(
-      isHideOnStartup: choice.match(
+      isRCloneDefault: choice.match(
         () => !state.isRCloneDefault,
         (t) => t,
       ),

@@ -55,7 +55,6 @@ class RCloneDriveService {
         isAutoSync: false,
         isDeletionEnabled: false,
         isTwoWaySync: false,
-        isRCloneBackend: true,
       );
       return folderModel;
     });

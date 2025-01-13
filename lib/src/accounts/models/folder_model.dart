@@ -18,7 +18,6 @@ class FolderModel with _$FolderModel {
     required bool isAutoSync,
     required bool isDeletionEnabled,
     required bool isTwoWaySync,
-    required bool isRCloneBackend,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>

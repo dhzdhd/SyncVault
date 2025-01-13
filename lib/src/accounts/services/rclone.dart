@@ -101,6 +101,9 @@ class RCloneAuthService implements AuthService {
                       refreshToken: refreshToken,
                       expiresIn: expiresIn,
                     ),
+                    createdAt: DateTime.now().toIso8601String(),
+                    updatedAt: DateTime.now().toIso8601String(),
+                    isRCloneBackend: true,
                   );
 
                   return model;
@@ -123,6 +126,9 @@ class RCloneAuthService implements AuthService {
                     accessKeyId: accessKeyId,
                     secretAccessKey: secretAccessKey,
                   ),
+                  createdAt: DateTime.now().toIso8601String(),
+                  updatedAt: DateTime.now().toIso8601String(),
+                  isRCloneBackend: true,
                 );
 
                 return model;
@@ -146,6 +152,9 @@ class RCloneAuthService implements AuthService {
                     username: username,
                     password: obscPassword,
                   ),
+                  createdAt: DateTime.now().toIso8601String(),
+                  updatedAt: DateTime.now().toIso8601String(),
+                  isRCloneBackend: true,
                 );
 
                 return model;
@@ -170,6 +179,9 @@ class RCloneAuthService implements AuthService {
                     user: user,
                     password: obscPassword,
                   ),
+                  createdAt: DateTime.now().toIso8601String(),
+                  updatedAt: DateTime.now().toIso8601String(),
+                  isRCloneBackend: true,
                 );
 
                 return model;
