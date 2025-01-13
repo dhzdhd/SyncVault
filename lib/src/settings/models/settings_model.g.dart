@@ -10,6 +10,7 @@ _$SettingsModelImpl _$$SettingsModelImplFromJson(Map<String, dynamic> json) =>
     _$SettingsModelImpl(
       isSentryEnabled: json['isSentryEnabled'] as bool,
       isHideOnStartup: json['isHideOnStartup'] as bool,
+      isRCloneDefault: json['isRCloneDefault'] as bool,
       themeMode: $enumDecode(_$ThemeModeEnumMap, json['themeMode']),
     );
 
@@ -17,6 +18,7 @@ Map<String, dynamic> _$$SettingsModelImplToJson(_$SettingsModelImpl instance) =>
     <String, dynamic>{
       'isSentryEnabled': instance.isSentryEnabled,
       'isHideOnStartup': instance.isHideOnStartup,
+      'isRCloneDefault': instance.isRCloneDefault,
       'themeMode': _$ThemeModeEnumMap[instance.themeMode]!,
     };
 

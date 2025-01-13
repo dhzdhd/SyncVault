@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -103,40 +105,60 @@ class SettingsView extends ConsumerWidget {
                           )
                         ],
                       ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: OutlinedButton(
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Are you sure'),
-                              actions: [
-                                const OutlinedButton(
-                                  onPressed: null,
-                                  child: Text('Yes'),
-                                ),
-                                FilledButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('No'),
-                                )
-                              ],
+                    if (!Platform.isIOS)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Default RClone backend',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
                             ),
-                          );
-                        },
-                        // TODO:
-                        child: const Text(
-                          'Download RClone',
-                          style: TextStyle(fontSize: 18),
+                          ),
+                          Switch(
+                            value: settings.isRCloneDefault,
+                            onChanged: (val) {
+                              settingsNotifier.setRCloneDefaultBackend();
+                            },
+                          )
+                        ],
+                      ),
+                    if (!Platform.isIOS)
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Are you sure'),
+                                actions: [
+                                  const OutlinedButton(
+                                    onPressed: null,
+                                    child: Text('Yes'),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('No'),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                          // TODO:
+                          child: const Text(
+                            'Download RClone',
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ),
                       ),
-                    ),
                     // Visible only in debug mode
                     Visibility(
-                      visible: kDebugMode,
+                      visible: kDebugMode && !Platform.isIOS,
                       child: SizedBox(
                         width: double.infinity,
                         height: 50,

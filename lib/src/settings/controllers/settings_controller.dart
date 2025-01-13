@@ -68,6 +68,16 @@ class Settings extends _$Settings {
     _box.put(settingsKey, state);
   }
 
+  void setRCloneDefaultBackend({Option<bool> choice = const None()}) {
+    state = state.copyWith(
+      isHideOnStartup: choice.match(
+        () => !state.isRCloneDefault,
+        (t) => t,
+      ),
+    );
+    _box.put(settingsKey, state);
+  }
+
   void updateThemeMode(ThemeMode? newThemeMode) async {
     if (newThemeMode == state.themeMode || newThemeMode == null) {
       return;

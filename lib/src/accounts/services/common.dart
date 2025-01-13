@@ -16,4 +16,8 @@ abstract interface class AuthService {
   });
 }
 
-abstract interface class ManualAuthService {}
+abstract interface class ManualAuthService extends AuthService {
+  TaskEither<AppError, DriveProviderModel> refresh({
+    required DriveProviderModel model,
+  });
+}

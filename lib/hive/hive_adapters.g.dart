@@ -60,6 +60,7 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
     return SettingsModel(
       isSentryEnabled: fields[3] as bool,
       isHideOnStartup: fields[4] as bool,
+      isRCloneDefault: fields[7] as bool,
       themeMode: fields[5] as ThemeMode,
     );
   }
@@ -67,13 +68,15 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
   @override
   void write(BinaryWriter writer, SettingsModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(3)
       ..write(obj.isSentryEnabled)
       ..writeByte(4)
       ..write(obj.isHideOnStartup)
       ..writeByte(5)
-      ..write(obj.themeMode);
+      ..write(obj.themeMode)
+      ..writeByte(7)
+      ..write(obj.isRCloneDefault);
   }
 
   @override
@@ -356,13 +359,14 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       isAutoSync: fields[4] as bool,
       isDeletionEnabled: fields[5] as bool,
       isTwoWaySync: fields[6] as bool,
+      isRCloneBackend: fields[8] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, FolderModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.remoteName)
       ..writeByte(1)
@@ -378,7 +382,9 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       ..writeByte(6)
       ..write(obj.isTwoWaySync)
       ..writeByte(7)
-      ..write(obj.remoteParentPath);
+      ..write(obj.remoteParentPath)
+      ..writeByte(8)
+      ..write(obj.isRCloneBackend);
   }
 
   @override

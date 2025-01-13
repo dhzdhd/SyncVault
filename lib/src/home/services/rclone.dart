@@ -55,6 +55,7 @@ class RCloneDriveService {
         isAutoSync: false,
         isDeletionEnabled: false,
         isTwoWaySync: false,
+        isRCloneBackend: true,
       );
       return folderModel;
     });
@@ -101,7 +102,6 @@ class RCloneDriveService {
     required FolderModel folderModel,
   }) {
     final utils = RCloneUtils();
-    // FIXME:
 
     return TaskEither<AppError, ()>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());

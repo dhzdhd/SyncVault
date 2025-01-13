@@ -15,7 +15,7 @@ types:
         index: 2
   SettingsModel:
     typeId: 1
-    nextIndex: 6
+    nextIndex: 8
     fields:
       isSentryEnabled:
         index: 3
@@ -23,6 +23,8 @@ types:
         index: 4
       themeMode:
         index: 5
+      isRCloneDefault:
+        index: 7
   IntroSettingsModel:
     typeId: 2
     nextIndex: 1
@@ -89,7 +91,7 @@ types:
         index: 2
   FolderModel:
     typeId: 11
-    nextIndex: 8
+    nextIndex: 9
     fields:
       remoteName:
         index: 0
@@ -107,6 +109,8 @@ types:
         index: 6
       remoteParentPath:
         index: 7
+      isRCloneBackend:
+        index: 8
   UserPassword:
     typeId: 12
     nextIndex: 2
