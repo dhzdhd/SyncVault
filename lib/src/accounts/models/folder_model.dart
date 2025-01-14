@@ -1,5 +1,6 @@
 // dart run build_runner build
 
+import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
@@ -18,6 +19,7 @@ class FolderModel with _$FolderModel {
     required bool isAutoSync,
     required bool isDeletionEnabled,
     required bool isTwoWaySync,
+    required Option<String> folderId,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>

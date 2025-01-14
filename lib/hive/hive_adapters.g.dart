@@ -368,13 +368,14 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       isAutoSync: fields[4] as bool,
       isDeletionEnabled: fields[5] as bool,
       isTwoWaySync: fields[6] as bool,
+      folderId: fields[9] as Option<String>,
     );
   }
 
   @override
   void write(BinaryWriter writer, FolderModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.remoteName)
       ..writeByte(1)
@@ -390,7 +391,9 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       ..writeByte(6)
       ..write(obj.isTwoWaySync)
       ..writeByte(7)
-      ..write(obj.remoteParentPath);
+      ..write(obj.remoteParentPath)
+      ..writeByte(9)
+      ..write(obj.folderId);
   }
 
   @override

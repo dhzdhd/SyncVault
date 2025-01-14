@@ -1,10 +1,10 @@
-import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
+import 'package:syncvault/src/accounts/services/common.dart';
 import 'package:syncvault/src/accounts/services/providers/google_auth.dart';
 import 'package:syncvault/src/accounts/services/rclone.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
@@ -56,12 +56,18 @@ class Auth extends _$Auth {
     return _box.values.toList();
   }
 
+  ManualAuthService getManualAuthService(DriveProvider provider) {
+    return switch (provider) {
+      DriveProvider.googleDrive => GoogleAuthService(),
+      _ => throw UnimplementedError(),
+    };
+  }
+
   Future<void> signIn(
     DriveProviderBackend backend,
     DriveProvider provider,
     String remoteName,
   ) async {
-    late final Either<AppError, DriveProviderModel> service;
     final settings = ref.watch(settingsProvider);
 
     if (state.any((element) => element.remoteName == remoteName)) {
@@ -70,18 +76,16 @@ class Auth extends _$Auth {
       );
     }
 
-    if (settings.isRCloneDefault) {
-      service = await RCloneAuthService()
+    final service = switch (settings.isRCloneDefault) {
+      true => await RCloneAuthService()
           .authorize(
               backend: backend, driveProvider: provider, remoteName: remoteName)
-          .run();
-    } else {
-      // TODO: Segregate by provider
-      service = await GoogleAuthService()
+          .run(),
+      false => await getManualAuthService(provider)
           .authorize(
               backend: backend, driveProvider: provider, remoteName: remoteName)
-          .run();
-    }
+          .run()
+    };
 
     service.match(
       (l) => throw l,
@@ -102,13 +106,14 @@ class Auth extends _$Auth {
   Future<DriveInfoModel> getDriveInfo(
     DriveProviderModel model,
   ) async {
-    late final Either<AppError, Option<DriveInfoModel>> result;
-    if (model.isRCloneBackend) {
-      result = await RCloneAuthService().driveInfo(model: model).run();
-    } else {
-      // TODO: Segregate by provider
-      result = await GoogleAuthService().driveInfo(model: model).run();
-    }
+    final result = switch (model.isRCloneBackend) {
+      true => await RCloneAuthService().driveInfo(model: model).run(),
+      false => await getManualAuthService(model.provider)
+          .refresh(model: model)
+          .flatMap((res) =>
+              getManualAuthService(model.provider).driveInfo(model: res))
+          .run()
+    };
 
     return result.match(
       (err) => throw err,

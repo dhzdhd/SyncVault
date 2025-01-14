@@ -8,9 +8,11 @@ import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/services/common.dart';
 
 @singleton
-class RCloneDriveService {
+class RCloneDriveService implements DriveService {
+  @override
   TaskEither<AppError, FolderModel> create({
     required DriveProviderModel model,
     required String folderPath,
@@ -55,11 +57,13 @@ class RCloneDriveService {
         isAutoSync: false,
         isDeletionEnabled: false,
         isTwoWaySync: false,
+        folderId: none(),
       );
       return folderModel;
     });
   }
 
+  @override
   TaskEither<AppError, ()> upload({
     required DriveProviderModel providerModel,
     required FolderModel folderModel,
@@ -96,6 +100,7 @@ class RCloneDriveService {
     });
   }
 
+  @override
   TaskEither<AppError, ()> delete({
     required DriveProviderModel providerModel,
     required FolderModel folderModel,
@@ -130,6 +135,7 @@ class RCloneDriveService {
     });
   }
 
+  @override
   TaskEither<AppError, Option<FileModel>> treeView({
     required FolderModel model,
   }) {

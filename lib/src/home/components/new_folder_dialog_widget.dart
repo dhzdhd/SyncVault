@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
-import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
@@ -147,6 +147,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                         folderName: t.$3,
                       );
 
+                  // TODO: Show this only on no error
                   if (context.mounted) {
                     context.showSuccessSnackBar(
                       content: 'Successfully linked folder',

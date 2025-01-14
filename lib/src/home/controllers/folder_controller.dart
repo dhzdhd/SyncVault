@@ -7,6 +7,7 @@ import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/services/providers/google_drive.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'folder_controller.g.dart';
@@ -139,7 +140,9 @@ class Folder extends _$Folder {
     required String folderName,
     String remoteParentPath = 'SyncVault/',
   }) async {
-    final driveService = RCloneDriveService();
+    // TODO: Segregate by provider
+    final driveService =
+        authModel.isRCloneBackend ? RCloneDriveService() : GoogleDriveService();
 
     final model = await driveService
         .create(

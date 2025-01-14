@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
-import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import '../controllers/settings_controller.dart';
 
@@ -111,7 +111,7 @@ class SettingsView extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Default RClone backend',
+                            'Set RClone as default backend',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,

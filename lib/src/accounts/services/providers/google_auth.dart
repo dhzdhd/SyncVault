@@ -5,9 +5,9 @@ import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/common.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
+import 'package:syncvault/src/common/services/providers/google_utils.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:get_it/get_it.dart';
@@ -16,28 +16,14 @@ final _dio = GetIt.I<Dio>();
 
 @singleton
 class GoogleAuthService implements ManualAuthService {
-  static final _clientId = PlatformExtension.isMobile
-      ? '844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q.apps.googleusercontent.com'
-      : '844110357681-uf9kcigbrju05jhebrr58388b3ij299d.apps.googleusercontent.com';
-  static final _callbackUrlScheme = PlatformExtension.isMobile
-      ? 'com.googleusercontent.apps.844110357681-4sa1ev4ep3thlfa5gq3l4pjigvv3n98q'
-      : 'http://localhost:8006';
-  static const _authHost = 'accounts.google.com';
-  // static final _clientSecret = dotenv.env['GDRIVE_SECRET']!;
-  // TODO: Different for mobile and desktop
-  static const _clientSecret = '';
-  static const _apiHost = 'www.googleapis.com';
-
   final _codeUri = Uri.https(
-    _authHost,
+    GoogleUtils.authHost,
     '/o/oauth2/v2/auth',
     {
-      'client_id': _clientId,
+      'client_id': GoogleUtils.clientId,
       'response_type': 'code',
-      'redirect_uri':
-          Platform.isAndroid ? '$_callbackUrlScheme:/' : _callbackUrlScheme,
-      'scope':
-          'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+      'redirect_uri': GoogleUtils.callbackUrlScheme,
+      'scope': GoogleUtils.scopesString,
       'state': '12345',
       'access_type': 'offline',
       'prompt': 'select_account consent',
@@ -57,7 +43,7 @@ class GoogleAuthService implements ManualAuthService {
     return TaskEither.tryCatch(() async {
       final result = await FlutterWebAuth2.authenticate(
         url: _codeUri.toString(),
-        callbackUrlScheme: _callbackUrlScheme,
+        callbackUrlScheme: GoogleUtils.callbackUrlScheme,
         options: const FlutterWebAuth2Options(
           useWebview: false,
           intentFlags: ephemeralIntentFlags,
@@ -67,7 +53,7 @@ class GoogleAuthService implements ManualAuthService {
       final code = Uri.parse(result).queryParameters['code'];
 
       final tokenUri = Uri.https(
-        _apiHost,
+        GoogleUtils.apiHost,
         '/oauth2/v4/token',
       );
 
@@ -77,11 +63,12 @@ class GoogleAuthService implements ManualAuthService {
       final response = await _dio.postUri<Map<String, dynamic>>(
         tokenUri,
         data: {
-          'client_id': _clientId,
+          'client_id': GoogleUtils.clientId,
           'code': code,
           'grant_type': 'authorization_code',
-          if (PlatformExtension.isDesktop) 'client_secret': _clientSecret,
-          'redirect_uri': _callbackUrlScheme,
+          if (PlatformExtension.isDesktop)
+            'client_secret': GoogleUtils.clientSecret,
+          'redirect_uri': GoogleUtils.callbackUrlScheme,
         },
         options: options,
       );
@@ -103,7 +90,7 @@ class GoogleAuthService implements ManualAuthService {
         updatedAt: DateTime.now().toIso8601String(),
         isRCloneBackend: false,
       );
-    }, (err, st) => err.handleError('Google auth failed', st));
+    }, (err, st) => err.handleError('Gdrive auth failed', st));
   }
 
   @override
@@ -115,8 +102,8 @@ class GoogleAuthService implements ManualAuthService {
       'Authorization': 'Bearer ${backend.accessToken}',
     });
 
-    final uri =
-        Uri.https(_apiHost, '/drive/v3/about', {'fields': 'storageQuota'});
+    final uri = Uri.https(
+        GoogleUtils.apiHost, '/drive/v3/about', {'fields': 'storageQuota'});
 
     return TaskEither.tryCatch(
       () async {
@@ -140,46 +127,50 @@ class GoogleAuthService implements ManualAuthService {
   }
 
   @override
-  TaskEither<AppError, DriveProviderModel> refresh(
-      {required DriveProviderModel model}) {
+  TaskEither<AppError, DriveProviderModel> refresh({
+    required DriveProviderModel model,
+  }) {
     return TaskEither.tryCatch(
       () async {
-        // final backend = model.backend as OAuth2;
+        final backend = model.backend as OAuth2;
 
-        // final prev = DateTime.parse(model.createdAt);
-        // final now = DateTime.now();
-        // final diff =
-        //     prev.add(Duration(seconds: model.expiresIn)).compareTo(now);
+        final prev = DateTime.parse(model.updatedAt);
+        final now = DateTime.now();
+        final diff = prev
+            .add(Duration(seconds: int.parse(backend.expiresIn)))
+            .compareTo(now);
 
-        // if (diff <= 0) {
-        //   final options = Options(
-        //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        //   );
-        //   final uri = Uri.https(
-        //     _apiHost,
-        //     '/oauth2/v4/token',
-        //   );
-        //   final response = await _dio.postUri<Map<String, dynamic>>(
-        //     uri,
-        //     data: {
-        //       'client_id': _clientId,
-        //       'grant_type': 'refresh_token',
-        //       // if (Platform.isWindows) 'client_secret': clientSecret,
-        //       'redirect_uri': _callbackUrlScheme,
-        //       'refresh_token': backend.refreshToken,
-        //     },
-        //     options: options,
-        //   );
+        if (diff <= 0) {
+          final options = Options(
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          );
+          final uri = Uri.https(
+            GoogleUtils.apiHost,
+            '/oauth2/v4/token',
+          );
+          final response = await _dio.postUri<Map<String, dynamic>>(
+            uri,
+            data: {
+              'client_id': GoogleUtils.clientId,
+              'grant_type': 'refresh_token',
+              if (PlatformExtension.isDesktop)
+                'client_secret': GoogleUtils.clientSecret,
+              'redirect_uri': GoogleUtils.callbackUrlScheme,
+              'refresh_token': backend.refreshToken,
+            },
+            options: options,
+          );
 
-        //   return model.copyWith(
-        //     accessToken: response.data!['access_token'],
-        //     expiresIn: response.data!['expires_in'],
-        //   );
-        // } else {
-        //   return model;
-        // }
-
-        throw UnimplementedError();
+          return model.copyWith(
+            backend: backend.copyWith(
+              accessToken: response.data!['access_token'],
+              expiresIn: response.data!['expires_in'].toString(),
+            ),
+            updatedAt: DateTime.now().toIso8601String(),
+          );
+        } else {
+          return model;
+        }
       },
       (err, st) => err.handleError('Failed to refresh gdrive token', st),
     );
@@ -193,7 +184,7 @@ class GoogleAuthService implements ManualAuthService {
     });
 
     return TaskEither.tryCatch(() async {
-      final uri = Uri.https(_apiHost, '/oauth2/v2/userinfo');
+      final uri = Uri.https(GoogleUtils.apiHost, '/oauth2/v2/userinfo');
       final response = await _dio.getUri<Map<String, dynamic>>(
         uri,
         options: authOptions,
@@ -201,7 +192,8 @@ class GoogleAuthService implements ManualAuthService {
 
       return response.data!;
     }, (error, stackTrace) {
-      return error.handleError('', StackTrace.empty);
+      return error.handleError(
+          'Failed to get Gdrive user info', StackTrace.empty);
     });
   }
 }

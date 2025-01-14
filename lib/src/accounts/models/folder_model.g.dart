@@ -16,6 +16,8 @@ _$FolderModelImpl _$$FolderModelImplFromJson(Map<String, dynamic> json) =>
       isAutoSync: json['isAutoSync'] as bool,
       isDeletionEnabled: json['isDeletionEnabled'] as bool,
       isTwoWaySync: json['isTwoWaySync'] as bool,
+      folderId:
+          Option<String>.fromJson(json['folderId'], (value) => value as String),
     );
 
 Map<String, dynamic> _$$FolderModelImplToJson(_$FolderModelImpl instance) =>
@@ -28,6 +30,9 @@ Map<String, dynamic> _$$FolderModelImplToJson(_$FolderModelImpl instance) =>
       'isAutoSync': instance.isAutoSync,
       'isDeletionEnabled': instance.isDeletionEnabled,
       'isTwoWaySync': instance.isTwoWaySync,
+      'folderId': instance.folderId.toJson(
+        (value) => value,
+      ),
     };
 
 const _$DriveProviderEnumMap = {
