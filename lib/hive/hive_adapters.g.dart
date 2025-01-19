@@ -364,11 +364,11 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       provider: fields[1] as DriveProvider,
       folderPath: fields[2] as String,
       folderName: fields[3] as String,
-      remoteParentPath: fields[7] as String,
+      remoteParentPath: fields[7] as String?,
       isAutoSync: fields[4] as bool,
       isDeletionEnabled: fields[5] as bool,
       isTwoWaySync: fields[6] as bool,
-      folderId: fields[9] as Option<String>,
+      folderId: fields[9] as String?,
     );
   }
 

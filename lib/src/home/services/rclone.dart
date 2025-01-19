@@ -17,7 +17,7 @@ class RCloneDriveService implements DriveService {
     required DriveProviderModel model,
     required String folderPath,
     required String folderName,
-    String remoteParentPath = 'SyncVault/',
+    required Option<String> remoteParentPath,
   }) {
     final utils = RCloneUtils();
 
@@ -28,11 +28,13 @@ class RCloneDriveService implements DriveService {
       await $(
         TaskEither.tryCatch(
           () async {
+            final parentPath = remoteParentPath.match(() => '/', (t) => '/$t/');
+
             // TODO: S3 only allows bucket name, not path
             final process = await Process.run(execPath, [
               ...configArgs,
               'mkdir',
-              '${model.remoteName}:/$remoteParentPath$folderName'
+              '${model.remoteName}:$parentPath$folderName'
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -53,11 +55,11 @@ class RCloneDriveService implements DriveService {
         provider: model.provider,
         folderPath: folderPath,
         folderName: folderName,
-        remoteParentPath: remoteParentPath,
+        remoteParentPath: remoteParentPath.toNullable(),
         isAutoSync: false,
         isDeletionEnabled: false,
         isTwoWaySync: false,
-        folderId: none(),
+        folderId: null,
       );
       return folderModel;
     });
@@ -78,11 +80,19 @@ class RCloneDriveService implements DriveService {
       final res = await $(
         TaskEither.tryCatch(
           () async {
+            final parentPath = Option.fromNullable(folderModel.remoteParentPath)
+                .match(() => '/', (t) => '/$t/');
+
             final process = await Process.run(execPath, [
+              // Use a 2 way copy to avoid deletion
               ...configArgs,
-              'sync',
+              folderModel.isTwoWaySync ? 'bisync' : 'sync',
+              '-u', // Do not delete/update on remote if remote file is newer
+              '-M',
+              '--inplace', // Bisync fails without this
+              '--resync',
               localPath,
-              '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
+              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}'
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -114,10 +124,13 @@ class RCloneDriveService implements DriveService {
       final res = await $(
         TaskEither.tryCatch(
           () async {
+            final parentPath = Option.fromNullable(folderModel.remoteParentPath)
+                .match(() => '/', (t) => '/$t/');
+
             final process = await Process.run(execPath, [
               ...configArgs,
               'purge',
-              '${folderModel.remoteName}:/${folderModel.remoteParentPath}${folderModel.folderName}'
+              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}'
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -147,6 +160,9 @@ class RCloneDriveService implements DriveService {
 
       final Option<FileModel> fileModel = await $(TaskEither.tryCatch(
         () async {
+          final parentPath = Option.fromNullable(model.remoteParentPath)
+              .match(() => '/', (t) => '/$t/');
+
           final process = await Process.run(execPath, [
             ...configArgs,
             'tree',
@@ -155,7 +171,7 @@ class RCloneDriveService implements DriveService {
             '--full-path',
             '-s',
             '-Q',
-            '${model.remoteName}:/${model.remoteParentPath}${model.folderName}'
+            '${model.remoteName}:/$parentPath${model.folderName}'
           ]);
 
           if (process.stderr.toString().trim().isNotEmpty) {

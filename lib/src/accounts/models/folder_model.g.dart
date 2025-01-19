@@ -12,12 +12,11 @@ _$FolderModelImpl _$$FolderModelImplFromJson(Map<String, dynamic> json) =>
       provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
       folderPath: json['folderPath'] as String,
       folderName: json['folderName'] as String,
-      remoteParentPath: json['remoteParentPath'] as String,
+      remoteParentPath: json['remoteParentPath'] as String?,
       isAutoSync: json['isAutoSync'] as bool,
       isDeletionEnabled: json['isDeletionEnabled'] as bool,
       isTwoWaySync: json['isTwoWaySync'] as bool,
-      folderId:
-          Option<String>.fromJson(json['folderId'], (value) => value as String),
+      folderId: json['folderId'] as String?,
     );
 
 Map<String, dynamic> _$$FolderModelImplToJson(_$FolderModelImpl instance) =>
@@ -30,9 +29,7 @@ Map<String, dynamic> _$$FolderModelImplToJson(_$FolderModelImpl instance) =>
       'isAutoSync': instance.isAutoSync,
       'isDeletionEnabled': instance.isDeletionEnabled,
       'isTwoWaySync': instance.isTwoWaySync,
-      'folderId': instance.folderId.toJson(
-        (value) => value,
-      ),
+      'folderId': instance.folderId,
     };
 
 const _$DriveProviderEnumMap = {

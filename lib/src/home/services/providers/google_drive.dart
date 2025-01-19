@@ -18,7 +18,7 @@ class GoogleDriveService implements DriveService {
     required DriveProviderModel model,
     required String folderPath,
     required String folderName,
-    String remoteParentPath = 'SyncVault/',
+    required Option<String> remoteParentPath,
   }) {
     return TaskEither.tryCatch(
       () async {
@@ -50,7 +50,10 @@ class GoogleDriveService implements DriveService {
         late final String parentFolderId;
         if (fileList.files!.isEmpty) {
           final folderMetadata = drive.File(
-            name: remoteParentPath.replaceAll('/', ''),
+            name: remoteParentPath.match(
+              () => 'SyncVault/',
+              (t) => t.replaceAll('/', ''),
+            ),
             mimeType: 'application/vnd.google-apps.folder',
           );
           final syncVaultFolder = await api.files.create(folderMetadata);
@@ -74,11 +77,11 @@ class GoogleDriveService implements DriveService {
           provider: model.provider,
           folderPath: folderPath,
           folderName: folderName,
-          remoteParentPath: remoteParentPath,
+          remoteParentPath: remoteParentPath.toNullable(),
           isAutoSync: false,
           isDeletionEnabled: false,
           isTwoWaySync: false,
-          folderId: Option.fromNullable(folder.id),
+          folderId: folder.id,
         );
       },
       (error, stackTrace) {

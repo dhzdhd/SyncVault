@@ -19,17 +19,20 @@ class NewFolderDialogWidget extends StatefulHookConsumerWidget {
 }
 
 class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
-  late final TextEditingController _controller;
+  late final TextEditingController _nameController;
+  late final TextEditingController _parentPathController;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+    _nameController = TextEditingController();
+    _parentPathController = TextEditingController(text: 'SyncVault');
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _nameController.dispose();
+    _parentPathController.dispose();
     super.dispose();
   }
 
@@ -57,10 +60,18 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
       contentPadding: const EdgeInsets.all(24),
       children: [
         TextField(
-          controller: _controller,
+          controller: _nameController,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Name of folder',
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _parentPathController,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Remote parent path',
           ),
         ),
         const SizedBox(height: 16),
@@ -88,9 +99,9 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
             Expanded(
               child: Tooltip(
                 message:
-                    selectedFolder.value.toNullable() ?? 'Not selected yet',
+                    selectedFolder.value.toNullable() ?? 'Select local folder',
                 child: Text(
-                  selectedFolder.value.toNullable() ?? 'Not selected yet',
+                  selectedFolder.value.toNullable() ?? 'Select local folder',
                   style: Theme.of(context).textTheme.titleMedium,
                   textAlign: TextAlign.left,
                   overflow: TextOverflow.ellipsis,
@@ -118,16 +129,23 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               : const Text('Submit'),
           onPressed: () async {
             if (!createFolderController.isLoading) {
-              final Option<(DriveProviderModel, String, String)> content =
-                  selectedProvider.value.match(
+              final Option<(DriveProviderModel, String, String, Option<String>)>
+                  content = selectedProvider.value.match(
                 () => none(),
                 (t) => selectedFolder.value.match(() => none(), (r) {
-                  final folderName = _controller.text;
-                  if (_controller.text.trim().isNotEmpty &&
+                  final folderName = _nameController.text.trim();
+                  final parentPathName = _parentPathController.text.trim();
+                  if (folderName.isNotEmpty &&
                       !ref
                           .read(folderProvider)
                           .any((element) => element.folderName == folderName)) {
-                    return some((t, r, folderName));
+                    return some((
+                      t,
+                      r,
+                      folderName,
+                      // TODO: Set none if S3 provider
+                      parentPathName.isEmpty ? none() : some(parentPathName)
+                    ));
                   } else {
                     return none();
                   }
@@ -142,10 +160,10 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                   await ref
                       .read(createFolderControllerProvider.notifier)
                       .createFolder(
-                        authModel: t.$1,
-                        folderPath: t.$2,
-                        folderName: t.$3,
-                      );
+                          authModel: t.$1,
+                          folderPath: t.$2,
+                          folderName: t.$3,
+                          remoteParentPath: t.$4);
 
                   // TODO: Show this only on no error
                   if (context.mounted) {

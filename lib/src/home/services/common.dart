@@ -9,7 +9,7 @@ abstract interface class DriveService {
     required DriveProviderModel model,
     required String folderPath,
     required String folderName,
-    String remoteParentPath = 'SyncVault/',
+    required Option<String> remoteParentPath,
   });
   TaskEither<AppError, ()> upload({
     required DriveProviderModel providerModel,

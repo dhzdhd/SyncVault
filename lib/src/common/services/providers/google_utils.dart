@@ -11,9 +11,7 @@ class GoogleUtils {
       : Platform.isIOS
           ? 'com.googleusercontent.apps.844110357681-2dhkpbmddfvblqn2vfril150kpgbq2d3:/'
           : 'http://localhost:8006';
-  // TODO: Hide secret
-  // static final _clientSecret = dotenv.env['GDRIVE_SECRET']!;
-  static const clientSecret = '';
+  static const clientSecret = String.fromEnvironment('GDRIVE_SECRET');
   static const authHost = 'accounts.google.com';
   static const apiHost = 'www.googleapis.com';
   static const basePath = '/drive/v3';

@@ -357,7 +357,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Two way sync',
+                            'Bidirectional sync',
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           SizedBox(

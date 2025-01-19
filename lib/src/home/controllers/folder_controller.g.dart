@@ -158,7 +158,7 @@ class _TreeViewProviderElement
 }
 
 String _$createFolderControllerHash() =>
-    r'03519908f475f209da83d9acc64c2bf3e5144610';
+    r'e4d79b87588b0c115affb54dba657c1c9e0189b8';
 
 /// See also [CreateFolderController].
 @ProviderFor(CreateFolderController)
@@ -191,7 +191,7 @@ final uploadDeleteControllerProvider =
 );
 
 typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<void>;
-String _$folderHash() => r'58c9dbfbefab3b46f0a4f3831aee425dd1e2d5d9';
+String _$folderHash() => r'098bcc8f41888b0a73c25456df0241beab47d892';
 
 /// See also [Folder].
 @ProviderFor(Folder)

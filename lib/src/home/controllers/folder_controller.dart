@@ -23,8 +23,7 @@ class CreateFolderController extends _$CreateFolderController {
     required DriveProviderModel authModel,
     required String folderPath,
     required String folderName,
-    String remoteParentPath =
-        'SyncVault/', // TODO: Remove extra defaults in later calls
+    required Option<String> remoteParentPath,
   }) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
@@ -138,7 +137,7 @@ class Folder extends _$Folder {
     required DriveProviderModel authModel,
     required String folderPath,
     required String folderName,
-    String remoteParentPath = 'SyncVault/',
+    required Option<String> remoteParentPath,
   }) async {
     // TODO: Segregate by provider
     final driveService =

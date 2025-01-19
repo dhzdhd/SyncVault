@@ -24,11 +24,11 @@ mixin _$FolderModel {
   DriveProvider get provider => throw _privateConstructorUsedError;
   String get folderPath => throw _privateConstructorUsedError;
   String get folderName => throw _privateConstructorUsedError;
-  String get remoteParentPath => throw _privateConstructorUsedError;
+  String? get remoteParentPath => throw _privateConstructorUsedError;
   bool get isAutoSync => throw _privateConstructorUsedError;
   bool get isDeletionEnabled => throw _privateConstructorUsedError;
   bool get isTwoWaySync => throw _privateConstructorUsedError;
-  Option<String> get folderId => throw _privateConstructorUsedError;
+  String? get folderId => throw _privateConstructorUsedError;
 
   /// Serializes this FolderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,11 +51,11 @@ abstract class $FolderModelCopyWith<$Res> {
       DriveProvider provider,
       String folderPath,
       String folderName,
-      String remoteParentPath,
+      String? remoteParentPath,
       bool isAutoSync,
       bool isDeletionEnabled,
       bool isTwoWaySync,
-      Option<String> folderId});
+      String? folderId});
 }
 
 /// @nodoc
@@ -77,11 +77,11 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
     Object? provider = null,
     Object? folderPath = null,
     Object? folderName = null,
-    Object? remoteParentPath = null,
+    Object? remoteParentPath = freezed,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
     Object? isTwoWaySync = null,
-    Object? folderId = null,
+    Object? folderId = freezed,
   }) {
     return _then(_value.copyWith(
       remoteName: null == remoteName
@@ -100,10 +100,10 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
           ? _value.folderName
           : folderName // ignore: cast_nullable_to_non_nullable
               as String,
-      remoteParentPath: null == remoteParentPath
+      remoteParentPath: freezed == remoteParentPath
           ? _value.remoteParentPath
           : remoteParentPath // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       isAutoSync: null == isAutoSync
           ? _value.isAutoSync
           : isAutoSync // ignore: cast_nullable_to_non_nullable
@@ -116,10 +116,10 @@ class _$FolderModelCopyWithImpl<$Res, $Val extends FolderModel>
           ? _value.isTwoWaySync
           : isTwoWaySync // ignore: cast_nullable_to_non_nullable
               as bool,
-      folderId: null == folderId
+      folderId: freezed == folderId
           ? _value.folderId
           : folderId // ignore: cast_nullable_to_non_nullable
-              as Option<String>,
+              as String?,
     ) as $Val);
   }
 }
@@ -137,11 +137,11 @@ abstract class _$$FolderModelImplCopyWith<$Res>
       DriveProvider provider,
       String folderPath,
       String folderName,
-      String remoteParentPath,
+      String? remoteParentPath,
       bool isAutoSync,
       bool isDeletionEnabled,
       bool isTwoWaySync,
-      Option<String> folderId});
+      String? folderId});
 }
 
 /// @nodoc
@@ -161,11 +161,11 @@ class __$$FolderModelImplCopyWithImpl<$Res>
     Object? provider = null,
     Object? folderPath = null,
     Object? folderName = null,
-    Object? remoteParentPath = null,
+    Object? remoteParentPath = freezed,
     Object? isAutoSync = null,
     Object? isDeletionEnabled = null,
     Object? isTwoWaySync = null,
-    Object? folderId = null,
+    Object? folderId = freezed,
   }) {
     return _then(_$FolderModelImpl(
       remoteName: null == remoteName
@@ -184,10 +184,10 @@ class __$$FolderModelImplCopyWithImpl<$Res>
           ? _value.folderName
           : folderName // ignore: cast_nullable_to_non_nullable
               as String,
-      remoteParentPath: null == remoteParentPath
+      remoteParentPath: freezed == remoteParentPath
           ? _value.remoteParentPath
           : remoteParentPath // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       isAutoSync: null == isAutoSync
           ? _value.isAutoSync
           : isAutoSync // ignore: cast_nullable_to_non_nullable
@@ -200,10 +200,10 @@ class __$$FolderModelImplCopyWithImpl<$Res>
           ? _value.isTwoWaySync
           : isTwoWaySync // ignore: cast_nullable_to_non_nullable
               as bool,
-      folderId: null == folderId
+      folderId: freezed == folderId
           ? _value.folderId
           : folderId // ignore: cast_nullable_to_non_nullable
-              as Option<String>,
+              as String?,
     ));
   }
 }
@@ -234,7 +234,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
   @override
   final String folderName;
   @override
-  final String remoteParentPath;
+  final String? remoteParentPath;
   @override
   final bool isAutoSync;
   @override
@@ -242,7 +242,7 @@ class _$FolderModelImpl with DiagnosticableTreeMixin implements _FolderModel {
   @override
   final bool isTwoWaySync;
   @override
-  final Option<String> folderId;
+  final String? folderId;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -326,11 +326,11 @@ abstract class _FolderModel implements FolderModel {
       required final DriveProvider provider,
       required final String folderPath,
       required final String folderName,
-      required final String remoteParentPath,
+      required final String? remoteParentPath,
       required final bool isAutoSync,
       required final bool isDeletionEnabled,
       required final bool isTwoWaySync,
-      required final Option<String> folderId}) = _$FolderModelImpl;
+      required final String? folderId}) = _$FolderModelImpl;
 
   factory _FolderModel.fromJson(Map<String, dynamic> json) =
       _$FolderModelImpl.fromJson;
@@ -344,7 +344,7 @@ abstract class _FolderModel implements FolderModel {
   @override
   String get folderName;
   @override
-  String get remoteParentPath;
+  String? get remoteParentPath;
   @override
   bool get isAutoSync;
   @override
@@ -352,7 +352,7 @@ abstract class _FolderModel implements FolderModel {
   @override
   bool get isTwoWaySync;
   @override
-  Option<String> get folderId;
+  String? get folderId;
 
   /// Create a copy of FolderModel
   /// with the given fields replaced by the non-null parameter values.
