@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 0.7.0
+version: 0.7.1
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
@@ -50,7 +50,6 @@ dependencies:
   googleapis: ^13.2.0
   google_sign_in: ^6.2.2
   oauth2: ^2.0.3
-  uni_links: ^0.5.1
   googleapis_auth: ^1.6.0
 
 dev_dependencies:
