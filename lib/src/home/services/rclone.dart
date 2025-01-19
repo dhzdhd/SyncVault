@@ -90,7 +90,7 @@ class RCloneDriveService implements DriveService {
               '-u', // Do not delete/update on remote if remote file is newer
               '-M',
               '--inplace', // Bisync fails without this
-              '--resync',
+              if (folderModel.isTwoWaySync) '--resync',
               localPath,
               '${folderModel.remoteName}:/$parentPath${folderModel.folderName}'
             ]);

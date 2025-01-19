@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
+## 0.7.0 | 19-01-2025 (Prerelease)
+
+### Additions
+
+- Added new MacOS build (needs testing).
+- Added bidirectional sync (WARNING, use with caution. Can result in loss of data.)
+- Added field in the new folder dialog to input remote parent path. Defaults to SyncVault.
+- Added manual, non RClone backends and corresponding switch in settings for future IOS support. (WARNING, use with caution. Can result in loss of data. Currently only supports Google Drive, wherein GDRIVE_SECRET environment variable has to be set for desktop platforms.)
+
+### Fixes / Improvements
+
+- Improved loading indicator size and width
+- Fixed missing RClone binaries in Android release builds.
+- Fixed folder duplication on switch toggle.
+
+### Temporary removals (due to new backend)
+
+- RClone download in settings page does not work.
+- Minio folder creation does not work as intended (as it does support nested file paths, only buckets).
+- Two of the switches in the expanded cards in home page don't work (auto sync, delete on sync).
+- Folder deletion does not work as intended.
+- New accounts (remotes) are not yet automatically detected by supplied rclone config file.
+
 ## 0.6.4 | 08-01-2025 (Prerelease)
 
 ### Additions
