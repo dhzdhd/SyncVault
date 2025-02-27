@@ -18,7 +18,7 @@ import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:system_tray/system_tray.dart';
-import 'package:workmanager/workmanager.dart';
+// import 'package:workmanager/workmanager.dart';
 import 'package:syncvault/hive/hive_registrar.g.dart';
 
 import 'src/app.dart';
@@ -26,33 +26,33 @@ import 'src/settings/controllers/settings_controller.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    // final authInfo = Auth.init();
-    // final folderInfo = Folder.init();
+  // Workmanager().executeTask((task, inputData) async {
+  // final authInfo = Auth.init();
+  // final folderInfo = Folder.init();
 
-    // for (final folderModel in folderInfo) {
-    //   if (folderModel.isAutoSync) {
-    //     final authModel = authInfo
-    //         .where((element) => element.remoteName == folderModel.remoteName)
-    //         .first;
+  // for (final folderModel in folderInfo) {
+  //   if (folderModel.isAutoSync) {
+  //     final authModel = authInfo
+  //         .where((element) => element.remoteName == folderModel.remoteName)
+  //         .first;
 
-    //     // final result = await RCloneDriveService()
-    //     //     .upload(
-    //     //       providerModel: authModel,
-    //     //       folderModel: folderModel,
-    //     //       localPath: '',
-    //     //     )
-    //     //     .run();
+  //     // final result = await RCloneDriveService()
+  //     //     .upload(
+  //     //       providerModel: authModel,
+  //     //       folderModel: folderModel,
+  //     //       localPath: '',
+  //     //     )
+  //     //     .run();
 
-    //     // result.match(
-    //     //   (l) => print(l.message),
-    //     //   (r) => print('Success'),
-    //     // );
-    //   }
-    // }
+  //     // result.match(
+  //     //   (l) => print(l.message),
+  //     //   (r) => print('Success'),
+  //     // );
+  //   }
+  // }
 
-    return Future.value(true);
-  });
+  // return Future.value(true);
+  // });
 }
 
 void backgroundTask(RootIsolateToken rootIsolateToken) async {
@@ -173,14 +173,14 @@ void main() async {
     }
   } else if (Platform.isAndroid) {
     // Work manager
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
-    Workmanager().registerPeriodicTask(
-      'task-sync',
-      'syncData',
-      frequency: const Duration(minutes: 15), // Minimum possible duration :(
-      initialDelay: const Duration(seconds: 5),
-      existingWorkPolicy: ExistingWorkPolicy.replace,
-    );
+    // Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+    // Workmanager().registerPeriodicTask(
+    //   'task-sync',
+    //   'syncData',
+    //   frequency: const Duration(minutes: 15), // Minimum possible duration :(
+    //   initialDelay: const Duration(seconds: 5),
+    //   existingWorkPolicy: ExistingWorkPolicy.replace,
+    // );
   }
 
   if (settings.isSentryEnabled) {

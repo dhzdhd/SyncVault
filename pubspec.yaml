@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 0.7.5
+version: 0.7.6
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
@@ -29,7 +29,7 @@ dependencies:
   window_manager: ^0.4.3
   sentry_flutter: ^8.11.0
   url_launcher: ^6.3.1
-  workmanager: ^0.5.2
+  # workmanager: ^0.5.2
   permission_handler: ^11.3.1
   flutter_dotenv: ^5.2.1
   injectable: ^2.5.0
