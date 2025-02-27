@@ -88,7 +88,10 @@ class Auth extends _$Auth {
     };
 
     service.match(
-      (l) => throw l,
+      (l) {
+        l.handleError('Failed to authorize', StackTrace.empty);
+        throw l;
+      },
       (model) async {
         state = [...state, model];
         // TODO: account box is redundant as rclone config exists

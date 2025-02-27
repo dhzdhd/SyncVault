@@ -1,6 +1,6 @@
+*.dart eol=crlf
 *.png binary
 *.svg binary
 *.ai binary
 *.ico binary
 *.so binary
-* eol=crlf

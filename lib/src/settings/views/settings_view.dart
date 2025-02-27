@@ -125,7 +125,7 @@ class SettingsView extends ConsumerWidget {
                           )
                         ],
                       ),
-                    if (!Platform.isIOS)
+                    if (PlatformExtension.isDesktop)
                       SizedBox(
                         width: double.infinity,
                         height: 50,

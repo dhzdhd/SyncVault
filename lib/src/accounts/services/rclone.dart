@@ -79,6 +79,8 @@ class RCloneAuthService implements AuthService {
                     }
                   }
                 });
+                print(output);
+                print(errorOutput);
 
                 // Wait for process to finish
                 await process.exitCode;
