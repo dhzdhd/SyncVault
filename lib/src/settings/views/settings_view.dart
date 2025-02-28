@@ -105,26 +105,6 @@ class SettingsView extends ConsumerWidget {
                           )
                         ],
                       ),
-                    if (!Platform.isIOS)
-                      // IOS only supports manual
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Set RClone as default backend',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          Switch(
-                            value: settings.isRCloneDefault,
-                            onChanged: (val) {
-                              settingsNotifier.setRCloneDefaultBackend();
-                            },
-                          )
-                        ],
-                      ),
                     if (PlatformExtension.isDesktop)
                       SizedBox(
                         width: double.infinity,
@@ -157,7 +137,6 @@ class SettingsView extends ConsumerWidget {
                           ),
                         ),
                       ),
-                    // Visible only in debug mode
                     Visibility(
                       visible: kDebugMode && !Platform.isIOS,
                       child: SizedBox(

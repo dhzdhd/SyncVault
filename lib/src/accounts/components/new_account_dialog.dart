@@ -92,6 +92,26 @@ class _NewAccountDialogWidgetState
             selected.value = e!;
           },
         ),
+        // if (!Platform.isIOS)
+        //   // IOS only supports manual
+        //   Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       const Text(
+        //         'Set RClone as default backend',
+        //         style: TextStyle(
+        //           fontSize: 20,
+        //           fontWeight: FontWeight.w400,
+        //         ),
+        //       ),
+        //       Switch(
+        //         value: settings.isRCloneDefault,
+        //         onChanged: (val) {
+        //           settingsNotifier.setRCloneDefaultBackend();
+        //         },
+        //       )
+        //     ],
+        //   ),
         ...switch (selected.value.backendType) {
           const (OAuth2) => [],
           const (S3) => [
