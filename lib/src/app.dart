@@ -46,9 +46,9 @@ class MyApp extends ConsumerWidget {
               HomeView.routeName => const HomeView(),
               AccountView.routeName => const AccountView(),
               IntroductionView.routeName => const IntroductionView(),
-              _ => !introSettings.alreadyViewed
-                  ? const IntroductionView()
-                  : const HomeView()
+              _ => introSettings.alreadyViewed
+                  ? const HomeView()
+                  : const IntroductionView()
             };
           },
         );

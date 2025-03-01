@@ -10,9 +10,7 @@ import 'package:syncvault/helpers.dart';
 import 'package:syncvault/errors.dart';
 
 class IntroductionView extends StatefulHookConsumerWidget {
-  const IntroductionView({
-    super.key,
-  });
+  const IntroductionView({super.key});
 
   static const routeName = '/introduction';
 
@@ -21,6 +19,8 @@ class IntroductionView extends StatefulHookConsumerWidget {
 }
 
 class _IntroductionViewState extends ConsumerState<IntroductionView> {
+  final _introKey = GlobalKey<IntroductionScreenState>();
+
   @override
   Widget build(BuildContext context) {
     final rCloneDownloadProgress = ref.watch(rCloneDownloadControllerProvider);
@@ -42,6 +42,7 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
 
     return Scaffold(
       body: IntroductionScreen(
+        key: _introKey,
         next: const Text('Next'),
         done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w700)),
         back: const Text('Back'),
@@ -75,8 +76,9 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
                   onPressed: () async {
                     await Permission.manageExternalStorage
                         .onDeniedCallback(() {})
-                        .onGrantedCallback(() {})
-                        .request();
+                        .onGrantedCallback(() {
+                      _introKey.currentState?.next();
+                    }).request();
                   },
                   child: const Text('Give permissions'),
                 ),
@@ -95,8 +97,9 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
                   onPressed: () async {
                     await Permission.ignoreBatteryOptimizations
                         .onDeniedCallback(() {})
-                        .onGrantedCallback(() {})
-                        .request();
+                        .onGrantedCallback(() {
+                      _introKey.currentState?.next();
+                    }).request();
                   },
                   child: const Text('Give permissions'),
                 ),
@@ -115,8 +118,11 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
                   onPressed: () async {
                     await Permission.notification
                         .onDeniedCallback(() {})
-                        .onGrantedCallback(() {})
-                        .request();
+                        .onGrantedCallback(() {
+                      introSettingsNotifier
+                          .setAlreadyViewed(); // TODO: Handle error
+                      Navigator.of(context).popAndPushNamed('/home');
+                    }).request();
                   },
                   child: const Text('Give permissions'),
                 ),

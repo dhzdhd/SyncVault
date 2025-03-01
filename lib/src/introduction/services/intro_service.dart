@@ -42,12 +42,14 @@ class IntroService {
   }
 
   Either<AppError, ()> setLocalStorage(IntroSettingsModel model) {
-    return Either.tryCatch(() {
-      _box.put(introSettingsKey, model);
-      return ();
-    },
-        (err, stackTrace) => err.handleError(
-            'Failed to store intro settings model locally', stackTrace));
+    return Either.tryCatch(
+      () {
+        _box.put(introSettingsKey, model);
+        return ();
+      },
+      (err, stackTrace) => err.handleError(
+          'Failed to store intro settings model locally', stackTrace),
+    );
   }
 
   Future<File> getRCloneExec() async {
