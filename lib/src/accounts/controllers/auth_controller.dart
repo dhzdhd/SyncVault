@@ -10,7 +10,6 @@ import 'package:syncvault/src/accounts/services/rclone.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
-import 'package:syncvault/src/settings/controllers/settings_controller.dart';
 
 part 'auth_controller.g.dart';
 
@@ -21,12 +20,12 @@ class AuthController extends _$AuthController {
   FutureOr<void> build() {}
 
   Future<void> signIn(DriveProviderBackend backend, DriveProvider provider,
-      String remoteName) async {
+      String remoteName, bool isRCloneBackend) async {
     final authNotifier = ref.read(authProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => authNotifier.signIn(backend, provider, remoteName),
+      () => authNotifier.signIn(backend, provider, remoteName, isRCloneBackend),
     );
   }
 }
@@ -67,16 +66,15 @@ class Auth extends _$Auth {
     DriveProviderBackend backend,
     DriveProvider provider,
     String remoteName,
+    bool isRCloneBackend,
   ) async {
-    final settings = ref.watch(settingsProvider);
-
     if (state.any((element) => element.remoteName == remoteName)) {
       throw const GeneralError(
         'The provider already exists',
       );
     }
 
-    final service = switch (settings.isRCloneDefault) {
+    final service = switch (isRCloneBackend) {
       true => await RCloneAuthService()
           .authorize(
               backend: backend, driveProvider: provider, remoteName: remoteName)

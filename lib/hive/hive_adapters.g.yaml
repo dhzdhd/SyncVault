@@ -23,8 +23,6 @@ types:
         index: 4
       themeMode:
         index: 5
-      isRCloneDefault:
-        index: 7
   IntroSettingsModel:
     typeId: 2
     nextIndex: 1
@@ -97,7 +95,7 @@ types:
         index: 2
   FolderModel:
     typeId: 11
-    nextIndex: 10
+    nextIndex: 12
     fields:
       remoteName:
         index: 0
@@ -117,6 +115,8 @@ types:
         index: 7
       folderId:
         index: 9
+      isRCloneBackend:
+        index: 11
   UserPassword:
     typeId: 12
     nextIndex: 2

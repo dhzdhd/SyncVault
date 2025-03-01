@@ -22,7 +22,6 @@ SettingsModel _$SettingsModelFromJson(Map<String, dynamic> json) {
 mixin _$SettingsModel {
   bool get isSentryEnabled => throw _privateConstructorUsedError;
   bool get isHideOnStartup => throw _privateConstructorUsedError;
-  bool get isRCloneDefault => throw _privateConstructorUsedError;
   ThemeMode get themeMode => throw _privateConstructorUsedError;
 
   /// Serializes this SettingsModel to a JSON map.
@@ -41,11 +40,7 @@ abstract class $SettingsModelCopyWith<$Res> {
           SettingsModel value, $Res Function(SettingsModel) then) =
       _$SettingsModelCopyWithImpl<$Res, SettingsModel>;
   @useResult
-  $Res call(
-      {bool isSentryEnabled,
-      bool isHideOnStartup,
-      bool isRCloneDefault,
-      ThemeMode themeMode});
+  $Res call({bool isSentryEnabled, bool isHideOnStartup, ThemeMode themeMode});
 }
 
 /// @nodoc
@@ -65,7 +60,6 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
   $Res call({
     Object? isSentryEnabled = null,
     Object? isHideOnStartup = null,
-    Object? isRCloneDefault = null,
     Object? themeMode = null,
   }) {
     return _then(_value.copyWith(
@@ -76,10 +70,6 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
       isHideOnStartup: null == isHideOnStartup
           ? _value.isHideOnStartup
           : isHideOnStartup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isRCloneDefault: null == isRCloneDefault
-          ? _value.isRCloneDefault
-          : isRCloneDefault // ignore: cast_nullable_to_non_nullable
               as bool,
       themeMode: null == themeMode
           ? _value.themeMode
@@ -97,11 +87,7 @@ abstract class _$$SettingsModelImplCopyWith<$Res>
       __$$SettingsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isSentryEnabled,
-      bool isHideOnStartup,
-      bool isRCloneDefault,
-      ThemeMode themeMode});
+  $Res call({bool isSentryEnabled, bool isHideOnStartup, ThemeMode themeMode});
 }
 
 /// @nodoc
@@ -119,7 +105,6 @@ class __$$SettingsModelImplCopyWithImpl<$Res>
   $Res call({
     Object? isSentryEnabled = null,
     Object? isHideOnStartup = null,
-    Object? isRCloneDefault = null,
     Object? themeMode = null,
   }) {
     return _then(_$SettingsModelImpl(
@@ -130,10 +115,6 @@ class __$$SettingsModelImplCopyWithImpl<$Res>
       isHideOnStartup: null == isHideOnStartup
           ? _value.isHideOnStartup
           : isHideOnStartup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isRCloneDefault: null == isRCloneDefault
-          ? _value.isRCloneDefault
-          : isRCloneDefault // ignore: cast_nullable_to_non_nullable
               as bool,
       themeMode: null == themeMode
           ? _value.themeMode
@@ -149,7 +130,6 @@ class _$SettingsModelImpl implements _SettingsModel {
   const _$SettingsModelImpl(
       {required this.isSentryEnabled,
       required this.isHideOnStartup,
-      required this.isRCloneDefault,
       required this.themeMode});
 
   factory _$SettingsModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -160,13 +140,11 @@ class _$SettingsModelImpl implements _SettingsModel {
   @override
   final bool isHideOnStartup;
   @override
-  final bool isRCloneDefault;
-  @override
   final ThemeMode themeMode;
 
   @override
   String toString() {
-    return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, isRCloneDefault: $isRCloneDefault, themeMode: $themeMode)';
+    return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, themeMode: $themeMode)';
   }
 
   @override
@@ -178,16 +156,14 @@ class _$SettingsModelImpl implements _SettingsModel {
                 other.isSentryEnabled == isSentryEnabled) &&
             (identical(other.isHideOnStartup, isHideOnStartup) ||
                 other.isHideOnStartup == isHideOnStartup) &&
-            (identical(other.isRCloneDefault, isRCloneDefault) ||
-                other.isRCloneDefault == isRCloneDefault) &&
             (identical(other.themeMode, themeMode) ||
                 other.themeMode == themeMode));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, isSentryEnabled, isHideOnStartup,
-      isRCloneDefault, themeMode);
+  int get hashCode =>
+      Object.hash(runtimeType, isSentryEnabled, isHideOnStartup, themeMode);
 
   /// Create a copy of SettingsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -209,7 +185,6 @@ abstract class _SettingsModel implements SettingsModel {
   const factory _SettingsModel(
       {required final bool isSentryEnabled,
       required final bool isHideOnStartup,
-      required final bool isRCloneDefault,
       required final ThemeMode themeMode}) = _$SettingsModelImpl;
 
   factory _SettingsModel.fromJson(Map<String, dynamic> json) =
@@ -219,8 +194,6 @@ abstract class _SettingsModel implements SettingsModel {
   bool get isSentryEnabled;
   @override
   bool get isHideOnStartup;
-  @override
-  bool get isRCloneDefault;
   @override
   ThemeMode get themeMode;
 

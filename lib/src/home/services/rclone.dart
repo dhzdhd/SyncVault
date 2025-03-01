@@ -60,6 +60,7 @@ class RCloneDriveService implements DriveService {
         isDeletionEnabled: false,
         isTwoWaySync: false,
         folderId: null,
+        isRCloneBackend: true,
       );
       return folderModel;
     });

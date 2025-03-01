@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
@@ -49,6 +51,7 @@ class _NewAccountDialogWidgetState
   @override
   Widget build(BuildContext context) {
     final selected = useState(DriveProvider.oneDrive);
+    final isRCloneBackend = useState(!Platform.isIOS);
     final authController = ref.watch(authControllerProvider);
 
     ref.listen<AsyncValue>(
@@ -77,118 +80,128 @@ class _NewAccountDialogWidgetState
           ),
         ),
         const SizedBox(height: 16),
-        DropdownButton<DriveProvider>(
-          items: DriveProvider.values
-              .map(
-                (e) => DropdownMenuItem(
-                  value: e,
-                  child: Text(e.displayName),
-                ),
+        // IOS only supports manual
+        if (!Platform.isIOS)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Use RClone',
+                style: TextStyle(fontSize: 16),
+              ),
+              Switch(
+                value: isRCloneBackend.value,
+                onChanged: (val) {
+                  isRCloneBackend.value = val;
+                  selected.value = DriveProvider.oneDrive;
+                },
               )
-              .toList(),
+            ],
+          ),
+        const SizedBox(height: 16),
+        DropdownButton<DriveProvider>(
+          items: isRCloneBackend.value
+              ? DriveProvider.values
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.displayName),
+                    ),
+                  )
+                  .toList()
+              : DriveProvider.values
+                  .filter((e) => e.backendType == OAuth2)
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.displayName),
+                    ),
+                  )
+                  .toList(),
           value: selected.value,
           isExpanded: true,
           onChanged: (DriveProvider? e) {
             selected.value = e!;
           },
         ),
-        // if (!Platform.isIOS)
-        //   // IOS only supports manual
-        //   Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        //       const Text(
-        //         'Set RClone as default backend',
-        //         style: TextStyle(
-        //           fontSize: 20,
-        //           fontWeight: FontWeight.w400,
-        //         ),
-        //       ),
-        //       Switch(
-        //         value: settings.isRCloneDefault,
-        //         onChanged: (val) {
-        //           settingsNotifier.setRCloneDefaultBackend();
-        //         },
-        //       )
-        //     ],
-        //   ),
-        ...switch (selected.value.backendType) {
-          const (OAuth2) => [],
-          const (S3) => [
-              const SizedBox(height: 16),
-              TextField(
-                controller: _urlController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Provider URL',
+        if (isRCloneBackend.value)
+          ...switch (selected.value.backendType) {
+            const (OAuth2) => [],
+            const (S3) => [
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _urlController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Provider URL',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _userController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Access Key ID',
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _userController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Access Key ID',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Secret Access Key',
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Secret Access Key',
+                  ),
                 ),
-              ),
-            ],
-          const (UserPassword) => [
-              const SizedBox(height: 16),
-              TextField(
-                controller: _userController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Username',
+              ],
+            const (UserPassword) => [
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _userController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Username',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
                 ),
-              ),
-            ],
-          const (Webdav) => [
-              const SizedBox(height: 16),
-              TextField(
-                controller: _urlController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Provider URL',
+              ],
+            const (Webdav) => [
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _urlController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Provider URL',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _userController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'User',
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _userController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'User',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
                 ),
-              ),
-            ],
-          _ => [],
-        },
+              ],
+            _ => [],
+          },
         const SizedBox(height: 32),
         ElevatedButton(
           onPressed: () async {
@@ -244,6 +257,7 @@ class _NewAccountDialogWidgetState
                       },
                       selected.value,
                       _remoteNameController.text,
+                      isRCloneBackend.value,
                     );
 
                 if (context.mounted && !authController.isLoading) {

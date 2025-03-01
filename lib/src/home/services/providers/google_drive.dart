@@ -82,6 +82,7 @@ class GoogleDriveService implements DriveService {
           isDeletionEnabled: false,
           isTwoWaySync: false,
           folderId: folder.id,
+          isRCloneBackend: false,
         );
       },
       (error, stackTrace) {
