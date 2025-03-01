@@ -14,6 +14,7 @@ final lightTheme = ThemeData(
     seedColor: const Color.fromARGB(255, 0, 76, 109),
     brightness: Brightness.light,
   ),
+  fontFamily: 'Inter',
 );
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
@@ -21,6 +22,7 @@ final darkTheme = ThemeData(
     seedColor: const Color.fromARGB(255, 0, 76, 109),
     brightness: Brightness.dark,
   ),
+  fontFamily: 'Inter',
 );
 
 // TODO: Move all box updates to a settings repository

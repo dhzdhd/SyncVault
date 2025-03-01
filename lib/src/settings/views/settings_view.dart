@@ -27,225 +27,184 @@ class SettingsView extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Theme',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
+            ListTile(
+              minTileHeight: 84,
+              title: Text(
+                'Theme',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              trailing: DropdownMenu<ThemeMode>(
+                width: 180,
+                enableSearch: false,
+                enableFilter: false,
+                initialSelection: settings.themeMode,
+                onSelected: settingsNotifier.updateThemeMode,
+                dropdownMenuEntries: ThemeMode.values
+                    .map(
+                      (val) => DropdownMenuEntry(
+                        value: val,
+                        label: val.name.capitalize(),
                       ),
+                    )
+                    .toList(),
+              ),
+            ),
+            ListTile(
+              minTileHeight: 84,
+              title: Text(
+                'Enable Sentry monitoring',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              trailing: Switch(
+                value: settings.isSentryEnabled,
+                onChanged: (val) {
+                  settingsNotifier.setSentry();
+                },
+              ),
+            ),
+            if (PlatformExtension.isDesktop)
+              ListTile(
+                minTileHeight: 84,
+                title: Text(
+                  'Hide on startup',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                trailing: Switch(
+                  value: settings.isHideOnStartup,
+                  onChanged: (val) {
+                    settingsNotifier.setHideOnStartup();
+                  },
+                ),
+              ),
+            if (PlatformExtension.isDesktop)
+              ListTile(
+                minTileHeight: 84,
+                title: Text(
+                  'Download RClone',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                subtitle: const Text('Download RClone binary'),
+                onTap: () async {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Are you sure'),
+                      actions: [
+                        const OutlinedButton(
+                          onPressed: null,
+                          child: Text('Yes'),
+                        ),
+                        FilledButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('No'),
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      child: DropdownMenu<ThemeMode>(
-                        width: 180,
-                        enableSearch: false,
-                        enableFilter: false,
-                        initialSelection: settings.themeMode,
-                        onSelected: settingsNotifier.updateThemeMode,
-                        dropdownMenuEntries: ThemeMode.values
+                  );
+                },
+                // TODO:
+              ),
+            Visibility(
+              visible: kDebugMode && !Platform.isIOS,
+              child: ListTile(
+                minTileHeight: 84,
+                title: Text(
+                  'Show RClone config',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                subtitle: const Text('Show the entire RClone config file'),
+                onTap: () async {
+                  final config = await RCloneUtils().getIniConfig().run();
+                  config.match((e) => {}, (ini) async {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => SimpleDialog(
+                        title: const Text('Config'),
+                        children: ini
+                            .sections()
                             .map(
-                              (val) => DropdownMenuEntry(
-                                value: val,
-                                label: val.name.capitalize(),
+                              (section) => ListTile(
+                                minTileHeight: 84,
+                                title: Text(section),
+                                subtitle: Text(ini.items(section).toString()),
                               ),
                             )
                             .toList(),
                       ),
-                    ),
-                  ],
-                ),
+                    );
+                  });
+                },
               ),
             ),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  spacing: 10,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Enable Sentry monitoring',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        Switch(
-                          value: settings.isSentryEnabled,
-                          onChanged: (val) {
-                            settingsNotifier.setSentry();
-                          },
-                        )
-                      ],
-                    ),
-                    if (PlatformExtension.isDesktop)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Hide on startup',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          Switch(
-                            value: settings.isHideOnStartup,
-                            onChanged: (val) {
-                              settingsNotifier.setHideOnStartup();
-                            },
-                          )
-                        ],
-                      ),
-                    if (PlatformExtension.isDesktop)
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: OutlinedButton(
-                          onPressed: () async {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Are you sure'),
-                                actions: [
-                                  const OutlinedButton(
-                                    onPressed: null,
-                                    child: Text('Yes'),
-                                  ),
-                                  FilledButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('No'),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                          // TODO:
-                          child: const Text(
-                            'Download RClone',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ),
-                    Visibility(
-                      visible: kDebugMode && !Platform.isIOS,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: OutlinedButton(
-                          onPressed: () async {
-                            final config =
-                                await RCloneUtils().getIniConfig().run();
-                            config.match((e) => {}, (ini) async {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) => SimpleDialog(
-                                  title: const Text('Config'),
-                                  children: ini
-                                      .sections()
-                                      .map(
-                                        (section) => ListTile(
-                                          title: Text(section),
-                                          subtitle: Text(
-                                              ini.items(section).toString()),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              );
-                            });
-                          },
-                          child: const Text(
-                            'Show RClone config',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: OutlinedButton(
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Are you sure'),
-                              actions: [
-                                OutlinedButton(
-                                  onPressed: () async {
-                                    await folderNotifier.clearCache();
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                  child: const Text('Yes'),
-                                ),
-                                FilledButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('No'),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Clear local folder storage',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: OutlinedButton(
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Are you sure'),
-                              actions: [
-                                OutlinedButton(
-                                  onPressed: () async {
-                                    settingsNotifier.resetSettings();
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                  child: const Text('Yes'),
-                                ),
-                                FilledButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('No'),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Reset settings',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+            ListTile(
+              minTileHeight: 84,
+              title: Text(
+                'Clear local folder storage',
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
+              subtitle: const Text(
+                  'Clear all local folder storage, does not include settings'),
+              onTap: () async {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Are you sure'),
+                    actions: [
+                      OutlinedButton(
+                        onPressed: () async {
+                          await folderNotifier.clearCache();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: const Text('Yes'),
+                      ),
+                      FilledButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('No'),
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
+            ListTile(
+              minTileHeight: 84,
+              title: Text(
+                'Reset settings',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              subtitle: const Text('Reset all settings to default'),
+              onTap: () async {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Are you sure'),
+                    actions: [
+                      OutlinedButton(
+                        onPressed: () async {
+                          settingsNotifier.resetSettings();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: const Text('Yes'),
+                      ),
+                      FilledButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('No'),
+                      )
+                    ],
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),

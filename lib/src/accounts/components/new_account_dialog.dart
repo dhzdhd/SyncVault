@@ -115,9 +115,7 @@ class _NewAccountDialogWidgetState
         ...switch (selected.value.backendType) {
           const (OAuth2) => [],
           const (S3) => [
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _urlController,
                 decoration: const InputDecoration(
@@ -125,9 +123,7 @@ class _NewAccountDialogWidgetState
                   labelText: 'Provider URL',
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _userController,
                 decoration: const InputDecoration(
@@ -135,9 +131,7 @@ class _NewAccountDialogWidgetState
                   labelText: 'Access Key ID',
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
@@ -148,9 +142,7 @@ class _NewAccountDialogWidgetState
               ),
             ],
           const (UserPassword) => [
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _userController,
                 decoration: const InputDecoration(
@@ -158,9 +150,7 @@ class _NewAccountDialogWidgetState
                   labelText: 'Username',
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
@@ -171,9 +161,7 @@ class _NewAccountDialogWidgetState
               ),
             ],
           const (Webdav) => [
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _urlController,
                 decoration: const InputDecoration(
@@ -181,9 +169,7 @@ class _NewAccountDialogWidgetState
                   labelText: 'Provider URL',
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _userController,
                 decoration: const InputDecoration(
@@ -191,9 +177,7 @@ class _NewAccountDialogWidgetState
                   labelText: 'User',
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: true,

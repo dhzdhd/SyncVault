@@ -1,12 +1,12 @@
 name: syncvault
 description: A new Flutter project.
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 0.7.7
 
 environment:
-  sdk: '>=3.6.0 <4.0.0'
+  sdk: ">=3.6.0 <4.0.0"
   flutter: ^3.27.0
 
 dependencies:
@@ -51,6 +51,7 @@ dependencies:
   google_sign_in: ^6.2.2
   oauth2: ^2.0.3
   googleapis_auth: ^1.6.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -75,3 +76,9 @@ flutter:
     - assets/images/
     - assets/logos/
     - assets/icons/
+    - assets/fonts/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf
