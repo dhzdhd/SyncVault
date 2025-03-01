@@ -20,6 +20,19 @@ class TreeWidget extends ConsumerWidget {
     return treeNode..addAll(children);
   }
 
+  String convertSize(String size) {
+    final bytes = int.parse(size);
+    if (bytes <= 1024) {
+      return '$bytes B';
+    } else if (bytes <= 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(2)} KB';
+    } else if (bytes <= 1024 * 1024 * 1024) {
+      return '${(bytes / 1024 / 1024).toStringAsFixed(2)} MB';
+    } else {
+      return '${(bytes / 1024 / 1024 / 1024).toStringAsFixed(2)} GB';
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return CustomScrollView(
@@ -28,12 +41,14 @@ class TreeWidget extends ConsumerWidget {
           tree: wrapWithTreeNode(file),
           showRootNode: false,
           builder: (context, node) {
+            final size = convertSize(node.data!.$2);
+
             return ListTile(
               leading: Icon(
                 node.data!.$3 ? Icons.folder : Icons.file_copy,
               ),
               title: Text(node.data!.$1),
-              subtitle: Text('${node.data!.$2} bytes'),
+              subtitle: Text(size),
             );
           },
         ),
