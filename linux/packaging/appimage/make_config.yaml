@@ -1,0 +1,38 @@
+display_name: SyncVault
+
+icon: assets/icons/logo.png
+
+keywords:
+  - Hello
+  - World
+  - Test
+  - Application
+
+generic_name: Drive Sync Application
+
+actions:
+  - name: Say Hi
+    label: say-hi
+    arguments:
+      - --say
+      - hi
+  - name: Say Bye
+    label: say-bye
+    arguments:
+      - --say
+      - bye
+
+categories:
+  - Utility
+
+startup_notify: true
+
+# You can specify the shared libraries that you want to bundle with your app
+# flutter_distributor automatically detects the shared libraries that your app
+# depends on, but you can also specify them manually here.
+#
+# The following example shows how to bundle the libcurl library with your app.
+#
+# include:
+#   - libcurl.so.4
+include: []
