@@ -1,0 +1,29 @@
+display_name: SyncVault
+package_name: syncvault
+maintainer:
+  name: dhzdhd
+  email: dhzdhd@proton.me
+priority: optional
+section: x11
+installed_size: 6604
+essential: false
+icon: assets/icons/logo.png
+
+postinstall_scripts:
+  - echo "Thank you for installing SyncVault"
+postuninstall_scripts:
+  - echo "Sorry to see you go"
+
+keywords:
+  - Hello
+  - World
+  - Test
+  - Application
+
+generic_name: Drive Sync Application
+
+categories:
+  - Media
+  - Utility
+
+startup_notify: true

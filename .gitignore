@@ -49,3 +49,5 @@ app.*.map.json
 .sentry-native/
 
 provider_tests/data
+
+dist/

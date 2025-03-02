@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>dev.dhzdhd.syncvault</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>MIT</project_license>
+  <name>SyncVault</name>
+  <summary>Sync files with drives</summary>
+
+  <description>
+    <p>
+      SyncVault is a file synchronization app that allows you to sync files with the drive of your choice.
+    </p>
+    <p>Choose between the following drives</p>
+    <ul>
+      <li>Google Drive</li>
+      <li>OneDrive</li>
+      <li>Proton Drive</li>
+      <li>Minio providers</li>
+      <li>NextCloud</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">dev.dhzdhd.syncvault.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Home screen</caption>
+      <image>https://github.com/dhzdhd/SyncVault/blob/master/showcase/home.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Light mode</caption>
+      <image>https://github.com/dhzdhd/SyncVault/blob/master/showcase/light.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Accounts screen</caption>
+      <image>https://github.com/dhzdhd/SyncVault/blob/master/showcase/accounts.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Settings screen</caption>
+      <image>https://github.com/dhzdhd/SyncVault/blob/master/showcase/settings.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://github.com/dhzdhd/SyncVault/</url>
+  <project_group>dhzdhd</project_group>
+
+  <provides>
+    <binary>syncvault</binary>
+  </provides>
+
+  <!-- <releases>
+    <release version="3.12.2" date="2013-04-12">
+      <description>
+        <p>Fixes issues X, Y and Z</p>
+      </description>
+    </release>
+  </releases> -->
+</component>
