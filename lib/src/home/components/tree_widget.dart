@@ -35,24 +35,27 @@ class TreeWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return CustomScrollView(
-      slivers: [
-        SliverTreeView.simpleTyped<Tuple, TreeNode<Tuple>>(
-          tree: wrapWithTreeNode(file),
-          showRootNode: false,
-          builder: (context, node) {
-            final size = convertSize(node.data!.$2);
+    return switch (file.children.isEmpty) {
+      true => const Center(child: Text('No files found')),
+      false => CustomScrollView(
+          slivers: [
+            SliverTreeView.simpleTyped<Tuple, TreeNode<Tuple>>(
+              tree: wrapWithTreeNode(file),
+              showRootNode: false,
+              builder: (context, node) {
+                final size = convertSize(node.data!.$2);
 
-            return ListTile(
-              leading: Icon(
-                node.data!.$3 ? Icons.folder : Icons.file_copy,
-              ),
-              title: Text(node.data!.$1),
-              subtitle: Text(size),
-            );
-          },
-        ),
-      ],
-    );
+                return ListTile(
+                  leading: Icon(
+                    node.data!.$3 ? Icons.folder : Icons.file_copy,
+                  ),
+                  title: Text(node.data!.$1),
+                  subtitle: Text(size),
+                );
+              },
+            ),
+          ],
+        )
+    };
   }
 }

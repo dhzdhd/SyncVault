@@ -7,14 +7,14 @@ Linux and MacOS builds are planned.
 
 ## Support
 
-- Windows & Android
+- Windows, Linux, MacOS, Android
   - OneDrive
   - Google Drive
   - Dropbox
   - Minio
   - Nextcloud
   - Proton Drive
-- Linux, MacOS - no build yet
+- IOS - no build yet
 
 ## Status
 
