@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/injectable.dart';
+import 'package:syncvault/setup.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
@@ -113,24 +114,10 @@ void main() async {
   final docDir = await getApplicationDocumentsDirectory();
   final boxPath = '${docDir.path}/SyncVault/hive';
 
-  final settingsBox =
-      await Hive.openBox<SettingsModel>('settings_box', path: boxPath);
-  GetIt.I.registerSingleton<Box<SettingsModel>>(settingsBox);
-
-  final introSettingsBox = await Hive.openBox<IntroSettingsModel>(
-    'intro_settings_box',
-    path: boxPath,
-  );
-  GetIt.I.registerSingleton<Box<IntroSettingsModel>>(introSettingsBox);
-
-  // FIXME: On fail, somehow migrate or create a default []
-  final accountsBox =
-      await Hive.openBox<DriveProviderModel>('accounts_box', path: boxPath);
-  GetIt.I.registerSingleton<Box<DriveProviderModel>>(accountsBox);
-
-  final foldersBox =
-      await Hive.openBox<FolderModel>('folders_box', path: boxPath);
-  GetIt.I.registerSingleton<Box<FolderModel>>(foldersBox);
+  await setupHiveBox<SettingsModel>(boxPath);
+  await setupHiveBox<IntroSettingsModel>(boxPath);
+  await setupHiveBox<DriveProviderModel>(boxPath);
+  await setupHiveBox<FolderModel>(boxPath);
 
   final settings = Settings.init();
 
