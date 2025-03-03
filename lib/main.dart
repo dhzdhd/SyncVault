@@ -18,9 +18,9 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
-import 'package:system_tray/system_tray.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:syncvault/hive/hive_registrar.g.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
@@ -59,17 +59,6 @@ void callbackDispatcher() {
 void backgroundTask(RootIsolateToken rootIsolateToken) async {
   BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
 
-  final docDir = await getApplicationDocumentsDirectory();
-  final boxPath = '${docDir.path}/SyncVault/hive';
-
-  final accountsBox =
-      await Hive.openBox<DriveProviderModel>('accounts_box', path: boxPath);
-  GetIt.I.registerSingleton<Box<DriveProviderModel>>(accountsBox);
-
-  final foldersBox =
-      await Hive.openBox<FolderModel>('folders_box', path: boxPath);
-  GetIt.I.registerSingleton<Box<FolderModel>>(foldersBox);
-
   final authInfo = Auth.init();
   final folderInfo = Folder.init();
   final driveService = RCloneDriveService();
@@ -104,6 +93,7 @@ void backgroundTask(RootIsolateToken rootIsolateToken) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
 
   GetIt.I.registerSingleton<Dio>(Dio());
 
@@ -127,36 +117,9 @@ void main() async {
   //   Isolate.spawn<RootIsolateToken>(backgroundTask, RootIsolateToken.instance!);
   // }
 
-  // FIXME: Segfault when calling initSystemTray on Linux
-  // Move to https://github.com/leanflutter/tray_manager
   if (Platform.isWindows || Platform.isMacOS) {
-    // System tray
-    final appWindow = AppWindow();
-    final systemTray = SystemTray();
-
-    await systemTray.initSystemTray(
-      title: 'SyncVault',
-      iconPath: 'assets/icons/icon.ico',
-    );
-
-    final menu = Menu();
-    await menu.buildFrom([
-      MenuItemLabel(label: 'Show', onClicked: (menuItem) => appWindow.show()),
-      MenuItemLabel(label: 'Hide', onClicked: (menuItem) => appWindow.hide()),
-      MenuItemLabel(label: 'Exit', onClicked: (menuItem) => appWindow.close())
-    ]);
-
-    await systemTray.setContextMenu(menu);
-    systemTray.registerSystemTrayEventHandler((eventName) {
-      if (eventName == kSystemTrayEventClick) {
-        Platform.isWindows ? appWindow.show() : systemTray.popUpContextMenu();
-      } else if (eventName == kSystemTrayEventRightClick) {
-        Platform.isWindows ? systemTray.popUpContextMenu() : appWindow.show();
-      }
-    });
-
     if (settings.isHideOnStartup) {
-      await appWindow.hide();
+      await windowManager.hide();
     }
   } else if (Platform.isAndroid) {
     // Work manager

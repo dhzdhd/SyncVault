@@ -24,7 +24,6 @@ dependencies:
   hooks_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
   json_annotation: ^4.9.0
-  system_tray: ^2.0.3
   watcher: ^1.1.0
   window_manager: ^0.4.3
   sentry_flutter: ^8.11.0
@@ -52,6 +51,7 @@ dependencies:
   oauth2: ^2.0.3
   googleapis_auth: ^1.6.0
   google_fonts: ^6.2.1
+  tray_manager: ^0.3.2
 
 dev_dependencies:
   flutter_test:

@@ -16,10 +16,10 @@ import 'package:syncvault/src/home/components/delete_folder_dialog.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
 import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
-import 'package:system_tray/system_tray.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watcher/watcher.dart';
 import 'package:syncvault/src/settings/views/settings_view.dart';
+import 'package:window_manager/window_manager.dart';
 
 class HomeView extends StatefulHookConsumerWidget {
   const HomeView({
@@ -128,7 +128,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
               icon: const Icon(Icons.arrow_downward),
               tooltip: 'Hide to system tray',
               onPressed: () async {
-                await AppWindow().hide();
+                await windowManager.hide();
               },
             ),
           IconButton(

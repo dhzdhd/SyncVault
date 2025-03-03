@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -5,18 +7,61 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
 import 'package:syncvault/src/introduction/views/intro_view.dart';
+import 'package:tray_manager/tray_manager.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'home/views/home_view.dart';
 import 'settings/controllers/settings_controller.dart';
 import 'settings/views/settings_view.dart';
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp>
+    with WindowListener, TrayListener {
+  @override
+  void initState() {
+    super.initState();
+
+    String iconPath =
+        Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png';
+
+    trayManager.addListener(this);
+
+    final menu = Menu(
+      items: [
+        MenuItem(
+          label: 'Show',
+          onClick: (menuItem) async => await windowManager.show(),
+        ),
+        MenuItem(
+          label: 'Hide',
+          onClick: (menuItem) async => await windowManager.hide(),
+        ),
+        MenuItem(
+          label: 'Exit',
+          onClick: (menuItem) async => await windowManager.close(),
+        ),
+      ],
+    );
+    trayManager.setContextMenu(menu);
+    trayManager.setIcon(iconPath);
+  }
+
+  @override
+  void dispose() {
+    trayManager.removeListener(this);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final introSettings = ref.watch(introSettingsProvider);
 
@@ -54,5 +99,11 @@ class MyApp extends ConsumerWidget {
         );
       },
     );
+  }
+
+  @override
+  void onTrayMenuItemClick(MenuItem menuItem) {
+    windowManager.show();
+    super.onTrayMenuItemClick(menuItem);
   }
 }
