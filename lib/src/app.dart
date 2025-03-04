@@ -29,6 +29,7 @@ class _MyAppState extends ConsumerState<MyApp>
   void initState() {
     super.initState();
 
+    // TODO: Add icons
     String iconPath =
         Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png';
 
@@ -50,6 +51,7 @@ class _MyAppState extends ConsumerState<MyApp>
         ),
       ],
     );
+    trayManager.setTitle('SyncVault');
     trayManager.setContextMenu(menu);
     trayManager.setIcon(iconPath);
   }
@@ -102,8 +104,7 @@ class _MyAppState extends ConsumerState<MyApp>
   }
 
   @override
-  void onTrayMenuItemClick(MenuItem menuItem) {
-    windowManager.show();
-    super.onTrayMenuItemClick(menuItem);
+  void onTrayIconMouseDown() async {
+    await windowManager.show();
   }
 }
