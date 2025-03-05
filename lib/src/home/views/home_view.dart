@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
 import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
@@ -110,46 +111,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SyncVault'),
-        actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.warning),
-          //   tooltip: 'Test RClone',
-          //   onPressed: () async {
-          //     final model = folderInfo.first;
-          //     final res =
-          //         await RCloneDriveService().treeView(model: model).run();
-          //     print(res);
-          //   },
-          // ),
-          if (Platform.isWindows)
-            IconButton(
-              icon: const Icon(Icons.arrow_downward),
-              tooltip: 'Hide to system tray',
-              onPressed: () async {
-                await windowManager.hide();
-              },
-            ),
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            tooltip: 'Navigate to accounts',
-            onPressed: () {
-              Navigator.restorablePushNamed(context, AccountView.routeName);
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: IconButton(
-              icon: const Icon(Icons.settings),
-              tooltip: 'Navigate to settings',
-              onPressed: () {
-                Navigator.restorablePushNamed(context, SettingsView.routeName);
-              },
-            ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Sync new folder',
         onPressed: () async {
@@ -167,252 +128,301 @@ class _HomeViewState extends ConsumerState<HomeView> {
         },
         child: const Icon(Icons.add),
       ),
-      body: Center(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 84),
-          children: folderInfo
-              .mapWithIndex(
-                (e, index) => ExpandableCardWidget(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Tooltip(
-                        message: e.provider.displayName,
-                        child: SvgPicture.asset(
-                          e.provider.providerIcon,
-                          width: 25,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          e.folderName,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                      ),
-                    ],
-                  ),
-                  trailing: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Visibility(
-                      visible: uploadDeleteController.isLoading &&
-                          currentLoadingIndex.value == index,
-                      child: const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child:
-                            CircularProgressWidget(size: 300, isInfinite: true),
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    spacing: 8.0,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).dialogBackgroundColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  e.folderPath,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAnimatedAppBar(
+            title: 'Home',
+            canExpand: folderInfo.isNotEmpty,
+            hasLeading: false,
+            actions: [
+              if (Platform.isWindows)
+                IconButton(
+                  icon: const Icon(Icons.arrow_downward),
+                  tooltip: 'Hide to system tray',
+                  onPressed: () async {
+                    await windowManager.hide();
+                  },
+                ),
+              IconButton(
+                icon: const Icon(Icons.account_circle),
+                tooltip: 'Navigate to accounts',
+                onPressed: () {
+                  Navigator.restorablePushNamed(context, AccountView.routeName);
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  icon: const Icon(Icons.settings),
+                  tooltip: 'Navigate to settings',
+                  onPressed: () {
+                    Navigator.restorablePushNamed(
+                        context, SettingsView.routeName);
+                  },
+                ),
+              ),
+            ],
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed(
+                folderInfo
+                    .mapWithIndex(
+                      (e, index) => ExpandableCardWidget(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Tooltip(
+                              message: e.provider.displayName,
+                              child: SvgPicture.asset(
+                                e.provider.providerIcon,
+                                width: 25,
                               ),
-                              Expanded(
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                e.folderName,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Visibility(
+                            visible: uploadDeleteController.isLoading &&
+                                currentLoadingIndex.value == index,
+                            child: const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressWidget(
+                                  size: 300, isInfinite: true),
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          spacing: 8.0,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).dialogBackgroundColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    if (PlatformExtension.isDesktop)
-                                      Flexible(
-                                        child: SizedBox(
-                                          width: 50,
-                                          child: Tooltip(
-                                            message: 'Open in file manager',
-                                            child: TextButton(
-                                              child:
-                                                  const Icon(Icons.open_in_new),
-                                              onPressed: () async {
-                                                await launchUrl(
-                                                  Uri.file(e.folderPath),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
                                     Flexible(
-                                      child: SizedBox(
-                                        width: 50,
-                                        child: Tooltip(
-                                          message: 'Sync',
-                                          child: TextButton(
-                                            child: const Icon(Icons.sync),
-                                            onPressed: () async {
-                                              if (uploadDeleteController
-                                                  .isLoading) {
-                                                return;
-                                              }
-                                              currentLoadingIndex.value = index;
-
-                                              if (!uploadDeleteController
-                                                  .isLoading) {
-                                                await ref
-                                                    .read(
-                                                      uploadDeleteControllerProvider
-                                                          .notifier,
-                                                    )
-                                                    .upload(e, none());
-
-                                                if (context.mounted) {
-                                                  context.showSuccessSnackBar(
-                                                    content: 'Success',
-                                                  );
-                                                }
-                                              }
-                                            },
-                                          ),
-                                        ),
+                                      child: Text(
+                                        e.folderPath,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    Flexible(
-                                      child: SizedBox(
-                                        width: 50,
-                                        child: Tooltip(
-                                          message: 'Delete',
-                                          child: TextButton(
-                                            child: const Icon(Icons.delete),
-                                            onPressed: () async {
-                                              if (uploadDeleteController
-                                                  .isLoading) {
-                                                return;
-                                              }
-                                              // TODO: Perhaps make loadingIndex an array
-                                              currentLoadingIndex.value = index;
+                                    Expanded(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          if (PlatformExtension.isDesktop)
+                                            Flexible(
+                                              child: SizedBox(
+                                                width: 50,
+                                                child: Tooltip(
+                                                  message:
+                                                      'Open in file manager',
+                                                  child: TextButton(
+                                                    child: const Icon(
+                                                        Icons.open_in_new),
+                                                    onPressed: () async {
+                                                      await launchUrl(
+                                                        Uri.file(e.folderPath),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          Flexible(
+                                            child: SizedBox(
+                                              width: 50,
+                                              child: Tooltip(
+                                                message: 'Sync',
+                                                child: TextButton(
+                                                  child: const Icon(Icons.sync),
+                                                  onPressed: () async {
+                                                    if (uploadDeleteController
+                                                        .isLoading) {
+                                                      return;
+                                                    }
+                                                    currentLoadingIndex.value =
+                                                        index;
 
-                                              if (context.mounted) {
-                                                if (context.mounted) {
-                                                  await showDialog(
-                                                    context: context,
-                                                    builder: (ctx) =>
-                                                        DeleteFolderDialogWidget(
-                                                            model: e),
-                                                  );
-                                                }
-                                              }
-                                            },
+                                                    if (!uploadDeleteController
+                                                        .isLoading) {
+                                                      await ref
+                                                          .read(
+                                                            uploadDeleteControllerProvider
+                                                                .notifier,
+                                                          )
+                                                          .upload(e, none());
+
+                                                      if (context.mounted) {
+                                                        context
+                                                            .showSuccessSnackBar(
+                                                          content: 'Success',
+                                                        );
+                                                      }
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          Flexible(
+                                            child: SizedBox(
+                                              width: 50,
+                                              child: Tooltip(
+                                                message: 'Delete',
+                                                child: TextButton(
+                                                  child:
+                                                      const Icon(Icons.delete),
+                                                  onPressed: () async {
+                                                    if (uploadDeleteController
+                                                        .isLoading) {
+                                                      return;
+                                                    }
+                                                    // TODO: Perhaps make loadingIndex an array
+                                                    currentLoadingIndex.value =
+                                                        index;
+
+                                                    if (context.mounted) {
+                                                      if (context.mounted) {
+                                                        await showDialog(
+                                                          context: context,
+                                                          builder: (ctx) =>
+                                                              DeleteFolderDialogWidget(
+                                                                  model: e),
+                                                        );
+                                                      }
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Account',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                Text(
+                                  e.remoteName,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Auto sync',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                  child: FittedBox(
+                                    fit: BoxFit.fill,
+                                    child: Switch(
+                                      value: e.isAutoSync,
+                                      onChanged: (val) =>
+                                          folderNotifier.toggleAutoSync(e),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Bidirectional sync',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                  child: FittedBox(
+                                    fit: BoxFit.fill,
+                                    child: Switch(
+                                      value: e.isTwoWaySync,
+                                      onChanged: (val) =>
+                                          folderNotifier.toggleTwoWaySync(e),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Delete on sync',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                  child: FittedBox(
+                                    fit: BoxFit.fill,
+                                    child: Switch(
+                                      value: e.isDeletionEnabled,
+                                      onChanged: (val) => folderNotifier
+                                          .toggleDeletionOnSync(e),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton(
+                                onPressed: () async {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (ctx) => TreeViewSheetWidget(
+                                      folderModel: e,
+                                    ),
+                                  );
+                                },
+                                child: const Text('Tree view'),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Account',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          Text(
-                            e.remoteName,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Auto sync',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          SizedBox(
-                            height: 30,
-                            child: FittedBox(
-                              fit: BoxFit.fill,
-                              child: Switch(
-                                value: e.isAutoSync,
-                                onChanged: (val) =>
-                                    folderNotifier.toggleAutoSync(e),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Bidirectional sync',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          SizedBox(
-                            height: 30,
-                            child: FittedBox(
-                              fit: BoxFit.fill,
-                              child: Switch(
-                                value: e.isTwoWaySync,
-                                onChanged: (val) =>
-                                    folderNotifier.toggleTwoWaySync(e),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Delete on sync',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          SizedBox(
-                            height: 30,
-                            child: FittedBox(
-                              fit: BoxFit.fill,
-                              child: Switch(
-                                value: e.isDeletionEnabled,
-                                onChanged: (val) =>
-                                    folderNotifier.toggleDeletionOnSync(e),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () async {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (ctx) => TreeViewSheetWidget(
-                                folderModel: e,
-                              ),
-                            );
-                          },
-                          child: const Text('Tree view'),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
-        ),
+                    )
+                    .toList(),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

@@ -30,7 +30,7 @@ class SettingsView extends ConsumerWidget {
               delegate: SliverChildListDelegate.fixed(
                 [
                   ListTile(
-                    minTileHeight: 84,
+                    minTileHeight: 64,
                     title: Text(
                       'Theme',
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -52,7 +52,7 @@ class SettingsView extends ConsumerWidget {
                     ),
                   ),
                   ListTile(
-                    minTileHeight: 84,
+                    minTileHeight: 64,
                     title: Text(
                       'Enable Sentry monitoring',
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -66,7 +66,7 @@ class SettingsView extends ConsumerWidget {
                   ),
                   if (PlatformExtension.isDesktop)
                     ListTile(
-                      minTileHeight: 84,
+                      minTileHeight: 64,
                       title: Text(
                         'Hide on startup',
                         style: Theme.of(context).textTheme.headlineSmall,
@@ -80,7 +80,7 @@ class SettingsView extends ConsumerWidget {
                     ),
                   if (PlatformExtension.isDesktop)
                     ListTile(
-                      minTileHeight: 84,
+                      minTileHeight: 64,
                       title: Text(
                         'Download RClone',
                         style: Theme.of(context).textTheme.headlineSmall,
@@ -111,7 +111,7 @@ class SettingsView extends ConsumerWidget {
                   Visibility(
                     visible: kDebugMode && !Platform.isIOS,
                     child: ListTile(
-                      minTileHeight: 84,
+                      minTileHeight: 64,
                       title: Text(
                         'Show RClone config',
                         style: Theme.of(context).textTheme.headlineSmall,
@@ -129,7 +129,7 @@ class SettingsView extends ConsumerWidget {
                                   .sections()
                                   .map(
                                     (section) => ListTile(
-                                      minTileHeight: 84,
+                                      minTileHeight: 64,
                                       title: Text(section),
                                       subtitle:
                                           Text(ini.items(section).toString()),
@@ -143,7 +143,7 @@ class SettingsView extends ConsumerWidget {
                     ),
                   ),
                   ListTile(
-                    minTileHeight: 84,
+                    minTileHeight: 64,
                     title: Text(
                       'Clear local folder storage',
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -177,7 +177,7 @@ class SettingsView extends ConsumerWidget {
                     },
                   ),
                   ListTile(
-                    minTileHeight: 84,
+                    minTileHeight: 64,
                     title: Text(
                       'Reset settings',
                       style: Theme.of(context).textTheme.headlineSmall,
