@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
+## 0.8.0 | 05-03-2025 (Prerelease)
+
+### Fixes / Improvements
+
+- Improved app bar by adding scroll animations.
+- Improved settings UI by improving spacing and removing cards.
+- Moved RClone backend switch from settings to account creation dialog.
+- Changed app font to Inter from Roboto.
+- Fixed system tray on Linux.
+- Fixed error on hive box access when the schema has changed.
+- Fixed tree view showing nothing when no files exist in the remote folder. 
+
 ## 0.7.7 | 19-01-2025 (Prerelease)
 
 ### Additions
