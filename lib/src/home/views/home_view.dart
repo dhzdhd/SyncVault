@@ -135,7 +135,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             canExpand: folderInfo.isNotEmpty,
             hasLeading: false,
             actions: [
-              if (Platform.isWindows)
+              if (PlatformExtension.isDesktop)
                 IconButton(
                   icon: const Icon(Icons.arrow_downward),
                   tooltip: 'Hide to system tray',
