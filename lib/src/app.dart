@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
 import 'package:syncvault/src/introduction/views/intro_view.dart';
@@ -29,31 +30,33 @@ class _MyAppState extends ConsumerState<MyApp>
   void initState() {
     super.initState();
 
-    // TODO: Add icons
-    String iconPath =
-        Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png';
+    if (PlatformExtension.isDesktop) {
+      // TODO: Add icons
+      String iconPath =
+          Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png';
 
-    trayManager.addListener(this);
+      trayManager.addListener(this);
 
-    final menu = Menu(
-      items: [
-        MenuItem(
-          label: 'Show',
-          onClick: (menuItem) async => await windowManager.show(),
-        ),
-        MenuItem(
-          label: 'Hide',
-          onClick: (menuItem) async => await windowManager.hide(),
-        ),
-        MenuItem(
-          label: 'Exit',
-          onClick: (menuItem) async => await windowManager.close(),
-        ),
-      ],
-    );
-    trayManager.setTitle('SyncVault');
-    trayManager.setContextMenu(menu);
-    trayManager.setIcon(iconPath);
+      final menu = Menu(
+        items: [
+          MenuItem(
+            label: 'Show',
+            onClick: (menuItem) async => await windowManager.show(),
+          ),
+          MenuItem(
+            label: 'Hide',
+            onClick: (menuItem) async => await windowManager.hide(),
+          ),
+          MenuItem(
+            label: 'Exit',
+            onClick: (menuItem) async => await windowManager.close(),
+          ),
+        ],
+      );
+      trayManager.setTitle('SyncVault');
+      trayManager.setContextMenu(menu);
+      trayManager.setIcon(iconPath);
+    }
   }
 
   @override
