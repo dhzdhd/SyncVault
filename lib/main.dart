@@ -13,6 +13,7 @@ import 'package:syncvault/helpers.dart';
 import 'package:syncvault/injectable.dart';
 import 'package:syncvault/setup.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/graph/models/workflow_model.dart';
 import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -108,6 +109,7 @@ void main() async {
   await setupHiveBox<IntroSettingsModel>(boxPath);
   await setupHiveBox<DriveProviderModel>(boxPath);
   await setupHiveBox<FolderModel>(boxPath);
+  await setupHiveBox<WorkflowModel>(boxPath);
 
   final settings = Settings.init();
 

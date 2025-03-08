@@ -52,6 +52,7 @@ dependencies:
   googleapis_auth: ^1.6.0
   google_fonts: ^6.2.1
   tray_manager: ^0.3.2
+  fl_nodes: ^0.2.0+1
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+
+  shaders:
+    - packages/fl_nodes/shaders/grid.frag
 
   assets:
     - assets/images/
