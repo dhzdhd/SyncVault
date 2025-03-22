@@ -53,6 +53,13 @@ dependencies:
   google_fonts: ^6.2.1
   tray_manager: ^0.3.2
   fl_nodes: ^0.2.0+1
+  workmanager:
+    git:
+      url: https://github.com/fluttercommunity/flutter_workmanager.git
+      path: workmanager
+      ref: 4ce065135dc1b91fee918f81596b42a56850391d
+  flutter_local_notifications: ^19.0.0
+  hashlib: ^1.21.2
 
 dev_dependencies:
   flutter_test:

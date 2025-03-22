@@ -52,45 +52,45 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      final folders = ref.watch(folderProvider).toList();
+    // useEffect(() {
+    //   final folders = ref.watch(folderProvider).toList();
 
-      for (int i = 0; i < _watchers.length; i++) {
-        // TODO: Match watcher and folder by remote name instead of index
-        // Also add/delete watcher with folder
-        _watchers[i].events.listen((event) async {
-          debugLogger.i(event.toString());
-          switch (event.type) {
-            case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
-              {
-                try {
-                  await ref.read(folderProvider.notifier).upload(
-                        folders[i],
-                        some(event.path),
-                      );
-                  debugPrint('Success');
-                } catch (e, st) {
-                  debugPrint(
-                      e.handleError('Failed to sync folders', st).message);
-                }
-              }
-            case ChangeType.REMOVE
-                when folders[i].isDeletionEnabled && folders[i].isAutoSync:
-              {
-                // final result = await ref
-                //     .read(folderProvider.notifier)
-                //     .delete(folders[i], some(event.path))
-                //     .run();
+    //   for (int i = 0; i < _watchers.length; i++) {
+    //     // TODO: Match watcher and folder by remote name instead of index
+    //     // Also add/delete watcher with folder
+    //     _watchers[i].events.listen((event) async {
+    //       debugLogger.i(event.toString());
+    //       switch (event.type) {
+    //         case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
+    //           {
+    //             try {
+    //               await ref.read(folderProvider.notifier).upload(
+    //                     folders[i],
+    //                     some(event.path),
+    //                   );
+    //               debugPrint('Success');
+    //             } catch (e, st) {
+    //               debugPrint(
+    //                   e.handleError('Failed to sync folders', st).message);
+    //             }
+    //           }
+    //         case ChangeType.REMOVE
+    //             when folders[i].isDeletionEnabled && folders[i].isAutoSync:
+    //           {
+    //             // final result = await ref
+    //             //     .read(folderProvider.notifier)
+    //             //     .delete(folders[i], some(event.path))
+    //             //     .run();
 
-                // result.match(
-                //     (l) => debugPrint(l.message), (r) => debugPrint('Success'));
-              }
-          }
-        });
-      }
+    //             // result.match(
+    //             //     (l) => debugPrint(l.message), (r) => debugPrint('Success'));
+    //           }
+    //       }
+    //     });
+    //   }
 
-      return null;
-    }, [ref.watch(folderProvider)]);
+    //   return null;
+    // }, [ref.watch(folderProvider)]);
 
     final folderInfo = ref.watch(folderProvider);
     final folderNotifier = ref.read(folderProvider.notifier);
