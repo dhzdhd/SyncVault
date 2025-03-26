@@ -11,6 +11,7 @@ class SettingsModel with _$SettingsModel {
   const factory SettingsModel({
     required bool isSentryEnabled,
     required bool isHideOnStartup,
+    required bool isLaunchOnStartup,
     required ThemeMode themeMode,
   }) = _SettingsModel;
 
@@ -20,6 +21,7 @@ class SettingsModel with _$SettingsModel {
   factory SettingsModel.defaultValue() => const SettingsModel(
         isSentryEnabled: false,
         isHideOnStartup: false,
+        isLaunchOnStartup: false,
         themeMode: ThemeMode.system,
       );
 }

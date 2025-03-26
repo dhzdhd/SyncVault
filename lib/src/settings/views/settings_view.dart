@@ -82,6 +82,20 @@ class SettingsView extends ConsumerWidget {
                     ListTile(
                       minTileHeight: 64,
                       title: Text(
+                        'Launch on startup',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      trailing: Switch(
+                        value: settings.isLaunchOnStartup,
+                        onChanged: (val) {
+                          settingsNotifier.setLaunchOnStartup();
+                        },
+                      ),
+                    ),
+                  if (PlatformExtension.isDesktop)
+                    ListTile(
+                      minTileHeight: 64,
+                      title: Text(
                         'Download RClone',
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),

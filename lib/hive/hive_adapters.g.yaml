@@ -15,7 +15,7 @@ types:
         index: 2
   SettingsModel:
     typeId: 1
-    nextIndex: 8
+    nextIndex: 9
     fields:
       isSentryEnabled:
         index: 3
@@ -23,6 +23,8 @@ types:
         index: 4
       themeMode:
         index: 5
+      isLaunchOnStartup:
+        index: 8
   IntroSettingsModel:
     typeId: 2
     nextIndex: 1

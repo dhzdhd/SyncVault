@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/errors.dart';
@@ -26,6 +27,7 @@ import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:syncvault/hive/hive_registrar.g.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
@@ -214,6 +216,20 @@ void main() async {
 
   if (PlatformExtension.isDesktop) {
     await windowManager.ensureInitialized();
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    launchAtStartup.setup(
+      appName: packageInfo.appName,
+      appPath: Platform.resolvedExecutable,
+      packageName: 'com.example.syncvault',
+    );
+
+    if (settings.isLaunchOnStartup) {
+      await launchAtStartup.enable();
+    } else {
+      await launchAtStartup.disable();
+    }
 
     if (settings.isHideOnStartup) {
       await windowManager.hide();

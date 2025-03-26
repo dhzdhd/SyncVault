@@ -60,6 +60,8 @@ dependencies:
       ref: 4ce065135dc1b91fee918f81596b42a56850391d
   flutter_local_notifications: ^19.0.0
   hashlib: ^1.21.2
+  launch_at_startup: ^0.4.0
+  package_info_plus: ^8.3.0
 
 dev_dependencies:
   flutter_test:
