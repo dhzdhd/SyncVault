@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fpdart/fpdart.dart';
@@ -9,9 +8,11 @@ import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/home/models/folder_hash_model.dart';
 import 'package:syncvault/src/home/services/file_comparer.dart';
 import 'package:syncvault/helpers.dart';
-import 'package:syncvault/injectable.dart';
+import 'package:syncvault/injectable/injectable.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/setup.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
@@ -28,6 +29,8 @@ import 'package:window_manager/window_manager.dart';
 
 import 'src/app.dart';
 import 'src/settings/controllers/settings_controller.dart';
+
+const notifID = 2352;
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -46,13 +49,16 @@ void callbackDispatcher() {
       channelDescription: 'Notifies user of app running in background',
       importance: Importance.low,
       priority: Priority.min,
-      ticker: 'ticker',
+      ticker: 'SyncVault sync running in background',
+      actions: [
+        AndroidNotificationAction('cancel_sync', 'Stop background sync')
+      ],
     );
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 
     final notifs = await notifService.getActiveNotifications();
-    final notif = notifs.filter((notif) => notif.id == 0);
+    final notif = notifs.filter((notif) => notif.id == notifID);
 
     if (notif.isEmpty) {
       await notifService.initialize(
@@ -60,7 +66,7 @@ void callbackDispatcher() {
         onDidReceiveNotificationResponse: notificationHandler,
       );
       await notifService.show(
-        0,
+        notifID,
         'File sync',
         'Syncing files in the background',
         notificationDetails,
@@ -75,15 +81,18 @@ void callbackDispatcher() {
     final docDir = await getApplicationDocumentsDirectory();
     final service = RCloneDriveService();
     final boxPath = '${docDir.path}/SyncVault/hive';
+
     await setupHiveBox<DriveProviderModel>(boxPath);
     await setupHiveBox<FolderModel>(boxPath);
+    await setupHiveBox<FolderHashModel>(boxPath);
 
     final authProviders = Auth.init();
     final folders = Folder.init().filter((folder) => folder.isAutoSync);
+    final hashes = GetIt.I<Box<FolderHashModel>>().values;
 
     final fileComparer = FileComparer();
 
-    // File watcher approach cannot work on mobile devices
+    // File watcher approach does not work on mobile devices
     for (final folderModel in folders) {
       final entities = await Directory(folderModel.folderPath)
           .list(recursive: true)
@@ -92,46 +101,39 @@ void callbackDispatcher() {
 
       debugLogger.i(files);
 
-      final hash = switch (await fileComparer.calcHash(files).run()) {
-        Left(:final value) => throw value,
-        Right(:final value) => value,
-      };
+      // Compare calculated and stored hash
+      final calcHashResult = await fileComparer.calcHash(files).run();
+      final storedHashResult = hashes
+          .filter((model) => model.remoteName == folderModel.remoteName)
+          .firstOption
+          .toEither(() => const GeneralError('Stored hash does not exist'));
 
-      final providerModel = authProviders
-          .filter((provider) => provider.remoteName == folderModel.remoteName)
-          .firstOption;
+      final Either<AppError, bool> hashCompareResult = Either.Do(($) {
+        final calcHash = $(calcHashResult);
+        final storedHash = $(storedHashResult).hash;
 
-      await service
-          .upload(
-              providerModel: providerModel.toNullable()!,
-              folderModel: folderModel,
-              localPath: folderModel.folderPath)
-          .run();
+        return fileComparer.isSameFolder(calcHash, storedHash);
+      });
 
-      //   Directory(folder.folderPath).watch().listen(
-      //     (event) async {
-      //       debugLogger.i('iehfie');
-      //       final authProvider = authProviders
-      //           .filter((provider) => provider.remoteName == folder.remoteName)
-      //           .first;
+      // If equal, sync files
+      hashCompareResult.match(
+        (err) {
+          debugLogger.e(err);
+        },
+        (val) async {
+          final providerModel = authProviders
+              .filter(
+                  (provider) => provider.remoteName == folderModel.remoteName)
+              .firstOption;
 
-      //       final result = await service
-      //           .upload(
-      //             providerModel: authProvider,
-      //             folderModel: folder,
-      //             localPath: event.path,
-      //           )
-      //           .run();
-      //       result.match(
-      //         (e) => print(e),
-      //         (t) {
-      //           print('Uploaded file: ${event.path}');
-      //         },
-      //       );
-      //     },
-      //   );
-
-      //   print(folders);
+          await service
+              .upload(
+                  providerModel: providerModel.toNullable()!,
+                  folderModel: folderModel,
+                  localPath: folderModel.folderPath)
+              .run();
+        },
+      );
     }
 
     return Future.value(true);
@@ -139,10 +141,15 @@ void callbackDispatcher() {
 }
 
 @pragma('vm:entry-point')
-void notificationHandler(NotificationResponse notificationResponse) {
-  // handle action
+void notificationHandler(NotificationResponse notificationResponse) async {
+  if (notificationResponse.actionId == 'cancel_sync') {
+    final notifService = FlutterLocalNotificationsPlugin();
+    await notifService.cancel(notifID);
+    await Workmanager().cancelAll();
+  }
 }
 
+// TODO: Setup desktop bg sync task
 // void backgroundTask(RootIsolateToken rootIsolateToken) async {
 //   BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
 
@@ -181,8 +188,6 @@ void notificationHandler(NotificationResponse notificationResponse) {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  GetIt.I.registerSingleton<Dio>(Dio());
-
   // Hive stuff
   await Hive.initFlutter();
   Hive.registerAdapters();
@@ -195,10 +200,13 @@ void main() async {
   await setupHiveBox<DriveProviderModel>(boxPath);
   await setupHiveBox<FolderModel>(boxPath);
   await setupHiveBox<WorkflowModel>(boxPath);
-
-  final settings = Settings.init();
+  if (PlatformExtension.isMobile) {
+    await setupHiveBox<FolderHashModel>(boxPath);
+  }
 
   configureDependencies();
+
+  final settings = Settings.init();
 
   // if (PlatformExtension.isDesktop) {
   //   Isolate.spawn<RootIsolateToken>(backgroundTask, RootIsolateToken.instance!);
@@ -219,7 +227,6 @@ void main() async {
       initialDelay: const Duration(seconds: 5),
       existingWorkPolicy: ExistingWorkPolicy.replace,
       constraints: Constraints(networkType: NetworkType.connected),
-      // outOfQuotaPolicy: OutOfQuotaPolicy.run_as_non_expedited_work_request,
     );
   }
 

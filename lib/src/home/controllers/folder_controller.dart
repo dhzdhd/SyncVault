@@ -1,11 +1,12 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/providers/google_drive.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
@@ -13,6 +14,8 @@ import 'package:syncvault/src/home/services/rclone.dart';
 part 'folder_controller.g.dart';
 
 final _box = GetIt.I<Box<FolderModel>>();
+// Make fetchable from GetIt
+final _storage = HiveStorage<FolderModel>(_box);
 
 @riverpod
 class CreateFolderController extends _$CreateFolderController {
@@ -85,7 +88,7 @@ class Folder extends _$Folder {
   }
 
   static List<FolderModel> init() {
-    return _box.values.toList();
+    return _storage.fetchAll().toList();
   }
 
   Future<void> toggleAutoSync(FolderModel model) async {
@@ -99,8 +102,7 @@ class Folder extends _$Folder {
         )
     ];
 
-    await _box.clear();
-    await _box.addAll(state);
+    _storage.update(state);
   }
 
   Future<void> toggleDeletionOnSync(FolderModel model) async {
@@ -114,8 +116,7 @@ class Folder extends _$Folder {
         )
     ];
 
-    await _box.clear();
-    await _box.addAll(state);
+    _storage.update(state);
   }
 
   Future<void> toggleTwoWaySync(FolderModel model) async {
@@ -129,8 +130,7 @@ class Folder extends _$Folder {
         )
     ];
 
-    await _box.clear();
-    await _box.addAll(state);
+    _storage.update(state);
   }
 
   Future<void> create({
@@ -155,7 +155,7 @@ class Folder extends _$Folder {
 
     state = [...state, model];
 
-    await _box.add(model);
+    await _storage.addSingle(model);
   }
 
   Future<void> upload(
@@ -190,15 +190,11 @@ class Folder extends _$Folder {
     }
 
     state = state.where((element) => element != model).toList();
-    await _box.clear();
-    await _box.addAll(state);
+    await _storage.update(state);
   }
 
-  Future<()> clearCache() async {
+  Future<void> clearCache() async {
     state = [];
-    await _box.clear();
-    await _box.flush();
-
-    return ();
+    await _storage.clear();
   }
 }

@@ -9,7 +9,9 @@ extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(DriveProviderAdapter());
     registerAdapter(DriveProviderModelAdapter());
+    registerAdapter(FolderHashModelAdapter());
     registerAdapter(FolderModelAdapter());
+    registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
     registerAdapter(OAuth2Adapter());
     registerAdapter(S3Adapter());
@@ -17,5 +19,6 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(ThemeModeAdapter());
     registerAdapter(UserPasswordAdapter());
     registerAdapter(WebdavAdapter());
+    registerAdapter(WorkflowModelAdapter());
   }
 }

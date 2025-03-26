@@ -443,3 +443,111 @@ class UserPasswordAdapter extends TypeAdapter<UserPassword> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
+  @override
+  final int typeId = 21;
+
+  @override
+  WorkflowModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return WorkflowModel(
+      name: fields[0] as String,
+      workflowJson: fields[1] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, WorkflowModel obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.workflowJson);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WorkflowModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class FolderHashModelAdapter extends TypeAdapter<FolderHashModel> {
+  @override
+  final int typeId = 22;
+
+  @override
+  FolderHashModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return FolderHashModel(
+      remoteName: fields[0] as String,
+      hash: fields[1] as HashDigest,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, FolderHashModel obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.remoteName)
+      ..writeByte(1)
+      ..write(obj.hash);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FolderHashModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class HashDigestAdapter extends TypeAdapter<HashDigest> {
+  @override
+  final int typeId = 23;
+
+  @override
+  HashDigest read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return HashDigest(
+      fields[0] as Uint8List,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, HashDigest obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.bytes);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HashDigestAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
