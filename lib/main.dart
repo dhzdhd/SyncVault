@@ -10,6 +10,7 @@ import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
 import 'package:syncvault/src/home/services/file_comparer.dart';
 import 'package:syncvault/helpers.dart';
@@ -49,8 +50,8 @@ void callbackDispatcher() {
       'sync_notif',
       'SyncVault',
       channelDescription: 'Notifies user of app running in background',
-      importance: Importance.low,
-      priority: Priority.min,
+      importance: Importance.max,
+      priority: Priority.max,
       ticker: 'SyncVault sync running in background',
       actions: [
         AndroidNotificationAction('cancel_sync', 'Stop background sync')
@@ -62,6 +63,8 @@ void callbackDispatcher() {
     final notifs = await notifService.getActiveNotifications();
     final notif = notifs.filter((notif) => notif.id == notifID);
 
+    debugLogger.i('Notif: $notifID: $notif');
+
     if (notif.isEmpty) {
       await notifService.initialize(
         initializationSettings,
@@ -72,7 +75,6 @@ void callbackDispatcher() {
         'File sync',
         'Syncing files in the background',
         notificationDetails,
-        payload: 'item x',
       );
     }
 
@@ -86,13 +88,14 @@ void callbackDispatcher() {
 
     await setupHiveBox<DriveProviderModel>(boxPath);
     await setupHiveBox<FolderModel>(boxPath);
-    await setupHiveBox<FolderHashModel>(boxPath);
+    final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
 
     final authProviders = Auth.init();
     final folders = Folder.init().filter((folder) => folder.isAutoSync);
     final hashes = GetIt.I<Box<FolderHashModel>>().values;
 
     final fileComparer = FileComparer();
+    final hashStorage = HiveStorage<FolderHashModel>(hashBox);
 
     // File watcher approach does not work on mobile devices
     for (final folderModel in folders) {
@@ -114,6 +117,9 @@ void callbackDispatcher() {
         final calcHash = $(calcHashResult);
         final storedHash = $(storedHashResult).hash;
 
+        debugLogger.i(calcHash);
+        debugLogger.i(storedHash);
+
         return fileComparer.isSameFolder(calcHash, storedHash);
       });
 
@@ -122,18 +128,52 @@ void callbackDispatcher() {
         (err) {
           debugLogger.e(err);
         },
-        (val) async {
-          final providerModel = authProviders
-              .filter(
-                  (provider) => provider.remoteName == folderModel.remoteName)
-              .firstOption;
+        (isSameFolder) async {
+          if (!isSameFolder) {
+            final providerModel = authProviders
+                .filter(
+                    (provider) => provider.remoteName == folderModel.remoteName)
+                .firstOption;
 
-          await service
-              .upload(
-                  providerModel: providerModel.toNullable()!,
-                  folderModel: folderModel,
-                  localPath: folderModel.folderPath)
-              .run();
+            final uploadRes = await service
+                .upload(
+                    providerModel: providerModel.toNullable()!,
+                    folderModel: folderModel,
+                    localPath: folderModel.folderPath)
+                .run();
+
+            uploadRes.match(
+              // FIXME: Fails by - no impl found for getNativeLibraryPath
+              // Workaround - pass the path to bg after calling it in main isolate
+              (err) => err.handleError(
+                  'Failed to do background sync', StackTrace.empty),
+              (_) async {
+                debugLogger.i('Background sync completed');
+
+                final files = await Directory(folderModel.folderPath)
+                    .list(recursive: true)
+                    .toList();
+                final hashResult = await fileComparer
+                    .calcHash(files.whereType<File>().toList())
+                    .run();
+                hashResult.match(
+                  (err) => err.handleError(err.message, StackTrace.empty),
+                  (hash) {
+                    final hashModels = hashStorage.fetchAll().toList();
+                    final model = FolderHashModel(
+                      hash: hash,
+                      remoteName: folderModel.remoteName,
+                    );
+                    hashStorage.update(
+                      hashModels
+                        ..removeWhere((e) => e.remoteName == model.remoteName)
+                        ..add(model),
+                    );
+                  },
+                );
+              },
+            );
+          }
         },
       );
     }
@@ -148,6 +188,8 @@ void notificationHandler(NotificationResponse notificationResponse) async {
     final notifService = FlutterLocalNotificationsPlugin();
     await notifService.cancel(notifID);
     await Workmanager().cancelAll();
+
+    debugLogger.i('Cancelled all background tasks');
   }
 }
 
@@ -240,7 +282,7 @@ void main() async {
       'sync',
       'syncData',
       frequency: const Duration(minutes: 15), // Minimum possible duration :(
-      initialDelay: const Duration(seconds: 5),
+      initialDelay: const Duration(seconds: 15),
       existingWorkPolicy: ExistingWorkPolicy.replace,
       constraints: Constraints(networkType: NetworkType.connected),
     );
