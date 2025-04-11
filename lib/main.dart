@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
+import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
 import 'package:syncvault/src/home/services/file_comparer.dart';
 import 'package:syncvault/helpers.dart';
@@ -38,6 +39,12 @@ const notifID = 2352;
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    final execPath = inputData?['execPath'] as String?;
+    if (execPath == null) {
+      debugLogger.e('RClone exec path is null');
+      return Future.value(false);
+    }
+
     // Setup and show notification
     final notifService = FlutterLocalNotificationsPlugin();
     const InitializationSettings initializationSettings =
@@ -137,9 +144,11 @@ void callbackDispatcher() {
 
             final uploadRes = await service
                 .upload(
-                    providerModel: providerModel.toNullable()!,
-                    folderModel: folderModel,
-                    localPath: folderModel.folderPath)
+                  providerModel: providerModel.toNullable()!,
+                  folderModel: folderModel,
+                  localPath: folderModel.folderPath,
+                  rCloneExecPath: execPath,
+                )
                 .run();
 
             uploadRes.match(
@@ -193,42 +202,6 @@ void notificationHandler(NotificationResponse notificationResponse) async {
   }
 }
 
-// TODO: Setup desktop bg sync task
-// void backgroundTask(RootIsolateToken rootIsolateToken) async {
-//   BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
-
-//   final authInfo = Auth.init();
-//   final folderInfo = Folder.init();
-//   final driveService = RCloneDriveService();
-
-//   for (final folderModel in folderInfo) {
-//     Directory(folderModel.folderPath).watch().listen((event) async {
-//       final providerModel = authInfo
-//           .filter((model) => model.remoteName == folderModel.remoteName)
-//           .first;
-
-//       switch (event.type) {
-//         case FileSystemEvent.create:
-//           {
-//             final result = await driveService
-//                 .upload(
-//                   providerModel: providerModel,
-//                   folderModel: folderModel,
-//                   localPath: event.path,
-//                 )
-//                 .run();
-//             result.match(
-//               (e) => print(e),
-//               (t) {},
-//             );
-//           }
-//       }
-//     });
-//   }
-
-//   for (int i = 0; i < 10; i++) print('hi');
-// }
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -252,10 +225,6 @@ void main() async {
 
   final settings = Settings.init();
 
-  // if (PlatformExtension.isDesktop) {
-  //   Isolate.spawn<RootIsolateToken>(backgroundTask, RootIsolateToken.instance!);
-  // }
-
   if (PlatformExtension.isDesktop) {
     await windowManager.ensureInitialized();
 
@@ -277,6 +246,8 @@ void main() async {
       await windowManager.hide();
     }
   } else if (Platform.isAndroid) {
+    final execPath = await RCloneUtils().getRCloneExec().run();
+
     Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     Workmanager().registerPeriodicTask(
       'sync',
@@ -285,6 +256,9 @@ void main() async {
       initialDelay: const Duration(seconds: 15),
       existingWorkPolicy: ExistingWorkPolicy.replace,
       constraints: Constraints(networkType: NetworkType.connected),
+      inputData: {
+        'execPath': execPath.toNullable(),
+      },
     );
   }
 

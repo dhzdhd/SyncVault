@@ -71,11 +71,12 @@ class RCloneDriveService implements DriveService {
     required DriveProviderModel providerModel,
     required FolderModel folderModel,
     required String localPath,
+    String? rCloneExecPath,
   }) {
     final utils = RCloneUtils();
 
     return TaskEither<AppError, ()>.Do(($) async {
-      final execPath = await $(utils.getRCloneExec());
+      final execPath = rCloneExecPath ?? await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
       final res = await $(
@@ -84,7 +85,7 @@ class RCloneDriveService implements DriveService {
             final parentPath = Option.fromNullable(folderModel.remoteParentPath)
                 .match(() => '/', (t) => '/$t/');
 
-            final process = await Process.run(execPath, [
+            final process = await Process.run(execPath!, [
               // Use a 2 way copy to avoid deletion
               ...configArgs,
               folderModel.isTwoWaySync ? 'bisync' : 'sync',

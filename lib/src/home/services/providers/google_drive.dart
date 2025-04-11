@@ -96,6 +96,7 @@ class GoogleDriveService implements DriveService {
     required DriveProviderModel providerModel,
     required FolderModel folderModel,
     required String localPath,
+    String? rCloneExecPath,
   }) {
     // TODO: implement upload
     throw UnimplementedError();

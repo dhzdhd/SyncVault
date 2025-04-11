@@ -12,6 +12,9 @@ extension ErrorSegregation on Object {
       fileLogger.e(message,
           error: this, stackTrace: stackTrace, time: DateTime.now());
       sentryLogger.e(message, stackTrace: stackTrace, time: DateTime.now());
+    } else {
+      debugLogger.e(message,
+          error: this, stackTrace: stackTrace, time: DateTime.now());
     }
 
     // TODO: Log errors and return readable errors

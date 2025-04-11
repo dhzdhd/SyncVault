@@ -15,6 +15,7 @@ abstract interface class DriveService {
     required DriveProviderModel providerModel,
     required FolderModel folderModel,
     required String localPath,
+    String? rCloneExecPath,
   });
   TaskEither<AppError, ()> delete({
     required DriveProviderModel providerModel,
