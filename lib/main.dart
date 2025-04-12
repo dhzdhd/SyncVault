@@ -217,9 +217,7 @@ void main() async {
   await setupHiveBox<DriveProviderModel>(boxPath);
   await setupHiveBox<FolderModel>(boxPath);
   await setupHiveBox<WorkflowModel>(boxPath);
-  if (PlatformExtension.isMobile) {
-    await setupHiveBox<FolderHashModel>(boxPath);
-  }
+  await setupHiveBox<FolderHashModel>(boxPath);
 
   configureDependencies();
 

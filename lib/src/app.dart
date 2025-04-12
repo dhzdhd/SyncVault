@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
@@ -9,6 +8,7 @@ import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/src/graph/views/workflow_view.dart';
 import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
 import 'package:syncvault/src/introduction/views/intro_view.dart';
+import 'package:syncvault/src/localization/generated/i18n/app_localizations.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
