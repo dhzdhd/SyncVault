@@ -6,15 +6,15 @@ part of 'settings_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SettingsModelImpl _$$SettingsModelImplFromJson(Map<String, dynamic> json) =>
-    _$SettingsModelImpl(
+_SettingsModel _$SettingsModelFromJson(Map<String, dynamic> json) =>
+    _SettingsModel(
       isSentryEnabled: json['isSentryEnabled'] as bool,
       isHideOnStartup: json['isHideOnStartup'] as bool,
       isLaunchOnStartup: json['isLaunchOnStartup'] as bool,
       themeMode: $enumDecode(_$ThemeModeEnumMap, json['themeMode']),
     );
 
-Map<String, dynamic> _$$SettingsModelImplToJson(_$SettingsModelImpl instance) =>
+Map<String, dynamic> _$SettingsModelToJson(_SettingsModel instance) =>
     <String, dynamic>{
       'isSentryEnabled': instance.isSentryEnabled,
       'isHideOnStartup': instance.isHideOnStartup,

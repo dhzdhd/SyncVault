@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,101 +10,67 @@ part of 'file_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
 
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-FileModel _$FileModelFromJson(Map<String, dynamic> json) {
-  return _FileModel.fromJson(json);
-}
-
 /// @nodoc
-mixin _$FileModel {
-  String get name => throw _privateConstructorUsedError;
-  String get size => throw _privateConstructorUsedError;
+mixin _$FileModel implements DiagnosticableTreeMixin {
+  String get name;
+  String get size;
   @FileSystemEntityConverter()
-  FileSystemEntity get file => throw _privateConstructorUsedError;
+  FileSystemEntity get file;
   @DirectoryConverter()
-  Directory get parent => throw _privateConstructorUsedError;
-  List<FileModel> get children => throw _privateConstructorUsedError;
-
-  /// Serializes this FileModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Directory get parent;
+  List<FileModel> get children;
 
   /// Create a copy of FileModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $FileModelCopyWith<FileModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $FileModelCopyWith<$Res> {
-  factory $FileModelCopyWith(FileModel value, $Res Function(FileModel) then) =
-      _$FileModelCopyWithImpl<$Res, FileModel>;
-  @useResult
-  $Res call(
-      {String name,
-      String size,
-      @FileSystemEntityConverter() FileSystemEntity file,
-      @DirectoryConverter() Directory parent,
-      List<FileModel> children});
-}
-
-/// @nodoc
-class _$FileModelCopyWithImpl<$Res, $Val extends FileModel>
-    implements $FileModelCopyWith<$Res> {
-  _$FileModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of FileModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $FileModelCopyWith<FileModel> get copyWith =>
+      _$FileModelCopyWithImpl<FileModel>(this as FileModel, _$identity);
+
+  /// Serializes this FileModel to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? name = null,
-    Object? size = null,
-    Object? file = null,
-    Object? parent = null,
-    Object? children = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      size: null == size
-          ? _value.size
-          : size // ignore: cast_nullable_to_non_nullable
-              as String,
-      file: null == file
-          ? _value.file
-          : file // ignore: cast_nullable_to_non_nullable
-              as FileSystemEntity,
-      parent: null == parent
-          ? _value.parent
-          : parent // ignore: cast_nullable_to_non_nullable
-              as Directory,
-      children: null == children
-          ? _value.children
-          : children // ignore: cast_nullable_to_non_nullable
-              as List<FileModel>,
-    ) as $Val);
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('type', 'FileModel'))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('size', size))
+      ..add(DiagnosticsProperty('file', file))
+      ..add(DiagnosticsProperty('parent', parent))
+      ..add(DiagnosticsProperty('children', children));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is FileModel &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.size, size) || other.size == size) &&
+            (identical(other.file, file) || other.file == file) &&
+            (identical(other.parent, parent) || other.parent == parent) &&
+            const DeepCollectionEquality().equals(other.children, children));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, size, file, parent,
+      const DeepCollectionEquality().hash(children));
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'FileModel(name: $name, size: $size, file: $file, parent: $parent, children: $children)';
   }
 }
 
 /// @nodoc
-abstract class _$$FileModelImplCopyWith<$Res>
-    implements $FileModelCopyWith<$Res> {
-  factory _$$FileModelImplCopyWith(
-          _$FileModelImpl value, $Res Function(_$FileModelImpl) then) =
-      __$$FileModelImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $FileModelCopyWith<$Res> {
+  factory $FileModelCopyWith(FileModel value, $Res Function(FileModel) _then) =
+      _$FileModelCopyWithImpl;
   @useResult
   $Res call(
       {String name,
@@ -114,12 +81,11 @@ abstract class _$$FileModelImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$FileModelImplCopyWithImpl<$Res>
-    extends _$FileModelCopyWithImpl<$Res, _$FileModelImpl>
-    implements _$$FileModelImplCopyWith<$Res> {
-  __$$FileModelImplCopyWithImpl(
-      _$FileModelImpl _value, $Res Function(_$FileModelImpl) _then)
-      : super(_value, _then);
+class _$FileModelCopyWithImpl<$Res> implements $FileModelCopyWith<$Res> {
+  _$FileModelCopyWithImpl(this._self, this._then);
+
+  final FileModel _self;
+  final $Res Function(FileModel) _then;
 
   /// Create a copy of FileModel
   /// with the given fields replaced by the non-null parameter values.
@@ -132,25 +98,25 @@ class __$$FileModelImplCopyWithImpl<$Res>
     Object? parent = null,
     Object? children = null,
   }) {
-    return _then(_$FileModelImpl(
+    return _then(_self.copyWith(
       name: null == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
       size: null == size
-          ? _value.size
+          ? _self.size
           : size // ignore: cast_nullable_to_non_nullable
               as String,
       file: null == file
-          ? _value.file
+          ? _self.file
           : file // ignore: cast_nullable_to_non_nullable
               as FileSystemEntity,
       parent: null == parent
-          ? _value.parent
+          ? _self.parent
           : parent // ignore: cast_nullable_to_non_nullable
               as Directory,
       children: null == children
-          ? _value._children
+          ? _self.children
           : children // ignore: cast_nullable_to_non_nullable
               as List<FileModel>,
     ));
@@ -159,17 +125,16 @@ class __$$FileModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
-  const _$FileModelImpl(
+class _FileModel with DiagnosticableTreeMixin implements FileModel {
+  const _FileModel(
       {required this.name,
       required this.size,
       @FileSystemEntityConverter() required this.file,
       @DirectoryConverter() required this.parent,
       required final List<FileModel> children})
       : _children = children;
-
-  factory _$FileModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FileModelImplFromJson(json);
+  factory _FileModel.fromJson(Map<String, dynamic> json) =>
+      _$FileModelFromJson(json);
 
   @override
   final String name;
@@ -189,14 +154,23 @@ class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
     return EqualUnmodifiableListView(_children);
   }
 
+  /// Create a copy of FileModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FileModel(name: $name, size: $size, file: $file, parent: $parent, children: $children)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$FileModelCopyWith<_FileModel> get copyWith =>
+      __$FileModelCopyWithImpl<_FileModel>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$FileModelToJson(
+      this,
+    );
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'FileModel'))
       ..add(DiagnosticsProperty('name', name))
@@ -210,7 +184,7 @@ class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FileModelImpl &&
+            other is _FileModel &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.size, size) || other.size == size) &&
             (identical(other.file, file) || other.file == file) &&
@@ -223,50 +197,69 @@ class _$FileModelImpl with DiagnosticableTreeMixin implements _FileModel {
   int get hashCode => Object.hash(runtimeType, name, size, file, parent,
       const DeepCollectionEquality().hash(_children));
 
-  /// Create a copy of FileModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$FileModelImplCopyWith<_$FileModelImpl> get copyWith =>
-      __$$FileModelImplCopyWithImpl<_$FileModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$FileModelImplToJson(
-      this,
-    );
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'FileModel(name: $name, size: $size, file: $file, parent: $parent, children: $children)';
   }
 }
 
-abstract class _FileModel implements FileModel {
-  const factory _FileModel(
-      {required final String name,
-      required final String size,
-      @FileSystemEntityConverter() required final FileSystemEntity file,
-      @DirectoryConverter() required final Directory parent,
-      required final List<FileModel> children}) = _$FileModelImpl;
+/// @nodoc
+abstract mixin class _$FileModelCopyWith<$Res>
+    implements $FileModelCopyWith<$Res> {
+  factory _$FileModelCopyWith(
+          _FileModel value, $Res Function(_FileModel) _then) =
+      __$FileModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String name,
+      String size,
+      @FileSystemEntityConverter() FileSystemEntity file,
+      @DirectoryConverter() Directory parent,
+      List<FileModel> children});
+}
 
-  factory _FileModel.fromJson(Map<String, dynamic> json) =
-      _$FileModelImpl.fromJson;
+/// @nodoc
+class __$FileModelCopyWithImpl<$Res> implements _$FileModelCopyWith<$Res> {
+  __$FileModelCopyWithImpl(this._self, this._then);
 
-  @override
-  String get name;
-  @override
-  String get size;
-  @override
-  @FileSystemEntityConverter()
-  FileSystemEntity get file;
-  @override
-  @DirectoryConverter()
-  Directory get parent;
-  @override
-  List<FileModel> get children;
+  final _FileModel _self;
+  final $Res Function(_FileModel) _then;
 
   /// Create a copy of FileModel
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FileModelImplCopyWith<_$FileModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? name = null,
+    Object? size = null,
+    Object? file = null,
+    Object? parent = null,
+    Object? children = null,
+  }) {
+    return _then(_FileModel(
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      size: null == size
+          ? _self.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as String,
+      file: null == file
+          ? _self.file
+          : file // ignore: cast_nullable_to_non_nullable
+              as FileSystemEntity,
+      parent: null == parent
+          ? _self.parent
+          : parent // ignore: cast_nullable_to_non_nullable
+              as Directory,
+      children: null == children
+          ? _self._children
+          : children // ignore: cast_nullable_to_non_nullable
+              as List<FileModel>,
+    ));
+  }
 }
+
+// dart format on

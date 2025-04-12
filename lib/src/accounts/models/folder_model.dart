@@ -9,7 +9,7 @@ part 'folder_model.g.dart';
 
 @freezed
 // TODO: Convert nullables to option when adapter is fixed
-class FolderModel with _$FolderModel {
+abstract class FolderModel with _$FolderModel {
   const factory FolderModel({
     required String remoteName,
     required DriveProvider provider,

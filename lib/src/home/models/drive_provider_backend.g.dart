@@ -6,7 +6,7 @@ part of 'drive_provider_backend.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$OAuth2Impl _$$OAuth2ImplFromJson(Map<String, dynamic> json) => _$OAuth2Impl(
+OAuth2 _$OAuth2FromJson(Map<String, dynamic> json) => OAuth2(
       authJson: json['authJson'] as Map<String, dynamic>,
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
@@ -14,8 +14,7 @@ _$OAuth2Impl _$$OAuth2ImplFromJson(Map<String, dynamic> json) => _$OAuth2Impl(
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$OAuth2ImplToJson(_$OAuth2Impl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$OAuth2ToJson(OAuth2 instance) => <String, dynamic>{
       'authJson': instance.authJson,
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,
@@ -23,43 +22,41 @@ Map<String, dynamic> _$$OAuth2ImplToJson(_$OAuth2Impl instance) =>
       'runtimeType': instance.$type,
     };
 
-_$S3Impl _$$S3ImplFromJson(Map<String, dynamic> json) => _$S3Impl(
+S3 _$S3FromJson(Map<String, dynamic> json) => S3(
       url: json['url'] as String,
       accessKeyId: json['accessKeyId'] as String,
       secretAccessKey: json['secretAccessKey'] as String,
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$S3ImplToJson(_$S3Impl instance) => <String, dynamic>{
+Map<String, dynamic> _$S3ToJson(S3 instance) => <String, dynamic>{
       'url': instance.url,
       'accessKeyId': instance.accessKeyId,
       'secretAccessKey': instance.secretAccessKey,
       'runtimeType': instance.$type,
     };
 
-_$WebdavImpl _$$WebdavImplFromJson(Map<String, dynamic> json) => _$WebdavImpl(
+Webdav _$WebdavFromJson(Map<String, dynamic> json) => Webdav(
       url: json['url'] as String,
       user: json['user'] as String,
       password: json['password'] as String,
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$WebdavImplToJson(_$WebdavImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WebdavToJson(Webdav instance) => <String, dynamic>{
       'url': instance.url,
       'user': instance.user,
       'password': instance.password,
       'runtimeType': instance.$type,
     };
 
-_$UserPasswordImpl _$$UserPasswordImplFromJson(Map<String, dynamic> json) =>
-    _$UserPasswordImpl(
+UserPassword _$UserPasswordFromJson(Map<String, dynamic> json) => UserPassword(
       username: json['username'] as String,
       password: json['password'] as String,
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$UserPasswordImplToJson(_$UserPasswordImpl instance) =>
+Map<String, dynamic> _$UserPasswordToJson(UserPassword instance) =>
     <String, dynamic>{
       'username': instance.username,
       'password': instance.password,

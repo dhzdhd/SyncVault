@@ -241,13 +241,14 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
       accessToken: fields[1] as String,
       refreshToken: fields[2] as String,
       expiresIn: fields[3] as String,
+      $type: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, OAuth2 obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(1)
       ..write(obj.accessToken)
       ..writeByte(2)
@@ -255,7 +256,9 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
       ..writeByte(3)
       ..write(obj.expiresIn)
       ..writeByte(4)
-      ..write(obj.authJson);
+      ..write(obj.authJson)
+      ..writeByte(5)
+      ..write(obj.$type);
   }
 
   @override
@@ -283,19 +286,22 @@ class S3Adapter extends TypeAdapter<S3> {
       url: fields[0] as String,
       accessKeyId: fields[1] as String,
       secretAccessKey: fields[2] as String,
+      $type: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, S3 obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.url)
       ..writeByte(1)
       ..write(obj.accessKeyId)
       ..writeByte(2)
-      ..write(obj.secretAccessKey);
+      ..write(obj.secretAccessKey)
+      ..writeByte(3)
+      ..write(obj.$type);
   }
 
   @override
@@ -323,19 +329,22 @@ class WebdavAdapter extends TypeAdapter<Webdav> {
       url: fields[0] as String,
       user: fields[1] as String,
       password: fields[2] as String,
+      $type: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Webdav obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.url)
       ..writeByte(1)
       ..write(obj.user)
       ..writeByte(2)
-      ..write(obj.password);
+      ..write(obj.password)
+      ..writeByte(3)
+      ..write(obj.$type);
   }
 
   @override
@@ -423,17 +432,20 @@ class UserPasswordAdapter extends TypeAdapter<UserPassword> {
     return UserPassword(
       username: fields[0] as String,
       password: fields[1] as String,
+      $type: fields[2] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserPassword obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.username)
       ..writeByte(1)
-      ..write(obj.password);
+      ..write(obj.password)
+      ..writeByte(2)
+      ..write(obj.$type);
   }
 
   @override

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,107 +10,95 @@ part of 'filter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$Filter {
-  Object get value => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(bool value) directory,
-    required TResult Function(String value) name,
-    required TResult Function(String value) id,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool value)? directory,
-    TResult? Function(String value)? name,
-    TResult? Function(String value)? id,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool value)? directory,
-    TResult Function(String value)? name,
-    TResult Function(String value)? id,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(DirectoryFilter value) directory,
-    required TResult Function(NameFilter value) name,
-    required TResult Function(IDFilter value) id,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(DirectoryFilter value)? directory,
-    TResult? Function(NameFilter value)? name,
-    TResult? Function(IDFilter value)? id,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(DirectoryFilter value)? directory,
-    TResult Function(NameFilter value)? name,
-    TResult Function(IDFilter value)? id,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  Object get value;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is Filter &&
+            const DeepCollectionEquality().equals(other.value, value));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(value));
+
+  @override
+  String toString() {
+    return 'Filter(value: $value)';
+  }
 }
 
 /// @nodoc
-abstract class $FilterCopyWith<$Res> {
-  factory $FilterCopyWith(Filter value, $Res Function(Filter) then) =
-      _$FilterCopyWithImpl<$Res, Filter>;
+class $FilterCopyWith<$Res> {
+  $FilterCopyWith(Filter _, $Res Function(Filter) __);
 }
 
 /// @nodoc
-class _$FilterCopyWithImpl<$Res, $Val extends Filter>
-    implements $FilterCopyWith<$Res> {
-  _$FilterCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+class DirectoryFilter implements Filter {
+  const DirectoryFilter(this.value);
+
+  @override
+  final bool value;
 
   /// Create a copy of Filter
   /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $DirectoryFilterCopyWith<DirectoryFilter> get copyWith =>
+      _$DirectoryFilterCopyWithImpl<DirectoryFilter>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is DirectoryFilter &&
+            (identical(other.value, value) || other.value == value));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, value);
+
+  @override
+  String toString() {
+    return 'Filter.directory(value: $value)';
+  }
 }
 
 /// @nodoc
-abstract class _$$DirectoryFilterImplCopyWith<$Res> {
-  factory _$$DirectoryFilterImplCopyWith(_$DirectoryFilterImpl value,
-          $Res Function(_$DirectoryFilterImpl) then) =
-      __$$DirectoryFilterImplCopyWithImpl<$Res>;
+abstract mixin class $DirectoryFilterCopyWith<$Res>
+    implements $FilterCopyWith<$Res> {
+  factory $DirectoryFilterCopyWith(
+          DirectoryFilter value, $Res Function(DirectoryFilter) _then) =
+      _$DirectoryFilterCopyWithImpl;
   @useResult
   $Res call({bool value});
 }
 
 /// @nodoc
-class __$$DirectoryFilterImplCopyWithImpl<$Res>
-    extends _$FilterCopyWithImpl<$Res, _$DirectoryFilterImpl>
-    implements _$$DirectoryFilterImplCopyWith<$Res> {
-  __$$DirectoryFilterImplCopyWithImpl(
-      _$DirectoryFilterImpl _value, $Res Function(_$DirectoryFilterImpl) _then)
-      : super(_value, _then);
+class _$DirectoryFilterCopyWithImpl<$Res>
+    implements $DirectoryFilterCopyWith<$Res> {
+  _$DirectoryFilterCopyWithImpl(this._self, this._then);
+
+  final DirectoryFilter _self;
+  final $Res Function(DirectoryFilter) _then;
 
   /// Create a copy of Filter
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
     Object? value = null,
   }) {
-    return _then(_$DirectoryFilterImpl(
+    return _then(DirectoryFilter(
       null == value
-          ? _value.value
+          ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
@@ -118,293 +107,62 @@ class __$$DirectoryFilterImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DirectoryFilterImpl implements DirectoryFilter {
-  const _$DirectoryFilterImpl(this.value);
+class NameFilter implements Filter {
+  const NameFilter(this.value);
 
   @override
-  final bool value;
+  final String value;
 
-  @override
-  String toString() {
-    return 'Filter.directory(value: $value)';
-  }
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $NameFilterCopyWith<NameFilter> get copyWith =>
+      _$NameFilterCopyWithImpl<NameFilter>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DirectoryFilterImpl &&
+            other is NameFilter &&
             (identical(other.value, value) || other.value == value));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, value);
-
-  /// Create a copy of Filter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DirectoryFilterImplCopyWith<_$DirectoryFilterImpl> get copyWith =>
-      __$$DirectoryFilterImplCopyWithImpl<_$DirectoryFilterImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(bool value) directory,
-    required TResult Function(String value) name,
-    required TResult Function(String value) id,
-  }) {
-    return directory(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool value)? directory,
-    TResult? Function(String value)? name,
-    TResult? Function(String value)? id,
-  }) {
-    return directory?.call(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool value)? directory,
-    TResult Function(String value)? name,
-    TResult Function(String value)? id,
-    required TResult orElse(),
-  }) {
-    if (directory != null) {
-      return directory(value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(DirectoryFilter value) directory,
-    required TResult Function(NameFilter value) name,
-    required TResult Function(IDFilter value) id,
-  }) {
-    return directory(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(DirectoryFilter value)? directory,
-    TResult? Function(NameFilter value)? name,
-    TResult? Function(IDFilter value)? id,
-  }) {
-    return directory?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(DirectoryFilter value)? directory,
-    TResult Function(NameFilter value)? name,
-    TResult Function(IDFilter value)? id,
-    required TResult orElse(),
-  }) {
-    if (directory != null) {
-      return directory(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class DirectoryFilter implements Filter {
-  const factory DirectoryFilter(final bool value) = _$DirectoryFilterImpl;
-
-  @override
-  bool get value;
-
-  /// Create a copy of Filter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DirectoryFilterImplCopyWith<_$DirectoryFilterImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$NameFilterImplCopyWith<$Res> {
-  factory _$$NameFilterImplCopyWith(
-          _$NameFilterImpl value, $Res Function(_$NameFilterImpl) then) =
-      __$$NameFilterImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String value});
-}
-
-/// @nodoc
-class __$$NameFilterImplCopyWithImpl<$Res>
-    extends _$FilterCopyWithImpl<$Res, _$NameFilterImpl>
-    implements _$$NameFilterImplCopyWith<$Res> {
-  __$$NameFilterImplCopyWithImpl(
-      _$NameFilterImpl _value, $Res Function(_$NameFilterImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of Filter
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = null,
-  }) {
-    return _then(_$NameFilterImpl(
-      null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$NameFilterImpl implements NameFilter {
-  const _$NameFilterImpl(this.value);
-
-  @override
-  final String value;
 
   @override
   String toString() {
     return 'Filter.name(value: $value)';
   }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$NameFilterImpl &&
-            (identical(other.value, value) || other.value == value));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  /// Create a copy of Filter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$NameFilterImplCopyWith<_$NameFilterImpl> get copyWith =>
-      __$$NameFilterImplCopyWithImpl<_$NameFilterImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(bool value) directory,
-    required TResult Function(String value) name,
-    required TResult Function(String value) id,
-  }) {
-    return name(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool value)? directory,
-    TResult? Function(String value)? name,
-    TResult? Function(String value)? id,
-  }) {
-    return name?.call(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool value)? directory,
-    TResult Function(String value)? name,
-    TResult Function(String value)? id,
-    required TResult orElse(),
-  }) {
-    if (name != null) {
-      return name(value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(DirectoryFilter value) directory,
-    required TResult Function(NameFilter value) name,
-    required TResult Function(IDFilter value) id,
-  }) {
-    return name(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(DirectoryFilter value)? directory,
-    TResult? Function(NameFilter value)? name,
-    TResult? Function(IDFilter value)? id,
-  }) {
-    return name?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(DirectoryFilter value)? directory,
-    TResult Function(NameFilter value)? name,
-    TResult Function(IDFilter value)? id,
-    required TResult orElse(),
-  }) {
-    if (name != null) {
-      return name(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class NameFilter implements Filter {
-  const factory NameFilter(final String value) = _$NameFilterImpl;
-
-  @override
-  String get value;
-
-  /// Create a copy of Filter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NameFilterImplCopyWith<_$NameFilterImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$IDFilterImplCopyWith<$Res> {
-  factory _$$IDFilterImplCopyWith(
-          _$IDFilterImpl value, $Res Function(_$IDFilterImpl) then) =
-      __$$IDFilterImplCopyWithImpl<$Res>;
+abstract mixin class $NameFilterCopyWith<$Res>
+    implements $FilterCopyWith<$Res> {
+  factory $NameFilterCopyWith(
+          NameFilter value, $Res Function(NameFilter) _then) =
+      _$NameFilterCopyWithImpl;
   @useResult
   $Res call({String value});
 }
 
 /// @nodoc
-class __$$IDFilterImplCopyWithImpl<$Res>
-    extends _$FilterCopyWithImpl<$Res, _$IDFilterImpl>
-    implements _$$IDFilterImplCopyWith<$Res> {
-  __$$IDFilterImplCopyWithImpl(
-      _$IDFilterImpl _value, $Res Function(_$IDFilterImpl) _then)
-      : super(_value, _then);
+class _$NameFilterCopyWithImpl<$Res> implements $NameFilterCopyWith<$Res> {
+  _$NameFilterCopyWithImpl(this._self, this._then);
+
+  final NameFilter _self;
+  final $Res Function(NameFilter) _then;
 
   /// Create a copy of Filter
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
     Object? value = null,
   }) {
-    return _then(_$IDFilterImpl(
+    return _then(NameFilter(
       null == value
-          ? _value.value
+          ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -413,114 +171,64 @@ class __$$IDFilterImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$IDFilterImpl implements IDFilter {
-  const _$IDFilterImpl(this.value);
+class IDFilter implements Filter {
+  const IDFilter(this.value);
 
   @override
   final String value;
 
-  @override
-  String toString() {
-    return 'Filter.id(value: $value)';
-  }
+  /// Create a copy of Filter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $IDFilterCopyWith<IDFilter> get copyWith =>
+      _$IDFilterCopyWithImpl<IDFilter>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$IDFilterImpl &&
+            other is IDFilter &&
             (identical(other.value, value) || other.value == value));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
+  @override
+  String toString() {
+    return 'Filter.id(value: $value)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $IDFilterCopyWith<$Res> implements $FilterCopyWith<$Res> {
+  factory $IDFilterCopyWith(IDFilter value, $Res Function(IDFilter) _then) =
+      _$IDFilterCopyWithImpl;
+  @useResult
+  $Res call({String value});
+}
+
+/// @nodoc
+class _$IDFilterCopyWithImpl<$Res> implements $IDFilterCopyWith<$Res> {
+  _$IDFilterCopyWithImpl(this._self, this._then);
+
+  final IDFilter _self;
+  final $Res Function(IDFilter) _then;
+
   /// Create a copy of Filter
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
   @pragma('vm:prefer-inline')
-  _$$IDFilterImplCopyWith<_$IDFilterImpl> get copyWith =>
-      __$$IDFilterImplCopyWithImpl<_$IDFilterImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(bool value) directory,
-    required TResult Function(String value) name,
-    required TResult Function(String value) id,
+  $Res call({
+    Object? value = null,
   }) {
-    return id(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool value)? directory,
-    TResult? Function(String value)? name,
-    TResult? Function(String value)? id,
-  }) {
-    return id?.call(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool value)? directory,
-    TResult Function(String value)? name,
-    TResult Function(String value)? id,
-    required TResult orElse(),
-  }) {
-    if (id != null) {
-      return id(value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(DirectoryFilter value) directory,
-    required TResult Function(NameFilter value) name,
-    required TResult Function(IDFilter value) id,
-  }) {
-    return id(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(DirectoryFilter value)? directory,
-    TResult? Function(NameFilter value)? name,
-    TResult? Function(IDFilter value)? id,
-  }) {
-    return id?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(DirectoryFilter value)? directory,
-    TResult Function(NameFilter value)? name,
-    TResult Function(IDFilter value)? id,
-    required TResult orElse(),
-  }) {
-    if (id != null) {
-      return id(this);
-    }
-    return orElse();
+    return _then(IDFilter(
+      null == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
-abstract class IDFilter implements Filter {
-  const factory IDFilter(final String value) = _$IDFilterImpl;
-
-  @override
-  String get value;
-
-  /// Create a copy of Filter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$IDFilterImplCopyWith<_$IDFilterImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

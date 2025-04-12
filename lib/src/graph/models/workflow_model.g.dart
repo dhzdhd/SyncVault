@@ -6,13 +6,13 @@ part of 'workflow_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$WorkflowModelImpl _$$WorkflowModelImplFromJson(Map<String, dynamic> json) =>
-    _$WorkflowModelImpl(
+_WorkflowModel _$WorkflowModelFromJson(Map<String, dynamic> json) =>
+    _WorkflowModel(
       name: json['name'] as String,
       workflowJson: json['workflowJson'] as String?,
     );
 
-Map<String, dynamic> _$$WorkflowModelImplToJson(_$WorkflowModelImpl instance) =>
+Map<String, dynamic> _$WorkflowModelToJson(_WorkflowModel instance) =>
     <String, dynamic>{
       'name': instance.name,
       'workflowJson': instance.workflowJson,

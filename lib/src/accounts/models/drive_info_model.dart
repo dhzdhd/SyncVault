@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 part 'drive_info_model.freezed.dart';
 
 @freezed
-class DriveInfoModel with _$DriveInfoModel {
+abstract class DriveInfoModel with _$DriveInfoModel {
   const factory DriveInfoModel({
     required Option<int> remainingStorage,
     required Option<int> usedStorage,

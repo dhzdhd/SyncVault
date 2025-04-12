@@ -8,7 +8,7 @@ part 'folder_hash_model.freezed.dart';
 part 'folder_hash_model.g.dart';
 
 @freezed
-class FolderHashModel with _$FolderHashModel {
+abstract class FolderHashModel with _$FolderHashModel {
   const factory FolderHashModel({
     required String remoteName,
     @HashDigestConverter() required HashDigest hash,

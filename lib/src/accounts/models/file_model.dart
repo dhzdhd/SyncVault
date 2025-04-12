@@ -9,7 +9,7 @@ part 'file_model.freezed.dart';
 part 'file_model.g.dart';
 
 @freezed
-class FileModel with _$FileModel {
+abstract class FileModel with _$FileModel {
   const factory FileModel({
     required String name,
     required String size,

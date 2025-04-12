@@ -6,8 +6,7 @@ part of 'file_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$FileModelImpl _$$FileModelImplFromJson(Map<String, dynamic> json) =>
-    _$FileModelImpl(
+_FileModel _$FileModelFromJson(Map<String, dynamic> json) => _FileModel(
       name: json['name'] as String,
       size: json['size'] as String,
       file: const FileSystemEntityConverter().fromJson(json['file'] as String),
@@ -17,7 +16,7 @@ _$FileModelImpl _$$FileModelImplFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$FileModelImplToJson(_$FileModelImpl instance) =>
+Map<String, dynamic> _$FileModelToJson(_FileModel instance) =>
     <String, dynamic>{
       'name': instance.name,
       'size': instance.size,

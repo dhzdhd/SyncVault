@@ -65,7 +65,7 @@ types:
         index: 5
   OAuth2:
     typeId: 5
-    nextIndex: 5
+    nextIndex: 6
     fields:
       accessToken:
         index: 1
@@ -75,9 +75,11 @@ types:
         index: 3
       authJson:
         index: 4
+      $type:
+        index: 5
   S3:
     typeId: 6
-    nextIndex: 3
+    nextIndex: 4
     fields:
       url:
         index: 0
@@ -85,9 +87,11 @@ types:
         index: 1
       secretAccessKey:
         index: 2
+      $type:
+        index: 3
   Webdav:
     typeId: 7
-    nextIndex: 3
+    nextIndex: 4
     fields:
       url:
         index: 0
@@ -95,6 +99,8 @@ types:
         index: 1
       password:
         index: 2
+      $type:
+        index: 3
   FolderModel:
     typeId: 11
     nextIndex: 12
@@ -121,12 +127,14 @@ types:
         index: 11
   UserPassword:
     typeId: 12
-    nextIndex: 2
+    nextIndex: 3
     fields:
       username:
         index: 0
       password:
         index: 1
+      $type:
+        index: 2
   WorkflowModel:
     typeId: 21
     nextIndex: 2

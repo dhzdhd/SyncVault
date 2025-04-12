@@ -6,9 +6,8 @@ part of 'drive_provider_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DriveProviderModelImpl _$$DriveProviderModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DriveProviderModelImpl(
+_DriveProviderModel _$DriveProviderModelFromJson(Map<String, dynamic> json) =>
+    _DriveProviderModel(
       remoteName: json['remoteName'] as String,
       provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
       backend: DriveProviderBackend.fromJson(
@@ -18,8 +17,7 @@ _$DriveProviderModelImpl _$$DriveProviderModelImplFromJson(
       isRCloneBackend: json['isRCloneBackend'] as bool,
     );
 
-Map<String, dynamic> _$$DriveProviderModelImplToJson(
-        _$DriveProviderModelImpl instance) =>
+Map<String, dynamic> _$DriveProviderModelToJson(_DriveProviderModel instance) =>
     <String, dynamic>{
       'remoteName': instance.remoteName,
       'provider': _$DriveProviderEnumMap[instance.provider]!,

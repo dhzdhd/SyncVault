@@ -6,8 +6,7 @@ part of 'folder_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$FolderModelImpl _$$FolderModelImplFromJson(Map<String, dynamic> json) =>
-    _$FolderModelImpl(
+_FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => _FolderModel(
       remoteName: json['remoteName'] as String,
       provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
       folderPath: json['folderPath'] as String,
@@ -20,7 +19,7 @@ _$FolderModelImpl _$$FolderModelImplFromJson(Map<String, dynamic> json) =>
       isRCloneBackend: json['isRCloneBackend'] as bool,
     );
 
-Map<String, dynamic> _$$FolderModelImplToJson(_$FolderModelImpl instance) =>
+Map<String, dynamic> _$FolderModelToJson(_FolderModel instance) =>
     <String, dynamic>{
       'remoteName': instance.remoteName,
       'provider': _$DriveProviderEnumMap[instance.provider]!,

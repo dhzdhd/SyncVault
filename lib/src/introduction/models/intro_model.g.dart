@@ -6,14 +6,12 @@ part of 'intro_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$IntroSettingsModelImpl _$$IntroSettingsModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$IntroSettingsModelImpl(
+_IntroSettingsModel _$IntroSettingsModelFromJson(Map<String, dynamic> json) =>
+    _IntroSettingsModel(
       alreadyViewed: json['alreadyViewed'] as bool,
     );
 
-Map<String, dynamic> _$$IntroSettingsModelImplToJson(
-        _$IntroSettingsModelImpl instance) =>
+Map<String, dynamic> _$IntroSettingsModelToJson(_IntroSettingsModel instance) =>
     <String, dynamic>{
       'alreadyViewed': instance.alreadyViewed,
     };

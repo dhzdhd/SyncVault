@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,133 +10,30 @@ part of 'workflow_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-WorkflowModel _$WorkflowModelFromJson(Map<String, dynamic> json) {
-  return _WorkflowModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$WorkflowModel {
-  String get name => throw _privateConstructorUsedError;
-  String? get workflowJson => throw _privateConstructorUsedError;
-
-  /// Serializes this WorkflowModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get name;
+  String? get workflowJson;
 
   /// Create a copy of WorkflowModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $WorkflowModelCopyWith<WorkflowModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+      _$WorkflowModelCopyWithImpl<WorkflowModel>(
+          this as WorkflowModel, _$identity);
 
-/// @nodoc
-abstract class $WorkflowModelCopyWith<$Res> {
-  factory $WorkflowModelCopyWith(
-          WorkflowModel value, $Res Function(WorkflowModel) then) =
-      _$WorkflowModelCopyWithImpl<$Res, WorkflowModel>;
-  @useResult
-  $Res call({String name, String? workflowJson});
-}
-
-/// @nodoc
-class _$WorkflowModelCopyWithImpl<$Res, $Val extends WorkflowModel>
-    implements $WorkflowModelCopyWith<$Res> {
-  _$WorkflowModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of WorkflowModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? workflowJson = freezed,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      workflowJson: freezed == workflowJson
-          ? _value.workflowJson
-          : workflowJson // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$WorkflowModelImplCopyWith<$Res>
-    implements $WorkflowModelCopyWith<$Res> {
-  factory _$$WorkflowModelImplCopyWith(
-          _$WorkflowModelImpl value, $Res Function(_$WorkflowModelImpl) then) =
-      __$$WorkflowModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String? workflowJson});
-}
-
-/// @nodoc
-class __$$WorkflowModelImplCopyWithImpl<$Res>
-    extends _$WorkflowModelCopyWithImpl<$Res, _$WorkflowModelImpl>
-    implements _$$WorkflowModelImplCopyWith<$Res> {
-  __$$WorkflowModelImplCopyWithImpl(
-      _$WorkflowModelImpl _value, $Res Function(_$WorkflowModelImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of WorkflowModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? workflowJson = freezed,
-  }) {
-    return _then(_$WorkflowModelImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      workflowJson: freezed == workflowJson
-          ? _value.workflowJson
-          : workflowJson // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$WorkflowModelImpl implements _WorkflowModel {
-  const _$WorkflowModelImpl({required this.name, required this.workflowJson});
-
-  factory _$WorkflowModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$WorkflowModelImplFromJson(json);
-
-  @override
-  final String name;
-  @override
-  final String? workflowJson;
-
-  @override
-  String toString() {
-    return 'WorkflowModel(name: $name, workflowJson: $workflowJson)';
-  }
+  /// Serializes this WorkflowModel to a JSON map.
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$WorkflowModelImpl &&
+            other is WorkflowModel &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.workflowJson, workflowJson) ||
                 other.workflowJson == workflowJson));
@@ -145,39 +43,135 @@ class _$WorkflowModelImpl implements _WorkflowModel {
   @override
   int get hashCode => Object.hash(runtimeType, name, workflowJson);
 
-  /// Create a copy of WorkflowModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$WorkflowModelImplCopyWith<_$WorkflowModelImpl> get copyWith =>
-      __$$WorkflowModelImplCopyWithImpl<_$WorkflowModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$WorkflowModelImplToJson(
-      this,
-    );
+  String toString() {
+    return 'WorkflowModel(name: $name, workflowJson: $workflowJson)';
   }
 }
 
-abstract class _WorkflowModel implements WorkflowModel {
-  const factory _WorkflowModel(
-      {required final String name,
-      required final String? workflowJson}) = _$WorkflowModelImpl;
+/// @nodoc
+abstract mixin class $WorkflowModelCopyWith<$Res> {
+  factory $WorkflowModelCopyWith(
+          WorkflowModel value, $Res Function(WorkflowModel) _then) =
+      _$WorkflowModelCopyWithImpl;
+  @useResult
+  $Res call({String name, String? workflowJson});
+}
 
-  factory _WorkflowModel.fromJson(Map<String, dynamic> json) =
-      _$WorkflowModelImpl.fromJson;
+/// @nodoc
+class _$WorkflowModelCopyWithImpl<$Res>
+    implements $WorkflowModelCopyWith<$Res> {
+  _$WorkflowModelCopyWithImpl(this._self, this._then);
+
+  final WorkflowModel _self;
+  final $Res Function(WorkflowModel) _then;
+
+  /// Create a copy of WorkflowModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? workflowJson = freezed,
+  }) {
+    return _then(_self.copyWith(
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      workflowJson: freezed == workflowJson
+          ? _self.workflowJson
+          : workflowJson // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _WorkflowModel implements WorkflowModel {
+  const _WorkflowModel({required this.name, required this.workflowJson});
+  factory _WorkflowModel.fromJson(Map<String, dynamic> json) =>
+      _$WorkflowModelFromJson(json);
 
   @override
-  String get name;
+  final String name;
   @override
-  String? get workflowJson;
+  final String? workflowJson;
 
   /// Create a copy of WorkflowModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$WorkflowModelImplCopyWith<_$WorkflowModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$WorkflowModelCopyWith<_WorkflowModel> get copyWith =>
+      __$WorkflowModelCopyWithImpl<_WorkflowModel>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$WorkflowModelToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _WorkflowModel &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.workflowJson, workflowJson) ||
+                other.workflowJson == workflowJson));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, workflowJson);
+
+  @override
+  String toString() {
+    return 'WorkflowModel(name: $name, workflowJson: $workflowJson)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$WorkflowModelCopyWith<$Res>
+    implements $WorkflowModelCopyWith<$Res> {
+  factory _$WorkflowModelCopyWith(
+          _WorkflowModel value, $Res Function(_WorkflowModel) _then) =
+      __$WorkflowModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call({String name, String? workflowJson});
+}
+
+/// @nodoc
+class __$WorkflowModelCopyWithImpl<$Res>
+    implements _$WorkflowModelCopyWith<$Res> {
+  __$WorkflowModelCopyWithImpl(this._self, this._then);
+
+  final _WorkflowModel _self;
+  final $Res Function(_WorkflowModel) _then;
+
+  /// Create a copy of WorkflowModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? name = null,
+    Object? workflowJson = freezed,
+  }) {
+    return _then(_WorkflowModel(
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      workflowJson: freezed == workflowJson
+          ? _self.workflowJson
+          : workflowJson // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+// dart format on

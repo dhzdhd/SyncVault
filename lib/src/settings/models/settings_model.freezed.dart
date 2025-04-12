@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,171 +10,32 @@ part of 'settings_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-SettingsModel _$SettingsModelFromJson(Map<String, dynamic> json) {
-  return _SettingsModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$SettingsModel {
-  bool get isSentryEnabled => throw _privateConstructorUsedError;
-  bool get isHideOnStartup => throw _privateConstructorUsedError;
-  bool get isLaunchOnStartup => throw _privateConstructorUsedError;
-  ThemeMode get themeMode => throw _privateConstructorUsedError;
-
-  /// Serializes this SettingsModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  bool get isSentryEnabled;
+  bool get isHideOnStartup;
+  bool get isLaunchOnStartup;
+  ThemeMode get themeMode;
 
   /// Create a copy of SettingsModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $SettingsModelCopyWith<SettingsModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+      _$SettingsModelCopyWithImpl<SettingsModel>(
+          this as SettingsModel, _$identity);
 
-/// @nodoc
-abstract class $SettingsModelCopyWith<$Res> {
-  factory $SettingsModelCopyWith(
-          SettingsModel value, $Res Function(SettingsModel) then) =
-      _$SettingsModelCopyWithImpl<$Res, SettingsModel>;
-  @useResult
-  $Res call(
-      {bool isSentryEnabled,
-      bool isHideOnStartup,
-      bool isLaunchOnStartup,
-      ThemeMode themeMode});
-}
-
-/// @nodoc
-class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
-    implements $SettingsModelCopyWith<$Res> {
-  _$SettingsModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of SettingsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isSentryEnabled = null,
-    Object? isHideOnStartup = null,
-    Object? isLaunchOnStartup = null,
-    Object? themeMode = null,
-  }) {
-    return _then(_value.copyWith(
-      isSentryEnabled: null == isSentryEnabled
-          ? _value.isSentryEnabled
-          : isSentryEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isHideOnStartup: null == isHideOnStartup
-          ? _value.isHideOnStartup
-          : isHideOnStartup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isLaunchOnStartup: null == isLaunchOnStartup
-          ? _value.isLaunchOnStartup
-          : isLaunchOnStartup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      themeMode: null == themeMode
-          ? _value.themeMode
-          : themeMode // ignore: cast_nullable_to_non_nullable
-              as ThemeMode,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$SettingsModelImplCopyWith<$Res>
-    implements $SettingsModelCopyWith<$Res> {
-  factory _$$SettingsModelImplCopyWith(
-          _$SettingsModelImpl value, $Res Function(_$SettingsModelImpl) then) =
-      __$$SettingsModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {bool isSentryEnabled,
-      bool isHideOnStartup,
-      bool isLaunchOnStartup,
-      ThemeMode themeMode});
-}
-
-/// @nodoc
-class __$$SettingsModelImplCopyWithImpl<$Res>
-    extends _$SettingsModelCopyWithImpl<$Res, _$SettingsModelImpl>
-    implements _$$SettingsModelImplCopyWith<$Res> {
-  __$$SettingsModelImplCopyWithImpl(
-      _$SettingsModelImpl _value, $Res Function(_$SettingsModelImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of SettingsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isSentryEnabled = null,
-    Object? isHideOnStartup = null,
-    Object? isLaunchOnStartup = null,
-    Object? themeMode = null,
-  }) {
-    return _then(_$SettingsModelImpl(
-      isSentryEnabled: null == isSentryEnabled
-          ? _value.isSentryEnabled
-          : isSentryEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isHideOnStartup: null == isHideOnStartup
-          ? _value.isHideOnStartup
-          : isHideOnStartup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isLaunchOnStartup: null == isLaunchOnStartup
-          ? _value.isLaunchOnStartup
-          : isLaunchOnStartup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      themeMode: null == themeMode
-          ? _value.themeMode
-          : themeMode // ignore: cast_nullable_to_non_nullable
-              as ThemeMode,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$SettingsModelImpl implements _SettingsModel {
-  const _$SettingsModelImpl(
-      {required this.isSentryEnabled,
-      required this.isHideOnStartup,
-      required this.isLaunchOnStartup,
-      required this.themeMode});
-
-  factory _$SettingsModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SettingsModelImplFromJson(json);
-
-  @override
-  final bool isSentryEnabled;
-  @override
-  final bool isHideOnStartup;
-  @override
-  final bool isLaunchOnStartup;
-  @override
-  final ThemeMode themeMode;
-
-  @override
-  String toString() {
-    return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, isLaunchOnStartup: $isLaunchOnStartup, themeMode: $themeMode)';
-  }
+  /// Serializes this SettingsModel to a JSON map.
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SettingsModelImpl &&
+            other is SettingsModel &&
             (identical(other.isSentryEnabled, isSentryEnabled) ||
                 other.isSentryEnabled == isSentryEnabled) &&
             (identical(other.isHideOnStartup, isHideOnStartup) ||
@@ -189,45 +51,177 @@ class _$SettingsModelImpl implements _SettingsModel {
   int get hashCode => Object.hash(runtimeType, isSentryEnabled, isHideOnStartup,
       isLaunchOnStartup, themeMode);
 
-  /// Create a copy of SettingsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$SettingsModelImplCopyWith<_$SettingsModelImpl> get copyWith =>
-      __$$SettingsModelImplCopyWithImpl<_$SettingsModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SettingsModelImplToJson(
-      this,
-    );
+  String toString() {
+    return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, isLaunchOnStartup: $isLaunchOnStartup, themeMode: $themeMode)';
   }
 }
 
-abstract class _SettingsModel implements SettingsModel {
-  const factory _SettingsModel(
-      {required final bool isSentryEnabled,
-      required final bool isHideOnStartup,
-      required final bool isLaunchOnStartup,
-      required final ThemeMode themeMode}) = _$SettingsModelImpl;
+/// @nodoc
+abstract mixin class $SettingsModelCopyWith<$Res> {
+  factory $SettingsModelCopyWith(
+          SettingsModel value, $Res Function(SettingsModel) _then) =
+      _$SettingsModelCopyWithImpl;
+  @useResult
+  $Res call(
+      {bool isSentryEnabled,
+      bool isHideOnStartup,
+      bool isLaunchOnStartup,
+      ThemeMode themeMode});
+}
 
-  factory _SettingsModel.fromJson(Map<String, dynamic> json) =
-      _$SettingsModelImpl.fromJson;
+/// @nodoc
+class _$SettingsModelCopyWithImpl<$Res>
+    implements $SettingsModelCopyWith<$Res> {
+  _$SettingsModelCopyWithImpl(this._self, this._then);
+
+  final SettingsModel _self;
+  final $Res Function(SettingsModel) _then;
+
+  /// Create a copy of SettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isSentryEnabled = null,
+    Object? isHideOnStartup = null,
+    Object? isLaunchOnStartup = null,
+    Object? themeMode = null,
+  }) {
+    return _then(_self.copyWith(
+      isSentryEnabled: null == isSentryEnabled
+          ? _self.isSentryEnabled
+          : isSentryEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isHideOnStartup: null == isHideOnStartup
+          ? _self.isHideOnStartup
+          : isHideOnStartup // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLaunchOnStartup: null == isLaunchOnStartup
+          ? _self.isLaunchOnStartup
+          : isLaunchOnStartup // ignore: cast_nullable_to_non_nullable
+              as bool,
+      themeMode: null == themeMode
+          ? _self.themeMode
+          : themeMode // ignore: cast_nullable_to_non_nullable
+              as ThemeMode,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _SettingsModel implements SettingsModel {
+  const _SettingsModel(
+      {required this.isSentryEnabled,
+      required this.isHideOnStartup,
+      required this.isLaunchOnStartup,
+      required this.themeMode});
+  factory _SettingsModel.fromJson(Map<String, dynamic> json) =>
+      _$SettingsModelFromJson(json);
 
   @override
-  bool get isSentryEnabled;
+  final bool isSentryEnabled;
   @override
-  bool get isHideOnStartup;
+  final bool isHideOnStartup;
   @override
-  bool get isLaunchOnStartup;
+  final bool isLaunchOnStartup;
   @override
-  ThemeMode get themeMode;
+  final ThemeMode themeMode;
 
   /// Create a copy of SettingsModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SettingsModelImplCopyWith<_$SettingsModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$SettingsModelCopyWith<_SettingsModel> get copyWith =>
+      __$SettingsModelCopyWithImpl<_SettingsModel>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$SettingsModelToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _SettingsModel &&
+            (identical(other.isSentryEnabled, isSentryEnabled) ||
+                other.isSentryEnabled == isSentryEnabled) &&
+            (identical(other.isHideOnStartup, isHideOnStartup) ||
+                other.isHideOnStartup == isHideOnStartup) &&
+            (identical(other.isLaunchOnStartup, isLaunchOnStartup) ||
+                other.isLaunchOnStartup == isLaunchOnStartup) &&
+            (identical(other.themeMode, themeMode) ||
+                other.themeMode == themeMode));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, isSentryEnabled, isHideOnStartup,
+      isLaunchOnStartup, themeMode);
+
+  @override
+  String toString() {
+    return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, isLaunchOnStartup: $isLaunchOnStartup, themeMode: $themeMode)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$SettingsModelCopyWith<$Res>
+    implements $SettingsModelCopyWith<$Res> {
+  factory _$SettingsModelCopyWith(
+          _SettingsModel value, $Res Function(_SettingsModel) _then) =
+      __$SettingsModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {bool isSentryEnabled,
+      bool isHideOnStartup,
+      bool isLaunchOnStartup,
+      ThemeMode themeMode});
+}
+
+/// @nodoc
+class __$SettingsModelCopyWithImpl<$Res>
+    implements _$SettingsModelCopyWith<$Res> {
+  __$SettingsModelCopyWithImpl(this._self, this._then);
+
+  final _SettingsModel _self;
+  final $Res Function(_SettingsModel) _then;
+
+  /// Create a copy of SettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? isSentryEnabled = null,
+    Object? isHideOnStartup = null,
+    Object? isLaunchOnStartup = null,
+    Object? themeMode = null,
+  }) {
+    return _then(_SettingsModel(
+      isSentryEnabled: null == isSentryEnabled
+          ? _self.isSentryEnabled
+          : isSentryEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isHideOnStartup: null == isHideOnStartup
+          ? _self.isHideOnStartup
+          : isHideOnStartup // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLaunchOnStartup: null == isLaunchOnStartup
+          ? _self.isLaunchOnStartup
+          : isLaunchOnStartup // ignore: cast_nullable_to_non_nullable
+              as bool,
+      themeMode: null == themeMode
+          ? _self.themeMode
+          : themeMode // ignore: cast_nullable_to_non_nullable
+              as ThemeMode,
+    ));
+  }
+}
+
+// dart format on

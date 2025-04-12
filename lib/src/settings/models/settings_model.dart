@@ -7,7 +7,7 @@ part 'settings_model.freezed.dart';
 part 'settings_model.g.dart';
 
 @freezed
-class SettingsModel with _$SettingsModel {
+abstract class SettingsModel with _$SettingsModel {
   const factory SettingsModel({
     required bool isSentryEnabled,
     required bool isHideOnStartup,

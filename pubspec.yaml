@@ -15,12 +15,12 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   dio: ^5.7.0
-  file_picker: 8.1.4
-  flutter_hooks: ^0.20.4
+  file_picker: ^10.1.1
+  flutter_hooks: ^0.21.2
   flutter_svg: ^2.0.16
   flutter_web_auth_2: ^4.1.0
   fpdart: ^1.1.1
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^3.0.0
   hooks_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
   json_annotation: ^4.9.0
@@ -51,7 +51,7 @@ dependencies:
   oauth2: ^2.0.3
   googleapis_auth: ^1.6.0
   google_fonts: ^6.2.1
-  tray_manager: ^0.3.2
+  tray_manager: ^0.4.0
   fl_nodes: ^0.2.0+1
   workmanager:
     git:
@@ -69,9 +69,9 @@ dev_dependencies:
 
   flutter_lints: ^4.0.0
   build_runner: ^2.4.11
-  freezed: ^2.3.4
+  freezed: ^3.0.6
   json_serializable: ^6.7.0
-  custom_lint: ^0.6.10
+  custom_lint: ^0.7.5
   riverpod_lint: ^2.6.1
   riverpod_generator: ^2.6.1
   flutter_launcher_icons: ^0.13.1

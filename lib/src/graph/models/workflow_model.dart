@@ -4,7 +4,7 @@ part 'workflow_model.freezed.dart';
 part 'workflow_model.g.dart';
 
 @freezed
-class WorkflowModel with _$WorkflowModel {
+abstract class WorkflowModel with _$WorkflowModel {
   const factory WorkflowModel({
     required String name,
     required String? workflowJson,

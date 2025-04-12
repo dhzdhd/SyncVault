@@ -4,7 +4,7 @@ part 'intro_model.freezed.dart';
 part 'intro_model.g.dart';
 
 @freezed
-class IntroSettingsModel with _$IntroSettingsModel {
+abstract class IntroSettingsModel with _$IntroSettingsModel {
   const factory IntroSettingsModel({
     required bool alreadyViewed,
   }) = _IntroSettingsModel;
