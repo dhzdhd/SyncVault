@@ -51,30 +51,21 @@ class Settings extends _$Settings {
 
   void setSentry({Option<bool> choice = const None()}) {
     state = state.copyWith(
-      isSentryEnabled: choice.match(
-        () => !state.isSentryEnabled,
-        (t) => t,
-      ),
+      isSentryEnabled: choice.match(() => !state.isSentryEnabled, (t) => t),
     );
     _box.put(settingsKey, state);
   }
 
   void setHideOnStartup({Option<bool> choice = const None()}) {
     state = state.copyWith(
-      isHideOnStartup: choice.match(
-        () => !state.isHideOnStartup,
-        (t) => t,
-      ),
+      isHideOnStartup: choice.match(() => !state.isHideOnStartup, (t) => t),
     );
     _box.put(settingsKey, state);
   }
 
   void setLaunchOnStartup({Option<bool> choice = const None()}) {
     state = state.copyWith(
-      isLaunchOnStartup: choice.match(
-        () => !state.isLaunchOnStartup,
-        (t) => t,
-      ),
+      isLaunchOnStartup: choice.match(() => !state.isLaunchOnStartup, (t) => t),
     );
     _box.put(settingsKey, state);
   }

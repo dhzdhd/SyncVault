@@ -22,9 +22,7 @@ import 'package:syncvault/src/settings/views/settings_view.dart';
 import 'package:window_manager/window_manager.dart';
 
 class HomeView extends StatefulHookConsumerWidget {
-  const HomeView({
-    super.key,
-  });
+  const HomeView({super.key});
 
   static const routeName = '/home';
 
@@ -64,14 +62,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
             case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
               {
                 try {
-                  await ref.read(folderProvider.notifier).upload(
-                        folders[i],
-                        some(event.path),
-                      );
+                  await ref
+                      .read(folderProvider.notifier)
+                      .upload(folders[i], some(event.path));
                   debugPrint('Success');
                 } catch (e, st) {
                   debugPrint(
-                      e.handleError('Failed to sync folders', st).message);
+                    e.handleError('Failed to sync folders', st).message,
+                  );
                 }
               }
             case ChangeType.REMOVE
@@ -90,8 +88,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
       }
 
       return () => {
-            for (final i in _watchers) {i.events.drain()}
-          };
+        for (final i in _watchers) {i.events.drain()},
+      };
     }, [ref.watch(folderProvider)]);
 
     final folderInfo = ref.watch(folderProvider);
@@ -99,17 +97,18 @@ class _HomeViewState extends ConsumerState<HomeView> {
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
     final currentLoadingIndex = useState(0);
 
-    ref.listen<AsyncValue>(
-      uploadDeleteControllerProvider,
-      (prev, state) {
-        if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(state.error!
-              .handleError('Upload/Delete controller failed',
-                  state.stackTrace ?? StackTrace.empty)
-              .message);
-        }
-      },
-    );
+    ref.listen<AsyncValue>(uploadDeleteControllerProvider, (prev, state) {
+      if (!state.isLoading && state.hasError) {
+        context.showErrorSnackBar(
+          state.error!
+              .handleError(
+                'Upload/Delete controller failed',
+                state.stackTrace ?? StackTrace.empty,
+              )
+              .message,
+        );
+      }
+    });
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -149,7 +148,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 tooltip: 'Navigate to workflows',
                 onPressed: () {
                   Navigator.restorablePushNamed(
-                      context, WorkflowsView.routeName);
+                    context,
+                    WorkflowsView.routeName,
+                  );
                 },
               ),
               IconButton(
@@ -166,7 +167,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   tooltip: 'Navigate to settings',
                   onPressed: () {
                     Navigator.restorablePushNamed(
-                        context, SettingsView.routeName);
+                      context,
+                      SettingsView.routeName,
+                    );
                   },
                 ),
               ),
@@ -203,13 +206,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
                         trailing: Padding(
                           padding: const EdgeInsets.only(right: 16.0),
                           child: Visibility(
-                            visible: uploadDeleteController.isLoading &&
+                            visible:
+                                uploadDeleteController.isLoading &&
                                 currentLoadingIndex.value == index,
                             child: const SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressWidget(
-                                  size: 300, isInfinite: true),
+                                size: 300,
+                                isInfinite: true,
+                              ),
                             ),
                           ),
                         ),
@@ -230,9 +236,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     Flexible(
                                       child: Text(
                                         e.folderPath,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge,
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -251,7 +258,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                       'Open in file manager',
                                                   child: TextButton(
                                                     child: const Icon(
-                                                        Icons.open_in_new),
+                                                      Icons.open_in_new,
+                                                    ),
                                                     onPressed: () async {
                                                       await launchUrl(
                                                         Uri.file(e.folderPath),
@@ -288,8 +296,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                       if (context.mounted) {
                                                         context
                                                             .showSuccessSnackBar(
-                                                          content: 'Success',
-                                                        );
+                                                              content:
+                                                                  'Success',
+                                                            );
                                                       }
                                                     }
                                                   },
@@ -303,8 +312,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                               child: Tooltip(
                                                 message: 'Delete',
                                                 child: TextButton(
-                                                  child:
-                                                      const Icon(Icons.delete),
+                                                  child: const Icon(
+                                                    Icons.delete,
+                                                  ),
                                                   onPressed: () async {
                                                     if (uploadDeleteController
                                                         .isLoading) {
@@ -318,9 +328,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                       if (context.mounted) {
                                                         await showDialog(
                                                           context: context,
-                                                          builder: (ctx) =>
-                                                              DeleteFolderDialogWidget(
-                                                                  model: e),
+                                                          builder:
+                                                              (ctx) =>
+                                                                  DeleteFolderDialogWidget(
+                                                                    model: e,
+                                                                  ),
                                                         );
                                                       }
                                                     }
@@ -346,7 +358,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 Text(
                                   e.remoteName,
                                   style: Theme.of(context).textTheme.bodyLarge,
-                                )
+                                ),
                               ],
                             ),
                             Row(
@@ -362,11 +374,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     fit: BoxFit.fill,
                                     child: Switch(
                                       value: e.isAutoSync,
-                                      onChanged: (val) =>
-                                          folderNotifier.toggleAutoSync(e),
+                                      onChanged:
+                                          (val) =>
+                                              folderNotifier.toggleAutoSync(e),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             Row(
@@ -382,11 +395,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     fit: BoxFit.fill,
                                     child: Switch(
                                       value: e.isTwoWaySync,
-                                      onChanged: (val) =>
-                                          folderNotifier.toggleTwoWaySync(e),
+                                      onChanged:
+                                          (val) => folderNotifier
+                                              .toggleTwoWaySync(e),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             Row(
@@ -402,11 +416,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     fit: BoxFit.fill,
                                     child: Switch(
                                       value: e.isDeletionEnabled,
-                                      onChanged: (val) => folderNotifier
-                                          .toggleDeletionOnSync(e),
+                                      onChanged:
+                                          (val) => folderNotifier
+                                              .toggleDeletionOnSync(e),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             SizedBox(
@@ -415,14 +430,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 onPressed: () async {
                                   showModalBottomSheet(
                                     context: context,
-                                    builder: (ctx) => TreeViewSheetWidget(
-                                      folderModel: e,
-                                    ),
+                                    builder:
+                                        (ctx) =>
+                                            TreeViewSheetWidget(folderModel: e),
                                   );
                                 },
                                 child: const Text('Tree view'),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -430,7 +445,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     .toList(),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

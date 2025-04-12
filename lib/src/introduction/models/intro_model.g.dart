@@ -7,11 +7,7 @@ part of 'intro_model.dart';
 // **************************************************************************
 
 _IntroSettingsModel _$IntroSettingsModelFromJson(Map<String, dynamic> json) =>
-    _IntroSettingsModel(
-      alreadyViewed: json['alreadyViewed'] as bool,
-    );
+    _IntroSettingsModel(alreadyViewed: json['alreadyViewed'] as bool);
 
 Map<String, dynamic> _$IntroSettingsModelToJson(_IntroSettingsModel instance) =>
-    <String, dynamic>{
-      'alreadyViewed': instance.alreadyViewed,
-    };
+    <String, dynamic>{'alreadyViewed': instance.alreadyViewed};

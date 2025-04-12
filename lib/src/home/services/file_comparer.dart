@@ -6,27 +6,33 @@ import 'package:syncvault/errors.dart';
 
 class FileComparer {
   TaskEither<AppError, HashDigest> calcFileHash(File file) {
-    return TaskEither.tryCatch(() async {
-      XXHash32 hasher = const XXHash32();
-      final hash = await hasher.file(file);
+    return TaskEither.tryCatch(
+      () async {
+        XXHash32 hasher = const XXHash32();
+        final hash = await hasher.file(file);
 
-      return hash;
-    }, (e, st) {
-      return e.handleError(e.toString(), st);
-    });
+        return hash;
+      },
+      (e, st) {
+        return e.handleError(e.toString(), st);
+      },
+    );
   }
 
   TaskEither<AppError, HashDigest> calcTotalHash(List<HashDigest> hashes) {
-    return TaskEither.tryCatch(() async {
-      final totalHashString = hashes.map((hash) => hash.toString()).join();
+    return TaskEither.tryCatch(
+      () async {
+        final totalHashString = hashes.map((hash) => hash.toString()).join();
 
-      XXHash32 hasher = const XXHash32();
-      final hash = hasher.string(totalHashString);
+        XXHash32 hasher = const XXHash32();
+        final hash = hasher.string(totalHashString);
 
-      return hash;
-    }, (e, st) {
-      return e.handleError(e.toString(), st);
-    });
+        return hash;
+      },
+      (e, st) {
+        return e.handleError(e.toString(), st);
+      },
+    );
   }
 
   TaskEither<AppError, HashDigest> calcHash(List<File> files) {

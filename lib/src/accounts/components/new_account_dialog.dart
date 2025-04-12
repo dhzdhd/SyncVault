@@ -54,19 +54,18 @@ class _NewAccountDialogWidgetState
     final isRCloneBackend = useState(!Platform.isIOS);
     final authController = ref.watch(authControllerProvider);
 
-    ref.listen<AsyncValue>(
-      authControllerProvider,
-      (prev, state) {
-        if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(
-            state.error!
-                .handleError('Auth controller failed',
-                    state.stackTrace ?? StackTrace.empty)
-                .message,
-          );
-        }
-      },
-    );
+    ref.listen<AsyncValue>(authControllerProvider, (prev, state) {
+      if (!state.isLoading && state.hasError) {
+        context.showErrorSnackBar(
+          state.error!
+              .handleError(
+                'Auth controller failed',
+                state.stackTrace ?? StackTrace.empty,
+              )
+              .message,
+        );
+      }
+    });
 
     return SimpleDialog(
       title: const Text('Register a new drive account'),
@@ -85,39 +84,37 @@ class _NewAccountDialogWidgetState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Use RClone',
-                style: TextStyle(fontSize: 16),
-              ),
+              const Text('Use RClone', style: TextStyle(fontSize: 16)),
               Switch(
                 value: isRCloneBackend.value,
                 onChanged: (val) {
                   isRCloneBackend.value = val;
                   selected.value = DriveProvider.oneDrive;
                 },
-              )
+              ),
             ],
           ),
         const SizedBox(height: 16),
         DropdownButton<DriveProvider>(
-          items: isRCloneBackend.value
-              ? DriveProvider.values
-                  .map(
-                    (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e.displayName),
-                    ),
-                  )
-                  .toList()
-              : DriveProvider.values
-                  .filter((e) => e.backendType == OAuth2)
-                  .map(
-                    (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e.displayName),
-                    ),
-                  )
-                  .toList(),
+          items:
+              isRCloneBackend.value
+                  ? DriveProvider.values
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.displayName),
+                        ),
+                      )
+                      .toList()
+                  : DriveProvider.values
+                      .filter((e) => e.backendType == OAuth2)
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.displayName),
+                        ),
+                      )
+                      .toList(),
           value: selected.value,
           isExpanded: true,
           onChanged: (DriveProvider? e) {
@@ -128,78 +125,78 @@ class _NewAccountDialogWidgetState
           ...switch (selected.value.backendType) {
             const (OAuth2) => [],
             const (S3) => [
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _urlController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Provider URL',
-                  ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _urlController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Provider URL',
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _userController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Access Key ID',
-                  ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _userController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Access Key ID',
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Secret Access Key',
-                  ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Secret Access Key',
                 ),
-              ],
+              ),
+            ],
             const (UserPassword) => [
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _userController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Username',
-                  ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _userController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Username',
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                  ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
                 ),
-              ],
+              ),
+            ],
             const (Webdav) => [
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _urlController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Provider URL',
-                  ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _urlController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Provider URL',
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _userController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'User',
-                  ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _userController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'User',
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                  ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
                 ),
-              ],
+              ),
+            ],
             _ => [],
           },
         const SizedBox(height: 32),
@@ -209,51 +206,55 @@ class _NewAccountDialogWidgetState
               final valid = switch (selected.value.backendType) {
                 const (OAuth2) => validateControllers([_remoteNameController]),
                 const (S3) => validateControllers([
-                    _remoteNameController,
-                    _urlController,
-                    _userController,
-                    _passwordController
-                  ]),
+                  _remoteNameController,
+                  _urlController,
+                  _userController,
+                  _passwordController,
+                ]),
                 const (UserPassword) => validateControllers([
-                    _remoteNameController,
-                    _userController,
-                    _passwordController
-                  ]),
+                  _remoteNameController,
+                  _userController,
+                  _passwordController,
+                ]),
                 const (Webdav) => validateControllers([
-                    _remoteNameController,
-                    _urlController,
-                    _userController,
-                    _passwordController
-                  ]),
-                _ => false
+                  _remoteNameController,
+                  _urlController,
+                  _userController,
+                  _passwordController,
+                ]),
+                _ => false,
               };
 
               if (valid) {
-                await ref.read(authControllerProvider.notifier).signIn(
+                await ref
+                    .read(authControllerProvider.notifier)
+                    .signIn(
                       switch (selected.value.backendType) {
                         // Create defaults for OAuth2 as OAuth2 requires additional user auth
                         const (OAuth2) => const OAuth2(
-                            authJson: {},
-                            accessToken: '',
-                            refreshToken: '',
-                            expiresIn: '',
-                          ),
+                          authJson: {},
+                          accessToken: '',
+                          refreshToken: '',
+                          expiresIn: '',
+                        ),
                         const (UserPassword) => UserPassword(
-                            username: _userController.text,
-                            password: _passwordController.text,
-                          ),
+                          username: _userController.text,
+                          password: _passwordController.text,
+                        ),
                         const (S3) => S3(
-                            url: _urlController.text,
-                            accessKeyId: _userController.text,
-                            secretAccessKey: _passwordController.text,
-                          ),
+                          url: _urlController.text,
+                          accessKeyId: _userController.text,
+                          secretAccessKey: _passwordController.text,
+                        ),
                         const (Webdav) => Webdav(
-                            url: _urlController.text,
-                            user: _userController.text,
-                            password: _passwordController.text,
-                          ),
-                        _ => throw const GeneralError(
-                            'Backend not supported'), // TODO:
+                          url: _urlController.text,
+                          user: _userController.text,
+                          password: _passwordController.text,
+                        ),
+                        _ =>
+                          throw const GeneralError(
+                            'Backend not supported',
+                          ), // TODO:
                       },
                       selected.value,
                       _remoteNameController.text,
@@ -268,13 +269,14 @@ class _NewAccountDialogWidgetState
               }
             }
           },
-          child: authController.isLoading
-              ? const SizedBox.square(
-                  dimension: 20.0,
-                  child: CircularProgressWidget(size: 300, isInfinite: true),
-                )
-              : const Text('Submit'),
-        )
+          child:
+              authController.isLoading
+                  ? const SizedBox.square(
+                    dimension: 20.0,
+                    child: CircularProgressWidget(size: 300, isInfinite: true),
+                  )
+                  : const Text('Submit'),
+        ),
       ],
     );
   }

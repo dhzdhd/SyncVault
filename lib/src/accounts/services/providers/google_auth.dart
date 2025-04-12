@@ -16,19 +16,15 @@ final _dio = GetIt.I<Dio>();
 
 @singleton
 class GoogleAuthService implements ManualAuthService {
-  final _codeUri = Uri.https(
-    GoogleUtils.authHost,
-    '/o/oauth2/v2/auth',
-    {
-      'client_id': GoogleUtils.clientId,
-      'response_type': 'code',
-      'redirect_uri': GoogleUtils.callbackUrlScheme,
-      'scope': GoogleUtils.scopesString,
-      'state': '12345',
-      'access_type': 'offline',
-      'prompt': 'select_account consent',
-    },
-  );
+  final _codeUri = Uri.https(GoogleUtils.authHost, '/o/oauth2/v2/auth', {
+    'client_id': GoogleUtils.clientId,
+    'response_type': 'code',
+    'redirect_uri': GoogleUtils.callbackUrlScheme,
+    'scope': GoogleUtils.scopesString,
+    'state': '12345',
+    'access_type': 'offline',
+    'prompt': 'select_account consent',
+  });
 
   @override
   TaskEither<AppError, DriveProviderModel> authorize({
@@ -52,10 +48,7 @@ class GoogleAuthService implements ManualAuthService {
 
       final code = Uri.parse(result).queryParameters['code'];
 
-      final tokenUri = Uri.https(
-        GoogleUtils.apiHost,
-        '/oauth2/v4/token',
-      );
+      final tokenUri = Uri.https(GoogleUtils.apiHost, '/oauth2/v4/token');
 
       final options = Options(
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -98,12 +91,13 @@ class GoogleAuthService implements ManualAuthService {
     required DriveProviderModel model,
   }) {
     final backend = model.backend as OAuth2;
-    final authOptions = Options(headers: {
-      'Authorization': 'Bearer ${backend.accessToken}',
-    });
+    final authOptions = Options(
+      headers: {'Authorization': 'Bearer ${backend.accessToken}'},
+    );
 
-    final uri = Uri.https(
-        GoogleUtils.apiHost, '/drive/v3/about', {'fields': 'storageQuota'});
+    final uri = Uri.https(GoogleUtils.apiHost, '/drive/v3/about', {
+      'fields': 'storageQuota',
+    });
 
     return TaskEither.tryCatch(
       () async {
@@ -112,14 +106,20 @@ class GoogleAuthService implements ManualAuthService {
           options: authOptions,
         );
 
-        return some(DriveInfoModel(
-          remainingStorage: some(
+        return some(
+          DriveInfoModel(
+            remainingStorage: some(
               int.parse(response.data!['storageQuota']['limit']) -
-                  int.parse(response.data!['storageQuota']['usage'])),
-          usedStorage: some(int.parse(response.data!['storageQuota']['usage'])),
-          totalStorage:
-              some(int.parse(response.data!['storageQuota']['limit'])),
-        ));
+                  int.parse(response.data!['storageQuota']['usage']),
+            ),
+            usedStorage: some(
+              int.parse(response.data!['storageQuota']['usage']),
+            ),
+            totalStorage: some(
+              int.parse(response.data!['storageQuota']['limit']),
+            ),
+          ),
+        );
       },
       (error, stackTrace) =>
           error.handleError('Gdrive info cannot be fetched', StackTrace.empty),
@@ -130,70 +130,70 @@ class GoogleAuthService implements ManualAuthService {
   TaskEither<AppError, DriveProviderModel> refresh({
     required DriveProviderModel model,
   }) {
-    return TaskEither.tryCatch(
-      () async {
-        final backend = model.backend as OAuth2;
+    return TaskEither.tryCatch(() async {
+      final backend = model.backend as OAuth2;
 
-        final prev = DateTime.parse(model.updatedAt);
-        final now = DateTime.now();
-        final diff = prev
-            .add(Duration(seconds: int.parse(backend.expiresIn)))
-            .compareTo(now);
+      final prev = DateTime.parse(model.updatedAt);
+      final now = DateTime.now();
+      final diff = prev
+          .add(Duration(seconds: int.parse(backend.expiresIn)))
+          .compareTo(now);
 
-        if (diff <= 0) {
-          final options = Options(
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          );
-          final uri = Uri.https(
-            GoogleUtils.apiHost,
-            '/oauth2/v4/token',
-          );
-          final response = await _dio.postUri<Map<String, dynamic>>(
-            uri,
-            data: {
-              'client_id': GoogleUtils.clientId,
-              'grant_type': 'refresh_token',
-              if (PlatformExtension.isDesktop)
-                'client_secret': GoogleUtils.clientSecret,
-              'redirect_uri': GoogleUtils.callbackUrlScheme,
-              'refresh_token': backend.refreshToken,
-            },
-            options: options,
-          );
+      if (diff <= 0) {
+        final options = Options(
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        );
+        final uri = Uri.https(GoogleUtils.apiHost, '/oauth2/v4/token');
+        final response = await _dio.postUri<Map<String, dynamic>>(
+          uri,
+          data: {
+            'client_id': GoogleUtils.clientId,
+            'grant_type': 'refresh_token',
+            if (PlatformExtension.isDesktop)
+              'client_secret': GoogleUtils.clientSecret,
+            'redirect_uri': GoogleUtils.callbackUrlScheme,
+            'refresh_token': backend.refreshToken,
+          },
+          options: options,
+        );
 
-          return model.copyWith(
-            backend: backend.copyWith(
-              accessToken: response.data!['access_token'],
-              expiresIn: response.data!['expires_in'].toString(),
-            ),
-            updatedAt: DateTime.now().toIso8601String(),
-          );
-        } else {
-          return model;
-        }
-      },
-      (err, st) => err.handleError('Failed to refresh gdrive token', st),
-    );
+        return model.copyWith(
+          backend: backend.copyWith(
+            accessToken: response.data!['access_token'],
+            expiresIn: response.data!['expires_in'].toString(),
+          ),
+          updatedAt: DateTime.now().toIso8601String(),
+        );
+      } else {
+        return model;
+      }
+    }, (err, st) => err.handleError('Failed to refresh gdrive token', st));
   }
 
   @override
-  TaskEither<AppError, Map<String, dynamic>> getUserInfo(
-      {required String accessToken}) {
-    final authOptions = Options(headers: {
-      'Authorization': 'Bearer $accessToken',
-    });
+  TaskEither<AppError, Map<String, dynamic>> getUserInfo({
+    required String accessToken,
+  }) {
+    final authOptions = Options(
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
 
-    return TaskEither.tryCatch(() async {
-      final uri = Uri.https(GoogleUtils.apiHost, '/oauth2/v2/userinfo');
-      final response = await _dio.getUri<Map<String, dynamic>>(
-        uri,
-        options: authOptions,
-      );
+    return TaskEither.tryCatch(
+      () async {
+        final uri = Uri.https(GoogleUtils.apiHost, '/oauth2/v2/userinfo');
+        final response = await _dio.getUri<Map<String, dynamic>>(
+          uri,
+          options: authOptions,
+        );
 
-      return response.data!;
-    }, (error, stackTrace) {
-      return error.handleError(
-          'Failed to get Gdrive user info', StackTrace.empty);
-    });
+        return response.data!;
+      },
+      (error, stackTrace) {
+        return error.handleError(
+          'Failed to get Gdrive user info',
+          StackTrace.empty,
+        );
+      },
+    );
   }
 }

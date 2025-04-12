@@ -40,117 +40,116 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
       contentPadding: const EdgeInsets.all(24),
       children: switch (driveInfoController) {
         AsyncData(:final value) => [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Center(
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Center(
-                        child: Text(
-                          // Avoid zero div error
-                          '${(getPercent(value) * 100).toStringAsFixed(0)}%\nused',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 17,
-                          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Center(
+              child: Stack(
+                children: [
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Center(
+                      child: Text(
+                        // Avoid zero div error
+                        '${(getPercent(value) * 100).toStringAsFixed(0)}%\nused',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      // TODO: Use custom progress widget
-                      child: CircularProgressIndicator(
-                        backgroundColor:
-                            Theme.of(context).scaffoldBackgroundColor,
-                        value:
-                            // Avoid zero div error
-                            getPercent(value),
-                      ),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                    // TODO: Use custom progress widget
+                    child: CircularProgressIndicator(
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      value:
+                      // Avoid zero div error
+                      getPercent(value),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: value.usedStorage.isSome(),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Storage used',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      getSize(value.usedStorage.toNullable() ?? 0),
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ],
                 ),
               ),
             ),
-            Visibility(
-              visible: value.usedStorage.isSome(),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Storage used',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Text(
-                        getSize(value.usedStorage.toNullable() ?? 0),
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      )
-                    ],
-                  ),
+          ),
+          Visibility(
+            visible: value.remainingStorage.isSome(),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Storage remaining',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      getSize(value.remainingStorage.toNullable() ?? 0),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  ],
                 ),
               ),
             ),
-            Visibility(
-              visible: value.remainingStorage.isSome(),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Storage remaining',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Text(
-                        getSize(value.remainingStorage.toNullable() ?? 0),
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      )
-                    ],
-                  ),
+          ),
+          Visibility(
+            visible: value.totalStorage.isSome(),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Total storage',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      getSize(value.totalStorage.toNullable() ?? 0),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  ],
                 ),
               ),
             ),
-            Visibility(
-              visible: value.totalStorage.isSome(),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Total storage',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Text(
-                        getSize(value.totalStorage.toNullable() ?? 0),
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
+        ],
         AsyncError(:final error, :final stackTrace) => [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                error
-                    .handleError(
-                        'Failed to render drive information', stackTrace)
-                    .message,
-              ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              error
+                  .handleError('Failed to render drive information', stackTrace)
+                  .message,
             ),
-          ],
+          ),
+        ],
         AsyncLoading() => [
-            const CircularProgressWidget(size: 300, isInfinite: true)
-          ],
+          const CircularProgressWidget(size: 300, isInfinite: true),
+        ],
         _ => [], // TODO:
       },
     );

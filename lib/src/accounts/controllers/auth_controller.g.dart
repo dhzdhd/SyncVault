@@ -40,21 +40,15 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
   const DriveInfoControllerFamily();
 
   /// See also [driveInfoController].
-  DriveInfoControllerProvider call(
-    DriveProviderModel model,
-  ) {
-    return DriveInfoControllerProvider(
-      model,
-    );
+  DriveInfoControllerProvider call(DriveProviderModel model) {
+    return DriveInfoControllerProvider(model);
   }
 
   @override
   DriveInfoControllerProvider getProviderOverride(
     covariant DriveInfoControllerProvider provider,
   ) {
-    return call(
-      provider.model,
-    );
+    return call(provider.model);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -76,24 +70,20 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
 class DriveInfoControllerProvider
     extends AutoDisposeFutureProvider<DriveInfoModel> {
   /// See also [driveInfoController].
-  DriveInfoControllerProvider(
-    DriveProviderModel model,
-  ) : this._internal(
-          (ref) => driveInfoController(
-            ref as DriveInfoControllerRef,
-            model,
-          ),
-          from: driveInfoControllerProvider,
-          name: r'driveInfoControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$driveInfoControllerHash,
-          dependencies: DriveInfoControllerFamily._dependencies,
-          allTransitiveDependencies:
-              DriveInfoControllerFamily._allTransitiveDependencies,
-          model: model,
-        );
+  DriveInfoControllerProvider(DriveProviderModel model)
+    : this._internal(
+        (ref) => driveInfoController(ref as DriveInfoControllerRef, model),
+        from: driveInfoControllerProvider,
+        name: r'driveInfoControllerProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$driveInfoControllerHash,
+        dependencies: DriveInfoControllerFamily._dependencies,
+        allTransitiveDependencies:
+            DriveInfoControllerFamily._allTransitiveDependencies,
+        model: model,
+      );
 
   DriveInfoControllerProvider._internal(
     super._createNotifier, {
@@ -166,14 +156,15 @@ String _$authControllerHash() => r'2729c5e63ac1c6eb326b90bc83d03058a2996ebb';
 @ProviderFor(AuthController)
 final authControllerProvider =
     AutoDisposeAsyncNotifierProvider<AuthController, void>.internal(
-  AuthController.new,
-  name: r'authControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$authControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      AuthController.new,
+      name: r'authControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$authControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
 String _$authHash() => r'99ba390fed63330161dcd88171fcf94a851c4647';
@@ -182,13 +173,13 @@ String _$authHash() => r'99ba390fed63330161dcd88171fcf94a851c4647';
 @ProviderFor(Auth)
 final authProvider =
     AutoDisposeNotifierProvider<Auth, List<DriveProviderModel>>.internal(
-  Auth.new,
-  name: r'authProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$authHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      Auth.new,
+      name: r'authProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product') ? null : _$authHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$Auth = AutoDisposeNotifier<List<DriveProviderModel>>;
 // ignore_for_file: type=lint

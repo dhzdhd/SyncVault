@@ -48,7 +48,9 @@ class IntroService {
         return ();
       },
       (err, stackTrace) => err.handleError(
-          'Failed to store intro settings model locally', stackTrace),
+        'Failed to store intro settings model locally',
+        stackTrace,
+      ),
     );
   }
 
@@ -85,39 +87,42 @@ class IntroService {
       final downloadPath = '${appDir.path}/SyncVault/RCloneDir.zip';
       final unzippedPath = '${appDir.path}/SyncVault/RCloneDir';
 
-      _dio.download(
-        url,
-        downloadPath,
-        onReceiveProgress: (received, total) {
-          progressStreamController.add(((received / total) * 100).round());
-        },
-        options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
-        ),
-      ).then((_) async {
-        await extractFileToDisk(downloadPath, unzippedPath);
-        await File(downloadPath).delete();
+      _dio
+          .download(
+            url,
+            downloadPath,
+            onReceiveProgress: (received, total) {
+              progressStreamController.add(((received / total) * 100).round());
+            },
+            options: Options(
+              responseType: ResponseType.bytes,
+              followRedirects: false,
+              validateStatus: (status) {
+                return status! < 500;
+              },
+            ),
+          )
+          .then((_) async {
+            await extractFileToDisk(downloadPath, unzippedPath);
+            await File(downloadPath).delete();
 
-        // Delete similarly named rclone.1 file
-        final rCloneOne = await getRCloneOne();
-        await rCloneOne.delete();
+            // Delete similarly named rclone.1 file
+            final rCloneOne = await getRCloneOne();
+            await rCloneOne.delete();
 
-        // Move rclone executable outside
-        final rCloneExec = await getRCloneExec();
-        final lastSeparator =
-            rCloneExec.path.lastIndexOf(Platform.pathSeparator);
-        final execName = rCloneExec.path.substring(lastSeparator);
+            // Move rclone executable outside
+            final rCloneExec = await getRCloneExec();
+            final lastSeparator = rCloneExec.path.lastIndexOf(
+              Platform.pathSeparator,
+            );
+            final execName = rCloneExec.path.substring(lastSeparator);
 
-        // Rename does not work at times across different file systems
-        await rCloneExec.copy('${appDir.path}/SyncVault/$execName');
+            // Rename does not work at times across different file systems
+            await rCloneExec.copy('${appDir.path}/SyncVault/$execName');
 
-        // Cleanup
-        await File(unzippedPath).delete(recursive: true);
-      });
+            // Cleanup
+            await File(unzippedPath).delete(recursive: true);
+          });
 
       yield* progressStreamController.stream.map((val) => Right(val));
     } catch (err, stackTrace) {

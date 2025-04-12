@@ -5,9 +5,8 @@ part 'intro_model.g.dart';
 
 @freezed
 abstract class IntroSettingsModel with _$IntroSettingsModel {
-  const factory IntroSettingsModel({
-    required bool alreadyViewed,
-  }) = _IntroSettingsModel;
+  const factory IntroSettingsModel({required bool alreadyViewed}) =
+      _IntroSettingsModel;
 
   factory IntroSettingsModel.fromJson(Map<String, Object?> json) =>
       _$IntroSettingsModelFromJson(json);

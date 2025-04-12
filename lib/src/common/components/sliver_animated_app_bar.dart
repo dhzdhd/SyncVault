@@ -31,9 +31,9 @@ class SliverAnimatedAppBar extends StatelessWidget {
           const expandedHeight = 160.0;
           final collapsedHeight =
               kToolbarHeight + MediaQuery.of(context).padding.top;
-          final expansionProgress =
-              ((top - collapsedHeight) / (expandedHeight - collapsedHeight))
-                  .clamp(0.0, 1.0);
+          final expansionProgress = ((top - collapsedHeight) /
+                  (expandedHeight - collapsedHeight))
+              .clamp(0.0, 1.0);
 
           final leftPadding =
               hasLeading ? 56.0 - (30.0 * expansionProgress) : 56.0 - 30.0;
@@ -43,14 +43,13 @@ class SliverAnimatedAppBar extends StatelessWidget {
             background: const SizedBox(),
             title: Text(
               title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             titlePadding: EdgeInsets.only(
-              left: canExpand
-                  ? leftPadding
-                  : hasLeading
+              left:
+                  canExpand
+                      ? leftPadding
+                      : hasLeading
                       ? 56.0
                       : 56.0 - 30.0,
               bottom: 14.0,

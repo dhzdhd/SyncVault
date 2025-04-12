@@ -20,38 +20,24 @@ class TreeViewSheetWidget extends ConsumerWidget {
         padding: const EdgeInsets.all(16.0),
         child: switch (treeState) {
           AsyncError() => const Center(
-              child: Text(
-                'Error',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
+            child: Text('Error', style: TextStyle(fontSize: 24)),
+          ),
           AsyncLoading() => const Center(
-              child: CircularProgressWidget(
-                size: 300,
-                isInfinite: true,
-              ),
-            ),
+            child: CircularProgressWidget(size: 300, isInfinite: true),
+          ),
           AsyncData(:final value) => switch (value) {
-              Some(:final value) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Flexible(child: TreeWidget(file: value)),
-                  ],
-                ),
-              None() => const Center(
-                  child: Text(
-                    'No data found',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-            },
+            Some(:final value) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[Flexible(child: TreeWidget(file: value))],
+            ),
+            None() => const Center(
+              child: Text('No data found', style: TextStyle(fontSize: 24)),
+            ),
+          },
           _ => const Center(
-              child: Text(
-                'Error',
-                style: TextStyle(fontSize: 24),
-              ),
-            ), // TODO: Why are 3 states not exhausting AsyncValue?
+            child: Text('Error', style: TextStyle(fontSize: 24)),
+          ), // TODO: Why are 3 states not exhausting AsyncValue?
         },
       ),
     );

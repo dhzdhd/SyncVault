@@ -20,21 +20,23 @@ class DeleteFolderDialogWidget extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-            onPressed: () async {
-              if (context.mounted) {
-                Navigator.of(context).pop();
-              }
-              await folderNotifier.delete(model, true);
-            },
-            child: const Text('Remote Delete')),
+          onPressed: () async {
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+            await folderNotifier.delete(model, true);
+          },
+          child: const Text('Remote Delete'),
+        ),
         TextButton(
-            onPressed: () async {
-              if (context.mounted) {
-                Navigator.of(context).pop();
-              }
-              await folderNotifier.delete(model, false);
-            },
-            child: const Text('Local Delete')),
+          onPressed: () async {
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+            await folderNotifier.delete(model, false);
+          },
+          child: const Text('Local Delete'),
+        ),
         ElevatedButton(
           onPressed: () {
             if (context.mounted) {
@@ -42,7 +44,7 @@ class DeleteFolderDialogWidget extends ConsumerWidget {
             }
           },
           child: const Text('Cancel'),
-        )
+        ),
       ],
     );
   }

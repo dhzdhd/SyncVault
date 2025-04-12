@@ -39,21 +39,13 @@ class TreeViewFamily extends Family<AsyncValue<Option<FileModel>>> {
   const TreeViewFamily();
 
   /// See also [treeView].
-  TreeViewProvider call(
-    FolderModel folderModel,
-  ) {
-    return TreeViewProvider(
-      folderModel,
-    );
+  TreeViewProvider call(FolderModel folderModel) {
+    return TreeViewProvider(folderModel);
   }
 
   @override
-  TreeViewProvider getProviderOverride(
-    covariant TreeViewProvider provider,
-  ) {
-    return call(
-      provider.folderModel,
-    );
+  TreeViewProvider getProviderOverride(covariant TreeViewProvider provider) {
+    return call(provider.folderModel);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -74,23 +66,19 @@ class TreeViewFamily extends Family<AsyncValue<Option<FileModel>>> {
 /// See also [treeView].
 class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
   /// See also [treeView].
-  TreeViewProvider(
-    FolderModel folderModel,
-  ) : this._internal(
-          (ref) => treeView(
-            ref as TreeViewRef,
-            folderModel,
-          ),
-          from: treeViewProvider,
-          name: r'treeViewProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$treeViewHash,
-          dependencies: TreeViewFamily._dependencies,
-          allTransitiveDependencies: TreeViewFamily._allTransitiveDependencies,
-          folderModel: folderModel,
-        );
+  TreeViewProvider(FolderModel folderModel)
+    : this._internal(
+        (ref) => treeView(ref as TreeViewRef, folderModel),
+        from: treeViewProvider,
+        name: r'treeViewProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$treeViewHash,
+        dependencies: TreeViewFamily._dependencies,
+        allTransitiveDependencies: TreeViewFamily._allTransitiveDependencies,
+        folderModel: folderModel,
+      );
 
   TreeViewProvider._internal(
     super._createNotifier, {
@@ -164,14 +152,15 @@ String _$createFolderControllerHash() =>
 @ProviderFor(CreateFolderController)
 final createFolderControllerProvider =
     AutoDisposeAsyncNotifierProvider<CreateFolderController, void>.internal(
-  CreateFolderController.new,
-  name: r'createFolderControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$createFolderControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      CreateFolderController.new,
+      name: r'createFolderControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$createFolderControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$CreateFolderController = AutoDisposeAsyncNotifier<void>;
 String _$uploadDeleteControllerHash() =>
@@ -181,14 +170,15 @@ String _$uploadDeleteControllerHash() =>
 @ProviderFor(UploadDeleteController)
 final uploadDeleteControllerProvider =
     AutoDisposeAsyncNotifierProvider<UploadDeleteController, void>.internal(
-  UploadDeleteController.new,
-  name: r'uploadDeleteControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$uploadDeleteControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      UploadDeleteController.new,
+      name: r'uploadDeleteControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$uploadDeleteControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<void>;
 String _$folderHash() => r'8c61c886b6c4f99c16565d593d8a01f99715bfc3';
@@ -197,13 +187,13 @@ String _$folderHash() => r'8c61c886b6c4f99c16565d593d8a01f99715bfc3';
 @ProviderFor(Folder)
 final folderProvider =
     AutoDisposeNotifierProvider<Folder, List<FolderModel>>.internal(
-  Folder.new,
-  name: r'folderProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$folderHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      Folder.new,
+      name: r'folderProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product') ? null : _$folderHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$Folder = AutoDisposeNotifier<List<FolderModel>>;
 // ignore_for_file: type=lint

@@ -11,7 +11,8 @@ _DriveProviderModel _$DriveProviderModelFromJson(Map<String, dynamic> json) =>
       remoteName: json['remoteName'] as String,
       provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
       backend: DriveProviderBackend.fromJson(
-          json['backend'] as Map<String, dynamic>),
+        json['backend'] as Map<String, dynamic>,
+      ),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       isRCloneBackend: json['isRCloneBackend'] as bool,

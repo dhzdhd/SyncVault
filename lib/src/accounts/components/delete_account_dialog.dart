@@ -26,13 +26,14 @@ class DeleteAccountDialogWidget extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-            onPressed: () {
-              authNotifier.signOut(model);
-              if (context.mounted) {
-                Navigator.of(context).pop();
-              }
-            },
-            child: const Text('Delete')),
+          onPressed: () {
+            authNotifier.signOut(model);
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: const Text('Delete'),
+        ),
         ElevatedButton(
           onPressed: () {
             if (context.mounted) {
@@ -40,7 +41,7 @@ class DeleteAccountDialogWidget extends ConsumerWidget {
             }
           },
           child: const Text('Cancel'),
-        )
+        ),
       ],
     );
   }

@@ -43,17 +43,18 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
     final authInfo = ref.watch(authProvider);
     final createFolderController = ref.watch(createFolderControllerProvider);
 
-    ref.listen<AsyncValue>(
-      createFolderControllerProvider,
-      (prev, state) {
-        if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(state.error!
-              .handleError('Create folder controller failed',
-                  state.stackTrace ?? StackTrace.empty)
-              .message);
-        }
-      },
-    );
+    ref.listen<AsyncValue>(createFolderControllerProvider, (prev, state) {
+      if (!state.isLoading && state.hasError) {
+        context.showErrorSnackBar(
+          state.error!
+              .handleError(
+                'Create folder controller failed',
+                state.stackTrace ?? StackTrace.empty,
+              )
+              .message,
+        );
+      }
+    });
 
     return SimpleDialog(
       title: const Text('Sync a new folder'),
@@ -76,15 +77,17 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         ),
         const SizedBox(height: 16),
         DropdownButton<DriveProviderModel?>(
-          items: authInfo
-              .map(
-                (e) => DropdownMenuItem(
-                  value: e,
-                  child:
-                      Text('${e.provider.name.capitalize()} - ${e.remoteName}'),
-                ),
-              )
-              .toList(),
+          items:
+              authInfo
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(
+                        '${e.provider.name.capitalize()} - ${e.remoteName}',
+                      ),
+                    ),
+                  )
+                  .toList(),
           value: selectedProvider.value.toNullable(),
           isExpanded: true,
           hint: const Text('Enter provider account'),
@@ -121,16 +124,17 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         ),
         const SizedBox(height: 32),
         ElevatedButton(
-          child: createFolderController.isLoading
-              ? const SizedBox.square(
-                  dimension: 20.0,
-                  child: CircularProgressWidget(size: 300, isInfinite: true),
-                )
-              : const Text('Submit'),
+          child:
+              createFolderController.isLoading
+                  ? const SizedBox.square(
+                    dimension: 20.0,
+                    child: CircularProgressWidget(size: 300, isInfinite: true),
+                  )
+                  : const Text('Submit'),
           onPressed: () async {
             if (!createFolderController.isLoading) {
               final Option<(DriveProviderModel, String, String, Option<String>)>
-                  content = selectedProvider.value.match(
+              content = selectedProvider.value.match(
                 () => none(),
                 (t) => selectedFolder.value.match(() => none(), (r) {
                   final folderName = _nameController.text.trim();
@@ -144,7 +148,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                       r,
                       folderName,
                       // TODO: Set none if S3 provider
-                      parentPathName.isEmpty ? none() : some(parentPathName)
+                      parentPathName.isEmpty ? none() : some(parentPathName),
                     ));
                   } else {
                     return none();
@@ -160,10 +164,11 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                   await ref
                       .read(createFolderControllerProvider.notifier)
                       .createFolder(
-                          authModel: t.$1,
-                          folderPath: t.$2,
-                          folderName: t.$3,
-                          remoteParentPath: t.$4);
+                        authModel: t.$1,
+                        folderPath: t.$2,
+                        folderName: t.$3,
+                        remoteParentPath: t.$4,
+                      );
 
                   // TODO: Show this only on no error
                   if (context.mounted) {
@@ -176,7 +181,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               );
             }
           },
-        )
+        ),
       ],
     );
   }

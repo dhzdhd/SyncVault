@@ -22,16 +22,12 @@ import '../src/introduction/services/intro_service.dart' as _i808;
 import 'registration.dart' as _i544;
 
 extension GetItInjectableX on _i174.GetIt {
-// initializes the registration of main-scope dependencies inside of GetIt
+  // initializes the registration of main-scope dependencies inside of GetIt
   _i174.GetIt init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
   }) {
-    final gh = _i526.GetItHelper(
-      this,
-      environment,
-      environmentFilter,
-    );
+    final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
     gh.factory<_i361.Dio>(() => registerModule.dio);
     gh.singleton<_i360.GoogleAuthService>(() => _i360.GoogleAuthService());

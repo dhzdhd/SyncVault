@@ -24,21 +24,23 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
   @override
   Widget build(BuildContext context) {
     final rCloneDownloadProgress = ref.watch(rCloneDownloadControllerProvider);
-    final rCloneDownloadControllerNotifier =
-        ref.read(rCloneDownloadControllerProvider.notifier);
+    final rCloneDownloadControllerNotifier = ref.read(
+      rCloneDownloadControllerProvider.notifier,
+    );
     final introSettingsNotifier = ref.read(introSettingsProvider.notifier);
 
-    ref.listen<AsyncValue>(
-      rCloneDownloadControllerProvider,
-      (prev, state) {
-        if (!state.isLoading && state.hasError) {
-          context.showErrorSnackBar(state.error!
-              .handleError('RClone download controller failed',
-                  state.stackTrace ?? StackTrace.empty)
-              .message);
-        }
-      },
-    );
+    ref.listen<AsyncValue>(rCloneDownloadControllerProvider, (prev, state) {
+      if (!state.isLoading && state.hasError) {
+        context.showErrorSnackBar(
+          state.error!
+              .handleError(
+                'RClone download controller failed',
+                state.stackTrace ?? StackTrace.empty,
+              )
+              .message,
+        );
+      }
+    });
 
     return Scaffold(
       body: IntroductionScreen(
@@ -59,26 +61,23 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
             title: 'SyncVault',
             body:
                 'Welcome to the app! There are a few steps to be completed before you can use the app',
-            image: const Center(
-              child: Icon(Icons.waving_hand, size: 50.0),
-            ),
+            image: const Center(child: Icon(Icons.waving_hand, size: 50.0)),
           ),
           if (Platform.isAndroid)
             PageViewModel(
               title: 'Folder permissions',
               body:
                   'SyncVault requires access to all files to operate normally.',
-              image: const Center(
-                child: Icon(Icons.folder, size: 50.0),
-              ),
+              image: const Center(child: Icon(Icons.folder, size: 50.0)),
               footer: Center(
                 child: FilledButton(
                   onPressed: () async {
                     await Permission.manageExternalStorage
                         .onDeniedCallback(() {})
                         .onGrantedCallback(() {
-                      _introKey.currentState?.next();
-                    }).request();
+                          _introKey.currentState?.next();
+                        })
+                        .request();
                   },
                   child: const Text('Give permissions'),
                 ),
@@ -89,17 +88,16 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
               title: 'Battery permissions',
               body:
                   'SyncVault requires you to remove battery optimizations to operate normally.',
-              image: const Center(
-                child: Icon(Icons.battery_saver, size: 50.0),
-              ),
+              image: const Center(child: Icon(Icons.battery_saver, size: 50.0)),
               footer: Center(
                 child: FilledButton(
                   onPressed: () async {
                     await Permission.ignoreBatteryOptimizations
                         .onDeniedCallback(() {})
                         .onGrantedCallback(() {
-                      _introKey.currentState?.next();
-                    }).request();
+                          _introKey.currentState?.next();
+                        })
+                        .request();
                   },
                   child: const Text('Give permissions'),
                 ),
@@ -110,19 +108,18 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
               title: 'Notification permissions',
               body:
                   'SyncVault requires notification permissions to notify you during sync.',
-              image: const Center(
-                child: Icon(Icons.notifications, size: 50.0),
-              ),
+              image: const Center(child: Icon(Icons.notifications, size: 50.0)),
               footer: Center(
                 child: FilledButton(
                   onPressed: () async {
                     await Permission.notification
                         .onDeniedCallback(() {})
                         .onGrantedCallback(() {
-                      introSettingsNotifier
-                          .setAlreadyViewed(); // TODO: Handle error
-                      Navigator.of(context).popAndPushNamed('/home');
-                    }).request();
+                          introSettingsNotifier
+                              .setAlreadyViewed(); // TODO: Handle error
+                          Navigator.of(context).popAndPushNamed('/home');
+                        })
+                        .request();
                   },
                   child: const Text('Give permissions'),
                 ),
@@ -140,38 +137,40 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
                   TextButton(
                     onPressed: () async {
                       final res = await launchUrlString(
-                          'https://github.com/rclone/rclone');
+                        'https://github.com/rclone/rclone',
+                      );
                       if (!res && context.mounted) {
                         context.showErrorSnackBar('Failed to open URL');
                       }
                     },
                     child: const Text('RClone Github page'),
-                  )
+                  ),
                 ],
               ),
-              image: const Center(
-                child: Icon(Icons.download, size: 50.0),
-              ),
+              image: const Center(child: Icon(Icons.download, size: 50.0)),
               footer: Center(
                 child: FilledButton(
-                  onPressed: (rCloneDownloadProgress.isLoading ||
-                          (rCloneDownloadProgress.value != null &&
-                              rCloneDownloadProgress.value != 0))
-                      ? null
-                      : () async {
-                          await rCloneDownloadControllerNotifier
-                              .rCloneDownload();
-                        },
-                  child: Text(rCloneDownloadProgress.isLoading ||
-                          rCloneDownloadProgress.value != null &&
-                              rCloneDownloadProgress.value != 0
-                      ? rCloneDownloadProgress.value == 100
-                          ? 'Complete'
-                          : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
-                      : 'Download RClone'),
+                  onPressed:
+                      (rCloneDownloadProgress.isLoading ||
+                              (rCloneDownloadProgress.value != null &&
+                                  rCloneDownloadProgress.value != 0))
+                          ? null
+                          : () async {
+                            await rCloneDownloadControllerNotifier
+                                .rCloneDownload();
+                          },
+                  child: Text(
+                    rCloneDownloadProgress.isLoading ||
+                            rCloneDownloadProgress.value != null &&
+                                rCloneDownloadProgress.value != 0
+                        ? rCloneDownloadProgress.value == 100
+                            ? 'Complete'
+                            : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
+                        : 'Download RClone',
+                  ),
                 ),
               ),
-            )
+            ),
         ],
       ),
     );

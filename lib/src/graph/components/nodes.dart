@@ -17,16 +17,17 @@ enum Comparator { equal, notEqual, greater, greaterEqual, less, lessEqual }
 final FlPortStyle outputDataPortStyle = FlPortStyle(
   color: Colors.orange,
   shape: FlPortShape.circle,
-  linkStyleBuilder: (state) => const FlLinkStyle(
-    gradient: LinearGradient(
-      colors: [Colors.orange, Colors.purple],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-    ),
-    lineWidth: 3.0,
-    drawMode: FlLinkDrawMode.solid,
-    curveType: FlLinkCurveType.bezier,
-  ),
+  linkStyleBuilder:
+      (state) => const FlLinkStyle(
+        gradient: LinearGradient(
+          colors: [Colors.orange, Colors.purple],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        lineWidth: 3.0,
+        drawMode: FlLinkDrawMode.solid,
+        curveType: FlLinkCurveType.bezier,
+      ),
 );
 
 const FlPortStyle inputDataPortStyle = FlPortStyle(
@@ -37,16 +38,17 @@ const FlPortStyle inputDataPortStyle = FlPortStyle(
 final FlPortStyle controlOutputPortStyle = FlPortStyle(
   color: Colors.green,
   shape: FlPortShape.triangle,
-  linkStyleBuilder: (state) => const FlLinkStyle(
-    gradient: LinearGradient(
-      colors: [Colors.green, Colors.blue],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-    ),
-    lineWidth: 3.0,
-    drawMode: FlLinkDrawMode.solid,
-    curveType: FlLinkCurveType.bezier,
-  ),
+  linkStyleBuilder:
+      (state) => const FlLinkStyle(
+        gradient: LinearGradient(
+          colors: [Colors.green, Colors.blue],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        lineWidth: 3.0,
+        drawMode: FlLinkDrawMode.solid,
+        curveType: FlLinkCurveType.bezier,
+      ),
 );
 
 const FlPortStyle controlInputPortStyle = FlPortStyle(
@@ -59,35 +61,35 @@ NodePrototype createValueNode<T>({
   required String displayName,
   required T defaultValue,
   required Widget Function(T data) visualizerBuilder,
-  Function(
-    dynamic data,
-    Function(dynamic data) setData,
-  )? onVisualizerTap,
+  Function(dynamic data, Function(dynamic data) setData)? onVisualizerTap,
   Widget Function(
     BuildContext context,
     Function() removeOverlay,
     dynamic data,
     Function(dynamic data, {required FieldEventType eventType}) setData,
-  )? editorBuilder,
+  )?
+  editorBuilder,
 }) {
   return NodePrototype(
     idName: idName,
     displayName: displayName,
     description: 'Holds a constant $T value.',
-    styleBuilder: (state) => FlNodeStyle(
-      decoration: defaultNodeStyle(state).decoration,
-      headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
-        decoration: BoxDecoration(
-          color: Colors.orange,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(7),
-            topRight: const Radius.circular(7),
-            bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
-            bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
-          ),
+    styleBuilder:
+        (state) => FlNodeStyle(
+          decoration: defaultNodeStyle(state).decoration,
+          headerStyleBuilder:
+              (state) => defaultNodeHeaderStyle(state).copyWith(
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(7),
+                    topRight: const Radius.circular(7),
+                    bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
+                    bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
+                  ),
+                ),
+              ),
         ),
-      ),
-    ),
     ports: [
       ControlOutputPortPrototype(
         idName: 'completed',
@@ -126,30 +128,32 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'numericValue',
       displayName: 'Numeric Value',
       defaultValue: 0.0,
-      visualizerBuilder: (data) => Text(
-        data.toString(),
-        style: const TextStyle(color: Colors.white),
-      ),
-      editorBuilder: (context, removeOverlay, data, setData) => ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 100),
-        child: TextFormField(
-          initialValue: data.toString(),
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-            setData(
-              double.tryParse(value) ?? 0.0,
-              eventType: FieldEventType.change,
-            );
-          },
-          onFieldSubmitted: (value) {
-            setData(
-              double.tryParse(value) ?? 0.0,
-              eventType: FieldEventType.submit,
-            );
-            removeOverlay();
-          },
-        ),
-      ),
+      visualizerBuilder:
+          (data) => Text(
+            data.toString(),
+            style: const TextStyle(color: Colors.white),
+          ),
+      editorBuilder:
+          (context, removeOverlay, data, setData) => ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 100),
+            child: TextFormField(
+              initialValue: data.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setData(
+                  double.tryParse(value) ?? 0.0,
+                  eventType: FieldEventType.change,
+                );
+              },
+              onFieldSubmitted: (value) {
+                setData(
+                  double.tryParse(value) ?? 0.0,
+                  eventType: FieldEventType.submit,
+                );
+                removeOverlay();
+              },
+            ),
+          ),
     ),
   );
 
@@ -158,11 +162,12 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'boolValue',
       displayName: 'Boolean Value',
       defaultValue: false,
-      visualizerBuilder: (data) => Icon(
-        data ? Icons.check : Icons.close,
-        color: Colors.white,
-        size: 18,
-      ),
+      visualizerBuilder:
+          (data) => Icon(
+            data ? Icons.check : Icons.close,
+            color: Colors.white,
+            size: 18,
+          ),
       onVisualizerTap: (data, setData) => setData(!data),
     ),
   );
@@ -172,29 +177,23 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'stringValue',
       displayName: 'String Value',
       defaultValue: '',
-      visualizerBuilder: (data) => Text(
-        '"$data"',
-        style: const TextStyle(color: Colors.white),
-      ),
-      editorBuilder: (context, removeOverlay, data, setData) => ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 200),
-        child: TextFormField(
-          initialValue: data,
-          onChanged: (value) {
-            setData(
-              value,
-              eventType: FieldEventType.change,
-            );
-          },
-          onFieldSubmitted: (value) {
-            setData(
-              value,
-              eventType: FieldEventType.submit,
-            );
-            removeOverlay();
-          },
-        ),
-      ),
+      visualizerBuilder:
+          (data) =>
+              Text('"$data"', style: const TextStyle(color: Colors.white)),
+      editorBuilder:
+          (context, removeOverlay, data, setData) => ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: TextFormField(
+              initialValue: data,
+              onChanged: (value) {
+                setData(value, eventType: FieldEventType.change);
+              },
+              onFieldSubmitted: (value) {
+                setData(value, eventType: FieldEventType.submit);
+                removeOverlay();
+              },
+            ),
+          ),
     ),
   );
 
@@ -203,31 +202,39 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'numericListValue',
       displayName: 'Numeric List Value',
       defaultValue: [],
-      visualizerBuilder: (data) => Text(
-        data.length > 3
-            ? '[${data.take(3).join(', ')}...]'
-            : '[${data.join(', ')}]',
-        style: const TextStyle(color: Colors.white),
-      ),
-      editorBuilder: (context, removeOverlay, data, setData) => ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 200),
-        child: TextFormField(
-          initialValue: data.join(', '),
-          onChanged: (value) {
-            setData(
-              value.split(',').map((e) => int.tryParse(e.trim()) ?? 0).toList(),
-              eventType: FieldEventType.change,
-            );
-          },
-          onFieldSubmitted: (value) {
-            setData(
-              value.split(',').map((e) => int.tryParse(e.trim()) ?? 0).toList(),
-              eventType: FieldEventType.submit,
-            );
-            removeOverlay();
-          },
-        ),
-      ),
+      visualizerBuilder:
+          (data) => Text(
+            data.length > 3
+                ? '[${data.take(3).join(', ')}...]'
+                : '[${data.join(', ')}]',
+            style: const TextStyle(color: Colors.white),
+          ),
+      editorBuilder:
+          (context, removeOverlay, data, setData) => ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: TextFormField(
+              initialValue: data.join(', '),
+              onChanged: (value) {
+                setData(
+                  value
+                      .split(',')
+                      .map((e) => int.tryParse(e.trim()) ?? 0)
+                      .toList(),
+                  eventType: FieldEventType.change,
+                );
+              },
+              onFieldSubmitted: (value) {
+                setData(
+                  value
+                      .split(',')
+                      .map((e) => int.tryParse(e.trim()) ?? 0)
+                      .toList(),
+                  eventType: FieldEventType.submit,
+                );
+                removeOverlay();
+              },
+            ),
+          ),
     ),
   );
 
@@ -236,31 +243,33 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'boolListValue',
       displayName: 'Boolean List Value',
       defaultValue: [],
-      visualizerBuilder: (data) => Text(
-        data.length > 3
-            ? '[${data.take(3).map((e) => e ? 'true' : 'false').join(', ')}...]'
-            : '[${data.map((e) => e ? 'true' : 'false').join(', ')}]',
-        style: const TextStyle(color: Colors.white),
-      ),
-      editorBuilder: (context, removeOverlay, data, setData) => ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 200),
-        child: TextFormField(
-          initialValue: data.map((e) => e ? 'true' : 'false').join(', '),
-          onChanged: (value) {
-            setData(
-              value.split(',').map((e) => e.trim() == 'true').toList(),
-              eventType: FieldEventType.change,
-            );
-          },
-          onFieldSubmitted: (value) {
-            setData(
-              value.split(',').map((e) => e.trim() == 'true').toList(),
-              eventType: FieldEventType.submit,
-            );
-            removeOverlay();
-          },
-        ),
-      ),
+      visualizerBuilder:
+          (data) => Text(
+            data.length > 3
+                ? '[${data.take(3).map((e) => e ? 'true' : 'false').join(', ')}...]'
+                : '[${data.map((e) => e ? 'true' : 'false').join(', ')}]',
+            style: const TextStyle(color: Colors.white),
+          ),
+      editorBuilder:
+          (context, removeOverlay, data, setData) => ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: TextFormField(
+              initialValue: data.map((e) => e ? 'true' : 'false').join(', '),
+              onChanged: (value) {
+                setData(
+                  value.split(',').map((e) => e.trim() == 'true').toList(),
+                  eventType: FieldEventType.change,
+                );
+              },
+              onFieldSubmitted: (value) {
+                setData(
+                  value.split(',').map((e) => e.trim() == 'true').toList(),
+                  eventType: FieldEventType.submit,
+                );
+                removeOverlay();
+              },
+            ),
+          ),
     ),
   );
 
@@ -283,27 +292,30 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'stringListValue',
       displayName: 'String List Value',
       defaultValue: [],
-      visualizerBuilder: (data) => Text(
-        formatStringList(data),
-        style: const TextStyle(color: Colors.white),
-      ),
-      editorBuilder: (context, removeOverlay, data, setData) => ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 200),
-        child: TextFormField(
-          initialValue: serializeStringList(data),
-          onChanged: (value) => setData(
-            parseStringList(value),
-            eventType: FieldEventType.change,
+      visualizerBuilder:
+          (data) => Text(
+            formatStringList(data),
+            style: const TextStyle(color: Colors.white),
           ),
-          onFieldSubmitted: (value) {
-            setData(
-              parseStringList(value),
-              eventType: FieldEventType.submit,
-            );
-            removeOverlay();
-          },
-        ),
-      ),
+      editorBuilder:
+          (context, removeOverlay, data, setData) => ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: TextFormField(
+              initialValue: serializeStringList(data),
+              onChanged:
+                  (value) => setData(
+                    parseStringList(value),
+                    eventType: FieldEventType.change,
+                  ),
+              onFieldSubmitted: (value) {
+                setData(
+                  parseStringList(value),
+                  eventType: FieldEventType.submit,
+                );
+                removeOverlay();
+              },
+            ),
+          ),
     ),
   );
 
@@ -312,20 +324,22 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'operator',
       displayName: 'Operator',
       description: 'Applies a chosen operation to two numbers.',
-      styleBuilder: (state) => FlNodeStyle(
-        decoration: defaultNodeStyle(state).decoration,
-        headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
-          decoration: BoxDecoration(
-            color: Colors.pink,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(7),
-              topRight: const Radius.circular(7),
-              bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
-              bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
-            ),
+      styleBuilder:
+          (state) => FlNodeStyle(
+            decoration: defaultNodeStyle(state).decoration,
+            headerStyleBuilder:
+                (state) => defaultNodeHeaderStyle(state).copyWith(
+                  decoration: BoxDecoration(
+                    color: Colors.pink,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(7),
+                      topRight: const Radius.circular(7),
+                      bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
+                      bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
+                    ),
+                  ),
+                ),
           ),
-        ),
-      ),
       ports: [
         ControlInputPortPrototype(
           idName: 'exec',
@@ -362,25 +376,37 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
           displayName: 'Operation',
           dataType: Operator,
           defaultData: Operator.add,
-          visualizerBuilder: (data) => Text(
-            data.toString().split('.').last,
-            style: const TextStyle(color: Colors.white),
-          ),
-          editorBuilder: (context, removeOverlay, data, setData) =>
-              SegmentedButton<Operator>(
-            segments: const [
-              ButtonSegment(value: Operator.add, label: Text('Add')),
-              ButtonSegment(value: Operator.subtract, label: Text('Subtract')),
-              ButtonSegment(value: Operator.multiply, label: Text('Multiply')),
-              ButtonSegment(value: Operator.divide, label: Text('Divide')),
-            ],
-            selected: {data as Operator},
-            onSelectionChanged: (newSelection) {
-              setData(newSelection.first, eventType: FieldEventType.submit);
-              removeOverlay();
-            },
-            direction: Axis.horizontal,
-          ),
+          visualizerBuilder:
+              (data) => Text(
+                data.toString().split('.').last,
+                style: const TextStyle(color: Colors.white),
+              ),
+          editorBuilder:
+              (
+                context,
+                removeOverlay,
+                data,
+                setData,
+              ) => SegmentedButton<Operator>(
+                segments: const [
+                  ButtonSegment(value: Operator.add, label: Text('Add')),
+                  ButtonSegment(
+                    value: Operator.subtract,
+                    label: Text('Subtract'),
+                  ),
+                  ButtonSegment(
+                    value: Operator.multiply,
+                    label: Text('Multiply'),
+                  ),
+                  ButtonSegment(value: Operator.divide, label: Text('Divide')),
+                ],
+                selected: {data as Operator},
+                onSelectionChanged: (newSelection) {
+                  setData(newSelection.first, eventType: FieldEventType.submit);
+                  removeOverlay();
+                },
+                direction: Axis.horizontal,
+              ),
         ),
       ],
       onExecute: (ports, fields, state, f, p) async {
@@ -409,20 +435,22 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'random',
       displayName: 'Random',
       description: 'Outputs a random number between 0 and 1.',
-      styleBuilder: (state) => FlNodeStyle(
-        decoration: defaultNodeStyle(state).decoration,
-        headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
-          decoration: BoxDecoration(
-            color: Colors.purple,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(7),
-              topRight: const Radius.circular(7),
-              bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
-              bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
-            ),
+      styleBuilder:
+          (state) => FlNodeStyle(
+            decoration: defaultNodeStyle(state).decoration,
+            headerStyleBuilder:
+                (state) => defaultNodeHeaderStyle(state).copyWith(
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(7),
+                      topRight: const Radius.circular(7),
+                      bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
+                      bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
+                    ),
+                  ),
+                ),
           ),
-        ),
-      ),
       ports: [
         ControlOutputPortPrototype(
           idName: 'completed',
@@ -449,20 +477,22 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'if',
       displayName: 'If',
       description: 'Executes a branch based on a condition.',
-      styleBuilder: (state) => FlNodeStyle(
-        decoration: defaultNodeStyle(state).decoration,
-        headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
-          decoration: BoxDecoration(
-            color: Colors.green,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(7),
-              topRight: const Radius.circular(7),
-              bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
-              bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
-            ),
+      styleBuilder:
+          (state) => FlNodeStyle(
+            decoration: defaultNodeStyle(state).decoration,
+            headerStyleBuilder:
+                (state) => defaultNodeHeaderStyle(state).copyWith(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(7),
+                      topRight: const Radius.circular(7),
+                      bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
+                      bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
+                    ),
+                  ),
+                ),
           ),
-        ),
-      ),
       ports: [
         ControlInputPortPrototype(
           idName: 'exec',
@@ -501,20 +531,22 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'comparator',
       displayName: 'Comparator',
       description: 'Compares two numbers based on a chosen comparator.',
-      styleBuilder: (state) => FlNodeStyle(
-        decoration: defaultNodeStyle(state).decoration,
-        headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
-          decoration: BoxDecoration(
-            color: Colors.cyan,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(7),
-              topRight: const Radius.circular(7),
-              bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
-              bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
-            ),
+      styleBuilder:
+          (state) => FlNodeStyle(
+            decoration: defaultNodeStyle(state).decoration,
+            headerStyleBuilder:
+                (state) => defaultNodeHeaderStyle(state).copyWith(
+                  decoration: BoxDecoration(
+                    color: Colors.cyan,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(7),
+                      topRight: const Radius.circular(7),
+                      bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
+                      bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
+                    ),
+                  ),
+                ),
           ),
-        ),
-      ),
       ports: [
         ControlInputPortPrototype(
           idName: 'exec',
@@ -551,27 +583,36 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
           displayName: 'Comparator',
           dataType: Comparator,
           defaultData: Comparator.equal,
-          visualizerBuilder: (data) => Text(
-            data.toString().split('.').last,
-            style: const TextStyle(color: Colors.white),
-          ),
-          editorBuilder: (context, removeOverlay, data, setData) =>
-              SegmentedButton<Comparator>(
-            segments: const [
-              ButtonSegment(value: Comparator.equal, label: Text('==')),
-              ButtonSegment(value: Comparator.notEqual, label: Text('!=')),
-              ButtonSegment(value: Comparator.greater, label: Text('>')),
-              ButtonSegment(value: Comparator.greaterEqual, label: Text('>=')),
-              ButtonSegment(value: Comparator.less, label: Text('<')),
-              ButtonSegment(value: Comparator.lessEqual, label: Text('<=')),
-            ],
-            selected: {data as Comparator},
-            onSelectionChanged: (newSelection) {
-              setData(newSelection.first, eventType: FieldEventType.submit);
-              removeOverlay();
-            },
-            direction: Axis.horizontal,
-          ),
+          visualizerBuilder:
+              (data) => Text(
+                data.toString().split('.').last,
+                style: const TextStyle(color: Colors.white),
+              ),
+          editorBuilder:
+              (
+                context,
+                removeOverlay,
+                data,
+                setData,
+              ) => SegmentedButton<Comparator>(
+                segments: const [
+                  ButtonSegment(value: Comparator.equal, label: Text('==')),
+                  ButtonSegment(value: Comparator.notEqual, label: Text('!=')),
+                  ButtonSegment(value: Comparator.greater, label: Text('>')),
+                  ButtonSegment(
+                    value: Comparator.greaterEqual,
+                    label: Text('>='),
+                  ),
+                  ButtonSegment(value: Comparator.less, label: Text('<')),
+                  ButtonSegment(value: Comparator.lessEqual, label: Text('<=')),
+                ],
+                selected: {data as Comparator},
+                onSelectionChanged: (newSelection) {
+                  setData(newSelection.first, eventType: FieldEventType.submit);
+                  removeOverlay();
+                },
+                direction: Axis.horizontal,
+              ),
         ),
       ],
       onExecute: (ports, fields, state, f, p) async {
@@ -604,20 +645,22 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'print',
       displayName: 'Print',
       description: 'Prints a value to the console.',
-      styleBuilder: (state) => FlNodeStyle(
-        decoration: defaultNodeStyle(state).decoration,
-        headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
-          decoration: BoxDecoration(
-            color: Colors.deepPurple,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(7),
-              topRight: const Radius.circular(7),
-              bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
-              bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
-            ),
+      styleBuilder:
+          (state) => FlNodeStyle(
+            decoration: defaultNodeStyle(state).decoration,
+            headerStyleBuilder:
+                (state) => defaultNodeHeaderStyle(state).copyWith(
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(7),
+                      topRight: const Radius.circular(7),
+                      bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
+                      bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
+                    ),
+                  ),
+                ),
           ),
-        ),
-      ),
       ports: [
         ControlInputPortPrototype(
           idName: 'exec',
@@ -641,11 +684,9 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
           print(ports['value']);
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Value: ${ports['value']}'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Value: ${ports['value']}')));
 
         unawaited(f({('completed')}));
       },
@@ -657,20 +698,22 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'round',
       displayName: 'Round',
       description: 'Rounds a number to a specified number of decimals.',
-      styleBuilder: (state) => FlNodeStyle(
-        decoration: defaultNodeStyle(state).decoration,
-        headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(7),
-              topRight: const Radius.circular(7),
-              bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
-              bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
-            ),
+      styleBuilder:
+          (state) => FlNodeStyle(
+            decoration: defaultNodeStyle(state).decoration,
+            headerStyleBuilder:
+                (state) => defaultNodeHeaderStyle(state).copyWith(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(7),
+                      topRight: const Radius.circular(7),
+                      bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
+                      bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
+                    ),
+                  ),
+                ),
           ),
-        ),
-      ),
       ports: [
         ControlInputPortPrototype(
           idName: 'exec',
@@ -701,31 +744,32 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
           displayName: 'Decimals',
           dataType: int,
           defaultData: 2,
-          visualizerBuilder: (data) => Text(
-            data.toString(),
-            style: const TextStyle(color: Colors.white),
-          ),
-          editorBuilder: (context, removeOverlay, data, setData) =>
-              ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 100),
-            child: TextFormField(
-              initialValue: data.toString(),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setData(
-                  int.tryParse(value) ?? 0,
-                  eventType: FieldEventType.change,
-                );
-              },
-              onFieldSubmitted: (value) {
-                setData(
-                  int.tryParse(value) ?? 0,
-                  eventType: FieldEventType.submit,
-                );
-                removeOverlay();
-              },
-            ),
-          ),
+          visualizerBuilder:
+              (data) => Text(
+                data.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+          editorBuilder:
+              (context, removeOverlay, data, setData) => ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 100),
+                child: TextFormField(
+                  initialValue: data.toString(),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    setData(
+                      int.tryParse(value) ?? 0,
+                      eventType: FieldEventType.change,
+                    );
+                  },
+                  onFieldSubmitted: (value) {
+                    setData(
+                      int.tryParse(value) ?? 0,
+                      eventType: FieldEventType.submit,
+                    );
+                    removeOverlay();
+                  },
+                ),
+              ),
         ),
       ],
       onExecute: (ports, fields, state, f, p) async {
@@ -744,20 +788,22 @@ void registerNodes(BuildContext context, FlNodeEditorController controller) {
       idName: 'forEachLoop',
       displayName: 'For Each Loop',
       description: 'Executes a loop for a specified number of iterations.',
-      styleBuilder: (state) => FlNodeStyle(
-        decoration: defaultNodeStyle(state).decoration,
-        headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
-          decoration: BoxDecoration(
-            color: Colors.teal,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(7),
-              topRight: const Radius.circular(7),
-              bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
-              bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
-            ),
+      styleBuilder:
+          (state) => FlNodeStyle(
+            decoration: defaultNodeStyle(state).decoration,
+            headerStyleBuilder:
+                (state) => defaultNodeHeaderStyle(state).copyWith(
+                  decoration: BoxDecoration(
+                    color: Colors.teal,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(7),
+                      topRight: const Radius.circular(7),
+                      bottomLeft: Radius.circular(state.isCollapsed ? 7 : 0),
+                      bottomRight: Radius.circular(state.isCollapsed ? 7 : 0),
+                    ),
+                  ),
+                ),
           ),
-        ),
-      ),
       ports: [
         ControlInputPortPrototype(
           idName: 'exec',

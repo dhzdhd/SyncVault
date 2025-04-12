@@ -12,13 +12,13 @@ String _$workflowHash() => r'5525682c106281dceaa61b5451193aa5d51f8c47';
 @ProviderFor(Workflow)
 final workflowProvider =
     AutoDisposeNotifierProvider<Workflow, List<WorkflowModel>>.internal(
-  Workflow.new,
-  name: r'workflowProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$workflowHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      Workflow.new,
+      name: r'workflowProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product') ? null : _$workflowHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$Workflow = AutoDisposeNotifier<List<WorkflowModel>>;
 // ignore_for_file: type=lint

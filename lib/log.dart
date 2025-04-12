@@ -29,8 +29,9 @@ final class FileLogOutput extends LogOutput {
     final dateString = '${date.day}-${date.month}-${date.year}';
 
     final docDir = await getApplicationDocumentsDirectory();
-    final dir = await Directory('${docDir.path}/SyncVault/logs/')
-        .create(recursive: true);
+    final dir = await Directory(
+      '${docDir.path}/SyncVault/logs/',
+    ).create(recursive: true);
 
     final file = await File('${dir.path}/$dateString.log').create();
 

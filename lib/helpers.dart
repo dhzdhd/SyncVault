@@ -16,7 +16,8 @@ extension StringExtension on String {
       final mapped = mappedValues[match[1]];
       if (mapped == null) {
         throw ArgumentError(
-            '$mappedValues does not contain the key "${match[1]}"');
+          '$mappedValues does not contain the key "${match[1]}"',
+        );
       }
       return mapped;
     });
@@ -32,24 +33,24 @@ class PlatformExtension {
 
 extension SnackBarExtension on BuildContext {
   void showSuccessSnackBar({required String content, SnackBarAction? action}) {
-    ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
-      content: content,
-      state: SnackBarState.success,
-      action: action,
-    ));
+    ScaffoldMessenger.of(this).showSnackBar(
+      snackBarWidget(
+        content: content,
+        state: SnackBarState.success,
+        action: action,
+      ),
+    );
   }
 
   void showErrorSnackBar(String content) {
-    ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
-      content: content,
-      state: SnackBarState.error,
-    ));
+    ScaffoldMessenger.of(this).showSnackBar(
+      snackBarWidget(content: content, state: SnackBarState.error),
+    );
   }
 
   void showWarningSnackBar(String content) {
-    ScaffoldMessenger.of(this).showSnackBar(snackBarWidget(
-      content: content,
-      state: SnackBarState.warning,
-    ));
+    ScaffoldMessenger.of(this).showSnackBar(
+      snackBarWidget(content: content, state: SnackBarState.warning),
+    );
   }
 }

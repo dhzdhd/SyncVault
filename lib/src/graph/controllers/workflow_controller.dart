@@ -18,9 +18,7 @@ class Workflow extends _$Workflow {
     return _box.values.toList();
   }
 
-  Future<void> create({
-    required WorkflowModel model,
-  }) async {
+  Future<void> create({required WorkflowModel model}) async {
     state = [...state, model];
 
     await _box.add(model);

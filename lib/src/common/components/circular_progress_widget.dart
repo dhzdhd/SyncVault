@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CircularProgressWidget extends StatefulWidget {
-  const CircularProgressWidget(
-      {super.key, required this.size, required this.isInfinite});
+  const CircularProgressWidget({
+    super.key,
+    required this.size,
+    required this.isInfinite,
+  });
 
   final double size;
   final bool isInfinite;
@@ -21,8 +24,8 @@ class _CircularProgressWidgetState extends State<CircularProgressWidget>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..addListener(() {
-        setState(() {});
-      });
+      setState(() {});
+    });
     controller.repeat(reverse: true);
     super.initState();
   }
@@ -51,7 +54,7 @@ class _CircularProgressWidgetState extends State<CircularProgressWidget>
               '${(controller.value * 100).toInt()}%',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-          )
+          ),
         ],
       ),
     );

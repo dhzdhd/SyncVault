@@ -100,9 +100,7 @@ class IntroSettingsModelAdapter extends TypeAdapter<IntroSettingsModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return IntroSettingsModel(
-      alreadyViewed: fields[0] as bool,
-    );
+    return IntroSettingsModel(alreadyViewed: fields[0] as bool);
   }
 
   @override
@@ -543,9 +541,7 @@ class HashDigestAdapter extends TypeAdapter<HashDigest> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return HashDigest(
-      fields[0] as Uint8List,
-    );
+    return HashDigest(fields[0] as Uint8List);
   }
 
   @override

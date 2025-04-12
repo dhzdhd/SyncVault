@@ -27,206 +27,211 @@ class SettingsView extends ConsumerWidget {
           SliverPadding(
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
-              delegate: SliverChildListDelegate.fixed(
-                [
-                  ListTile(
-                    minTileHeight: 64,
-                    title: Text(
-                      'Theme',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    trailing: DropdownMenu<ThemeMode>(
-                      width: 180,
-                      enableSearch: false,
-                      enableFilter: false,
-                      initialSelection: settings.themeMode,
-                      onSelected: settingsNotifier.updateThemeMode,
-                      dropdownMenuEntries: ThemeMode.values
-                          .map(
-                            (val) => DropdownMenuEntry(
-                              value: val,
-                              label: val.name.capitalize(),
-                            ),
-                          )
-                          .toList(),
-                    ),
+              delegate: SliverChildListDelegate.fixed([
+                ListTile(
+                  minTileHeight: 64,
+                  title: Text(
+                    'Theme',
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
+                  trailing: DropdownMenu<ThemeMode>(
+                    width: 180,
+                    enableSearch: false,
+                    enableFilter: false,
+                    initialSelection: settings.themeMode,
+                    onSelected: settingsNotifier.updateThemeMode,
+                    dropdownMenuEntries:
+                        ThemeMode.values
+                            .map(
+                              (val) => DropdownMenuEntry(
+                                value: val,
+                                label: val.name.capitalize(),
+                              ),
+                            )
+                            .toList(),
+                  ),
+                ),
+                ListTile(
+                  minTileHeight: 64,
+                  title: Text(
+                    'Enable Sentry monitoring',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  trailing: Switch(
+                    value: settings.isSentryEnabled,
+                    onChanged: (val) {
+                      settingsNotifier.setSentry();
+                    },
+                  ),
+                ),
+                if (PlatformExtension.isDesktop)
                   ListTile(
                     minTileHeight: 64,
                     title: Text(
-                      'Enable Sentry monitoring',
+                      'Hide on startup',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     trailing: Switch(
-                      value: settings.isSentryEnabled,
+                      value: settings.isHideOnStartup,
                       onChanged: (val) {
-                        settingsNotifier.setSentry();
+                        settingsNotifier.setHideOnStartup();
                       },
                     ),
                   ),
-                  if (PlatformExtension.isDesktop)
-                    ListTile(
-                      minTileHeight: 64,
-                      title: Text(
-                        'Hide on startup',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      trailing: Switch(
-                        value: settings.isHideOnStartup,
-                        onChanged: (val) {
-                          settingsNotifier.setHideOnStartup();
-                        },
-                      ),
+                if (PlatformExtension.isDesktop)
+                  ListTile(
+                    minTileHeight: 64,
+                    title: Text(
+                      'Launch on startup',
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                  if (PlatformExtension.isDesktop)
-                    ListTile(
-                      minTileHeight: 64,
-                      title: Text(
-                        'Launch on startup',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      trailing: Switch(
-                        value: settings.isLaunchOnStartup,
-                        onChanged: (val) {
-                          settingsNotifier.setLaunchOnStartup();
-                        },
-                      ),
+                    trailing: Switch(
+                      value: settings.isLaunchOnStartup,
+                      onChanged: (val) {
+                        settingsNotifier.setLaunchOnStartup();
+                      },
                     ),
-                  if (PlatformExtension.isDesktop)
-                    ListTile(
-                      minTileHeight: 64,
-                      title: Text(
-                        'Download RClone',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      subtitle: const Text('Download RClone binary'),
-                      onTap: () async {
+                  ),
+                if (PlatformExtension.isDesktop)
+                  ListTile(
+                    minTileHeight: 64,
+                    title: Text(
+                      'Download RClone',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    subtitle: const Text('Download RClone binary'),
+                    onTap: () async {
+                      showDialog(
+                        context: context,
+                        builder:
+                            (context) => AlertDialog(
+                              title: const Text('Are you sure'),
+                              actions: [
+                                const OutlinedButton(
+                                  onPressed: null,
+                                  child: Text('Yes'),
+                                ),
+                                FilledButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('No'),
+                                ),
+                              ],
+                            ),
+                      );
+                    },
+                    // TODO:
+                  ),
+                Visibility(
+                  visible: kDebugMode && !Platform.isIOS,
+                  child: ListTile(
+                    minTileHeight: 64,
+                    title: Text(
+                      'Show RClone config',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    subtitle: const Text('Show the entire RClone config file'),
+                    onTap: () async {
+                      final config = await RCloneUtils().getIniConfig().run();
+                      config.match((e) => {}, (ini) async {
                         showDialog(
                           context: context,
-                          builder: (context) => AlertDialog(
+                          builder:
+                              (ctx) => SimpleDialog(
+                                title: const Text('Config'),
+                                children:
+                                    ini
+                                        .sections()
+                                        .map(
+                                          (section) => ListTile(
+                                            minTileHeight: 64,
+                                            title: Text(section),
+                                            subtitle: Text(
+                                              ini.items(section).toString(),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                              ),
+                        );
+                      });
+                    },
+                  ),
+                ),
+                ListTile(
+                  minTileHeight: 64,
+                  title: Text(
+                    'Clear local folder storage',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  subtitle: const Text(
+                    'Clear all local folder storage, does not include settings',
+                  ),
+                  onTap: () async {
+                    showDialog(
+                      context: context,
+                      builder:
+                          (context) => AlertDialog(
                             title: const Text('Are you sure'),
                             actions: [
-                              const OutlinedButton(
-                                onPressed: null,
-                                child: Text('Yes'),
+                              OutlinedButton(
+                                onPressed: () async {
+                                  await folderNotifier.clearCache();
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                child: const Text('Yes'),
                               ),
                               FilledButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text('No'),
-                              )
+                              ),
                             ],
                           ),
-                        );
-                      },
-                      // TODO:
-                    ),
-                  Visibility(
-                    visible: kDebugMode && !Platform.isIOS,
-                    child: ListTile(
-                      minTileHeight: 64,
-                      title: Text(
-                        'Show RClone config',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      subtitle:
-                          const Text('Show the entire RClone config file'),
-                      onTap: () async {
-                        final config = await RCloneUtils().getIniConfig().run();
-                        config.match((e) => {}, (ini) async {
-                          showDialog(
-                            context: context,
-                            builder: (ctx) => SimpleDialog(
-                              title: const Text('Config'),
-                              children: ini
-                                  .sections()
-                                  .map(
-                                    (section) => ListTile(
-                                      minTileHeight: 64,
-                                      title: Text(section),
-                                      subtitle:
-                                          Text(ini.items(section).toString()),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          );
-                        });
-                      },
-                    ),
+                    );
+                  },
+                ),
+                ListTile(
+                  minTileHeight: 64,
+                  title: Text(
+                    'Reset settings',
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                  ListTile(
-                    minTileHeight: 64,
-                    title: Text(
-                      'Clear local folder storage',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    subtitle: const Text(
-                        'Clear all local folder storage, does not include settings'),
-                    onTap: () async {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Are you sure'),
-                          actions: [
-                            OutlinedButton(
-                              onPressed: () async {
-                                await folderNotifier.clearCache();
-                                if (context.mounted) {
+                  subtitle: const Text('Reset all settings to default'),
+                  onTap: () async {
+                    showDialog(
+                      context: context,
+                      builder:
+                          (context) => AlertDialog(
+                            title: const Text('Are you sure'),
+                            actions: [
+                              OutlinedButton(
+                                onPressed: () async {
+                                  settingsNotifier.resetSettings();
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                child: const Text('Yes'),
+                              ),
+                              FilledButton(
+                                onPressed: () {
                                   Navigator.of(context).pop();
-                                }
-                              },
-                              child: const Text('Yes'),
-                            ),
-                            FilledButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('No'),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    minTileHeight: 64,
-                    title: Text(
-                      'Reset settings',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    subtitle: const Text('Reset all settings to default'),
-                    onTap: () async {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Are you sure'),
-                          actions: [
-                            OutlinedButton(
-                              onPressed: () async {
-                                settingsNotifier.resetSettings();
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
-                              },
-                              child: const Text('Yes'),
-                            ),
-                            FilledButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('No'),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                                },
+                                child: const Text('No'),
+                              ),
+                            ],
+                          ),
+                    );
+                  },
+                ),
+              ]),
             ),
-          )
+          ),
         ],
       ),
     );

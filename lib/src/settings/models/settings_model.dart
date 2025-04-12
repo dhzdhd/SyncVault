@@ -19,9 +19,9 @@ abstract class SettingsModel with _$SettingsModel {
       _$SettingsModelFromJson(json);
 
   factory SettingsModel.defaultValue() => const SettingsModel(
-        isSentryEnabled: false,
-        isHideOnStartup: false,
-        isLaunchOnStartup: false,
-        themeMode: ThemeMode.system,
-      );
+    isSentryEnabled: false,
+    isHideOnStartup: false,
+    isLaunchOnStartup: false,
+    themeMode: ThemeMode.system,
+  );
 }

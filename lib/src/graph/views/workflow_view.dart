@@ -33,10 +33,8 @@ class WorkflowsView extends ConsumerWidget {
           SliverAnimatedAppBar(title: 'Workflows'),
           SliverPadding(
             padding: EdgeInsets.all(16),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate.fixed([]),
-            ),
-          )
+            sliver: SliverList(delegate: SliverChildListDelegate.fixed([])),
+          ),
         ],
       ),
     );

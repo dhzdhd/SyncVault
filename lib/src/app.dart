@@ -17,9 +17,7 @@ import 'settings/controllers/settings_controller.dart';
 import 'settings/views/settings_view.dart';
 
 class MyApp extends ConsumerStatefulWidget {
-  const MyApp({
-    super.key,
-  });
+  const MyApp({super.key});
 
   @override
   ConsumerState<MyApp> createState() => _MyAppState();
@@ -80,11 +78,9 @@ class _MyAppState extends ConsumerState<MyApp>
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en', ''),
-      ],
-      onGenerateTitle: (BuildContext context) =>
-          AppLocalizations.of(context)!.appTitle,
+      supportedLocales: const [Locale('en', '')],
+      onGenerateTitle:
+          (BuildContext context) => AppLocalizations.of(context)!.appTitle,
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: settings.themeMode,
@@ -98,9 +94,10 @@ class _MyAppState extends ConsumerState<MyApp>
               AccountView.routeName => const AccountView(),
               WorkflowsView.routeName => const WorkflowsView(),
               IntroductionView.routeName => const IntroductionView(),
-              _ => introSettings.alreadyViewed
-                  ? const HomeView()
-                  : const IntroductionView()
+              _ =>
+                introSettings.alreadyViewed
+                    ? const HomeView()
+                    : const IntroductionView(),
             };
           },
         );

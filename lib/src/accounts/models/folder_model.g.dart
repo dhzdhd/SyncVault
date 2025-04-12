@@ -7,17 +7,17 @@ part of 'folder_model.dart';
 // **************************************************************************
 
 _FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => _FolderModel(
-      remoteName: json['remoteName'] as String,
-      provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
-      folderPath: json['folderPath'] as String,
-      folderName: json['folderName'] as String,
-      remoteParentPath: json['remoteParentPath'] as String?,
-      isAutoSync: json['isAutoSync'] as bool,
-      isDeletionEnabled: json['isDeletionEnabled'] as bool,
-      isTwoWaySync: json['isTwoWaySync'] as bool,
-      folderId: json['folderId'] as String?,
-      isRCloneBackend: json['isRCloneBackend'] as bool,
-    );
+  remoteName: json['remoteName'] as String,
+  provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
+  folderPath: json['folderPath'] as String,
+  folderName: json['folderName'] as String,
+  remoteParentPath: json['remoteParentPath'] as String?,
+  isAutoSync: json['isAutoSync'] as bool,
+  isDeletionEnabled: json['isDeletionEnabled'] as bool,
+  isTwoWaySync: json['isTwoWaySync'] as bool,
+  folderId: json['folderId'] as String?,
+  isRCloneBackend: json['isRCloneBackend'] as bool,
+);
 
 Map<String, dynamic> _$FolderModelToJson(_FolderModel instance) =>
     <String, dynamic>{

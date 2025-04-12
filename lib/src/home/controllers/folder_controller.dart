@@ -54,18 +54,12 @@ class UploadDeleteController extends _$UploadDeleteController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> upload(
-    FolderModel folderModel,
-    Option<String> filePath,
-  ) async {
+  Future<void> upload(FolderModel folderModel, Option<String> filePath) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.upload(
-        folderModel,
-        filePath,
-      ),
+      () => folderNotifier.upload(folderModel, filePath),
     );
   }
 
@@ -106,10 +100,7 @@ class Folder extends _$Folder {
     state = [
       ...state
         ..remove(model)
-        ..insert(
-          index,
-          model.copyWith(isAutoSync: !model.isAutoSync),
-        )
+        ..insert(index, model.copyWith(isAutoSync: !model.isAutoSync)),
     ];
 
     _folderStorage.update(state);
@@ -123,7 +114,7 @@ class Folder extends _$Folder {
         ..insert(
           index,
           model.copyWith(isDeletionEnabled: !model.isDeletionEnabled),
-        )
+        ),
     ];
 
     _folderStorage.update(state);
@@ -134,10 +125,7 @@ class Folder extends _$Folder {
     state = [
       ...state
         ..remove(model)
-        ..insert(
-          index,
-          model.copyWith(isTwoWaySync: !model.isTwoWaySync),
-        )
+        ..insert(index, model.copyWith(isTwoWaySync: !model.isTwoWaySync)),
     ];
 
     _folderStorage.update(state);
@@ -153,29 +141,28 @@ class Folder extends _$Folder {
     final driveService =
         authModel.isRCloneBackend ? RCloneDriveService() : GoogleDriveService();
 
-    final model = await driveService
-        .create(
-          folderName: folderName,
-          folderPath: folderPath,
-          remoteParentPath: remoteParentPath,
-          model: authModel,
-        )
-        .match((l) => throw l, (r) => r)
-        .run();
+    final model =
+        await driveService
+            .create(
+              folderName: folderName,
+              folderPath: folderPath,
+              remoteParentPath: remoteParentPath,
+              model: authModel,
+            )
+            .match((l) => throw l, (r) => r)
+            .run();
 
     state = [...state, model];
 
     await _folderStorage.addSingle(model);
   }
 
-  Future<void> upload(
-    FolderModel folderModel,
-    Option<String> filePath,
-  ) async {
+  Future<void> upload(FolderModel folderModel, Option<String> filePath) async {
     final providerModels = ref.watch(authProvider);
-    final providerModel = providerModels
-        .filter((t) => t.remoteName == folderModel.remoteName)
-        .first;
+    final providerModel =
+        providerModels
+            .filter((t) => t.remoteName == folderModel.remoteName)
+            .first;
 
     await RCloneDriveService()
         .upload(
@@ -186,24 +173,27 @@ class Folder extends _$Folder {
         .run();
 
     if (PlatformExtension.isMobile) {
-      final files = await Directory(folderModel.folderPath)
-          .list(recursive: true)
-          .toList();
+      final files =
+          await Directory(
+            folderModel.folderPath,
+          ).list(recursive: true).toList();
       final hashResult =
           await _fileComparer.calcHash(files.whereType<File>().toList()).run();
-      hashResult.match((err) => err.handleError(err.message, StackTrace.empty),
-          (hash) {
-        final hashModels = _hashStorage.fetchAll().toList();
-        final model = FolderHashModel(
-          hash: hash,
-          remoteName: folderModel.remoteName,
-        );
-        _hashStorage.update(
-          hashModels
-            ..removeWhere((e) => e.remoteName == model.remoteName)
-            ..add(model),
-        );
-      });
+      hashResult.match(
+        (err) => err.handleError(err.message, StackTrace.empty),
+        (hash) {
+          final hashModels = _hashStorage.fetchAll().toList();
+          final model = FolderHashModel(
+            hash: hash,
+            remoteName: folderModel.remoteName,
+          );
+          _hashStorage.update(
+            hashModels
+              ..removeWhere((e) => e.remoteName == model.remoteName)
+              ..add(model),
+          );
+        },
+      );
     }
 
     // TODO: Implement per file

@@ -13,14 +13,15 @@ String _$rCloneDownloadControllerHash() =>
 @ProviderFor(RCloneDownloadController)
 final rCloneDownloadControllerProvider =
     AutoDisposeAsyncNotifierProvider<RCloneDownloadController, int>.internal(
-  RCloneDownloadController.new,
-  name: r'rCloneDownloadControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$rCloneDownloadControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      RCloneDownloadController.new,
+      name: r'rCloneDownloadControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$rCloneDownloadControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$RCloneDownloadController = AutoDisposeAsyncNotifier<int>;
 String _$introSettingsHash() => r'a46b4528d139006372a8917a53f33d49caec8133';
@@ -29,14 +30,15 @@ String _$introSettingsHash() => r'a46b4528d139006372a8917a53f33d49caec8133';
 @ProviderFor(IntroSettings)
 final introSettingsProvider =
     AutoDisposeNotifierProvider<IntroSettings, IntroSettingsModel>.internal(
-  IntroSettings.new,
-  name: r'introSettingsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$introSettingsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      IntroSettings.new,
+      name: r'introSettingsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$introSettingsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$IntroSettings = AutoDisposeNotifier<IntroSettingsModel>;
 // ignore_for_file: type=lint

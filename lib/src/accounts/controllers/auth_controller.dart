@@ -19,8 +19,12 @@ class AuthController extends _$AuthController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> signIn(DriveProviderBackend backend, DriveProvider provider,
-      String remoteName, bool isRCloneBackend) async {
+  Future<void> signIn(
+    DriveProviderBackend backend,
+    DriveProvider provider,
+    String remoteName,
+    bool isRCloneBackend,
+  ) async {
     final authNotifier = ref.read(authProvider.notifier);
 
     state = const AsyncLoading();
@@ -69,20 +73,26 @@ class Auth extends _$Auth {
     bool isRCloneBackend,
   ) async {
     if (state.any((element) => element.remoteName == remoteName)) {
-      throw const GeneralError(
-        'The provider already exists',
-      );
+      throw const GeneralError('The provider already exists');
     }
 
     final service = switch (isRCloneBackend) {
-      true => await RCloneAuthService()
-          .authorize(
-              backend: backend, driveProvider: provider, remoteName: remoteName)
-          .run(),
-      false => await getManualAuthService(provider)
-          .authorize(
-              backend: backend, driveProvider: provider, remoteName: remoteName)
-          .run()
+      true =>
+        await RCloneAuthService()
+            .authorize(
+              backend: backend,
+              driveProvider: provider,
+              remoteName: remoteName,
+            )
+            .run(),
+      false =>
+        await getManualAuthService(provider)
+            .authorize(
+              backend: backend,
+              driveProvider: provider,
+              remoteName: remoteName,
+            )
+            .run(),
     };
 
     service.match(
@@ -104,16 +114,17 @@ class Auth extends _$Auth {
     await _box.delete(model.remoteName);
   }
 
-  Future<DriveInfoModel> getDriveInfo(
-    DriveProviderModel model,
-  ) async {
+  Future<DriveInfoModel> getDriveInfo(DriveProviderModel model) async {
     final result = switch (model.isRCloneBackend) {
       true => await RCloneAuthService().driveInfo(model: model).run(),
-      false => await getManualAuthService(model.provider)
-          .refresh(model: model)
-          .flatMap((res) =>
-              getManualAuthService(model.provider).driveInfo(model: res))
-          .run()
+      false =>
+        await getManualAuthService(model.provider)
+            .refresh(model: model)
+            .flatMap(
+              (res) =>
+                  getManualAuthService(model.provider).driveInfo(model: res),
+            )
+            .run(),
     };
 
     return result.match(

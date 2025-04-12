@@ -49,23 +49,24 @@ void callbackDispatcher() {
     final notifService = FlutterLocalNotificationsPlugin();
     const InitializationSettings initializationSettings =
         InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: null,
-    );
+          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+          iOS: null,
+        );
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'sync_notif',
-      'SyncVault',
-      channelDescription: 'Notifies user of app running in background',
-      importance: Importance.max,
-      priority: Priority.max,
-      ticker: 'SyncVault sync running in background',
-      actions: [
-        AndroidNotificationAction('cancel_sync', 'Stop background sync')
-      ],
+          'sync_notif',
+          'SyncVault',
+          channelDescription: 'Notifies user of app running in background',
+          importance: Importance.max,
+          priority: Priority.max,
+          ticker: 'SyncVault sync running in background',
+          actions: [
+            AndroidNotificationAction('cancel_sync', 'Stop background sync'),
+          ],
+        );
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
     );
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
 
     final notifs = await notifService.getActiveNotifications();
     final notif = notifs.filter((notif) => notif.id == notifID);
@@ -106,9 +107,10 @@ void callbackDispatcher() {
 
     // File watcher approach does not work on mobile devices
     for (final folderModel in folders) {
-      final entities = await Directory(folderModel.folderPath)
-          .list(recursive: true)
-          .toList();
+      final entities =
+          await Directory(
+            folderModel.folderPath,
+          ).list(recursive: true).toList();
       final files = entities.whereType<File>().toList();
 
       debugLogger.i(files);
@@ -137,34 +139,42 @@ void callbackDispatcher() {
         },
         (isSameFolder) async {
           if (!isSameFolder) {
-            final providerModel = authProviders
-                .filter(
-                    (provider) => provider.remoteName == folderModel.remoteName)
-                .firstOption;
+            final providerModel =
+                authProviders
+                    .filter(
+                      (provider) =>
+                          provider.remoteName == folderModel.remoteName,
+                    )
+                    .firstOption;
 
-            final uploadRes = await service
-                .upload(
-                  providerModel: providerModel.toNullable()!,
-                  folderModel: folderModel,
-                  localPath: folderModel.folderPath,
-                  rCloneExecPath: execPath,
-                )
-                .run();
+            final uploadRes =
+                await service
+                    .upload(
+                      providerModel: providerModel.toNullable()!,
+                      folderModel: folderModel,
+                      localPath: folderModel.folderPath,
+                      rCloneExecPath: execPath,
+                    )
+                    .run();
 
             uploadRes.match(
               // FIXME: Fails by - no impl found for getNativeLibraryPath
               // Workaround - pass the path to bg after calling it in main isolate
               (err) => err.handleError(
-                  'Failed to do background sync', StackTrace.empty),
+                'Failed to do background sync',
+                StackTrace.empty,
+              ),
               (_) async {
                 debugLogger.i('Background sync completed');
 
-                final files = await Directory(folderModel.folderPath)
-                    .list(recursive: true)
-                    .toList();
-                final hashResult = await fileComparer
-                    .calcHash(files.whereType<File>().toList())
-                    .run();
+                final files =
+                    await Directory(
+                      folderModel.folderPath,
+                    ).list(recursive: true).toList();
+                final hashResult =
+                    await fileComparer
+                        .calcHash(files.whereType<File>().toList())
+                        .run();
                 hashResult.match(
                   (err) => err.handleError(err.message, StackTrace.empty),
                   (hash) {
@@ -254,23 +264,16 @@ void main() async {
       initialDelay: const Duration(seconds: 15),
       existingWorkPolicy: ExistingWorkPolicy.replace,
       constraints: Constraints(networkType: NetworkType.connected),
-      inputData: {
-        'execPath': execPath.toNullable(),
-      },
+      inputData: {'execPath': execPath.toNullable()},
     );
   }
 
   if (settings.isSentryEnabled) {
-    await SentryFlutter.init(
-      (options) {
-        options.dsn =
-            'https://6f9773aae01846168e9cd2b1e62adde3@o4504764245344256.ingest.us.sentry.io/4505318015696896';
-        options.tracesSampleRate = 1.0;
-      },
-      appRunner: () => runApp(
-        const ProviderScope(child: MyApp()),
-      ),
-    );
+    await SentryFlutter.init((options) {
+      options.dsn =
+          'https://6f9773aae01846168e9cd2b1e62adde3@o4504764245344256.ingest.us.sentry.io/4505318015696896';
+      options.tracesSampleRate = 1.0;
+    }, appRunner: () => runApp(const ProviderScope(child: MyApp())));
   } else {
     runApp(const ProviderScope(child: MyApp()));
   }
