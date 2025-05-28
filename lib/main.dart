@@ -107,10 +107,9 @@ void callbackDispatcher() {
 
     // File watcher approach does not work on mobile devices
     for (final folderModel in folders) {
-      final entities =
-          await Directory(
-            folderModel.folderPath,
-          ).list(recursive: true).toList();
+      final entities = await Directory(
+        folderModel.folderPath,
+      ).list(recursive: true).toList();
       final files = entities.whereType<File>().toList();
 
       debugLogger.i(files);
@@ -139,23 +138,20 @@ void callbackDispatcher() {
         },
         (isSameFolder) async {
           if (!isSameFolder) {
-            final providerModel =
-                authProviders
-                    .filter(
-                      (provider) =>
-                          provider.remoteName == folderModel.remoteName,
-                    )
-                    .firstOption;
+            final providerModel = authProviders
+                .filter(
+                  (provider) => provider.remoteName == folderModel.remoteName,
+                )
+                .firstOption;
 
-            final uploadRes =
-                await service
-                    .upload(
-                      providerModel: providerModel.toNullable()!,
-                      folderModel: folderModel,
-                      localPath: folderModel.folderPath,
-                      rCloneExecPath: execPath,
-                    )
-                    .run();
+            final uploadRes = await service
+                .upload(
+                  providerModel: providerModel.toNullable()!,
+                  folderModel: folderModel,
+                  localPath: folderModel.folderPath,
+                  rCloneExecPath: execPath,
+                )
+                .run();
 
             uploadRes.match(
               // FIXME: Fails by - no impl found for getNativeLibraryPath
@@ -167,14 +163,12 @@ void callbackDispatcher() {
               (_) async {
                 debugLogger.i('Background sync completed');
 
-                final files =
-                    await Directory(
-                      folderModel.folderPath,
-                    ).list(recursive: true).toList();
-                final hashResult =
-                    await fileComparer
-                        .calcHash(files.whereType<File>().toList())
-                        .run();
+                final files = await Directory(
+                  folderModel.folderPath,
+                ).list(recursive: true).toList();
+                final hashResult = await fileComparer
+                    .calcHash(files.whereType<File>().toList())
+                    .run();
                 hashResult.match(
                   (err) => err.handleError(err.message, StackTrace.empty),
                   (hash) {

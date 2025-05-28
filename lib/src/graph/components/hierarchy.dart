@@ -66,10 +66,9 @@ class _HierarchyWidgetState extends State<HierarchyWidget> {
 
                   // Custom selection style
                   final isSelected = node.state.isSelected;
-                  final backgroundColor =
-                      isSelected
-                          ? Colors.blue.withAlpha(156)
-                          : const Color.fromRGBO(51, 51, 51, 1);
+                  final backgroundColor = isSelected
+                      ? Colors.blue.withAlpha(156)
+                      : const Color.fromRGBO(51, 51, 51, 1);
 
                   return Padding(
                     padding: const EdgeInsets.all(4),
@@ -88,10 +87,9 @@ class _HierarchyWidgetState extends State<HierarchyWidget> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: isSelected ? Colors.white : Colors.white70,
-                            fontWeight:
-                                isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                         subtitle: Text(

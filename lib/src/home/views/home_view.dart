@@ -197,8 +197,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
                                 e.folderName,
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall,
                               ),
                             ),
                           ],
@@ -236,10 +237,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     Flexible(
                                       child: Text(
                                         e.folderPath,
-                                        style:
-                                            Theme.of(
-                                              context,
-                                            ).textTheme.bodyLarge,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -328,11 +328,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                       if (context.mounted) {
                                                         await showDialog(
                                                           context: context,
-                                                          builder:
-                                                              (ctx) =>
-                                                                  DeleteFolderDialogWidget(
-                                                                    model: e,
-                                                                  ),
+                                                          builder: (ctx) =>
+                                                              DeleteFolderDialogWidget(
+                                                                model: e,
+                                                              ),
                                                         );
                                                       }
                                                     }
@@ -374,9 +373,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     fit: BoxFit.fill,
                                     child: Switch(
                                       value: e.isAutoSync,
-                                      onChanged:
-                                          (val) =>
-                                              folderNotifier.toggleAutoSync(e),
+                                      onChanged: (val) =>
+                                          folderNotifier.toggleAutoSync(e),
                                     ),
                                   ),
                                 ),
@@ -395,9 +393,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     fit: BoxFit.fill,
                                     child: Switch(
                                       value: e.isTwoWaySync,
-                                      onChanged:
-                                          (val) => folderNotifier
-                                              .toggleTwoWaySync(e),
+                                      onChanged: (val) =>
+                                          folderNotifier.toggleTwoWaySync(e),
                                     ),
                                   ),
                                 ),
@@ -416,9 +413,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     fit: BoxFit.fill,
                                     child: Switch(
                                       value: e.isDeletionEnabled,
-                                      onChanged:
-                                          (val) => folderNotifier
-                                              .toggleDeletionOnSync(e),
+                                      onChanged: (val) => folderNotifier
+                                          .toggleDeletionOnSync(e),
                                     ),
                                   ),
                                 ),
@@ -430,9 +426,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 onPressed: () async {
                                   showModalBottomSheet(
                                     context: context,
-                                    builder:
-                                        (ctx) =>
-                                            TreeViewSheetWidget(folderModel: e),
+                                    builder: (ctx) =>
+                                        TreeViewSheetWidget(folderModel: e),
                                   );
                                 },
                                 child: const Text('Tree view'),

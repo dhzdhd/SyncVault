@@ -96,25 +96,24 @@ class _NewAccountDialogWidgetState
           ),
         const SizedBox(height: 16),
         DropdownButton<DriveProvider>(
-          items:
-              isRCloneBackend.value
-                  ? DriveProvider.values
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.displayName),
-                        ),
-                      )
-                      .toList()
-                  : DriveProvider.values
-                      .filter((e) => e.backendType == OAuth2)
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.displayName),
-                        ),
-                      )
-                      .toList(),
+          items: isRCloneBackend.value
+              ? DriveProvider.values
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.displayName),
+                      ),
+                    )
+                    .toList()
+              : DriveProvider.values
+                    .filter((e) => e.backendType == OAuth2)
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.displayName),
+                      ),
+                    )
+                    .toList(),
           value: selected.value,
           isExpanded: true,
           onChanged: (DriveProvider? e) {
@@ -251,10 +250,9 @@ class _NewAccountDialogWidgetState
                           user: _userController.text,
                           password: _passwordController.text,
                         ),
-                        _ =>
-                          throw const GeneralError(
-                            'Backend not supported',
-                          ), // TODO:
+                        _ => throw const GeneralError(
+                          'Backend not supported',
+                        ), // TODO:
                       },
                       selected.value,
                       _remoteNameController.text,
@@ -269,13 +267,12 @@ class _NewAccountDialogWidgetState
               }
             }
           },
-          child:
-              authController.isLoading
-                  ? const SizedBox.square(
-                    dimension: 20.0,
-                    child: CircularProgressWidget(size: 300, isInfinite: true),
-                  )
-                  : const Text('Submit'),
+          child: authController.isLoading
+              ? const SizedBox.square(
+                  dimension: 20.0,
+                  child: CircularProgressWidget(size: 300, isInfinite: true),
+                )
+              : const Text('Submit'),
         ),
       ],
     );

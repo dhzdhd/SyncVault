@@ -15,10 +15,9 @@ final rCloneDownloadControllerProvider =
     AutoDisposeAsyncNotifierProvider<RCloneDownloadController, int>.internal(
       RCloneDownloadController.new,
       name: r'rCloneDownloadControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$rCloneDownloadControllerHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$rCloneDownloadControllerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
@@ -32,10 +31,9 @@ final introSettingsProvider =
     AutoDisposeNotifierProvider<IntroSettings, IntroSettingsModel>.internal(
       IntroSettings.new,
       name: r'introSettingsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$introSettingsHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$introSettingsHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

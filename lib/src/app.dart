@@ -31,8 +31,9 @@ class _MyAppState extends ConsumerState<MyApp>
 
     if (PlatformExtension.isDesktop) {
       // TODO: Add icons
-      String iconPath =
-          Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png';
+      String iconPath = Platform.isWindows
+          ? 'images/tray_icon.ico'
+          : 'images/tray_icon.png';
 
       trayManager.addListener(this);
 
@@ -79,8 +80,8 @@ class _MyAppState extends ConsumerState<MyApp>
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en', '')],
-      onGenerateTitle:
-          (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+      onGenerateTitle: (BuildContext context) =>
+          AppLocalizations.of(context)!.appTitle,
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: settings.themeMode,

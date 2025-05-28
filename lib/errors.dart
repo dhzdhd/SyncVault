@@ -36,11 +36,10 @@ extension ErrorSegregation on Object {
       StateError err => GeneralError(err.toString()),
       Exception err => GeneralError(err.toString()),
       Error err => GeneralError(err.toString()),
-      Object err =>
-        throw NoSuchMethodError.withInvocation(
-          err,
-          Invocation.method(const Symbol('handleError'), null),
-        ),
+      Object err => throw NoSuchMethodError.withInvocation(
+        err,
+        Invocation.method(const Symbol('handleError'), null),
+      ),
     };
   }
 }

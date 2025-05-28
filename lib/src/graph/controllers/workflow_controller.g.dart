@@ -14,8 +14,9 @@ final workflowProvider =
     AutoDisposeNotifierProvider<Workflow, List<WorkflowModel>>.internal(
       Workflow.new,
       name: r'workflowProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$workflowHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$workflowHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

@@ -75,10 +75,9 @@ class DriveInfoControllerProvider
         (ref) => driveInfoController(ref as DriveInfoControllerRef, model),
         from: driveInfoControllerProvider,
         name: r'driveInfoControllerProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$driveInfoControllerHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$driveInfoControllerHash,
         dependencies: DriveInfoControllerFamily._dependencies,
         allTransitiveDependencies:
             DriveInfoControllerFamily._allTransitiveDependencies,
@@ -158,10 +157,9 @@ final authControllerProvider =
     AutoDisposeAsyncNotifierProvider<AuthController, void>.internal(
       AuthController.new,
       name: r'authControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$authControllerHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$authControllerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
@@ -175,8 +173,9 @@ final authProvider =
     AutoDisposeNotifierProvider<Auth, List<DriveProviderModel>>.internal(
       Auth.new,
       name: r'authProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$authHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$authHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

@@ -20,12 +20,11 @@ class _CircularProgressWidgetState extends State<CircularProgressWidget>
 
   @override
   void initState() {
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..addListener(() {
-      setState(() {});
-    });
+    controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2))
+          ..addListener(() {
+            setState(() {});
+          });
     controller.repeat(reverse: true);
     super.initState();
   }

@@ -78,95 +78,94 @@ class _SearchWidgetState extends State<SearchWidget> {
                 child: FadeTransition(opacity: animation, child: child),
               );
             },
-            child:
-                _showSearch
-                    ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            key: ValueKey<bool>(_showSearch),
-                            width: 200,
-                            child: TextField(
-                              autofocus: true,
-                              focusNode: _focusNode,
-                              controller: _searchController,
-                              decoration: const InputDecoration(
-                                hintText: 'Search nodes by name...',
-                                hintStyle: TextStyle(color: Colors.white),
-                                border: InputBorder.none,
-                              ),
-                              style: const TextStyle(color: Colors.white),
-                              onChanged: (value) async {
-                                if (value.isEmpty) {
-                                  setState(() {
-                                    _isSearching = false;
-                                    _searchResults.clear();
-                                  });
-                                  return;
-                                }
-
-                                setState(() {
-                                  _isSearching = true;
-                                  _searchResults.clear();
-                                });
-
-                                _searchResults.addAll(
-                                  await widget.controller.searchNodesByName(
-                                    value,
-                                  ),
-                                );
-
+            child: _showSearch
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          key: ValueKey<bool>(_showSearch),
+                          width: 200,
+                          child: TextField(
+                            autofocus: true,
+                            focusNode: _focusNode,
+                            controller: _searchController,
+                            decoration: const InputDecoration(
+                              hintText: 'Search nodes by name...',
+                              hintStyle: TextStyle(color: Colors.white),
+                              border: InputBorder.none,
+                            ),
+                            style: const TextStyle(color: Colors.white),
+                            onChanged: (value) async {
+                              if (value.isEmpty) {
                                 setState(() {
                                   _isSearching = false;
+                                  _searchResults.clear();
                                 });
-                              },
-                              onSubmitted: (value) {
-                                if (_searchResults.isEmpty) return;
+                                return;
+                              }
 
-                                if (_currentFocus == null) {
-                                  _currentFocus = _searchResults.first;
+                              setState(() {
+                                _isSearching = true;
+                                _searchResults.clear();
+                              });
 
-                                  widget.controller.focusNodesById({
-                                    _currentFocus!,
-                                  });
-                                } else {
-                                  _toNextResult();
-                                }
+                              _searchResults.addAll(
+                                await widget.controller.searchNodesByName(
+                                  value,
+                                ),
+                              );
 
-                                _focusNode.requestFocus();
-                              },
-                              onTapOutside: (event) => _focusNode.unfocus(),
-                            ),
+                              setState(() {
+                                _isSearching = false;
+                              });
+                            },
+                            onSubmitted: (value) {
+                              if (_searchResults.isEmpty) return;
+
+                              if (_currentFocus == null) {
+                                _currentFocus = _searchResults.first;
+
+                                widget.controller.focusNodesById({
+                                  _currentFocus!,
+                                });
+                              } else {
+                                _toNextResult();
+                              }
+
+                              _focusNode.requestFocus();
+                            },
+                            onTapOutside: (event) => _focusNode.unfocus(),
                           ),
-                          const SizedBox(width: 8),
-                          if (_currentFocus != null)
-                            IconButton(
-                              icon: const Icon(
-                                Icons.navigate_before,
-                                color: Colors.white,
-                              ),
-                              onPressed: _toPreviousResult,
+                        ),
+                        const SizedBox(width: 8),
+                        if (_currentFocus != null)
+                          IconButton(
+                            icon: const Icon(
+                              Icons.navigate_before,
+                              color: Colors.white,
                             ),
-                          if (_currentFocus != null)
-                            IconButton(
-                              icon: const Icon(
-                                Icons.navigate_next,
-                                color: Colors.white,
-                              ),
-                              onPressed: _toNextResult,
-                            ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _isSearching
-                                ? 'Searching...'
-                                : '${_searchResults.length} results',
-                            style: const TextStyle(color: Colors.white),
+                            onPressed: _toPreviousResult,
                           ),
-                        ],
-                      ),
-                    )
-                    : const SizedBox.shrink(),
+                        if (_currentFocus != null)
+                          IconButton(
+                            icon: const Icon(
+                              Icons.navigate_next,
+                              color: Colors.white,
+                            ),
+                            onPressed: _toNextResult,
+                          ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _isSearching
+                              ? 'Searching...'
+                              : '${_searchResults.length} results',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
         ],
       ),

@@ -77,17 +77,16 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         ),
         const SizedBox(height: 16),
         DropdownButton<DriveProviderModel?>(
-          items:
-              authInfo
-                  .map(
-                    (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(
-                        '${e.provider.name.capitalize()} - ${e.remoteName}',
-                      ),
-                    ),
-                  )
-                  .toList(),
+          items: authInfo
+              .map(
+                (e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(
+                    '${e.provider.name.capitalize()} - ${e.remoteName}',
+                  ),
+                ),
+              )
+              .toList(),
           value: selectedProvider.value.toNullable(),
           isExpanded: true,
           hint: const Text('Enter provider account'),
@@ -124,13 +123,12 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         ),
         const SizedBox(height: 32),
         ElevatedButton(
-          child:
-              createFolderController.isLoading
-                  ? const SizedBox.square(
-                    dimension: 20.0,
-                    child: CircularProgressWidget(size: 300, isInfinite: true),
-                  )
-                  : const Text('Submit'),
+          child: createFolderController.isLoading
+              ? const SizedBox.square(
+                  dimension: 20.0,
+                  child: CircularProgressWidget(size: 300, isInfinite: true),
+                )
+              : const Text('Submit'),
           onPressed: () async {
             if (!createFolderController.isLoading) {
               final Option<(DriveProviderModel, String, String, Option<String>)>

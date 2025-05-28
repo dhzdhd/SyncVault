@@ -152,20 +152,20 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
                 child: FilledButton(
                   onPressed:
                       (rCloneDownloadProgress.isLoading ||
-                              (rCloneDownloadProgress.value != null &&
-                                  rCloneDownloadProgress.value != 0))
-                          ? null
-                          : () async {
-                            await rCloneDownloadControllerNotifier
-                                .rCloneDownload();
-                          },
+                          (rCloneDownloadProgress.value != null &&
+                              rCloneDownloadProgress.value != 0))
+                      ? null
+                      : () async {
+                          await rCloneDownloadControllerNotifier
+                              .rCloneDownload();
+                        },
                   child: Text(
                     rCloneDownloadProgress.isLoading ||
                             rCloneDownloadProgress.value != null &&
                                 rCloneDownloadProgress.value != 0
                         ? rCloneDownloadProgress.value == 100
-                            ? 'Complete'
-                            : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
+                              ? 'Complete'
+                              : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
                         : 'Download RClone',
                   ),
                 ),

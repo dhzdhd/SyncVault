@@ -198,10 +198,9 @@ class RCloneAuthService implements AuthService {
             final toWrite = driveProvider
                 .template(backend: model.backend)
                 .getOrElse(
-                  () =>
-                      throw const GeneralError(
-                        'Unable to fetch template for given provider.',
-                      ),
+                  () => throw const GeneralError(
+                    'Unable to fetch template for given provider.',
+                  ),
                 );
 
             // OneDrive requires drive ID which is not provided by rclone

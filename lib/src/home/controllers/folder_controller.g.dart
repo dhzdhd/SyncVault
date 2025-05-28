@@ -71,10 +71,9 @@ class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
         (ref) => treeView(ref as TreeViewRef, folderModel),
         from: treeViewProvider,
         name: r'treeViewProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$treeViewHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$treeViewHash,
         dependencies: TreeViewFamily._dependencies,
         allTransitiveDependencies: TreeViewFamily._allTransitiveDependencies,
         folderModel: folderModel,
@@ -154,10 +153,9 @@ final createFolderControllerProvider =
     AutoDisposeAsyncNotifierProvider<CreateFolderController, void>.internal(
       CreateFolderController.new,
       name: r'createFolderControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$createFolderControllerHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$createFolderControllerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
@@ -172,10 +170,9 @@ final uploadDeleteControllerProvider =
     AutoDisposeAsyncNotifierProvider<UploadDeleteController, void>.internal(
       UploadDeleteController.new,
       name: r'uploadDeleteControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$uploadDeleteControllerHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$uploadDeleteControllerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
@@ -189,8 +186,9 @@ final folderProvider =
     AutoDisposeNotifierProvider<Folder, List<FolderModel>>.internal(
       Folder.new,
       name: r'folderProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$folderHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$folderHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

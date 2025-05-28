@@ -194,12 +194,11 @@ class RCloneDriveService implements DriveService {
               dotAll: true,
             );
             for (final line in lines) {
-              final matched =
-                  regex
-                      .allMatches(line)
-                      .toList()
-                      .map((t) => t.groups([1, 2]))
-                      .firstOrNull;
+              final matched = regex
+                  .allMatches(line)
+                  .toList()
+                  .map((t) => t.groups([1, 2]))
+                  .firstOrNull;
               if (matched != [] && matched != null) {
                 matches.add([matched[0]!, matched[1]!.replaceAll('\\', '/')]);
               }
@@ -213,38 +212,35 @@ class RCloneDriveService implements DriveService {
               Option<Directory> parent,
             ) {
               // Get the name of the current path
-              final currentSegments =
-                  currentPath
-                      .split('/')
-                      .where((seg) => seg.isNotEmpty)
-                      .toList();
-              final currentName =
-                  currentSegments.isEmpty ? '/' : currentSegments.last;
+              final currentSegments = currentPath
+                  .split('/')
+                  .where((seg) => seg.isNotEmpty)
+                  .toList();
+              final currentName = currentSegments.isEmpty
+                  ? '/'
+                  : currentSegments.last;
 
               // Find direct children of the current path
-              final childrenPaths =
-                  paths.where((path) {
-                    final segments =
-                        path[1]
-                            .split('/')
-                            .where((seg) => seg.isNotEmpty)
-                            .toList();
-                    return segments.length > currentSegments.length &&
-                        List.generate(
-                              currentSegments.length,
-                              (i) => segments[i],
-                            ).join('/') ==
-                            currentSegments.join('/');
-                  }).toList();
+              final childrenPaths = paths.where((path) {
+                final segments = path[1]
+                    .split('/')
+                    .where((seg) => seg.isNotEmpty)
+                    .toList();
+                return segments.length > currentSegments.length &&
+                    List.generate(
+                          currentSegments.length,
+                          (i) => segments[i],
+                        ).join('/') ==
+                        currentSegments.join('/');
+              }).toList();
 
               // Create child nodes recursively
               final List<FileModel> children = [];
               for (final childPath in childrenPaths) {
-                final segments =
-                    childPath[1]
-                        .split('/')
-                        .where((seg) => seg.isNotEmpty)
-                        .toList();
+                final segments = childPath[1]
+                    .split('/')
+                    .where((seg) => seg.isNotEmpty)
+                    .toList();
                 final size = childPath[0];
                 final childFullPath = segments.join('/');
 
@@ -262,23 +258,22 @@ class RCloneDriveService implements DriveService {
               }
 
               // Determine if the current node is a file or directory
-              final isFile =
-                  !paths.any((path) {
-                    final segments =
-                        path[1]
-                            .split('/')
-                            .where((seg) => seg.isNotEmpty)
-                            .toList();
-                    return segments.length > currentSegments.length &&
-                        List.generate(
-                              currentSegments.length,
-                              (i) => segments[i],
-                            ).join('/') ==
-                            currentSegments.join('/');
-                  });
+              final isFile = !paths.any((path) {
+                final segments = path[1]
+                    .split('/')
+                    .where((seg) => seg.isNotEmpty)
+                    .toList();
+                return segments.length > currentSegments.length &&
+                    List.generate(
+                          currentSegments.length,
+                          (i) => segments[i],
+                        ).join('/') ==
+                        currentSegments.join('/');
+              });
 
-              final fileEntity =
-                  isFile ? File(currentPath) : Directory(currentPath);
+              final fileEntity = isFile
+                  ? File(currentPath)
+                  : Directory(currentPath);
 
               return FileModel(
                 name: currentName,

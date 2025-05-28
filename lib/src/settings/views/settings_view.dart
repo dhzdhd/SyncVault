@@ -40,15 +40,14 @@ class SettingsView extends ConsumerWidget {
                     enableFilter: false,
                     initialSelection: settings.themeMode,
                     onSelected: settingsNotifier.updateThemeMode,
-                    dropdownMenuEntries:
-                        ThemeMode.values
-                            .map(
-                              (val) => DropdownMenuEntry(
-                                value: val,
-                                label: val.name.capitalize(),
-                              ),
-                            )
-                            .toList(),
+                    dropdownMenuEntries: ThemeMode.values
+                        .map(
+                          (val) => DropdownMenuEntry(
+                            value: val,
+                            label: val.name.capitalize(),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
                 ListTile(
@@ -103,22 +102,21 @@ class SettingsView extends ConsumerWidget {
                     onTap: () async {
                       showDialog(
                         context: context,
-                        builder:
-                            (context) => AlertDialog(
-                              title: const Text('Are you sure'),
-                              actions: [
-                                const OutlinedButton(
-                                  onPressed: null,
-                                  child: Text('Yes'),
-                                ),
-                                FilledButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('No'),
-                                ),
-                              ],
+                        builder: (context) => AlertDialog(
+                          title: const Text('Are you sure'),
+                          actions: [
+                            const OutlinedButton(
+                              onPressed: null,
+                              child: Text('Yes'),
                             ),
+                            FilledButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('No'),
+                            ),
+                          ],
+                        ),
                       );
                     },
                     // TODO:
@@ -137,23 +135,21 @@ class SettingsView extends ConsumerWidget {
                       config.match((e) => {}, (ini) async {
                         showDialog(
                           context: context,
-                          builder:
-                              (ctx) => SimpleDialog(
-                                title: const Text('Config'),
-                                children:
-                                    ini
-                                        .sections()
-                                        .map(
-                                          (section) => ListTile(
-                                            minTileHeight: 64,
-                                            title: Text(section),
-                                            subtitle: Text(
-                                              ini.items(section).toString(),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                              ),
+                          builder: (ctx) => SimpleDialog(
+                            title: const Text('Config'),
+                            children: ini
+                                .sections()
+                                .map(
+                                  (section) => ListTile(
+                                    minTileHeight: 64,
+                                    title: Text(section),
+                                    subtitle: Text(
+                                      ini.items(section).toString(),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
                         );
                       });
                     },
@@ -171,27 +167,26 @@ class SettingsView extends ConsumerWidget {
                   onTap: () async {
                     showDialog(
                       context: context,
-                      builder:
-                          (context) => AlertDialog(
-                            title: const Text('Are you sure'),
-                            actions: [
-                              OutlinedButton(
-                                onPressed: () async {
-                                  await folderNotifier.clearCache();
-                                  if (context.mounted) {
-                                    Navigator.of(context).pop();
-                                  }
-                                },
-                                child: const Text('Yes'),
-                              ),
-                              FilledButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('No'),
-                              ),
-                            ],
+                      builder: (context) => AlertDialog(
+                        title: const Text('Are you sure'),
+                        actions: [
+                          OutlinedButton(
+                            onPressed: () async {
+                              await folderNotifier.clearCache();
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            child: const Text('Yes'),
                           ),
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('No'),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -205,27 +200,26 @@ class SettingsView extends ConsumerWidget {
                   onTap: () async {
                     showDialog(
                       context: context,
-                      builder:
-                          (context) => AlertDialog(
-                            title: const Text('Are you sure'),
-                            actions: [
-                              OutlinedButton(
-                                onPressed: () async {
-                                  settingsNotifier.resetSettings();
-                                  if (context.mounted) {
-                                    Navigator.of(context).pop();
-                                  }
-                                },
-                                child: const Text('Yes'),
-                              ),
-                              FilledButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('No'),
-                              ),
-                            ],
+                      builder: (context) => AlertDialog(
+                        title: const Text('Are you sure'),
+                        actions: [
+                          OutlinedButton(
+                            onPressed: () async {
+                              settingsNotifier.resetSettings();
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            child: const Text('Yes'),
                           ),
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('No'),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),

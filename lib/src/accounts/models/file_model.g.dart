@@ -11,10 +11,9 @@ _FileModel _$FileModelFromJson(Map<String, dynamic> json) => _FileModel(
   size: json['size'] as String,
   file: const FileSystemEntityConverter().fromJson(json['file'] as String),
   parent: const DirectoryConverter().fromJson(json['parent'] as String),
-  children:
-      (json['children'] as List<dynamic>)
-          .map((e) => FileModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+  children: (json['children'] as List<dynamic>)
+      .map((e) => FileModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$FileModelToJson(_FileModel instance) =>

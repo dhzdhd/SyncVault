@@ -138,19 +138,19 @@ class Folder extends _$Folder {
     required Option<String> remoteParentPath,
   }) async {
     // TODO: Segregate by provider
-    final driveService =
-        authModel.isRCloneBackend ? RCloneDriveService() : GoogleDriveService();
+    final driveService = authModel.isRCloneBackend
+        ? RCloneDriveService()
+        : GoogleDriveService();
 
-    final model =
-        await driveService
-            .create(
-              folderName: folderName,
-              folderPath: folderPath,
-              remoteParentPath: remoteParentPath,
-              model: authModel,
-            )
-            .match((l) => throw l, (r) => r)
-            .run();
+    final model = await driveService
+        .create(
+          folderName: folderName,
+          folderPath: folderPath,
+          remoteParentPath: remoteParentPath,
+          model: authModel,
+        )
+        .match((l) => throw l, (r) => r)
+        .run();
 
     state = [...state, model];
 
@@ -159,10 +159,9 @@ class Folder extends _$Folder {
 
   Future<void> upload(FolderModel folderModel, Option<String> filePath) async {
     final providerModels = ref.watch(authProvider);
-    final providerModel =
-        providerModels
-            .filter((t) => t.remoteName == folderModel.remoteName)
-            .first;
+    final providerModel = providerModels
+        .filter((t) => t.remoteName == folderModel.remoteName)
+        .first;
 
     await RCloneDriveService()
         .upload(
@@ -173,12 +172,12 @@ class Folder extends _$Folder {
         .run();
 
     if (PlatformExtension.isMobile) {
-      final files =
-          await Directory(
-            folderModel.folderPath,
-          ).list(recursive: true).toList();
-      final hashResult =
-          await _fileComparer.calcHash(files.whereType<File>().toList()).run();
+      final files = await Directory(
+        folderModel.folderPath,
+      ).list(recursive: true).toList();
+      final hashResult = await _fileComparer
+          .calcHash(files.whereType<File>().toList())
+          .run();
       hashResult.match(
         (err) => err.handleError(err.message, StackTrace.empty),
         (hash) {
@@ -202,8 +201,9 @@ class Folder extends _$Folder {
   Future<void> delete(FolderModel model, bool deleteRemote) async {
     if (deleteRemote) {
       final providerModels = ref.watch(authProvider);
-      final providerModel =
-          providerModels.filter((t) => t.remoteName == model.remoteName).first;
+      final providerModel = providerModels
+          .filter((t) => t.remoteName == model.remoteName)
+          .first;
 
       await RCloneDriveService()
           .delete(providerModel: providerModel, folderModel: model)
