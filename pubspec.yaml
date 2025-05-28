@@ -6,8 +6,8 @@ publish_to: "none"
 version: 0.8.1
 
 environment:
-  sdk: ">=3.7.0 <4.0.0"
-  flutter: ^3.29.0
+  sdk: ">=3.8.0 <4.0.0"
+  flutter: ^3.32.0
 
 dependencies:
   flutter:
@@ -15,9 +15,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   dio: ^5.8.0+1
-  file_picker: ^10.1.1
+  file_picker: ^10.1.9
   flutter_hooks: ^0.21.2
-  flutter_svg: ^2.0.17
+  flutter_svg: ^2.1.0
   flutter_web_auth_2: ^4.1.0
   fpdart: ^1.1.1
   freezed_annotation: ^3.0.0
@@ -39,8 +39,8 @@ dependencies:
   introduction_screen: ^3.1.17
   archive: ^4.0.5
   glob: ^2.1.3
-  hive_ce: ^2.10.1
-  hive_ce_flutter: ^2.2.0
+  hive_ce: ^2.11.3
+  hive_ce_flutter: ^2.3.1
   ini_v2:
     git:
       url: https://github.com/dhzdhd/ini_v2.git
@@ -51,14 +51,14 @@ dependencies:
   oauth2: ^2.0.3
   googleapis_auth: ^2.0.0
   google_fonts: ^6.2.1
-  tray_manager: ^0.4.0
+  tray_manager: ^0.5.0
   fl_nodes: ^0.2.0+1
   workmanager:
     git:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
       path: workmanager
       ref: 4ce065135dc1b91fee918f81596b42a56850391d
-  flutter_local_notifications: ^19.0.0
+  flutter_local_notifications: ^19.2.1
   hashlib: ^1.21.2
   launch_at_startup: ^0.5.1
   package_info_plus: ^8.3.0
@@ -67,16 +67,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   build_runner: ^2.4.15
   freezed: ^3.0.6
-  json_serializable: ^6.9.4
+  json_serializable: ^6.9.5
   custom_lint: ^0.7.5
   riverpod_lint: ^2.6.5
   riverpod_generator: ^2.6.5
   flutter_launcher_icons: ^0.14.3
   injectable_generator: ^2.7.0
-  hive_ce_generator: ^1.8.2
+  hive_ce_generator: ^1.9.2
 
 flutter:
   uses-material-design: true
