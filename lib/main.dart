@@ -19,7 +19,7 @@ import 'package:syncvault/injectable/injectable.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/setup.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
-import 'package:syncvault/src/graph/models/workflow_model.dart';
+import 'package:syncvault/src/workflows/models/workflow_model.dart';
 import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';

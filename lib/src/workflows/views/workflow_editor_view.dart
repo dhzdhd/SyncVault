@@ -7,10 +7,10 @@ import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
-import 'package:syncvault/src/graph/components/data_handlers.dart';
-import 'package:syncvault/src/graph/components/hierarchy.dart';
-import 'package:syncvault/src/graph/components/nodes.dart';
-import 'package:syncvault/src/graph/components/search.dart';
+import 'package:syncvault/src/workflows/components/data_handlers.dart';
+import 'package:syncvault/src/workflows/components/hierarchy.dart';
+import 'package:syncvault/src/workflows/components/nodes.dart';
+import 'package:syncvault/src/workflows/components/search.dart';
 
 class WorkflowEditorView extends StatefulHookConsumerWidget {
   const WorkflowEditorView({super.key, required this.workflowName});

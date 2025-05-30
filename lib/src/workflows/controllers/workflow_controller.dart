@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:syncvault/src/graph/models/workflow_model.dart';
+import 'package:syncvault/src/workflows/models/workflow_model.dart';
 
 part 'workflow_controller.g.dart';
 

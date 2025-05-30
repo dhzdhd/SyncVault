@@ -7,7 +7,7 @@ import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
-import 'package:syncvault/src/graph/views/workflow_view.dart';
+import 'package:syncvault/src/workflows/views/workflow_view.dart';
 import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';

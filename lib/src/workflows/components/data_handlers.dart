@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:fl_nodes/fl_nodes.dart';
-import 'package:syncvault/src/graph/components/nodes.dart';
+import 'package:syncvault/src/workflows/components/nodes.dart';
 
 void registerDataHandlers(FlNodeEditorController controller) {
   controller.project.registerDataHandler<Operator>(
