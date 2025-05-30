@@ -6,16 +6,21 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/workflows/components/data_handlers.dart';
 import 'package:syncvault/src/workflows/components/hierarchy.dart';
 import 'package:syncvault/src/workflows/components/nodes.dart';
 import 'package:syncvault/src/workflows/components/search.dart';
+import 'package:syncvault/src/workflows/models/workflow_node_type.dart';
 
 class WorkflowEditorView extends StatefulHookConsumerWidget {
-  const WorkflowEditorView({super.key, required this.workflowName});
+  const WorkflowEditorView({
+    super.key,
+    required this.workflowName,
+    required this.workflowNodeType,
+  });
 
   final String workflowName;
+  final WorkflowNodeType workflowNodeType;
 
   String get routeName => '/workflows/$workflowName';
 
@@ -42,6 +47,7 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
           allowedExtensions: ['json'],
         );
 
+        // outputPath should never be null as this project will never be run on the web
         if (outputPath != null) {
           final File file = File(outputPath);
           await file.writeAsString(jsonEncode(jsonData));
@@ -61,7 +67,7 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
                 content: const Text(
                   'You have unsaved changes. Do you want to proceed without saving?',
                 ),
-                actions: <Widget>[
+                actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: const Text('Cancel'),
@@ -127,20 +133,7 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
 
     () async {
       final response = await Dio().getUri(Uri.parse(sampleProjectLink));
-      if (response.statusCode == 200) {
-        _nodeEditorController.project.load(data: jsonDecode(response.data));
-      } else {
-        if (!mounted) return;
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Failed to load sample project. Please check your internet connection.',
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      _nodeEditorController.project.load(data: jsonDecode(response.data));
     }();
   }
 
@@ -182,9 +175,6 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
                           children: [
                             IconButton.filled(
                               tooltip: 'Toggle Hierarchy Panel',
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                              ),
                               onPressed: () => setState(() {
                                 isHierarchyCollapsed = !isHierarchyCollapsed;
                               }),
@@ -193,16 +183,12 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
                                     ? Icons.keyboard_arrow_right
                                     : Icons.keyboard_arrow_left,
                                 size: 32,
-                                color: Colors.white,
                               ),
                             ),
                             SearchWidget(controller: _nodeEditorController),
                             const Spacer(),
                             IconButton.filled(
                               tooltip: 'Toggle Snap to Grid',
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                              ),
                               onPressed: () => setState(() {
                                 _nodeEditorController.enableSnapToGrid(
                                   !_nodeEditorController
@@ -215,91 +201,15 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
                                     ? Icons.grid_on
                                     : Icons.grid_off,
                                 size: 32,
-                                color: Colors.white,
                               ),
                             ),
                             IconButton.filled(
                               tooltip: 'Execute Graph',
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                              ),
                               onPressed: () =>
                                   _nodeEditorController.runner.executeGraph(),
-                              icon: const Icon(
-                                Icons.play_arrow,
-                                size: 32,
-                                color: Colors.white,
-                              ),
+                              icon: const Icon(Icons.play_arrow, size: 32),
                             ),
                           ],
-                        ),
-                      ),
-                    ),
-                    FlOverlayData(
-                      bottom: 0,
-                      left: 0,
-                      child: Opacity(
-                        opacity: 0.5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: PlatformExtension.isMobile
-                              ? const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Touch Commands:',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(' - Tap: Select Node'),
-                                    Text(' - Double Tap: Clear Selection'),
-                                    Text(' - Long Press: Open Context Menu'),
-                                    Text(
-                                      ' - Drag: Start Linking / Select Nodes',
-                                    ),
-                                    Text(' - Pinch: Zoom In/Out'),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Additional Gestures:',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(' - Two-Finger Drag: Pan'),
-                                  ],
-                                )
-                              : const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Mouse Commands:',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(' - Left Click: Select Node'),
-                                    Text(' - Right Click: Open Context Menu'),
-                                    Text(' - Scroll: Zoom In/Out'),
-                                    Text(' - Middle Click: Pan'),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Keyboard Commands:',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(' - Ctrl + S: Save Project'),
-                                    Text(' - Ctrl + O: Open Project'),
-                                    Text(' - Ctrl + N: New Project'),
-                                    Text(' - Ctrl + C: Copy Node'),
-                                    Text(' - Ctrl + V: Paste Node'),
-                                    Text(' - Ctrl + X: Cut Node'),
-                                    Text(' - Delete | Backspace: Remove Node'),
-                                    Text(' - Ctrl + Z: Undo'),
-                                    Text(' - Ctrl + Y: Redo'),
-                                  ],
-                                ),
                         ),
                       ),
                     ),

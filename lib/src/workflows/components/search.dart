@@ -54,15 +54,12 @@ class _SearchWidgetState extends State<SearchWidget> {
     return AnimatedContainer(
       height: 50,
       duration: const Duration(milliseconds: 900),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(24),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.search, size: 32, color: Colors.white),
+            icon: const Icon(Icons.search, size: 32),
             onPressed: () {
               setState(() {
                 _showSearch = !_showSearch;
@@ -92,10 +89,8 @@ class _SearchWidgetState extends State<SearchWidget> {
                             controller: _searchController,
                             decoration: const InputDecoration(
                               hintText: 'Search nodes by name...',
-                              hintStyle: TextStyle(color: Colors.white),
                               border: InputBorder.none,
                             ),
-                            style: const TextStyle(color: Colors.white),
                             onChanged: (value) async {
                               if (value.isEmpty) {
                                 setState(() {
@@ -141,18 +136,12 @@ class _SearchWidgetState extends State<SearchWidget> {
                         const SizedBox(width: 8),
                         if (_currentFocus != null)
                           IconButton(
-                            icon: const Icon(
-                              Icons.navigate_before,
-                              color: Colors.white,
-                            ),
+                            icon: const Icon(Icons.navigate_before),
                             onPressed: _toPreviousResult,
                           ),
                         if (_currentFocus != null)
                           IconButton(
-                            icon: const Icon(
-                              Icons.navigate_next,
-                              color: Colors.white,
-                            ),
+                            icon: const Icon(Icons.navigate_next),
                             onPressed: _toNextResult,
                           ),
                         const SizedBox(width: 8),
@@ -160,7 +149,6 @@ class _SearchWidgetState extends State<SearchWidget> {
                           _isSearching
                               ? 'Searching...'
                               : '${_searchResults.length} results',
-                          style: const TextStyle(color: Colors.white),
                         ),
                       ],
                     ),

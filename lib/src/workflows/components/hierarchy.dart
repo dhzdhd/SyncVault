@@ -64,11 +64,10 @@ class _HierarchyWidgetState extends State<HierarchyWidget> {
                       widget.controller.nodesAsList.length - index - 1;
                   final node = widget.controller.nodesAsList[reversedIdx];
 
-                  // Custom selection style
                   final isSelected = node.state.isSelected;
                   final backgroundColor = isSelected
-                      ? Colors.blue.withAlpha(156)
-                      : const Color.fromRGBO(51, 51, 51, 1);
+                      ? Theme.of(context).colorScheme.primaryContainer
+                      : Theme.of(context).colorScheme.surface;
 
                   return Padding(
                     padding: const EdgeInsets.all(4),
@@ -76,27 +75,14 @@ class _HierarchyWidgetState extends State<HierarchyWidget> {
                       decoration: BoxDecoration(
                         color: backgroundColor,
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(
-                          color: isSelected ? Colors.blue : Colors.transparent,
-                          width: 2,
-                        ),
                       ),
                       child: ListTile(
                         title: Text(
                           node.prototype.displayName,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.white70,
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
                         ),
                         subtitle: Text(
                           'x: ${node.offset.dx.toStringAsFixed(2)} y: ${node.offset.dy.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.white70,
-                          ),
                         ),
                         onTap: () => _onNodeTap(node),
                       ),

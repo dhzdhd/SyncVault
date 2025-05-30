@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
-import 'package:syncvault/src/home/controllers/folder_controller.dart';
+import 'package:syncvault/src/workflows/components/new_workflow_dialog.dart';
 
 class WorkflowsView extends ConsumerWidget {
   const WorkflowsView({super.key});
@@ -11,19 +10,15 @@ class WorkflowsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final folders = ref.watch(folderProvider);
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         tooltip: 'Create new workflow',
         onPressed: () async {
-          if (folders.isEmpty) {
-            context.showErrorSnackBar('No folders created yet');
-            return;
-          }
-
           if (context.mounted) {
-            // TODO:
+            await showDialog(
+              context: context,
+              builder: (context) => const NewWorkflowWidget(),
+            );
           }
         },
         child: const Icon(Icons.add),
