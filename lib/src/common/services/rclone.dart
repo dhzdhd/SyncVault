@@ -56,6 +56,7 @@ class RCloneUtils {
     return getConfig().map((file) => ['--config', file.path]);
   }
 
+  // TODO: Pass file contents instead of reading
   TaskEither<AppError, Config> getIniConfig() {
     return TaskEither<AppError, Config>.Do(($) async {
       final configFile = await $(getConfig());

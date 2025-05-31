@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ini_v2/ini.dart';
 import 'package:syncvault/errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
@@ -120,12 +121,23 @@ class Auth extends _$Auth {
     );
   }
 
-  // TODO: Add functionality to delete folders & remove corresponding rclone config
+  // TODO: Add functionality to delete folders
   Future<void> signOut(DriveProviderModel model) async {
     state = AsyncData(
       state.requireValue.where((element) => element != model).toList(),
     );
     await _box.delete(model.remoteName);
+
+    // TODO: Refactor to getIniConfig
+    if (model.isRCloneBackend) {
+      final configFileRes = await RCloneUtils().getConfig().run();
+      final configFile = configFileRes.toOption().toNullable()!;
+
+      final config = Config.fromString(await configFile.readAsString());
+      config.removeSection(model.remoteName);
+
+      await configFile.writeAsString(config.toString());
+    }
   }
 
   Future<DriveInfoModel> getDriveInfo(DriveProviderModel model) async {
