@@ -80,9 +80,7 @@ class RCloneUtils {
       return await $(
         TaskEither<AppError, List<DriveProviderModel>>.tryCatch(
           () async {
-            return config.sections().map((section) {
-              final sectionName = section;
-
+            return config.sections().map((sectionName) {
               final remoteName =
                   config.get(sectionName, 'type') ??
                   config.get(sectionName, 'provider')!;

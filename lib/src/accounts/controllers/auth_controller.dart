@@ -1,3 +1,4 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -54,13 +55,20 @@ class Auth extends _$Auth {
   @override
   Future<List<DriveProviderModel>> build() async {
     // TODO: Change all instances of requireValue to switch cases
-    state = AsyncData([]);
+    state = AsyncData(_box.values.toList());
     return init();
   }
 
   static Future<List<DriveProviderModel>> init() async {
     final val = await RCloneUtils().parseModelFromConfig().run();
-    return val.getOrElse((_) => _box.values.toList());
+    return val
+        .map(
+          (providers) => [
+            ...providers,
+            ..._box.values.filter((provider) => !provider.isRCloneBackend),
+          ],
+        )
+        .getOrElse((_) => _box.values.toList());
   }
 
   ManualAuthService getManualAuthService(DriveProvider provider) {
