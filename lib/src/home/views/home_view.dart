@@ -93,6 +93,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     }, [ref.watch(folderProvider)]);
 
     final folderInfo = ref.watch(folderProvider);
+    final authProviders = ref.watch(authProvider).requireValue;
     final folderNotifier = ref.read(folderProvider.notifier);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
     final currentLoadingIndex = useState(0);
@@ -114,7 +115,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Sync new folder',
         onPressed: () async {
-          if (ref.watch(authProvider).isEmpty) {
+          if (authProviders.isEmpty) {
             context.showErrorSnackBar('No accounts registered yet');
             return;
           }

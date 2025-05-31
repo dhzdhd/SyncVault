@@ -165,12 +165,12 @@ final authControllerProvider =
     );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'99ba390fed63330161dcd88171fcf94a851c4647';
+String _$authHash() => r'0aaca8789ca8a8bcd50f395f171eefb398ca574c';
 
 /// See also [Auth].
 @ProviderFor(Auth)
 final authProvider =
-    AutoDisposeNotifierProvider<Auth, List<DriveProviderModel>>.internal(
+    AutoDisposeAsyncNotifierProvider<Auth, List<DriveProviderModel>>.internal(
       Auth.new,
       name: r'authProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -180,6 +180,6 @@ final authProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$Auth = AutoDisposeNotifier<List<DriveProviderModel>>;
+typedef _$Auth = AutoDisposeAsyncNotifier<List<DriveProviderModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

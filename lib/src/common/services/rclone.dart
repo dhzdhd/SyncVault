@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -7,6 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 
 import 'package:ini_v2/ini.dart';
+import 'package:syncvault/src/common/models/drive_provider.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend.dart';
+import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 @singleton
 class RCloneUtils {
@@ -64,6 +68,69 @@ class RCloneUtils {
           },
           (err, stackTrace) =>
               err.handleError('Failed to read ini file', stackTrace),
+        ),
+      );
+    });
+  }
+
+  TaskEither<AppError, List<DriveProviderModel>> parseModelFromConfig() {
+    return TaskEither<AppError, List<DriveProviderModel>>.Do(($) async {
+      final config = await $(getIniConfig());
+
+      return await $(
+        TaskEither<AppError, List<DriveProviderModel>>.tryCatch(
+          () async {
+            return config.sections().map((section) {
+              final sectionName = section;
+
+              final remoteName =
+                  config.get(sectionName, 'type') ??
+                  config.get(sectionName, 'provider')!;
+              final provider = DriveProvider.getProviderByName(
+                remoteName,
+              ).toNullable()!;
+
+              final backend = switch (provider) {
+                DriveProvider.googleDrive ||
+                DriveProvider.dropBox ||
+                DriveProvider.oneDrive ||
+                DriveProvider.protonDrive => (() {
+                  final json = jsonDecode(config.get(sectionName, 'token')!);
+
+                  return DriveProviderBackend.oauth2(
+                    authJson: json,
+                    accessToken: json['access_token'],
+                    refreshToken: json['refresh_token'],
+                    expiresIn: json['expiry'],
+                  );
+                })(),
+                DriveProvider.minio => DriveProviderBackend.s3(
+                  url: config.get(sectionName, 'endpoint')!,
+                  accessKeyId: config.get(sectionName, 'access_key_id')!,
+                  secretAccessKey: config.get(
+                    sectionName,
+                    'secret_access_key',
+                  )!,
+                ),
+                DriveProvider.nextCloud => DriveProviderBackend.webdav(
+                  url: config.get(sectionName, 'url')!,
+                  user: config.get(sectionName, 'user')!,
+                  password: config.get(sectionName, 'password')!,
+                ),
+              };
+
+              return DriveProviderModel(
+                remoteName: sectionName,
+                provider: provider,
+                backend: backend,
+                createdAt: DateTime.now().toIso8601String(),
+                updatedAt: DateTime.now().toIso8601String(),
+                isRCloneBackend: true,
+              );
+            }).toList();
+          },
+          (err, stackTrace) =>
+              err.handleError('Failed to write ini file', stackTrace),
         ),
       );
     });

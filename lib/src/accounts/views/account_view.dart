@@ -15,7 +15,7 @@ class AccountView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authInfo = ref.watch(authProvider);
+    final authInfo = ref.watch(authProvider).requireValue;
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(

@@ -77,7 +77,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         ),
         const SizedBox(height: 16),
         DropdownButton<DriveProviderModel?>(
-          items: authInfo
+          items: authInfo.requireValue
               .map(
                 (e) => DropdownMenuItem(
                   value: e,

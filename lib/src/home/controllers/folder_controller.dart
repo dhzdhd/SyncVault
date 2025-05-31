@@ -159,7 +159,7 @@ class Folder extends _$Folder {
 
   Future<void> upload(FolderModel folderModel, Option<String> filePath) async {
     final providerModels = ref.watch(authProvider);
-    final providerModel = providerModels
+    final providerModel = providerModels.requireValue
         .filter((t) => t.remoteName == folderModel.remoteName)
         .first;
 
@@ -201,7 +201,7 @@ class Folder extends _$Folder {
   Future<void> delete(FolderModel model, bool deleteRemote) async {
     if (deleteRemote) {
       final providerModels = ref.watch(authProvider);
-      final providerModel = providerModels
+      final providerModel = providerModels.requireValue
           .filter((t) => t.remoteName == model.remoteName)
           .first;
 

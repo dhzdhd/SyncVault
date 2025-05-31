@@ -24,6 +24,12 @@ enum DriveProvider {
     ).map((func) => func(backend));
   }
 
+  static Option<DriveProvider> getProviderByName(String name) {
+    return DriveProvider.values
+        .filter((value) => value.providerName == name)
+        .firstOption;
+  }
+
   const DriveProvider(
     this.providerName,
     this.displayName,

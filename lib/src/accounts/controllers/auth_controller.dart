@@ -8,6 +8,7 @@ import 'package:syncvault/src/accounts/services/common.dart';
 import 'package:syncvault/src/accounts/services/providers/google_auth.dart';
 import 'package:syncvault/src/accounts/services/rclone.dart';
 import 'package:syncvault/src/common/models/drive_provider.dart';
+import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
@@ -51,12 +52,15 @@ final _box = GetIt.I<Box<DriveProviderModel>>();
 @riverpod
 class Auth extends _$Auth {
   @override
-  List<DriveProviderModel> build() {
+  Future<List<DriveProviderModel>> build() async {
+    // TODO: Change all instances of requireValue to switch cases
+    state = AsyncData([]);
     return init();
   }
 
-  static List<DriveProviderModel> init() {
-    return _box.values.toList();
+  static Future<List<DriveProviderModel>> init() async {
+    final val = await RCloneUtils().parseModelFromConfig().run();
+    return val.getOrElse((_) => _box.values.toList());
   }
 
   ManualAuthService getManualAuthService(DriveProvider provider) {
@@ -72,7 +76,7 @@ class Auth extends _$Auth {
     String remoteName,
     bool isRCloneBackend,
   ) async {
-    if (state.any((element) => element.remoteName == remoteName)) {
+    if (state.requireValue.any((element) => element.remoteName == remoteName)) {
       throw const GeneralError('The provider already exists');
     }
 
@@ -101,7 +105,7 @@ class Auth extends _$Auth {
         throw l;
       },
       (model) async {
-        state = [...state, model];
+        state = AsyncData([...state.requireValue, model]);
         // TODO: account box is redundant as rclone config exists
         await _box.put(model.remoteName, model);
       },
@@ -110,7 +114,9 @@ class Auth extends _$Auth {
 
   // TODO: Add functionality to delete folders & remove corresponding rclone config
   Future<void> signOut(DriveProviderModel model) async {
-    state = state.where((element) => element != model).toList();
+    state = AsyncData(
+      state.requireValue.where((element) => element != model).toList(),
+    );
     await _box.delete(model.remoteName);
   }
 

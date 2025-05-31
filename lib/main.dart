@@ -98,7 +98,7 @@ void callbackDispatcher() {
     await setupHiveBox<FolderModel>(boxPath);
     final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
 
-    final authProviders = Auth.init();
+    final authProviders = await Auth.init();
     final folders = Folder.init().filter((folder) => folder.isAutoSync);
     final hashes = GetIt.I<Box<FolderHashModel>>().values;
 
