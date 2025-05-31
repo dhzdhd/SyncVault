@@ -22,3 +22,21 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(WorkflowModelAdapter());
   }
 }
+
+extension IsolatedHiveRegistrar on IsolatedHiveInterface {
+  void registerAdapters() {
+    registerAdapter(DriveProviderAdapter());
+    registerAdapter(DriveProviderModelAdapter());
+    registerAdapter(FolderHashModelAdapter());
+    registerAdapter(FolderModelAdapter());
+    registerAdapter(HashDigestAdapter());
+    registerAdapter(IntroSettingsModelAdapter());
+    registerAdapter(OAuth2Adapter());
+    registerAdapter(S3Adapter());
+    registerAdapter(SettingsModelAdapter());
+    registerAdapter(ThemeModeAdapter());
+    registerAdapter(UserPasswordAdapter());
+    registerAdapter(WebdavAdapter());
+    registerAdapter(WorkflowModelAdapter());
+  }
+}

@@ -15,49 +15,47 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$WorkflowModel {
-  String get name;
-  String? get workflowJson;
 
-  /// Create a copy of WorkflowModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $WorkflowModelCopyWith<WorkflowModel> get copyWith =>
-      _$WorkflowModelCopyWithImpl<WorkflowModel>(
-          this as WorkflowModel, _$identity);
+ String get name; String? get workflowJson; WorkflowNodeType get nodeType; WorkflowLinkType get linkType;
+/// Create a copy of WorkflowModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$WorkflowModelCopyWith<WorkflowModel> get copyWith => _$WorkflowModelCopyWithImpl<WorkflowModel>(this as WorkflowModel, _$identity);
 
   /// Serializes this WorkflowModel to a JSON map.
   Map<String, dynamic> toJson();
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is WorkflowModel &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.workflowJson, workflowJson) ||
-                other.workflowJson == workflowJson));
-  }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, workflowJson);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkflowModel&&(identical(other.name, name) || other.name == name)&&(identical(other.workflowJson, workflowJson) || other.workflowJson == workflowJson)&&(identical(other.nodeType, nodeType) || other.nodeType == nodeType)&&(identical(other.linkType, linkType) || other.linkType == linkType));
+}
 
-  @override
-  String toString() {
-    return 'WorkflowModel(name: $name, workflowJson: $workflowJson)';
-  }
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,workflowJson,nodeType,linkType);
+
+@override
+String toString() {
+  return 'WorkflowModel(name: $name, workflowJson: $workflowJson, nodeType: $nodeType, linkType: $linkType)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $WorkflowModelCopyWith<$Res> {
-  factory $WorkflowModelCopyWith(
-          WorkflowModel value, $Res Function(WorkflowModel) _then) =
-      _$WorkflowModelCopyWithImpl;
-  @useResult
-  $Res call({String name, String? workflowJson});
-}
+abstract mixin class $WorkflowModelCopyWith<$Res>  {
+  factory $WorkflowModelCopyWith(WorkflowModel value, $Res Function(WorkflowModel) _then) = _$WorkflowModelCopyWithImpl;
+@useResult
+$Res call({
+ String name, String? workflowJson, WorkflowNodeType nodeType, WorkflowLinkType linkType
+});
 
+
+
+
+}
 /// @nodoc
 class _$WorkflowModelCopyWithImpl<$Res>
     implements $WorkflowModelCopyWith<$Res> {
@@ -66,85 +64,73 @@ class _$WorkflowModelCopyWithImpl<$Res>
   final WorkflowModel _self;
   final $Res Function(WorkflowModel) _then;
 
-  /// Create a copy of WorkflowModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? workflowJson = freezed,
-  }) {
-    return _then(_self.copyWith(
-      name: null == name
-          ? _self.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      workflowJson: freezed == workflowJson
-          ? _self.workflowJson
-          : workflowJson // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
+/// Create a copy of WorkflowModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? workflowJson = freezed,Object? nodeType = null,Object? linkType = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,workflowJson: freezed == workflowJson ? _self.workflowJson : workflowJson // ignore: cast_nullable_to_non_nullable
+as String?,nodeType: null == nodeType ? _self.nodeType : nodeType // ignore: cast_nullable_to_non_nullable
+as WorkflowNodeType,linkType: null == linkType ? _self.linkType : linkType // ignore: cast_nullable_to_non_nullable
+as WorkflowLinkType,
+  ));
 }
+
+}
+
 
 /// @nodoc
 @JsonSerializable()
+
 class _WorkflowModel implements WorkflowModel {
-  const _WorkflowModel({required this.name, required this.workflowJson});
-  factory _WorkflowModel.fromJson(Map<String, dynamic> json) =>
-      _$WorkflowModelFromJson(json);
+  const _WorkflowModel({required this.name, required this.workflowJson, required this.nodeType, required this.linkType});
+  factory _WorkflowModel.fromJson(Map<String, dynamic> json) => _$WorkflowModelFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String? workflowJson;
+@override final  String name;
+@override final  String? workflowJson;
+@override final  WorkflowNodeType nodeType;
+@override final  WorkflowLinkType linkType;
 
-  /// Create a copy of WorkflowModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$WorkflowModelCopyWith<_WorkflowModel> get copyWith =>
-      __$WorkflowModelCopyWithImpl<_WorkflowModel>(this, _$identity);
+/// Create a copy of WorkflowModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$WorkflowModelCopyWith<_WorkflowModel> get copyWith => __$WorkflowModelCopyWithImpl<_WorkflowModel>(this, _$identity);
 
-  @override
-  Map<String, dynamic> toJson() {
-    return _$WorkflowModelToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$WorkflowModelToJson(this, );
+}
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _WorkflowModel &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.workflowJson, workflowJson) ||
-                other.workflowJson == workflowJson));
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkflowModel&&(identical(other.name, name) || other.name == name)&&(identical(other.workflowJson, workflowJson) || other.workflowJson == workflowJson)&&(identical(other.nodeType, nodeType) || other.nodeType == nodeType)&&(identical(other.linkType, linkType) || other.linkType == linkType));
+}
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, workflowJson);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,workflowJson,nodeType,linkType);
 
-  @override
-  String toString() {
-    return 'WorkflowModel(name: $name, workflowJson: $workflowJson)';
-  }
+@override
+String toString() {
+  return 'WorkflowModel(name: $name, workflowJson: $workflowJson, nodeType: $nodeType, linkType: $linkType)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class _$WorkflowModelCopyWith<$Res>
-    implements $WorkflowModelCopyWith<$Res> {
-  factory _$WorkflowModelCopyWith(
-          _WorkflowModel value, $Res Function(_WorkflowModel) _then) =
-      __$WorkflowModelCopyWithImpl;
-  @override
-  @useResult
-  $Res call({String name, String? workflowJson});
-}
+abstract mixin class _$WorkflowModelCopyWith<$Res> implements $WorkflowModelCopyWith<$Res> {
+  factory _$WorkflowModelCopyWith(_WorkflowModel value, $Res Function(_WorkflowModel) _then) = __$WorkflowModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String? workflowJson, WorkflowNodeType nodeType, WorkflowLinkType linkType
+});
 
+
+
+
+}
 /// @nodoc
 class __$WorkflowModelCopyWithImpl<$Res>
     implements _$WorkflowModelCopyWith<$Res> {
@@ -153,25 +139,19 @@ class __$WorkflowModelCopyWithImpl<$Res>
   final _WorkflowModel _self;
   final $Res Function(_WorkflowModel) _then;
 
-  /// Create a copy of WorkflowModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? name = null,
-    Object? workflowJson = freezed,
-  }) {
-    return _then(_WorkflowModel(
-      name: null == name
-          ? _self.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      workflowJson: freezed == workflowJson
-          ? _self.workflowJson
-          : workflowJson // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
+/// Create a copy of WorkflowModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? workflowJson = freezed,Object? nodeType = null,Object? linkType = null,}) {
+  return _then(_WorkflowModel(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,workflowJson: freezed == workflowJson ? _self.workflowJson : workflowJson // ignore: cast_nullable_to_non_nullable
+as String?,nodeType: null == nodeType ? _self.nodeType : nodeType // ignore: cast_nullable_to_non_nullable
+as WorkflowNodeType,linkType: null == linkType ? _self.linkType : linkType // ignore: cast_nullable_to_non_nullable
+as WorkflowLinkType,
+  ));
+}
+
+
 }
 
 // dart format on

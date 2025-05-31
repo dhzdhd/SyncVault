@@ -8,7 +8,7 @@ part of 'hive_adapters.dart';
 
 class ThemeModeAdapter extends TypeAdapter<ThemeMode> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   ThemeMode read(BinaryReader reader) {
@@ -49,7 +49,7 @@ class ThemeModeAdapter extends TypeAdapter<ThemeMode> {
 
 class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
   @override
-  final int typeId = 1;
+  final typeId = 1;
 
   @override
   SettingsModel read(BinaryReader reader) {
@@ -92,7 +92,7 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
 
 class IntroSettingsModelAdapter extends TypeAdapter<IntroSettingsModel> {
   @override
-  final int typeId = 2;
+  final typeId = 2;
 
   @override
   IntroSettingsModel read(BinaryReader reader) {
@@ -124,7 +124,7 @@ class IntroSettingsModelAdapter extends TypeAdapter<IntroSettingsModel> {
 
 class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
   @override
-  final int typeId = 3;
+  final typeId = 3;
 
   @override
   DriveProviderModel read(BinaryReader reader) {
@@ -173,7 +173,7 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
 
 class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
   @override
-  final int typeId = 4;
+  final typeId = 4;
 
   @override
   DriveProvider read(BinaryReader reader) {
@@ -226,7 +226,7 @@ class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
 
 class OAuth2Adapter extends TypeAdapter<OAuth2> {
   @override
-  final int typeId = 5;
+  final typeId = 5;
 
   @override
   OAuth2 read(BinaryReader reader) {
@@ -272,7 +272,7 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
 
 class S3Adapter extends TypeAdapter<S3> {
   @override
-  final int typeId = 6;
+  final typeId = 6;
 
   @override
   S3 read(BinaryReader reader) {
@@ -315,7 +315,7 @@ class S3Adapter extends TypeAdapter<S3> {
 
 class WebdavAdapter extends TypeAdapter<Webdav> {
   @override
-  final int typeId = 7;
+  final typeId = 7;
 
   @override
   Webdav read(BinaryReader reader) {
@@ -358,7 +358,7 @@ class WebdavAdapter extends TypeAdapter<Webdav> {
 
 class FolderModelAdapter extends TypeAdapter<FolderModel> {
   @override
-  final int typeId = 11;
+  final typeId = 11;
 
   @override
   FolderModel read(BinaryReader reader) {
@@ -419,7 +419,7 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
 
 class UserPasswordAdapter extends TypeAdapter<UserPassword> {
   @override
-  final int typeId = 12;
+  final typeId = 12;
 
   @override
   UserPassword read(BinaryReader reader) {
@@ -459,7 +459,7 @@ class UserPasswordAdapter extends TypeAdapter<UserPassword> {
 
 class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
   @override
-  final int typeId = 21;
+  final typeId = 21;
 
   @override
   WorkflowModel read(BinaryReader reader) {
@@ -470,17 +470,23 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
     return WorkflowModel(
       name: fields[0] as String,
       workflowJson: fields[1] as String?,
+      nodeType: fields[2] as WorkflowNodeType,
+      linkType: fields[3] as WorkflowLinkType,
     );
   }
 
   @override
   void write(BinaryWriter writer, WorkflowModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.workflowJson);
+      ..write(obj.workflowJson)
+      ..writeByte(2)
+      ..write(obj.nodeType)
+      ..writeByte(3)
+      ..write(obj.linkType);
   }
 
   @override
@@ -496,7 +502,7 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
 
 class FolderHashModelAdapter extends TypeAdapter<FolderHashModel> {
   @override
-  final int typeId = 22;
+  final typeId = 22;
 
   @override
   FolderHashModel read(BinaryReader reader) {
@@ -533,7 +539,7 @@ class FolderHashModelAdapter extends TypeAdapter<FolderHashModel> {
 
 class HashDigestAdapter extends TypeAdapter<HashDigest> {
   @override
-  final int typeId = 23;
+  final typeId = 23;
 
   @override
   HashDigest read(BinaryReader reader) {

@@ -10,7 +10,7 @@ import 'package:syncvault/src/workflows/components/data_handlers.dart';
 import 'package:syncvault/src/workflows/components/hierarchy.dart';
 import 'package:syncvault/src/workflows/components/nodes.dart';
 import 'package:syncvault/src/workflows/components/search.dart';
-import 'package:syncvault/src/workflows/models/workflow_node_type.dart';
+import 'package:syncvault/src/workflows/models/workflow_type.dart';
 
 class WorkflowEditorView extends StatefulHookConsumerWidget {
   const WorkflowEditorView({

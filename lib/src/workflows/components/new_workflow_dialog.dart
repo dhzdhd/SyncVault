@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/src/workflows/models/workflow_node_type.dart';
+import 'package:syncvault/src/workflows/models/workflow_type.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/workflows/views/workflow_editor_view.dart';
 
@@ -70,6 +70,7 @@ class _NewWorkflowWidgetState extends ConsumerState<NewWorkflowWidget> {
               return;
             }
 
+            Navigator.of(context).pop();
             Navigator.of(context).push<void>(
               MaterialPageRoute<void>(
                 builder: (BuildContext context) => WorkflowEditorView(

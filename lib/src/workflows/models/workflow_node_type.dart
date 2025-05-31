@@ -1,1 +1,0 @@
-enum WorkflowNodeType { remote, local }

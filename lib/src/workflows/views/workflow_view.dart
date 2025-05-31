@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
 import 'package:syncvault/src/workflows/components/new_workflow_dialog.dart';
+import 'package:syncvault/src/workflows/controllers/workflow_controller.dart';
 
 class WorkflowsView extends ConsumerWidget {
   const WorkflowsView({super.key});
@@ -10,6 +11,8 @@ class WorkflowsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final workflows = ref.watch(workflowProvider);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         tooltip: 'Create new workflow',
@@ -23,12 +26,31 @@ class WorkflowsView extends ConsumerWidget {
         },
         child: const Icon(Icons.add),
       ),
-      body: const CustomScrollView(
+      body: CustomScrollView(
         slivers: [
-          SliverAnimatedAppBar(title: 'Workflows'),
+          SliverAnimatedAppBar(
+            title: 'Workflows',
+            canExpand: workflows.isNotEmpty,
+          ),
           SliverPadding(
             padding: EdgeInsets.all(16),
-            sliver: SliverList(delegate: SliverChildListDelegate.fixed([])),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate.fixed(
+                workflows
+                    .map(
+                      (workflow) => ListTile(
+                        title: Text(workflow.name),
+                        subtitle: Text(workflow.name),
+                        onTap: () {
+                          Navigator.of(
+                            context,
+                          ).pushNamed('/workflows/${workflow.name}');
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
           ),
         ],
       ),
