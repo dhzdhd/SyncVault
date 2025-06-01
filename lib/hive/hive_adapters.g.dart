@@ -470,8 +470,8 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
     return WorkflowModel(
       name: fields[0] as String,
       workflowJson: fields[1] as String?,
-      nodeType: fields[2] as WorkflowNodeType,
-      linkType: fields[3] as WorkflowLinkType,
+      nodeType: fields[2] as WorkflowNode,
+      linkType: fields[3] as WorkflowOperation,
     );
   }
 

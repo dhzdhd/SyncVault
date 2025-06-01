@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/src/workflows/models/workflow_type.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/workflows/views/workflow_editor_view.dart';
 
@@ -29,10 +27,6 @@ class _NewWorkflowWidgetState extends ConsumerState<NewWorkflowWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedWorkflowNodeType = useState<WorkflowNodeType>(
-      WorkflowNodeType.local,
-    );
-
     return SimpleDialog(
       title: const Text('Create new workflow'),
       contentPadding: const EdgeInsets.all(24),
@@ -43,23 +37,6 @@ class _NewWorkflowWidgetState extends ConsumerState<NewWorkflowWidget> {
             border: OutlineInputBorder(),
             hintText: 'Name of workflow',
           ),
-        ),
-        const SizedBox(height: 16),
-        DropdownButton<WorkflowNodeType>(
-          items: WorkflowNodeType.values
-              .map(
-                (item) => DropdownMenuItem<WorkflowNodeType>(
-                  value: item,
-                  child: Text(item.name.capitalize()),
-                ),
-              )
-              .toList(),
-          value: selectedWorkflowNodeType.value,
-          isExpanded: true,
-          hint: const Text('Enter provider account'),
-          onChanged: (WorkflowNodeType? item) {
-            selectedWorkflowNodeType.value = item!;
-          },
         ),
         const SizedBox(height: 32),
         ElevatedButton(
@@ -73,10 +50,8 @@ class _NewWorkflowWidgetState extends ConsumerState<NewWorkflowWidget> {
             Navigator.of(context).pop();
             Navigator.of(context).push<void>(
               MaterialPageRoute<void>(
-                builder: (BuildContext context) => WorkflowEditorView(
-                  workflowName: _nameController.text,
-                  workflowNodeType: selectedWorkflowNodeType.value,
-                ),
+                builder: (BuildContext context) =>
+                    WorkflowEditorView(workflowName: _nameController.text),
               ),
             );
           },

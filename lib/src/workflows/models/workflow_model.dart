@@ -9,8 +9,8 @@ abstract class WorkflowModel with _$WorkflowModel {
   const factory WorkflowModel({
     required String name,
     required String? workflowJson,
-    required WorkflowNodeType nodeType,
-    required WorkflowLinkType linkType,
+    required WorkflowNode nodeType,
+    required WorkflowOperation linkType,
   }) = _WorkflowModel;
 
   factory WorkflowModel.fromJson(Map<String, Object?> json) =>

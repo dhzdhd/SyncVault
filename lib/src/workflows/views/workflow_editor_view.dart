@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,17 +7,11 @@ import 'package:syncvault/src/workflows/components/data_handlers.dart';
 import 'package:syncvault/src/workflows/components/hierarchy.dart';
 import 'package:syncvault/src/workflows/components/nodes.dart';
 import 'package:syncvault/src/workflows/components/search.dart';
-import 'package:syncvault/src/workflows/models/workflow_type.dart';
 
 class WorkflowEditorView extends StatefulHookConsumerWidget {
-  const WorkflowEditorView({
-    super.key,
-    required this.workflowName,
-    required this.workflowNodeType,
-  });
+  const WorkflowEditorView({super.key, required this.workflowName});
 
   final String workflowName;
-  final WorkflowNodeType workflowNodeType;
 
   String get routeName => '/workflows/$workflowName';
 
@@ -40,22 +31,7 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
     _nodeEditorController = FlNodeEditorController(
       style: const FlNodeEditorStyle(),
       projectSaver: (jsonData) async {
-        final String? outputPath = await FilePicker.platform.saveFile(
-          dialogTitle: 'Save Project',
-          fileName: '${widget.workflowName}.json',
-          type: FileType.custom,
-          allowedExtensions: ['json'],
-        );
-
-        // outputPath should never be null as this project will never be run on the web
-        if (outputPath != null) {
-          final File file = File(outputPath);
-          await file.writeAsString(jsonEncode(jsonData));
-
-          return true;
-        } else {
-          return false;
-        }
+        return true;
       },
       projectLoader: (isSaved) async {
         if (!isSaved) {
@@ -84,57 +60,12 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
           if (proceed != true) return null;
         }
 
-        final FilePickerResult? result = await FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: ['json'],
-        );
-
-        if (result == null) return null;
-
-        final File file = File(result.files.single.path!);
-        final fileContent = await file.readAsString();
-
-        return jsonDecode(fileContent);
-      },
-      projectCreator: (isSaved) async {
-        if (isSaved) return true;
-
-        final bool? proceed = await showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Unsaved Changes'),
-              content: const Text(
-                'You have unsaved changes. Do you want to proceed without saving?',
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Proceed'),
-                ),
-              ],
-            );
-          },
-        );
-
-        return proceed == true;
+        return jsonDecode('');
       },
     );
 
     registerDataHandlers(_nodeEditorController);
     registerNodes(context, _nodeEditorController);
-
-    const sampleProjectLink =
-        'https://raw.githubusercontent.com/WilliamKarolDiCioccio/fl_nodes/refs/heads/main/example/assets/www/node_project.json';
-
-    () async {
-      final response = await Dio().getUri(Uri.parse(sampleProjectLink));
-      _nodeEditorController.project.load(data: jsonDecode(response.data));
-    }();
   }
 
   @override

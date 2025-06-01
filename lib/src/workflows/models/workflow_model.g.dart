@@ -23,14 +23,14 @@ Map<String, dynamic> _$WorkflowModelToJson(_WorkflowModel instance) =>
     };
 
 const _$WorkflowNodeTypeEnumMap = {
-  WorkflowNodeType.remote: 'remote',
-  WorkflowNodeType.local: 'local',
+  WorkflowNode.remote: 'remote',
+  WorkflowNode.local: 'local',
 };
 
 const _$WorkflowLinkTypeEnumMap = {
-  WorkflowLinkType.upload: 'upload',
-  WorkflowLinkType.download: 'download',
-  WorkflowLinkType.bisync: 'bisync',
-  WorkflowLinkType.delete: 'delete',
-  WorkflowLinkType.move: 'move',
+  WorkflowOperation.upload: 'upload',
+  WorkflowOperation.download: 'download',
+  WorkflowOperation.bisync: 'bisync',
+  WorkflowOperation.delete: 'delete',
+  WorkflowOperation.move: 'move',
 };

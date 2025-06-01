@@ -1,3 +1,3 @@
-enum WorkflowNodeType { remote, local }
+enum WorkflowNode { remote, local }
 
-enum WorkflowLinkType { upload, download, bisync, delete, move }
+enum WorkflowOperation { upload, download, bisync, delete, move }
