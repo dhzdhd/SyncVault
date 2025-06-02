@@ -18,6 +18,12 @@ import 'package:ini_v2/ini.dart';
 
 final _dio = GetIt.I<Dio>();
 
+// FIXME:
+const errorMsgMap = {
+  'No code returned': 'Drive auth servers are not responding',
+  r'address already in use': 'Restart the application to proceed',
+};
+
 @singleton
 class RCloneAuthService implements AuthService {
   @override
@@ -68,21 +74,32 @@ class RCloneAuthService implements AuthService {
               });
               process.stderr.transform(utf8.decoder).listen((data) {
                 errorOutput.write(data);
-
-                // Match url with regex (url is in stderr for whatever reason)
-                final match = urlPattern.firstMatch(data);
-                if (match != null) {
-                  final url = match.group(0);
-                  if (url != null) {
-                    launchUrlString(url);
-                  }
-                }
               });
-              print(output);
-              print(errorOutput);
 
               // Wait for process to finish
               await process.exitCode;
+
+              for (final errorMsg in errorMsgMap.values) {
+                if (errorOutput.toString().allMatches(errorMsg).isNotEmpty) {
+                  throw GeneralError(errorMsgMap[errorMsg]!);
+                }
+              }
+
+              // Match url with regex (url is in stderr for whatever reason)
+              final urlMatch = urlPattern.firstMatch(errorOutput.toString());
+              if (urlMatch != null) {
+                final url = urlMatch.group(0);
+                if (url != null) {
+                  launchUrlString(url);
+                }
+              } else {
+                throw const GeneralError(
+                  'Could not fetch auth URL from RClone',
+                );
+              }
+
+              debugLogger.i(output.toString());
+              debugLogger.i(errorOutput.toString());
 
               final match =
                   RegExp(r'\{.+\}').stringMatch(output.toString()) ?? '';

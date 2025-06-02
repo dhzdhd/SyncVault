@@ -79,7 +79,7 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Workflows',
+          'Workflow Editor',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
