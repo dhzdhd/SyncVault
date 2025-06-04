@@ -81,9 +81,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               .map(
                 (e) => DropdownMenuItem(
                   value: e,
-                  child: Text(
-                    '${e.provider.name.capitalize()} - ${e.remoteName}',
-                  ),
+                  child: Text('${e.provider.displayName} - ${e.remoteName}'),
                 ),
               )
               .toList(),

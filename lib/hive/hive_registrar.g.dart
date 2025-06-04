@@ -7,13 +7,19 @@ import 'package:syncvault/hive/hive_adapters.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
-    registerAdapter(DriveProviderAdapter());
     registerAdapter(DriveProviderModelAdapter());
+    registerAdapter(DropBoxProviderAdapter());
     registerAdapter(FolderHashModelAdapter());
     registerAdapter(FolderModelAdapter());
+    registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
+    registerAdapter(LocalProviderAdapter());
+    registerAdapter(MinioProviderAdapter());
+    registerAdapter(NextCloudProviderAdapter());
     registerAdapter(OAuth2Adapter());
+    registerAdapter(OneDriveProviderAdapter());
+    registerAdapter(ProtonDriveProviderAdapter());
     registerAdapter(S3Adapter());
     registerAdapter(SettingsModelAdapter());
     registerAdapter(ThemeModeAdapter());
@@ -25,13 +31,19 @@ extension HiveRegistrar on HiveInterface {
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
-    registerAdapter(DriveProviderAdapter());
     registerAdapter(DriveProviderModelAdapter());
+    registerAdapter(DropBoxProviderAdapter());
     registerAdapter(FolderHashModelAdapter());
     registerAdapter(FolderModelAdapter());
+    registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
+    registerAdapter(LocalProviderAdapter());
+    registerAdapter(MinioProviderAdapter());
+    registerAdapter(NextCloudProviderAdapter());
     registerAdapter(OAuth2Adapter());
+    registerAdapter(OneDriveProviderAdapter());
+    registerAdapter(ProtonDriveProviderAdapter());
     registerAdapter(S3Adapter());
     registerAdapter(SettingsModelAdapter());
     registerAdapter(ThemeModeAdapter());

@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncvault/errors.dart';
 
 import 'package:ini_v2/ini.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
@@ -74,6 +74,12 @@ class RCloneUtils {
     });
   }
 
+  /// Parses the RClone INI configuration and returns a list of [DriveProviderModel]
+  /// wrapped in a [TaskEither]
+  ///
+  /// Local provider is supported by RClone but it treats the remote name as
+  /// the folder to target relative to the RClone working directory.
+  /// Hence, do not use the local backend.
   TaskEither<AppError, List<DriveProviderModel>> parseModelFromConfig() {
     return TaskEither<AppError, List<DriveProviderModel>>.Do(($) async {
       final config = await $(getIniConfig());
@@ -90,10 +96,10 @@ class RCloneUtils {
               ).toNullable()!;
 
               final backend = switch (provider) {
-                DriveProvider.googleDrive ||
-                DriveProvider.dropBox ||
-                DriveProvider.oneDrive ||
-                DriveProvider.protonDrive => (() {
+                OneDriveProvider() ||
+                DropBoxProvider() ||
+                GoogleDriveProvider() ||
+                ProtonDriveProvider() => (() {
                   final json = jsonDecode(config.get(sectionName, 'token')!);
 
                   return DriveProviderBackend.oauth2(
@@ -103,7 +109,7 @@ class RCloneUtils {
                     expiresIn: json['expiry'],
                   );
                 })(),
-                DriveProvider.minio => DriveProviderBackend.s3(
+                MinioProvider() => DriveProviderBackend.s3(
                   url: config.get(sectionName, 'endpoint')!,
                   accessKeyId: config.get(sectionName, 'access_key_id')!,
                   secretAccessKey: config.get(
@@ -111,10 +117,13 @@ class RCloneUtils {
                     'secret_access_key',
                   )!,
                 ),
-                DriveProvider.nextCloud => DriveProviderBackend.webdav(
+                NextCloudProvider() => DriveProviderBackend.webdav(
                   url: config.get(sectionName, 'url')!,
                   user: config.get(sectionName, 'user')!,
                   password: config.get(sectionName, 'password')!,
+                ),
+                LocalProvider() => throw GeneralError(
+                  'Local backend not supported',
                 ),
               };
 
@@ -129,7 +138,7 @@ class RCloneUtils {
             }).toList();
           },
           (err, stackTrace) =>
-              err.handleError('Failed to write ini file', stackTrace),
+              err.handleError('Failed to parse ini file', stackTrace),
         ),
       );
     });

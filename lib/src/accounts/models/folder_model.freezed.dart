@@ -59,7 +59,7 @@ $Res call({
 });
 
 
-
+$DriveProviderCopyWith<$Res> get provider;
 
 }
 /// @nodoc
@@ -87,7 +87,16 @@ as String?,isRCloneBackend: null == isRCloneBackend ? _self.isRCloneBackend : is
 as bool,
   ));
 }
-
+/// Create a copy of FolderModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DriveProviderCopyWith<$Res> get provider {
+  
+  return $DriveProviderCopyWith<$Res>(_self.provider, (value) {
+    return _then(_self.copyWith(provider: value));
+  });
+}
 }
 
 
@@ -152,7 +161,7 @@ $Res call({
 });
 
 
-
+@override $DriveProviderCopyWith<$Res> get provider;
 
 }
 /// @nodoc
@@ -181,7 +190,16 @@ as bool,
   ));
 }
 
-
+/// Create a copy of FolderModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DriveProviderCopyWith<$Res> get provider {
+  
+  return $DriveProviderCopyWith<$Res>(_self.provider, (value) {
+    return _then(_self.copyWith(provider: value));
+  });
+}
 }
 
 // dart format on

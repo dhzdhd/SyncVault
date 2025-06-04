@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 
 part 'drive_provider_model.freezed.dart';

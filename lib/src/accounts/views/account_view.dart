@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/components/delete_account_dialog.dart';
 import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
@@ -51,7 +50,7 @@ class AccountView extends ConsumerWidget {
                               Row(
                                 children: [
                                   Tooltip(
-                                    message: e.provider.name.capitalize(),
+                                    message: e.provider.displayName,
                                     child: SvgPicture.asset(
                                       e.provider.providerIcon,
                                       width:

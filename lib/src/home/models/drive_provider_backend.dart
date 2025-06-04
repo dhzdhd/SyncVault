@@ -25,6 +25,8 @@ sealed class DriveProviderBackend with _$DriveProviderBackend {
     required String username,
     required String password,
   }) = UserPassword;
+  const factory DriveProviderBackend.local({required String folderPath}) =
+      Local;
 
   factory DriveProviderBackend.fromJson(Map<String, Object?> json) =>
       _$DriveProviderBackendFromJson(json);

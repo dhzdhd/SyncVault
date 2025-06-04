@@ -171,59 +171,6 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
           typeId == other.typeId;
 }
 
-class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
-  @override
-  final typeId = 4;
-
-  @override
-  DriveProvider read(BinaryReader reader) {
-    switch (reader.readByte()) {
-      case 0:
-        return DriveProvider.oneDrive;
-      case 1:
-        return DriveProvider.googleDrive;
-      case 2:
-        return DriveProvider.dropBox;
-      case 3:
-        return DriveProvider.minio;
-      case 4:
-        return DriveProvider.nextCloud;
-      case 5:
-        return DriveProvider.protonDrive;
-      default:
-        return DriveProvider.oneDrive;
-    }
-  }
-
-  @override
-  void write(BinaryWriter writer, DriveProvider obj) {
-    switch (obj) {
-      case DriveProvider.oneDrive:
-        writer.writeByte(0);
-      case DriveProvider.googleDrive:
-        writer.writeByte(1);
-      case DriveProvider.dropBox:
-        writer.writeByte(2);
-      case DriveProvider.minio:
-        writer.writeByte(3);
-      case DriveProvider.nextCloud:
-        writer.writeByte(4);
-      case DriveProvider.protonDrive:
-        writer.writeByte(5);
-    }
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriveProviderAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
 class OAuth2Adapter extends TypeAdapter<OAuth2> {
   @override
   final typeId = 5;
@@ -565,6 +512,230 @@ class HashDigestAdapter extends TypeAdapter<HashDigest> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HashDigestAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class OneDriveProviderAdapter extends TypeAdapter<OneDriveProvider> {
+  @override
+  final typeId = 24;
+
+  @override
+  OneDriveProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return OneDriveProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, OneDriveProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OneDriveProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class GoogleDriveProviderAdapter extends TypeAdapter<GoogleDriveProvider> {
+  @override
+  final typeId = 25;
+
+  @override
+  GoogleDriveProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return GoogleDriveProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, GoogleDriveProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GoogleDriveProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class DropBoxProviderAdapter extends TypeAdapter<DropBoxProvider> {
+  @override
+  final typeId = 26;
+
+  @override
+  DropBoxProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return DropBoxProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, DropBoxProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DropBoxProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ProtonDriveProviderAdapter extends TypeAdapter<ProtonDriveProvider> {
+  @override
+  final typeId = 27;
+
+  @override
+  ProtonDriveProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ProtonDriveProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, ProtonDriveProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProtonDriveProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class MinioProviderAdapter extends TypeAdapter<MinioProvider> {
+  @override
+  final typeId = 28;
+
+  @override
+  MinioProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return MinioProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, MinioProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MinioProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class NextCloudProviderAdapter extends TypeAdapter<NextCloudProvider> {
+  @override
+  final typeId = 29;
+
+  @override
+  NextCloudProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return NextCloudProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, NextCloudProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NextCloudProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class LocalProviderAdapter extends TypeAdapter<LocalProvider> {
+  @override
+  final typeId = 30;
+
+  @override
+  LocalProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return LocalProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, LocalProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocalProviderAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

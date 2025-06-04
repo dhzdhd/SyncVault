@@ -3,7 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/services/rclone_template.dart';
 
-enum DriveProvider {
+enum DDriveProvider {
   oneDrive('onedrive', 'OneDrive', 'assets/logos/onedrive.svg', OAuth2),
   googleDrive('drive', 'Google Drive', 'assets/logos/gdrive.svg', OAuth2),
   dropBox('dropbox', 'Dropbox', 'assets/logos/dropbox.svg', OAuth2),
@@ -14,7 +14,8 @@ enum DriveProvider {
     UserPassword,
   ),
   minio('s3', 'Minio', 'assets/logos/minio.svg', S3),
-  nextCloud('webdav', 'NextCloud', 'assets/logos/nextcloud.svg', Webdav);
+  nextCloud('webdav', 'NextCloud', 'assets/logos/nextcloud.svg', Webdav),
+  local('local', 'Local', '', Local);
 
   Option<Map<String, String>> template({
     required DriveProviderBackend backend,
@@ -24,13 +25,13 @@ enum DriveProvider {
     ).map((func) => func(backend));
   }
 
-  static Option<DriveProvider> getProviderByName(String name) {
-    return DriveProvider.values
+  static Option<DDriveProvider> getProviderByName(String name) {
+    return DDriveProvider.values
         .filter((value) => value.providerName == name)
         .firstOption;
   }
 
-  const DriveProvider(
+  const DDriveProvider(
     this.providerName,
     this.displayName,
     this.providerIcon,

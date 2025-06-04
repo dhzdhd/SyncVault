@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hashlib/hashlib.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/workflows/models/workflow_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -20,7 +20,13 @@ part 'hive_adapters.g.dart';
   AdapterSpec<ThemeMode>(),
   AdapterSpec<IntroSettingsModel>(),
   AdapterSpec<DriveProviderModel>(),
-  AdapterSpec<DriveProvider>(),
+  AdapterSpec<OneDriveProvider>(),
+  AdapterSpec<GoogleDriveProvider>(),
+  AdapterSpec<DropBoxProvider>(),
+  AdapterSpec<ProtonDriveProvider>(),
+  AdapterSpec<MinioProvider>(),
+  AdapterSpec<NextCloudProvider>(),
+  AdapterSpec<LocalProvider>(),
   AdapterSpec<OAuth2>(),
   AdapterSpec<S3>(),
   AdapterSpec<Webdav>(),

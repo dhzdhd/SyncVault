@@ -8,7 +8,7 @@ part of 'folder_model.dart';
 
 _FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => _FolderModel(
   remoteName: json['remoteName'] as String,
-  provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
+  provider: DriveProvider.fromJson(json['provider'] as Map<String, dynamic>),
   folderPath: json['folderPath'] as String,
   folderName: json['folderName'] as String,
   remoteParentPath: json['remoteParentPath'] as String?,
@@ -22,7 +22,7 @@ _FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => _FolderModel(
 Map<String, dynamic> _$FolderModelToJson(_FolderModel instance) =>
     <String, dynamic>{
       'remoteName': instance.remoteName,
-      'provider': _$DriveProviderEnumMap[instance.provider]!,
+      'provider': instance.provider,
       'folderPath': instance.folderPath,
       'folderName': instance.folderName,
       'remoteParentPath': instance.remoteParentPath,
@@ -32,12 +32,3 @@ Map<String, dynamic> _$FolderModelToJson(_FolderModel instance) =>
       'folderId': instance.folderId,
       'isRCloneBackend': instance.isRCloneBackend,
     };
-
-const _$DriveProviderEnumMap = {
-  DriveProvider.oneDrive: 'oneDrive',
-  DriveProvider.googleDrive: 'googleDrive',
-  DriveProvider.dropBox: 'dropBox',
-  DriveProvider.protonDrive: 'protonDrive',
-  DriveProvider.minio: 'minio',
-  DriveProvider.nextCloud: 'nextCloud',
-};

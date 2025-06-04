@@ -53,7 +53,7 @@ $Res call({
 });
 
 
-$DriveProviderBackendCopyWith<$Res> get backend;
+$DriveProviderCopyWith<$Res> get provider;$DriveProviderBackendCopyWith<$Res> get backend;
 
 }
 /// @nodoc
@@ -78,6 +78,15 @@ as bool,
   ));
 }
 /// Create a copy of DriveProviderModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DriveProviderCopyWith<$Res> get provider {
+  
+  return $DriveProviderCopyWith<$Res>(_self.provider, (value) {
+    return _then(_self.copyWith(provider: value));
+  });
+}/// Create a copy of DriveProviderModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -141,7 +150,7 @@ $Res call({
 });
 
 
-@override $DriveProviderBackendCopyWith<$Res> get backend;
+@override $DriveProviderCopyWith<$Res> get provider;@override $DriveProviderBackendCopyWith<$Res> get backend;
 
 }
 /// @nodoc
@@ -167,6 +176,15 @@ as bool,
 }
 
 /// Create a copy of DriveProviderModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DriveProviderCopyWith<$Res> get provider {
+  
+  return $DriveProviderCopyWith<$Res>(_self.provider, (value) {
+    return _then(_self.copyWith(provider: value));
+  });
+}/// Create a copy of DriveProviderModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

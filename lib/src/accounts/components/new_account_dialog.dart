@@ -8,7 +8,7 @@ import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 
 class NewAccountDialogWidget extends StatefulHookConsumerWidget {
@@ -50,7 +50,7 @@ class _NewAccountDialogWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final selected = useState(DriveProvider.oneDrive);
+    final selected = useState<DriveProvider>(OneDriveProvider());
     final isRCloneBackend = useState(!Platform.isIOS);
     final authController = ref.watch(authControllerProvider);
 
@@ -89,7 +89,7 @@ class _NewAccountDialogWidgetState
                 value: isRCloneBackend.value,
                 onChanged: (val) {
                   isRCloneBackend.value = val;
-                  selected.value = DriveProvider.oneDrive;
+                  selected.value = OneDriveProvider();
                 },
               ),
             ],
@@ -97,7 +97,8 @@ class _NewAccountDialogWidgetState
         const SizedBox(height: 16),
         DropdownButton<DriveProvider>(
           items: isRCloneBackend.value
-              ? DriveProvider.values
+              ? DriveProvider.allProviders
+                    .filter((provider) => provider.defaultBackend is! Local)
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
@@ -105,8 +106,12 @@ class _NewAccountDialogWidgetState
                       ),
                     )
                     .toList()
-              : DriveProvider.values
-                    .filter((e) => e.backendType == OAuth2)
+              : DriveProvider.allProviders
+                    .filter(
+                      (e) =>
+                          e.defaultBackend is OAuth2 ||
+                          e.defaultBackend is Local,
+                    )
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
@@ -121,9 +126,9 @@ class _NewAccountDialogWidgetState
           },
         ),
         if (isRCloneBackend.value)
-          ...switch (selected.value.backendType) {
-            const (OAuth2) => [],
-            const (S3) => [
+          ...switch (selected.value.defaultBackend) {
+            OAuth2() => [],
+            S3() => [
               const SizedBox(height: 16),
               TextField(
                 controller: _urlController,
@@ -150,7 +155,7 @@ class _NewAccountDialogWidgetState
                 ),
               ),
             ],
-            const (UserPassword) => [
+            UserPassword() => [
               const SizedBox(height: 16),
               TextField(
                 controller: _userController,
@@ -169,7 +174,7 @@ class _NewAccountDialogWidgetState
                 ),
               ),
             ],
-            const (Webdav) => [
+            Webdav() => [
               const SizedBox(height: 16),
               TextField(
                 controller: _urlController,
@@ -196,63 +201,68 @@ class _NewAccountDialogWidgetState
                 ),
               ),
             ],
-            _ => [],
+            Local() => [
+              const SizedBox(height: 16),
+              TextField(
+                controller: _urlController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Local path',
+                ),
+              ),
+            ],
           },
         const SizedBox(height: 32),
         ElevatedButton(
           onPressed: () async {
             if (!authController.isLoading) {
-              final valid = switch (selected.value.backendType) {
-                const (OAuth2) => validateControllers([_remoteNameController]),
-                const (S3) => validateControllers([
+              final valid = switch (selected.value.defaultBackend) {
+                OAuth2() => validateControllers([_remoteNameController]),
+                S3() => validateControllers([
                   _remoteNameController,
                   _urlController,
                   _userController,
                   _passwordController,
                 ]),
-                const (UserPassword) => validateControllers([
+                UserPassword() => validateControllers([
                   _remoteNameController,
                   _userController,
                   _passwordController,
                 ]),
-                const (Webdav) => validateControllers([
+                Webdav() => validateControllers([
                   _remoteNameController,
                   _urlController,
                   _userController,
                   _passwordController,
                 ]),
-                _ => false,
+                Local() => validateControllers([
+                  _remoteNameController,
+                  _urlController,
+                ]),
               };
 
               if (valid) {
                 await ref
                     .read(authControllerProvider.notifier)
                     .signIn(
-                      switch (selected.value.backendType) {
+                      switch (selected.value.defaultBackend) {
                         // Create defaults for OAuth2 as OAuth2 requires additional user auth
-                        const (OAuth2) => const OAuth2(
-                          authJson: {},
-                          accessToken: '',
-                          refreshToken: '',
-                          expiresIn: '',
-                        ),
-                        const (UserPassword) => UserPassword(
+                        OAuth2 backend => backend,
+                        UserPassword() => UserPassword(
                           username: _userController.text,
                           password: _passwordController.text,
                         ),
-                        const (S3) => S3(
+                        S3() => S3(
                           url: _urlController.text,
                           accessKeyId: _userController.text,
                           secretAccessKey: _passwordController.text,
                         ),
-                        const (Webdav) => Webdav(
+                        Webdav() => Webdav(
                           url: _urlController.text,
                           user: _userController.text,
                           password: _passwordController.text,
                         ),
-                        _ => throw const GeneralError(
-                          'Backend not supported',
-                        ), // TODO:
+                        Local() => Local(folderPath: _urlController.text),
                       },
                       selected.value,
                       _remoteNameController.text,

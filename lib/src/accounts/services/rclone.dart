@@ -9,8 +9,8 @@ import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/common.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -206,14 +206,28 @@ class RCloneAuthService implements AuthService {
                 err.handleError('Webdav auth failed', stackTrace),
           ),
         ),
+        Local() => await $(
+          TaskEither.right(
+            DriveProviderModel(
+              remoteName: remoteName,
+              provider: driveProvider,
+              backend: backend,
+              createdAt: DateTime.now().toIso8601String(),
+              updatedAt: DateTime.now().toIso8601String(),
+              isRCloneBackend: false,
+            ),
+          ),
+        ),
       };
 
       // Write rclone output to rclone config file
       await $(
         TaskEither.tryCatch(
           () async {
+            // TODO: Use Either instead of Option
             final toWrite = driveProvider
-                .template(backend: model.backend)
+                .rCloneTemplate(model.backend)
+                .toOption()
                 .getOrElse(
                   () => throw const GeneralError(
                     'Unable to fetch template for given provider.',

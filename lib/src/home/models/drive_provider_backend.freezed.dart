@@ -32,6 +32,10 @@ DriveProviderBackend _$DriveProviderBackendFromJson(
           return UserPassword.fromJson(
             json
           );
+                case 'local':
+          return Local.fromJson(
+            json
+          );
         
           default:
             throw CheckedFromJsonException(
@@ -383,6 +387,79 @@ class _$UserPasswordCopyWithImpl<$Res>
   return _then(UserPassword(
 username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class Local implements DriveProviderBackend {
+  const Local({required this.folderPath, final  String? $type}): $type = $type ?? 'local';
+  factory Local.fromJson(Map<String, dynamic> json) => _$LocalFromJson(json);
+
+ final  String folderPath;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
+/// Create a copy of DriveProviderBackend
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LocalCopyWith<Local> get copyWith => _$LocalCopyWithImpl<Local>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$LocalToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Local&&(identical(other.folderPath, folderPath) || other.folderPath == folderPath));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,folderPath);
+
+@override
+String toString() {
+  return 'DriveProviderBackend.local(folderPath: $folderPath)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LocalCopyWith<$Res> implements $DriveProviderBackendCopyWith<$Res> {
+  factory $LocalCopyWith(Local value, $Res Function(Local) _then) = _$LocalCopyWithImpl;
+@useResult
+$Res call({
+ String folderPath
+});
+
+
+
+
+}
+/// @nodoc
+class _$LocalCopyWithImpl<$Res>
+    implements $LocalCopyWith<$Res> {
+  _$LocalCopyWithImpl(this._self, this._then);
+
+  final Local _self;
+  final $Res Function(Local) _then;
+
+/// Create a copy of DriveProviderBackend
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? folderPath = null,}) {
+  return _then(Local(
+folderPath: null == folderPath ? _self.folderPath : folderPath // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

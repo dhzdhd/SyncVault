@@ -4,8 +4,8 @@ import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/common.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/common/services/providers/google_utils.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:dio/dio.dart';
@@ -32,7 +32,7 @@ class GoogleAuthService implements ManualAuthService {
     required DriveProvider driveProvider,
     required String remoteName,
   }) {
-    if (driveProvider.backendType != OAuth2) {
+    if (backend is! OAuth2) {
       return TaskEither.left(const AppError.general('Only OAuth2 supported'));
     }
 
@@ -72,7 +72,7 @@ class GoogleAuthService implements ManualAuthService {
 
       return DriveProviderModel(
         remoteName: remoteName,
-        provider: DriveProvider.googleDrive,
+        provider: GoogleDriveProvider(),
         backend: OAuth2(
           authJson: {},
           accessToken: accessToken,

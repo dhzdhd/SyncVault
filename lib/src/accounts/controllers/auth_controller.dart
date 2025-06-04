@@ -9,8 +9,8 @@ import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/common.dart';
 import 'package:syncvault/src/accounts/services/providers/google_auth.dart';
 import 'package:syncvault/src/accounts/services/rclone.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
