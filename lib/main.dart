@@ -119,7 +119,9 @@ void callbackDispatcher() {
       final storedHashResult = hashes
           .filter((model) => model.remoteName == folderModel.remoteName)
           .firstOption
-          .toEither(() => const GeneralError('Stored hash does not exist'));
+          .toEither(
+            () => const GeneralError('Stored hash does not exist', null, null),
+          );
 
       final Either<AppError, bool> hashCompareResult = Either.Do(($) {
         final calcHash = $(calcHashResult);
@@ -134,7 +136,11 @@ void callbackDispatcher() {
       // If equal, sync files
       hashCompareResult.match(
         (err) {
-          debugLogger.e(err);
+          GeneralError(
+            'Error in comparing hashes',
+            err,
+            err.stackTrace,
+          ).logError();
         },
         (isSameFolder) async {
           if (!isSameFolder) {
@@ -156,10 +162,11 @@ void callbackDispatcher() {
             uploadRes.match(
               // FIXME: Fails by - no impl found for getNativeLibraryPath
               // Workaround - pass the path to bg after calling it in main isolate
-              (err) => err.handleError(
+              (err) => GeneralError(
                 'Failed to do background sync',
-                StackTrace.empty,
-              ),
+                err,
+                err.stackTrace,
+              ).logError(),
               (_) async {
                 debugLogger.i('Background sync completed');
 
@@ -170,7 +177,8 @@ void callbackDispatcher() {
                     .calcHash(files.whereType<File>().toList())
                     .run();
                 hashResult.match(
-                  (err) => err.handleError(err.message, StackTrace.empty),
+                  (err) =>
+                      GeneralError(err.message, err, err.stackTrace).logError(),
                   (hash) {
                     final hashModels = hashStorage.fetchAll().toList();
                     final model = FolderHashModel(

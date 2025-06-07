@@ -47,8 +47,10 @@ class IntroService {
         _box.put(introSettingsKey, model);
         return ();
       },
-      (err, stackTrace) => err.handleError(
-        'Failed to store intro settings model locally',
+      (err, stackTrace) => StorageError(
+        StorageErrorType.update,
+        StorageProviderType.hive,
+        err,
         stackTrace,
       ),
     );
@@ -126,7 +128,18 @@ class IntroService {
 
       yield* progressStreamController.stream.map((val) => Right(val));
     } catch (err, stackTrace) {
-      yield Left(err.handleError('Failed to download RClone', stackTrace));
+      final error = switch (err) {
+        DioException(:final response) => HttpError(
+          url,
+          response?.statusCode ?? 500,
+          response?.data,
+          err,
+          stackTrace,
+        ),
+        _ => HttpError(url, 500, {}, err, stackTrace),
+      };
+
+      yield Left(error);
     } finally {
       progressStreamController.close();
     }

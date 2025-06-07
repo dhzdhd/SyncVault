@@ -79,6 +79,9 @@ class RCloneAuthService implements AuthService {
               // Wait for process to finish
               await process.exitCode;
 
+              debugLogger.i(output.toString());
+              debugLogger.i(errorOutput.toString());
+
               for (final errorMsg in errorMsgMap.values) {
                 if (errorOutput.toString().allMatches(errorMsg).isNotEmpty) {
                   throw GeneralError(errorMsgMap[errorMsg]!);
@@ -97,9 +100,6 @@ class RCloneAuthService implements AuthService {
                   'Could not fetch auth URL from RClone',
                 );
               }
-
-              debugLogger.i(output.toString());
-              debugLogger.i(errorOutput.toString());
 
               final match =
                   RegExp(r'\{.+\}').stringMatch(output.toString()) ?? '';
@@ -235,7 +235,7 @@ class RCloneAuthService implements AuthService {
                 );
 
             // OneDrive requires drive ID which is not provided by rclone
-            if (model.provider == DriveProvider.oneDrive) {
+            if (model.provider is OneDriveProvider) {
               final backend = model.backend as OAuth2;
               final response = await _dio.get(
                 'https://graph.microsoft.com/v1.0/me/drive',
@@ -247,8 +247,9 @@ class RCloneAuthService implements AuthService {
                 ),
               );
               if (response.statusCode != 200) {
-                throw const HttpError(
+                throw HttpError(
                   'Microsoft Graph API cannot be accessed right now.',
+                  response.statusCode!,
                 );
               }
 
