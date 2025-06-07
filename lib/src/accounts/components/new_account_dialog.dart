@@ -57,12 +57,11 @@ class _NewAccountDialogWidgetState
     ref.listen<AsyncValue>(authControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
-          state.error!
-              .handleError(
-                'Auth controller failed',
-                state.stackTrace ?? StackTrace.empty,
-              )
-              .message,
+          GeneralError(
+            'Auth controller failed',
+            state.error!,
+            state.stackTrace,
+          ).logError().message,
         );
       }
     });
@@ -273,7 +272,11 @@ class _NewAccountDialogWidgetState
                   Navigator.of(context).pop();
                 }
               } else {
-                throw const GeneralError('Fields are empty'); // TODO:
+                throw const ValidationError(
+                  'Fields are empty',
+                  null,
+                  null,
+                ); // TODO:
               }
             }
           },

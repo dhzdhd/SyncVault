@@ -39,16 +39,13 @@ class RCloneAuthService implements AuthService {
       final configFile = await $(utils.getConfig());
       final rCloneConfig = await $(utils.getIniConfig());
 
+      // TODO: Remove unnecessary try catch
       await $(
-        TaskEither.tryCatch(
-          () async {
-            if (rCloneConfig.hasSection(remoteName)) {
-              throw const AppError.general('Remote already exists');
-            }
-          },
-          (err, stackTrace) =>
-              err.handleError('Remote already exists', stackTrace),
-        ),
+        TaskEither.tryCatch(() async {
+          if (rCloneConfig.hasSection(remoteName)) {
+            throw const GeneralError('Remote already exists', null, null);
+          }
+        }, (err, stackTrace) => err as AppError),
       );
 
       // Authorize with rclone for given provider
@@ -84,7 +81,7 @@ class RCloneAuthService implements AuthService {
 
               for (final errorMsg in errorMsgMap.values) {
                 if (errorOutput.toString().allMatches(errorMsg).isNotEmpty) {
-                  throw GeneralError(errorMsgMap[errorMsg]!);
+                  throw GeneralError(errorMsgMap[errorMsg]!, null, null);
                 }
               }
 
@@ -98,6 +95,8 @@ class RCloneAuthService implements AuthService {
               } else {
                 throw const GeneralError(
                   'Could not fetch auth URL from RClone',
+                  null,
+                  null,
                 );
               }
 
@@ -125,11 +124,19 @@ class RCloneAuthService implements AuthService {
 
                 return model;
               } else {
-                throw const GeneralError('Authorization response invalid');
+                throw const GeneralError(
+                  'Authorization response invalid',
+                  null,
+                  null,
+                );
               }
             },
-            (err, stackTrace) =>
-                err.handleError('OAuth2 auth failed', stackTrace),
+            (err, stackTrace) => ProviderError(
+              driveProvider,
+              ProviderOperationType.authorize,
+              err,
+              stackTrace,
+            ).logError(),
           ),
         ),
         S3(:final url, :final accessKeyId, :final secretAccessKey) => await $(
@@ -150,7 +157,12 @@ class RCloneAuthService implements AuthService {
 
               return model;
             },
-            (err, stackTrace) => err.handleError('S3 auth failed', stackTrace),
+            (err, stackTrace) => ProviderError(
+              driveProvider,
+              ProviderOperationType.authorize,
+              err,
+              stackTrace,
+            ).logError(),
           ),
         ),
         UserPassword(:final password, :final username) => await $(
@@ -177,8 +189,12 @@ class RCloneAuthService implements AuthService {
 
               return model;
             },
-            (err, stackTrace) =>
-                err.handleError('UserPassword auth failed', stackTrace),
+            (err, stackTrace) => ProviderError(
+              driveProvider,
+              ProviderOperationType.authorize,
+              err,
+              stackTrace,
+            ).logError(),
           ),
         ),
         Webdav(:final password, :final url, :final user) => await $(
@@ -202,8 +218,12 @@ class RCloneAuthService implements AuthService {
 
               return model;
             },
-            (err, stackTrace) =>
-                err.handleError('Webdav auth failed', stackTrace),
+            (err, stackTrace) => ProviderError(
+              driveProvider,
+              ProviderOperationType.authorize,
+              err,
+              stackTrace,
+            ).logError(),
           ),
         ),
         Local() => await $(
@@ -231,6 +251,8 @@ class RCloneAuthService implements AuthService {
                 .getOrElse(
                   () => throw const GeneralError(
                     'Unable to fetch template for given provider.',
+                    null,
+                    null,
                   ),
                 );
 
@@ -250,6 +272,9 @@ class RCloneAuthService implements AuthService {
                 throw HttpError(
                   'Microsoft Graph API cannot be accessed right now.',
                   response.statusCode!,
+                  response.data,
+                  null,
+                  null,
                 );
               }
 
@@ -265,8 +290,12 @@ class RCloneAuthService implements AuthService {
 
             await configFile.writeAsString(iniConfig.toString());
           },
-          (err, stackTrace) =>
-              err.handleError('Failed to write output to config', stackTrace),
+          (err, stackTrace) => StorageError(
+            StorageErrorType.update,
+            StorageProviderType.rCloneConfig,
+            err,
+            stackTrace,
+          ),
         ),
       );
 
@@ -315,8 +344,11 @@ class RCloneAuthService implements AuthService {
               ),
             );
           },
-          (err, stackTrace) =>
-              err.handleError('Failed to get drive information', stackTrace),
+          (err, stackTrace) => GeneralError(
+            'Failed to get drive information',
+            err,
+            stackTrace,
+          ).logError(),
         ),
       );
     });

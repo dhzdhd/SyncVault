@@ -43,10 +43,12 @@ class RCloneDriveService implements DriveService {
 
             return ();
           },
-          (err, stackTrace) => err.handleError(
-            'Failed to create directory in remote',
+          (err, stackTrace) => ProviderError(
+            model.provider,
+            ProviderOperationType.remoteCreation,
+            err,
             stackTrace,
-          ),
+          ).logError(),
         ),
       );
 
@@ -104,8 +106,12 @@ class RCloneDriveService implements DriveService {
 
             return ();
           },
-          (err, stackTrace) =>
-              err.handleError('Failed to upload files', stackTrace),
+          (err, stackTrace) => ProviderError(
+            providerModel.provider,
+            ProviderOperationType.upload,
+            err,
+            stackTrace,
+          ).logError(),
         ),
       );
 
@@ -143,8 +149,12 @@ class RCloneDriveService implements DriveService {
 
             return ();
           },
-          (err, stackTrace) =>
-              err.handleError('Failed to delete remote', stackTrace),
+          (err, stackTrace) => ProviderError(
+            providerModel.provider,
+            ProviderOperationType.delete,
+            err,
+            stackTrace,
+          ).logError(),
         ),
       );
 
@@ -291,8 +301,12 @@ class RCloneDriveService implements DriveService {
 
             return none();
           },
-          (err, stackTrace) =>
-              err.handleError('Failed to get file tree', stackTrace),
+          (err, stackTrace) => ProviderError(
+            model.provider,
+            ProviderOperationType.getTreeView,
+            err,
+            stackTrace,
+          ).logError(),
         ),
       );
       return fileModel;

@@ -178,7 +178,7 @@ final uploadDeleteControllerProvider =
     );
 
 typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<void>;
-String _$folderHash() => r'35a7161611d7cbfba8cb1d953e4f3ec0090e1ee3';
+String _$folderHash() => r'82cf3bfc94bc87493c898ce31f7975afa1601c88';
 
 /// See also [Folder].
 @ProviderFor(Folder)

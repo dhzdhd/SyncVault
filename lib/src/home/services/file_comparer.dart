@@ -14,7 +14,7 @@ class FileComparer {
         return hash;
       },
       (e, st) {
-        return e.handleError(e.toString(), st);
+        return GeneralError('Failed to hash file contents', e, st);
       },
     );
   }
@@ -30,7 +30,7 @@ class FileComparer {
         return hash;
       },
       (e, st) {
-        return e.handleError(e.toString(), st);
+        return GeneralError('Failed to calculate the total hash', e, st);
       },
     );
   }

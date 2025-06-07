@@ -67,9 +67,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       .upload(folders[i], some(event.path));
                   debugPrint('Success');
                 } catch (e, st) {
-                  debugPrint(
-                    e.handleError('Failed to sync folders', st).message,
-                  );
+                  ProviderError(
+                    folders[i].provider,
+                    ProviderOperationType.upload,
+                    e,
+                    st,
+                  ).logError();
                 }
               }
             case ChangeType.REMOVE
@@ -101,12 +104,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
     ref.listen<AsyncValue>(uploadDeleteControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
-          state.error!
-              .handleError(
-                'Upload/Delete controller failed',
-                state.stackTrace ?? StackTrace.empty,
-              )
-              .message,
+          GeneralError(
+            'Upload/Delete controller failed',
+
+            state.error!,
+            state.stackTrace,
+          ).message,
         );
       }
     });

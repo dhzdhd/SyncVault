@@ -142,9 +142,11 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              error
-                  .handleError('Failed to render drive information', stackTrace)
-                  .message,
+              GeneralError(
+                'Failed to render drive information',
+                error,
+                stackTrace,
+              ).logError().message,
             ),
           ),
         ],

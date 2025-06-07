@@ -86,7 +86,12 @@ class GoogleDriveService implements DriveService {
         );
       },
       (error, stackTrace) {
-        return error.handleError('Gdrive folder creation failed', stackTrace);
+        return ProviderError(
+          model.provider,
+          ProviderOperationType.remoteCreation,
+          error,
+          stackTrace,
+        ).logError();
       },
     );
   }

@@ -86,7 +86,7 @@ class Auth extends _$Auth {
     bool isRCloneBackend,
   ) async {
     if (state.requireValue.any((element) => element.remoteName == remoteName)) {
-      throw const GeneralError('The provider already exists');
+      throw const GeneralError('The provider already exists', null, null);
     }
 
     final service = switch (isRCloneBackend) {
@@ -109,9 +109,12 @@ class Auth extends _$Auth {
     };
 
     service.match(
-      (l) {
-        l.handleError('Failed to authorize', StackTrace.empty);
-        throw l;
+      (err) {
+        throw GeneralError(
+          'Failed to authorize',
+          err,
+          err.stackTrace,
+        ).logError();
       },
       (model) async {
         state = AsyncData([...state.requireValue, model]);
@@ -156,7 +159,8 @@ class Auth extends _$Auth {
     return result.match(
       (err) => throw err,
       (t) => t.match(
-        () => throw const GeneralError('Could not fetch drive info'),
+        () =>
+            throw const GeneralError('Could not fetch drive info', null, null),
         (s) => s,
       ),
     );

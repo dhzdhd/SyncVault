@@ -179,7 +179,8 @@ class Folder extends _$Folder {
           .calcHash(files.whereType<File>().toList())
           .run();
       hashResult.match(
-        (err) => err.handleError(err.message, StackTrace.empty),
+        (err) =>
+            GeneralError('Hashes do not match', err.message, err.stackTrace),
         (hash) {
           final hashModels = _hashStorage.fetchAll().toList();
           final model = FolderHashModel(

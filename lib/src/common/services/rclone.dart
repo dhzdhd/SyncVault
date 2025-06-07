@@ -15,23 +15,27 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 @singleton
 class RCloneUtils {
   TaskEither<AppError, String> getRCloneExec() {
-    return TaskEither.tryCatch(() async {
-      if (Platform.isAndroid) {
-        const channel = MethodChannel('com.example.syncvault/native_lib');
-        final path = await channel.invokeMethod('getNativeLibraryPath');
-        return '$path/librclone.so';
-      } else if (Platform.isWindows) {
-        final docDir = await getApplicationDocumentsDirectory();
-        return File('${docDir.path}/SyncVault/rclone.exe').path;
-      } else if (Platform.isLinux || Platform.isMacOS) {
-        final docDir = await getApplicationDocumentsDirectory();
-        return File('${docDir.path}/SyncVault/rclone').path;
-      } else if (Platform.isIOS) {
-        throw UnimplementedError('RClone not implemented in iOS yet');
-      } else {
-        throw UnimplementedError('This platform is not supported yet');
-      }
-    }, (err, stackTrace) => err.handleError(err.toString(), stackTrace));
+    return TaskEither.tryCatch(
+      () async {
+        if (Platform.isAndroid) {
+          const channel = MethodChannel('com.example.syncvault/native_lib');
+          final path = await channel.invokeMethod('getNativeLibraryPath');
+          return '$path/librclone.so';
+        } else if (Platform.isWindows) {
+          final docDir = await getApplicationDocumentsDirectory();
+          return File('${docDir.path}/SyncVault/rclone.exe').path;
+        } else if (Platform.isLinux || Platform.isMacOS) {
+          final docDir = await getApplicationDocumentsDirectory();
+          return File('${docDir.path}/SyncVault/rclone').path;
+        } else if (Platform.isIOS) {
+          throw UnimplementedError('RClone not implemented in iOS yet');
+        } else {
+          throw UnimplementedError('This platform is not supported yet');
+        }
+      },
+      (err, stackTrace) =>
+          GeneralError('Failed to get RClone executable', err, stackTrace),
+    );
   }
 
   TaskEither<AppError, File> getConfig() {
@@ -47,7 +51,11 @@ class RCloneUtils {
         return configFile;
       },
       (err, stackTrace) {
-        return err.handleError('Failed to get rclone config file', stackTrace);
+        return GeneralError(
+          'Failed to get RClone config file',
+          err,
+          stackTrace,
+        );
       },
     );
   }
@@ -68,7 +76,7 @@ class RCloneUtils {
             return Config.fromString(raw);
           },
           (err, stackTrace) =>
-              err.handleError('Failed to read ini file', stackTrace),
+              GeneralError('Failed to read ini file', err, stackTrace),
         ),
       );
     });
@@ -124,6 +132,8 @@ class RCloneUtils {
                 ),
                 LocalProvider() => throw GeneralError(
                   'Local backend not supported',
+                  null,
+                  null,
                 ),
               };
 
@@ -138,7 +148,7 @@ class RCloneUtils {
             }).toList();
           },
           (err, stackTrace) =>
-              err.handleError('Failed to parse ini file', stackTrace),
+              GeneralError('Failed to parse ini file', err, stackTrace),
         ),
       );
     });

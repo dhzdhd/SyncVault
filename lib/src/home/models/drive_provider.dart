@@ -139,6 +139,8 @@ sealed class DriveProvider with _$DriveProvider {
       _ => Left(
         GeneralError(
           'Invalid provider-backend combination: $runtimeType with ${backend.runtimeType}',
+          null,
+          null,
         ),
       ),
     };

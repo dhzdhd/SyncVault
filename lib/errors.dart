@@ -5,7 +5,15 @@ import 'package:syncvault/src/home/models/drive_provider.dart';
 
 part 'errors.freezed.dart';
 
-enum ProviderOperationType { authorize }
+enum ProviderOperationType {
+  authorize,
+  getDriveInfo,
+  getTreeView,
+  remoteCreation,
+  upload,
+  download,
+  delete,
+}
 
 enum AuthErrorType { unauthorized, forbidden, tokenExpired }
 

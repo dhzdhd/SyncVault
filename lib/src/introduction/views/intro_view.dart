@@ -32,12 +32,11 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
     ref.listen<AsyncValue>(rCloneDownloadControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
-          state.error!
-              .handleError(
-                'RClone download controller failed',
-                state.stackTrace ?? StackTrace.empty,
-              )
-              .message,
+          GeneralError(
+            'RClone download controller failed',
+            state.error!,
+            state.stackTrace,
+          ).logError().message,
         );
       }
     });
