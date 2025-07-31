@@ -6,6 +6,7 @@ import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 
 class AccountView extends ConsumerWidget {
   const AccountView({super.key});
@@ -40,7 +41,7 @@ class AccountView extends ConsumerWidget {
               delegate: SliverChildListDelegate.fixed(
                 authInfo
                     .map(
-                      (e) => Card(
+                      (providerModel) => Card(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -50,9 +51,9 @@ class AccountView extends ConsumerWidget {
                               Row(
                                 children: [
                                   Tooltip(
-                                    message: e.provider.displayName,
+                                    message: providerModel.provider.displayName,
                                     child: SvgPicture.asset(
-                                      e.provider.providerIcon,
+                                      providerModel.provider.providerIcon,
                                       width:
                                           MediaQuery.of(context).size.width <
                                               500
@@ -73,7 +74,7 @@ class AccountView extends ConsumerWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          e.remoteName,
+                                          providerModel.remoteName,
                                           style:
                                               MediaQuery.of(
                                                     context,
@@ -88,7 +89,9 @@ class AccountView extends ConsumerWidget {
                                           spacing: 6,
                                           children: [
                                             Text(
-                                              e.provider.displayName,
+                                              providerModel
+                                                  .provider
+                                                  .displayName,
                                               style:
                                                   MediaQuery.of(
                                                         context,
@@ -112,7 +115,7 @@ class AccountView extends ConsumerWidget {
                                                 right: 6,
                                               ),
                                               child: Text(
-                                                e.isRCloneBackend
+                                                providerModel.isRCloneBackend
                                                     ? 'RClone'
                                                     : 'Manual',
                                               ),
@@ -126,32 +129,34 @@ class AccountView extends ConsumerWidget {
                               ),
                               PopupMenuButton(
                                 itemBuilder: (ctx) => [
-                                  PopupMenuItem(
-                                    child: const Row(
-                                      children: [
-                                        Text('Info'),
-                                        Spacer(),
-                                        Icon(Icons.info_outline),
-                                      ],
+                                  // TODO: Perhaps show drive info for local too??
+                                  if (providerModel.backend is! Local)
+                                    PopupMenuItem(
+                                      child: const Row(
+                                        children: [
+                                          Text('Info'),
+                                          Spacer(),
+                                          Icon(Icons.info_outline),
+                                        ],
+                                      ),
+                                      onTap: () async {
+                                        await Future.delayed(
+                                          Duration.zero,
+                                          () => {
+                                            if (context.mounted)
+                                              {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (ctx) =>
+                                                      DriveInfoDialogWidget(
+                                                        model: providerModel,
+                                                      ),
+                                                ),
+                                              },
+                                          },
+                                        );
+                                      },
                                     ),
-                                    onTap: () async {
-                                      await Future.delayed(
-                                        Duration.zero,
-                                        () => {
-                                          if (context.mounted)
-                                            {
-                                              showDialog(
-                                                context: context,
-                                                builder: (ctx) =>
-                                                    DriveInfoDialogWidget(
-                                                      model: e,
-                                                    ),
-                                              ),
-                                            },
-                                        },
-                                      );
-                                    },
-                                  ),
                                   PopupMenuItem(
                                     child: const Row(
                                       children: [
@@ -166,7 +171,7 @@ class AccountView extends ConsumerWidget {
                                           context: context,
                                           builder: (ctx) =>
                                               DeleteAccountDialogWidget(
-                                                model: e,
+                                                model: providerModel,
                                               ),
                                         );
                                       }

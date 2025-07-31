@@ -130,7 +130,6 @@ class Auth extends _$Auth {
       },
       (model) async {
         state = AsyncData([...state.requireValue, model]);
-        // TODO: account box is redundant as rclone config exists
         await _box.put(model.remoteName, model);
       },
     );
