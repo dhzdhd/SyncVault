@@ -89,23 +89,35 @@ class Auth extends _$Auth {
       throw const GeneralError('The provider already exists', null, null);
     }
 
-    final service = switch (isRCloneBackend) {
-      true =>
-        await RCloneAuthService()
-            .authorize(
-              backend: backend,
-              driveProvider: provider,
-              remoteName: remoteName,
-            )
-            .run(),
-      false =>
-        await getManualAuthService(provider)
-            .authorize(
-              backend: backend,
-              driveProvider: provider,
-              remoteName: remoteName,
-            )
-            .run(),
+    final service = switch (backend is Local) {
+      true => Right<AppError, DriveProviderModel>(
+        DriveProviderModel(
+          backend: backend,
+          remoteName: remoteName,
+          provider: provider,
+          createdAt: DateTime.now().toIso8601String(),
+          updatedAt: DateTime.now().toIso8601String(),
+          isRCloneBackend: isRCloneBackend,
+        ),
+      ),
+      false => switch (isRCloneBackend) {
+        true =>
+          await RCloneAuthService()
+              .authorize(
+                backend: backend,
+                driveProvider: provider,
+                remoteName: remoteName,
+              )
+              .run(),
+        false =>
+          await getManualAuthService(provider)
+              .authorize(
+                backend: backend,
+                driveProvider: provider,
+                remoteName: remoteName,
+              )
+              .run(),
+      },
     };
 
     service.match(

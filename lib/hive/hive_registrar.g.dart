@@ -14,6 +14,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
+    registerAdapter(LocalAdapter());
     registerAdapter(LocalProviderAdapter());
     registerAdapter(MinioProviderAdapter());
     registerAdapter(NextCloudProviderAdapter());
@@ -38,6 +39,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
+    registerAdapter(LocalAdapter());
     registerAdapter(LocalProviderAdapter());
     registerAdapter(MinioProviderAdapter());
     registerAdapter(NextCloudProviderAdapter());

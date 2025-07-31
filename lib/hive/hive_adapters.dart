@@ -31,6 +31,7 @@ part 'hive_adapters.g.dart';
   AdapterSpec<S3>(),
   AdapterSpec<Webdav>(),
   AdapterSpec<UserPassword>(),
+  AdapterSpec<Local>(),
   AdapterSpec<FolderModel>(),
   AdapterSpec<WorkflowModel>(),
   AdapterSpec<FolderHashModel>(),

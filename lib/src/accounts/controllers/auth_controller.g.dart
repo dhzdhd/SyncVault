@@ -165,7 +165,7 @@ final authControllerProvider =
     );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'1cfa7fc0ab771720a316919a6e4a061b2a7fa90d';
+String _$authHash() => r'08fd347c0024cb2a6f7544c15cc5ca1b2f251042';
 
 /// See also [Auth].
 @ProviderFor(Auth)
