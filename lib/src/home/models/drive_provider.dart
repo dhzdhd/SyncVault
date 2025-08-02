@@ -47,7 +47,7 @@ sealed class DriveProvider with _$DriveProvider {
     ProtonDriveProvider() => 'assets/logos/protondrive.svg',
     MinioProvider() => 'assets/logos/minio.svg',
     NextCloudProvider() => 'assets/logos/nextcloud.svg',
-    LocalProvider() => '',
+    LocalProvider() => 'assets/logos/local.svg',
   };
 
   DriveProviderBackend get defaultBackend => switch (this) {
@@ -58,6 +58,7 @@ sealed class DriveProvider with _$DriveProvider {
       accessToken: '',
       refreshToken: '',
       expiresIn: '',
+      parentPath: '',
     ),
     ProtonDriveProvider() => const UserPassword(username: '', password: ''),
     MinioProvider() => const S3(url: '', accessKeyId: '', secretAccessKey: ''),

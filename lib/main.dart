@@ -106,98 +106,99 @@ void callbackDispatcher() {
     final hashStorage = HiveStorage<FolderHashModel>(hashBox);
 
     // File watcher approach does not work on mobile devices
-    for (final folderModel in folders) {
-      final entities = await Directory(
-        folderModel.folderPath,
-      ).list(recursive: true).toList();
-      final files = entities.whereType<File>().toList();
+    // FIXME: Change the approach for the new FolderModel
+    // for (final folderModel in folders) {
+    //   final entities = await Directory(
+    //     folderModel.folderPath,
+    //   ).list(recursive: true).toList();
+    //   final files = entities.whereType<File>().toList();
 
-      debugLogger.i(files);
+    //   debugLogger.i(files);
 
-      // Compare calculated and stored hash
-      final calcHashResult = await fileComparer.calcHash(files).run();
-      final storedHashResult = hashes
-          .filter((model) => model.remoteName == folderModel.remoteName)
-          .firstOption
-          .toEither(
-            () => const GeneralError('Stored hash does not exist', null, null),
-          );
+    //   // Compare calculated and stored hash
+    //   final calcHashResult = await fileComparer.calcHash(files).run();
+    //   final storedHashResult = hashes
+    //       .filter((model) => model.remoteName == folderModel.remoteName)
+    //       .firstOption
+    //       .toEither(
+    //         () => const GeneralError('Stored hash does not exist', null, null),
+    //       );
 
-      final Either<AppError, bool> hashCompareResult = Either.Do(($) {
-        final calcHash = $(calcHashResult);
-        final storedHash = $(storedHashResult).hash;
+    //   final Either<AppError, bool> hashCompareResult = Either.Do(($) {
+    //     final calcHash = $(calcHashResult);
+    //     final storedHash = $(storedHashResult).hash;
 
-        debugLogger.i(calcHash);
-        debugLogger.i(storedHash);
+    //     debugLogger.i(calcHash);
+    //     debugLogger.i(storedHash);
 
-        return fileComparer.isSameFolder(calcHash, storedHash);
-      });
+    //     return fileComparer.isSameFolder(calcHash, storedHash);
+    //   });
 
-      // If equal, sync files
-      hashCompareResult.match(
-        (err) {
-          GeneralError(
-            'Error in comparing hashes',
-            err,
-            err.stackTrace,
-          ).logError();
-        },
-        (isSameFolder) async {
-          if (!isSameFolder) {
-            final providerModel = authProviders
-                .filter(
-                  (provider) => provider.remoteName == folderModel.remoteName,
-                )
-                .firstOption;
+    //   // If equal, sync files
+    //   hashCompareResult.match(
+    //     (err) {
+    //       GeneralError(
+    //         'Error in comparing hashes',
+    //         err,
+    //         err.stackTrace,
+    //       ).logError();
+    //     },
+    //     (isSameFolder) async {
+    //       if (!isSameFolder) {
+    //         final providerModel = authProviders
+    //             .filter(
+    //               (provider) => provider.remoteName == folderModel.remoteName,
+    //             )
+    //             .firstOption;
 
-            final uploadRes = await service
-                .upload(
-                  providerModel: providerModel.toNullable()!,
-                  folderModel: folderModel,
-                  localPath: folderModel.folderPath,
-                  rCloneExecPath: execPath,
-                )
-                .run();
+    //         final uploadRes = await service
+    //             .upload(
+    //               providerModel: providerModel.toNullable()!,
+    //               folderModel: folderModel,
+    //               localPath: folderModel.folderPath,
+    //               rCloneExecPath: execPath,
+    //             )
+    //             .run();
 
-            uploadRes.match(
-              // FIXME: Fails by - no impl found for getNativeLibraryPath
-              // Workaround - pass the path to bg after calling it in main isolate
-              (err) => GeneralError(
-                'Failed to do background sync',
-                err,
-                err.stackTrace,
-              ).logError(),
-              (_) async {
-                debugLogger.i('Background sync completed');
+    //         uploadRes.match(
+    //           // FIXME: Fails by - no impl found for getNativeLibraryPath
+    //           // Workaround - pass the path to bg after calling it in main isolate
+    //           (err) => GeneralError(
+    //             'Failed to do background sync',
+    //             err,
+    //             err.stackTrace,
+    //           ).logError(),
+    //           (_) async {
+    //             debugLogger.i('Background sync completed');
 
-                final files = await Directory(
-                  folderModel.folderPath,
-                ).list(recursive: true).toList();
-                final hashResult = await fileComparer
-                    .calcHash(files.whereType<File>().toList())
-                    .run();
-                hashResult.match(
-                  (err) =>
-                      GeneralError(err.message, err, err.stackTrace).logError(),
-                  (hash) {
-                    final hashModels = hashStorage.fetchAll().toList();
-                    final model = FolderHashModel(
-                      hash: hash,
-                      remoteName: folderModel.remoteName,
-                    );
-                    hashStorage.update(
-                      hashModels
-                        ..removeWhere((e) => e.remoteName == model.remoteName)
-                        ..add(model),
-                    );
-                  },
-                );
-              },
-            );
-          }
-        },
-      );
-    }
+    //             final files = await Directory(
+    //               folderModel.folderPath,
+    //             ).list(recursive: true).toList();
+    //             final hashResult = await fileComparer
+    //                 .calcHash(files.whereType<File>().toList())
+    //                 .run();
+    //             hashResult.match(
+    //               (err) =>
+    //                   GeneralError(err.message, err, err.stackTrace).logError(),
+    //               (hash) {
+    //                 final hashModels = hashStorage.fetchAll().toList();
+    //                 final model = FolderHashModel(
+    //                   hash: hash,
+    //                   remoteName: folderModel.remoteName,
+    //                 );
+    //                 hashStorage.update(
+    //                   hashModels
+    //                     ..removeWhere((e) => e.remoteName == model.remoteName)
+    //                     ..add(model),
+    //                 );
+    //               },
+    //             );
+    //           },
+    //         );
+    //       }
+    //     },
+    //   );
+    // }
 
     return Future.value(true);
   });

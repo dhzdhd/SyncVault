@@ -30,20 +30,18 @@ class CreateFolderController extends _$CreateFolderController {
   FutureOr<void> build() {}
 
   Future<void> createFolder({
-    required DriveProviderModel authModel,
-    required String folderPath,
-    required String folderName,
-    required Option<String> remoteParentPath,
+    required String title,
+    required DriveProviderModel firstProviderModel,
+    required DriveProviderModel secondProviderModel,
   }) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () => folderNotifier.create(
-        authModel: authModel,
-        folderName: folderName,
-        folderPath: folderPath,
-        remoteParentPath: remoteParentPath,
+        title: title,
+        firstProviderModel: firstProviderModel,
+        secondProviderModel: secondProviderModel,
       ),
     );
   }
@@ -132,23 +130,17 @@ class Folder extends _$Folder {
   }
 
   Future<void> create({
-    required DriveProviderModel authModel,
-    required String folderPath,
-    required String folderName,
-    required Option<String> remoteParentPath,
+    required String title,
+    required DriveProviderModel firstProviderModel,
+    required DriveProviderModel secondProviderModel,
   }) async {
     // TODO: Segregate by provider
-    final driveService = authModel.isRCloneBackend
+    final driveService = firstProviderModel.isRCloneBackend
         ? RCloneDriveService()
         : GoogleDriveService();
 
     final model = await driveService
-        .create(
-          folderName: folderName,
-          folderPath: folderPath,
-          remoteParentPath: remoteParentPath,
-          model: authModel,
-        )
+        .create(title: title, model: firstProviderModel)
         .match((l) => throw l, (r) => r)
         .run();
 
@@ -160,20 +152,20 @@ class Folder extends _$Folder {
   Future<void> upload(FolderModel folderModel, Option<String> filePath) async {
     final providerModels = ref.watch(authProvider);
     final providerModel = providerModels.requireValue
-        .filter((t) => t.remoteName == folderModel.remoteName)
+        .filter((t) => t.remoteName == folderModel.firstRemote)
         .first;
 
     await RCloneDriveService()
         .upload(
           providerModel: providerModel,
           folderModel: folderModel,
-          localPath: folderModel.folderPath,
+          localPath: folderModel.title,
         )
         .run();
 
     if (PlatformExtension.isMobile) {
       final files = await Directory(
-        folderModel.folderPath,
+        folderModel.title,
       ).list(recursive: true).toList();
       final hashResult = await _fileComparer
           .calcHash(files.whereType<File>().toList())
@@ -185,7 +177,7 @@ class Folder extends _$Folder {
           final hashModels = _hashStorage.fetchAll().toList();
           final model = FolderHashModel(
             hash: hash,
-            remoteName: folderModel.remoteName,
+            remoteName: folderModel.firstRemote,
           );
           _hashStorage.update(
             hashModels
@@ -203,7 +195,7 @@ class Folder extends _$Folder {
     if (deleteRemote) {
       final providerModels = ref.watch(authProvider);
       final providerModel = providerModels.requireValue
-          .filter((t) => t.remoteName == model.remoteName)
+          .filter((t) => t.remoteName == model.firstRemote)
           .first;
 
       await RCloneDriveService()

@@ -33,7 +33,7 @@ types:
         index: 0
   DriveProviderModel:
     typeId: 3
-    nextIndex: 12
+    nextIndex: 13
     fields:
       remoteName:
         index: 6
@@ -47,9 +47,11 @@ types:
         index: 10
       isRCloneBackend:
         index: 11
+      folderName:
+        index: 12
   OAuth2:
     typeId: 5
-    nextIndex: 6
+    nextIndex: 7
     fields:
       accessToken:
         index: 1
@@ -61,6 +63,8 @@ types:
         index: 4
       $type:
         index: 5
+      parentPath:
+        index: 6
   S3:
     typeId: 6
     nextIndex: 4
@@ -87,28 +91,22 @@ types:
         index: 3
   FolderModel:
     typeId: 11
-    nextIndex: 12
+    nextIndex: 15
     fields:
-      remoteName:
-        index: 0
-      provider:
-        index: 1
-      folderPath:
-        index: 2
-      folderName:
-        index: 3
       isAutoSync:
         index: 4
       isDeletionEnabled:
         index: 5
       isTwoWaySync:
         index: 6
-      remoteParentPath:
-        index: 7
       folderId:
         index: 9
-      isRCloneBackend:
-        index: 11
+      firstRemote:
+        index: 12
+      secondRemote:
+        index: 13
+      title:
+        index: 14
   UserPassword:
     typeId: 12
     nextIndex: 3

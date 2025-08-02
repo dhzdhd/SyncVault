@@ -15,10 +15,8 @@ import 'package:googleapis_auth/googleapis_auth.dart';
 class GoogleDriveService implements DriveService {
   @override
   TaskEither<AppError, FolderModel> create({
+    required String title,
     required DriveProviderModel model,
-    required String folderPath,
-    required String folderName,
-    required Option<String> remoteParentPath,
   }) {
     return TaskEither.tryCatch(
       () async {
@@ -50,10 +48,11 @@ class GoogleDriveService implements DriveService {
         late final String parentFolderId;
         if (fileList.files!.isEmpty) {
           final folderMetadata = drive.File(
-            name: remoteParentPath.match(
-              () => 'SyncVault/',
-              (t) => t.replaceAll('/', ''),
-            ),
+            // name: remoteParentPath.match(
+            //   () => 'SyncVault/',
+            //   (t) => t.replaceAll('/', ''),
+            // ),
+            name: '',
             mimeType: 'application/vnd.google-apps.folder',
           );
           final syncVaultFolder = await api.files.create(folderMetadata);
@@ -64,7 +63,7 @@ class GoogleDriveService implements DriveService {
 
         // Create the new folder
         final folderMetadata = drive.File(
-          name: folderName,
+          name: model.remoteName,
           mimeType: 'application/vnd.google-apps.folder',
           parents: [parentFolderId],
         );
@@ -73,16 +72,13 @@ class GoogleDriveService implements DriveService {
         httpClient.close();
 
         return FolderModel(
-          remoteName: model.remoteName,
-          provider: model.provider,
-          folderPath: folderPath,
-          folderName: folderName,
-          remoteParentPath: remoteParentPath.toNullable(),
+          title: '',
+          firstRemote: model.remoteName,
+          secondRemote: '',
           isAutoSync: false,
           isDeletionEnabled: false,
           isTwoWaySync: false,
           folderId: folder.id,
-          isRCloneBackend: false,
         );
       },
       (error, stackTrace) {

@@ -6,10 +6,8 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 abstract interface class DriveService {
   TaskEither<AppError, FolderModel> create({
+    required String title,
     required DriveProviderModel model,
-    required String folderPath,
-    required String folderName,
-    required Option<String> remoteParentPath,
   });
   TaskEither<AppError, ()> upload({
     required DriveProviderModel providerModel,

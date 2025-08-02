@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
@@ -19,27 +18,29 @@ class NewFolderDialogWidget extends StatefulHookConsumerWidget {
 }
 
 class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
-  late final TextEditingController _nameController;
-  late final TextEditingController _parentPathController;
+  late final TextEditingController _titleController;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-    _parentPathController = TextEditingController(text: 'SyncVault');
+    _titleController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _parentPathController.dispose();
+    _titleController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final selectedProvider = useState<Option<DriveProviderModel>>(const None());
-    final selectedFolder = useState<Option<String>>(const None());
+    final firstSelectedProvider = useState<Option<DriveProviderModel>>(
+      const None(),
+    );
+    final secondSelectedProvider = useState<Option<DriveProviderModel>>(
+      const None(),
+    );
+
     final authInfo = ref.watch(authProvider);
     final createFolderController = ref.watch(createFolderControllerProvider);
 
@@ -60,65 +61,60 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
       contentPadding: const EdgeInsets.all(24),
       children: [
         TextField(
-          controller: _nameController,
+          controller: _titleController,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            hintText: 'Name of folder',
-          ),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: _parentPathController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Remote parent path',
+            hintText: 'Title',
           ),
         ),
         const SizedBox(height: 16),
         DropdownButton<DriveProviderModel?>(
           items: authInfo.requireValue
+              .filter(
+                (authModel) =>
+                    authModel.remoteName !=
+                    secondSelectedProvider.value.toNullable()?.remoteName,
+              )
               .map(
-                (e) => DropdownMenuItem(
-                  value: e,
-                  child: Text('${e.provider.displayName} - ${e.remoteName}'),
+                (authModel) => DropdownMenuItem(
+                  value: authModel,
+                  child: Text(
+                    '${authModel.provider.displayName} - ${authModel.remoteName}',
+                  ),
                 ),
               )
               .toList(),
-          value: selectedProvider.value.toNullable(),
+          value: firstSelectedProvider.value.toNullable(),
           isExpanded: true,
-          hint: const Text('Enter provider account'),
+          hint: const Text('Enter first remote'),
           onChanged: (DriveProviderModel? e) {
-            selectedProvider.value = Option.fromNullable(e);
+            firstSelectedProvider.value = Option.fromNullable(e);
           },
         ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Tooltip(
-                message:
-                    selectedFolder.value.toNullable() ?? 'Select local folder',
-                child: Text(
-                  selectedFolder.value.toNullable() ?? 'Select local folder',
-                  style: Theme.of(context).textTheme.titleMedium,
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+        DropdownButton<DriveProviderModel?>(
+          items: authInfo.requireValue
+              .filter(
+                (authModel) =>
+                    authModel.remoteName !=
+                    firstSelectedProvider.value.toNullable()?.remoteName,
+              )
+              .map(
+                (authModel) => DropdownMenuItem(
+                  value: authModel,
+                  child: Text(
+                    '${authModel.provider.displayName} - ${authModel.remoteName}',
+                  ),
                 ),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.folder),
-              tooltip: 'Get directory',
-              onPressed: () async {
-                final result = await FilePicker.platform.getDirectoryPath();
-                selectedFolder.value = Option.fromNullable(result);
-              },
-            ),
-          ],
+              )
+              .toList(),
+          value: secondSelectedProvider.value.toNullable(),
+          isExpanded: true,
+          hint: const Text('Enter second remote'),
+          onChanged: (DriveProviderModel? e) {
+            secondSelectedProvider.value = Option.fromNullable(e);
+          },
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
         ElevatedButton(
           child: createFolderController.isLoading
               ? const SizedBox.square(
@@ -127,29 +123,21 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                 )
               : const Text('Submit'),
           onPressed: () async {
+            // TODO: Create folder on remote provider creation in account screen
             if (!createFolderController.isLoading) {
-              final Option<(DriveProviderModel, String, String, Option<String>)>
-              content = selectedProvider.value.match(
-                () => none(),
-                (t) => selectedFolder.value.match(() => none(), (r) {
-                  final folderName = _nameController.text.trim();
-                  final parentPathName = _parentPathController.text.trim();
-                  if (folderName.isNotEmpty &&
-                      !ref
-                          .read(folderProvider)
-                          .any((element) => element.folderName == folderName)) {
-                    return some((
-                      t,
-                      r,
-                      folderName,
-                      // TODO: Set none if S3 provider
-                      parentPathName.isEmpty ? none() : some(parentPathName),
-                    ));
-                  } else {
-                    return none();
-                  }
-                }),
-              );
+              final content = Option.Do(($) {
+                final title = $(
+                  Option.fromNullable(
+                    _titleController.text.isNotEmpty
+                        ? _titleController.text
+                        : null,
+                  ),
+                );
+                final firstProvider = $(firstSelectedProvider.value);
+                final secondProvider = $(secondSelectedProvider.value);
+
+                return (title, firstProvider, secondProvider);
+              });
 
               content.match(
                 () => context.showErrorSnackBar(
@@ -159,10 +147,9 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                   await ref
                       .read(createFolderControllerProvider.notifier)
                       .createFolder(
-                        authModel: t.$1,
-                        folderPath: t.$2,
-                        folderName: t.$3,
-                        remoteParentPath: t.$4,
+                        title: t.$1,
+                        firstProviderModel: t.$2,
+                        secondProviderModel: t.$3,
                       );
 
                   // TODO: Show this only on no error

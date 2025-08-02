@@ -13,7 +13,7 @@ class DeleteFolderDialogWidget extends ConsumerWidget {
     final folderNotifier = ref.read(uploadDeleteControllerProvider.notifier);
 
     return AlertDialog(
-      title: Text('Delete ${model.folderName}?'),
+      title: Text('Delete ${model.title}?'),
       content: const Text(
         'Remote delete deletes the local state and uploaded files.\nLocal delete deletes only local state.\nThis does not affect your local files.',
         textAlign: TextAlign.left,

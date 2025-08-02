@@ -134,6 +134,7 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
     };
     return DriveProviderModel(
       remoteName: fields[6] as String,
+      folderName: fields[12] as String,
       provider: fields[7] as DriveProvider,
       backend: fields[8] as DriveProviderBackend,
       createdAt: fields[9] as String,
@@ -145,7 +146,7 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
   @override
   void write(BinaryWriter writer, DriveProviderModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(6)
       ..write(obj.remoteName)
       ..writeByte(7)
@@ -157,7 +158,9 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
       ..writeByte(10)
       ..write(obj.updatedAt)
       ..writeByte(11)
-      ..write(obj.isRCloneBackend);
+      ..write(obj.isRCloneBackend)
+      ..writeByte(12)
+      ..write(obj.folderName);
   }
 
   @override
@@ -186,6 +189,7 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
       accessToken: fields[1] as String,
       refreshToken: fields[2] as String,
       expiresIn: fields[3] as String,
+      parentPath: fields[6] as String,
       $type: fields[5] as String?,
     );
   }
@@ -193,7 +197,7 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
   @override
   void write(BinaryWriter writer, OAuth2 obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(1)
       ..write(obj.accessToken)
       ..writeByte(2)
@@ -203,7 +207,9 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
       ..writeByte(4)
       ..write(obj.authJson)
       ..writeByte(5)
-      ..write(obj.$type);
+      ..write(obj.$type)
+      ..writeByte(6)
+      ..write(obj.parentPath);
   }
 
   @override
@@ -314,43 +320,34 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FolderModel(
-      remoteName: fields[0] as String,
-      provider: fields[1] as DriveProvider,
-      folderPath: fields[2] as String,
-      folderName: fields[3] as String,
-      remoteParentPath: fields[7] as String?,
+      title: fields[14] as String,
+      firstRemote: fields[12] as String,
+      secondRemote: fields[13] as String,
       isAutoSync: fields[4] as bool,
       isDeletionEnabled: fields[5] as bool,
       isTwoWaySync: fields[6] as bool,
       folderId: fields[9] as String?,
-      isRCloneBackend: fields[11] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, FolderModel obj) {
     writer
-      ..writeByte(10)
-      ..writeByte(0)
-      ..write(obj.remoteName)
-      ..writeByte(1)
-      ..write(obj.provider)
-      ..writeByte(2)
-      ..write(obj.folderPath)
-      ..writeByte(3)
-      ..write(obj.folderName)
+      ..writeByte(7)
       ..writeByte(4)
       ..write(obj.isAutoSync)
       ..writeByte(5)
       ..write(obj.isDeletionEnabled)
       ..writeByte(6)
       ..write(obj.isTwoWaySync)
-      ..writeByte(7)
-      ..write(obj.remoteParentPath)
       ..writeByte(9)
       ..write(obj.folderId)
-      ..writeByte(11)
-      ..write(obj.isRCloneBackend);
+      ..writeByte(12)
+      ..write(obj.firstRemote)
+      ..writeByte(13)
+      ..write(obj.secondRemote)
+      ..writeByte(14)
+      ..write(obj.title);
   }
 
   @override

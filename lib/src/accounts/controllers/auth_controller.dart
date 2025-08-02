@@ -94,6 +94,7 @@ class Auth extends _$Auth {
         DriveProviderModel(
           backend: backend,
           remoteName: remoteName,
+          folderName: remoteName,
           provider: provider,
           createdAt: DateTime.now().toIso8601String(),
           updatedAt: DateTime.now().toIso8601String(),

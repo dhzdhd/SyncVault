@@ -36,7 +36,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     final folders = ref.read(folderProvider).toList();
-    _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
+    _watchers = [];
+    // _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
     super.initState();
   }
 
@@ -67,12 +68,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       .upload(folders[i], some(event.path));
                   debugPrint('Success');
                 } catch (e, st) {
-                  ProviderError(
-                    folders[i].provider,
-                    ProviderOperationType.upload,
-                    e,
-                    st,
-                  ).logError();
+                  // TODO:
+                  // ProviderError(
+                  //   folders[i].provider,
+                  //   ProviderOperationType.upload,
+                  //   e,
+                  //   st,
+                  // ).logError();
                 }
               }
             case ChangeType.REMOVE
@@ -106,7 +108,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
         context.showErrorSnackBar(
           GeneralError(
             'Upload/Delete controller failed',
-
             state.error!,
             state.stackTrace,
           ).message,
@@ -118,8 +119,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Sync new folder',
         onPressed: () async {
-          if (authProviders.isEmpty) {
-            context.showErrorSnackBar('No accounts registered yet');
+          if (authProviders.length < 2) {
+            context.showErrorSnackBar(
+              'Atleast two remotes need to be registered',
+            );
             return;
           }
 
@@ -185,22 +188,22 @@ class _HomeViewState extends ConsumerState<HomeView> {
               delegate: SliverChildListDelegate.fixed(
                 folderInfo
                     .mapWithIndex(
-                      (e, index) => ExpandableCardWidget(
+                      (folderModel, index) => ExpandableCardWidget(
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Tooltip(
-                              message: e.provider.displayName,
-                              child: SvgPicture.asset(
-                                e.provider.providerIcon,
-                                width: 25,
-                              ),
-                            ),
+                            // Tooltip(
+                            //   message: e.provider.displayName,
+                            //   child: SvgPicture.asset(
+                            //     e.provider.providerIcon,
+                            //     width: 25,
+                            //   ),
+                            // ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
-                                e.folderName,
+                                folderModel.title,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.headlineSmall,
@@ -229,7 +232,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: Theme.of(context).dialogBackgroundColor,
+                                color: Theme.of(
+                                  context,
+                                ).dialogTheme.backgroundColor,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Padding(
@@ -240,7 +245,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        e.folderPath,
+                                        folderModel.title,
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge,
@@ -266,7 +271,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                     ),
                                                     onPressed: () async {
                                                       await launchUrl(
-                                                        Uri.file(e.folderPath),
+                                                        Uri.file(
+                                                          folderModel.title,
+                                                        ),
                                                       );
                                                     },
                                                   ),
@@ -295,7 +302,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                             uploadDeleteControllerProvider
                                                                 .notifier,
                                                           )
-                                                          .upload(e, none());
+                                                          .upload(
+                                                            folderModel,
+                                                            none(),
+                                                          );
 
                                                       if (context.mounted) {
                                                         context
@@ -334,7 +344,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                           context: context,
                                                           builder: (ctx) =>
                                                               DeleteFolderDialogWidget(
-                                                                model: e,
+                                                                model:
+                                                                    folderModel,
                                                               ),
                                                         );
                                                       }
@@ -359,7 +370,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 Text(
-                                  e.remoteName,
+                                  folderModel.firstRemote,
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                               ],
@@ -376,9 +387,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   child: FittedBox(
                                     fit: BoxFit.fill,
                                     child: Switch(
-                                      value: e.isAutoSync,
-                                      onChanged: (val) =>
-                                          folderNotifier.toggleAutoSync(e),
+                                      value: folderModel.isAutoSync,
+                                      onChanged: (val) => folderNotifier
+                                          .toggleAutoSync(folderModel),
                                     ),
                                   ),
                                 ),
@@ -396,9 +407,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   child: FittedBox(
                                     fit: BoxFit.fill,
                                     child: Switch(
-                                      value: e.isTwoWaySync,
-                                      onChanged: (val) =>
-                                          folderNotifier.toggleTwoWaySync(e),
+                                      value: folderModel.isTwoWaySync,
+                                      onChanged: (val) => folderNotifier
+                                          .toggleTwoWaySync(folderModel),
                                     ),
                                   ),
                                 ),
@@ -416,9 +427,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   child: FittedBox(
                                     fit: BoxFit.fill,
                                     child: Switch(
-                                      value: e.isDeletionEnabled,
+                                      value: folderModel.isDeletionEnabled,
                                       onChanged: (val) => folderNotifier
-                                          .toggleDeletionOnSync(e),
+                                          .toggleDeletionOnSync(folderModel),
                                     ),
                                   ),
                                 ),
@@ -430,8 +441,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 onPressed: () async {
                                   showModalBottomSheet(
                                     context: context,
-                                    builder: (ctx) =>
-                                        TreeViewSheetWidget(folderModel: e),
+                                    builder: (ctx) => TreeViewSheetWidget(
+                                      folderModel: folderModel,
+                                    ),
                                   );
                                 },
                                 child: const Text('Tree view'),

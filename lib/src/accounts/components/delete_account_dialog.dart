@@ -18,7 +18,11 @@ class DeleteAccountDialogWidget extends ConsumerWidget {
       title: const Text('Delete account?'),
       content: Text(
         // Change message depending on account containing linked folders.
-        folders.any((element) => element.remoteName == model.remoteName)
+        folders.any(
+              (element) =>
+                  element.firstRemote == model.remoteName ||
+                  element.secondRemote == model.remoteName,
+            )
             ? 'The account contains dependent folders. Are you sure you want to sign out?\n This action will not delete the folders stored locally/in your drive.'
             : 'This action will not delete the folders stored locally/in your drive.',
         textAlign: TextAlign.left,

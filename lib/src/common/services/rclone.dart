@@ -115,6 +115,7 @@ class RCloneUtils {
                     accessToken: json['access_token'],
                     refreshToken: json['refresh_token'],
                     expiresIn: json['expiry'],
+                    parentPath: '',
                   );
                 })(),
                 MinioProvider() => DriveProviderBackend.s3(
@@ -139,6 +140,7 @@ class RCloneUtils {
 
               return DriveProviderModel(
                 remoteName: sectionName,
+                folderName: sectionName,
                 provider: provider,
                 backend: backend,
                 createdAt: DateTime.now().toIso8601String(),

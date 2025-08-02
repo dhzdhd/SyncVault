@@ -14,10 +14,8 @@ import 'package:syncvault/src/home/services/common.dart';
 class RCloneDriveService implements DriveService {
   @override
   TaskEither<AppError, FolderModel> create({
+    required String title,
     required DriveProviderModel model,
-    required String folderPath,
-    required String folderName,
-    required Option<String> remoteParentPath,
   }) {
     final utils = RCloneUtils();
 
@@ -28,13 +26,14 @@ class RCloneDriveService implements DriveService {
       await $(
         TaskEither.tryCatch(
           () async {
-            final parentPath = remoteParentPath.match(() => '/', (t) => '/$t/');
+            // final parentPath = remoteParentPath.match(() => '/', (t) => '/$t/');
+            final parentPath = '';
 
             // TODO: S3 only allows bucket name, not path
             final process = await Process.run(execPath, [
               ...configArgs,
               'mkdir',
-              '${model.remoteName}:$parentPath$folderName',
+              '${model.remoteName}:$parentPath${model.remoteName}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -53,16 +52,13 @@ class RCloneDriveService implements DriveService {
       );
 
       final folderModel = FolderModel(
-        remoteName: model.remoteName,
-        provider: model.provider,
-        folderPath: folderPath,
-        folderName: folderName,
-        remoteParentPath: remoteParentPath.toNullable(),
+        title: model.remoteName,
+        firstRemote: model.remoteName,
+        secondRemote: model.remoteName,
         isAutoSync: false,
         isDeletionEnabled: false,
         isTwoWaySync: false,
         folderId: null,
-        isRCloneBackend: true,
       );
       return folderModel;
     });
@@ -85,7 +81,7 @@ class RCloneDriveService implements DriveService {
         TaskEither.tryCatch(
           () async {
             final parentPath = Option.fromNullable(
-              folderModel.remoteParentPath,
+              folderModel.title,
             ).match(() => '/', (t) => '/$t/');
 
             final process = await Process.run(execPath!, [
@@ -97,7 +93,7 @@ class RCloneDriveService implements DriveService {
               '--inplace', // Bisync fails without this
               if (folderModel.isTwoWaySync) '--resync',
               localPath,
-              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}',
+              '${folderModel.firstRemote}:/$parentPath${folderModel.firstRemote}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -134,13 +130,13 @@ class RCloneDriveService implements DriveService {
         TaskEither.tryCatch(
           () async {
             final parentPath = Option.fromNullable(
-              folderModel.remoteParentPath,
+              folderModel.title,
             ).match(() => '/', (t) => '/$t/');
 
             final process = await Process.run(execPath, [
               ...configArgs,
               'purge',
-              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}',
+              '${folderModel.firstRemote}:/$parentPath${folderModel.firstRemote}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -176,7 +172,7 @@ class RCloneDriveService implements DriveService {
         TaskEither.tryCatch(
           () async {
             final parentPath = Option.fromNullable(
-              model.remoteParentPath,
+              model.title,
             ).match(() => '/', (t) => '/$t/');
 
             final process = await Process.run(execPath, [
@@ -187,7 +183,7 @@ class RCloneDriveService implements DriveService {
               '--full-path',
               '-s',
               '-Q',
-              '${model.remoteName}:/$parentPath${model.folderName}',
+              '${model.firstRemote}:/$parentPath${model.firstRemote}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -301,12 +297,15 @@ class RCloneDriveService implements DriveService {
 
             return none();
           },
-          (err, stackTrace) => ProviderError(
-            model.provider,
-            ProviderOperationType.getTreeView,
-            err,
-            stackTrace,
-          ).logError(),
+          (err, stackTrace) {
+            return AppError.general('message', err, stackTrace);
+            // return ProviderError(
+            //   model.provider,
+            //   ProviderOperationType.getTreeView,
+            //   err,
+            //   stackTrace,
+            // ).logError();
+          },
         ),
       );
       return fileModel;

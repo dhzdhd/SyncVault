@@ -10,6 +10,7 @@ sealed class DriveProviderBackend with _$DriveProviderBackend {
     required String accessToken,
     required String refreshToken,
     required String expiresIn,
+    required String parentPath,
   }) = OAuth2;
   const factory DriveProviderBackend.s3({
     required String url,

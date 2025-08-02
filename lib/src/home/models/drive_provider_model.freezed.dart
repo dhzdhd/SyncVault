@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DriveProviderModel {
 
- String get remoteName; DriveProvider get provider; DriveProviderBackend get backend; String get createdAt; String get updatedAt; bool get isRCloneBackend;
+ String get remoteName; String get folderName; DriveProvider get provider; DriveProviderBackend get backend; String get createdAt; String get updatedAt; bool get isRCloneBackend;
 /// Create a copy of DriveProviderModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $DriveProviderModelCopyWith<DriveProviderModel> get copyWith => _$DriveProviderM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriveProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriveProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,remoteName,provider,backend,createdAt,updatedAt,isRCloneBackend);
+int get hashCode => Object.hash(runtimeType,remoteName,folderName,provider,backend,createdAt,updatedAt,isRCloneBackend);
 
 @override
 String toString() {
-  return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
+  return 'DriveProviderModel(remoteName: $remoteName, folderName: $folderName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $DriveProviderModelCopyWith<$Res>  {
   factory $DriveProviderModelCopyWith(DriveProviderModel value, $Res Function(DriveProviderModel) _then) = _$DriveProviderModelCopyWithImpl;
 @useResult
 $Res call({
- String remoteName, DriveProvider provider, DriveProviderBackend backend, String createdAt, String updatedAt, bool isRCloneBackend
+ String remoteName, String folderName, DriveProvider provider, DriveProviderBackend backend, String createdAt, String updatedAt, bool isRCloneBackend
 });
 
 
@@ -66,9 +66,10 @@ class _$DriveProviderModelCopyWithImpl<$Res>
 
 /// Create a copy of DriveProviderModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? remoteName = null,Object? provider = null,Object? backend = null,Object? createdAt = null,Object? updatedAt = null,Object? isRCloneBackend = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? remoteName = null,Object? folderName = null,Object? provider = null,Object? backend = null,Object? createdAt = null,Object? updatedAt = null,Object? isRCloneBackend = null,}) {
   return _then(_self.copyWith(
 remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
+as String,folderName: null == folderName ? _self.folderName : folderName // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
 as DriveProvider,backend: null == backend ? _self.backend : backend // ignore: cast_nullable_to_non_nullable
 as DriveProviderBackend,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -103,10 +104,11 @@ $DriveProviderBackendCopyWith<$Res> get backend {
 @JsonSerializable()
 
 class _DriveProviderModel implements DriveProviderModel {
-  const _DriveProviderModel({required this.remoteName, required this.provider, required this.backend, required this.createdAt, required this.updatedAt, required this.isRCloneBackend});
+  const _DriveProviderModel({required this.remoteName, required this.folderName, required this.provider, required this.backend, required this.createdAt, required this.updatedAt, required this.isRCloneBackend});
   factory _DriveProviderModel.fromJson(Map<String, dynamic> json) => _$DriveProviderModelFromJson(json);
 
 @override final  String remoteName;
+@override final  String folderName;
 @override final  DriveProvider provider;
 @override final  DriveProviderBackend backend;
 @override final  String createdAt;
@@ -126,16 +128,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DriveProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DriveProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,remoteName,provider,backend,createdAt,updatedAt,isRCloneBackend);
+int get hashCode => Object.hash(runtimeType,remoteName,folderName,provider,backend,createdAt,updatedAt,isRCloneBackend);
 
 @override
 String toString() {
-  return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
+  return 'DriveProviderModel(remoteName: $remoteName, folderName: $folderName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
 }
 
 
@@ -146,7 +148,7 @@ abstract mixin class _$DriveProviderModelCopyWith<$Res> implements $DriveProvide
   factory _$DriveProviderModelCopyWith(_DriveProviderModel value, $Res Function(_DriveProviderModel) _then) = __$DriveProviderModelCopyWithImpl;
 @override @useResult
 $Res call({
- String remoteName, DriveProvider provider, DriveProviderBackend backend, String createdAt, String updatedAt, bool isRCloneBackend
+ String remoteName, String folderName, DriveProvider provider, DriveProviderBackend backend, String createdAt, String updatedAt, bool isRCloneBackend
 });
 
 
@@ -163,9 +165,10 @@ class __$DriveProviderModelCopyWithImpl<$Res>
 
 /// Create a copy of DriveProviderModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? remoteName = null,Object? provider = null,Object? backend = null,Object? createdAt = null,Object? updatedAt = null,Object? isRCloneBackend = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? remoteName = null,Object? folderName = null,Object? provider = null,Object? backend = null,Object? createdAt = null,Object? updatedAt = null,Object? isRCloneBackend = null,}) {
   return _then(_DriveProviderModel(
 remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
+as String,folderName: null == folderName ? _self.folderName : folderName // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
 as DriveProvider,backend: null == backend ? _self.backend : backend // ignore: cast_nullable_to_non_nullable
 as DriveProviderBackend,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable

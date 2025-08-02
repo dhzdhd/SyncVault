@@ -32,6 +32,7 @@ class _NewAccountDialogWidgetState
   @override
   void initState() {
     super.initState();
+    // TODO: Add folderName which is not unique but can be same as remoteName (add switch too)
     _remoteNameController = TextEditingController();
     _urlController = TextEditingController();
     _userController = TextEditingController();

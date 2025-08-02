@@ -9,6 +9,7 @@ part of 'drive_provider_model.dart';
 _DriveProviderModel _$DriveProviderModelFromJson(Map<String, dynamic> json) =>
     _DriveProviderModel(
       remoteName: json['remoteName'] as String,
+      folderName: json['folderName'] as String,
       provider: DriveProvider.fromJson(
         json['provider'] as Map<String, dynamic>,
       ),
@@ -23,6 +24,7 @@ _DriveProviderModel _$DriveProviderModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$DriveProviderModelToJson(_DriveProviderModel instance) =>
     <String, dynamic>{
       'remoteName': instance.remoteName,
+      'folderName': instance.folderName,
       'provider': instance.provider,
       'backend': instance.backend,
       'createdAt': instance.createdAt,
