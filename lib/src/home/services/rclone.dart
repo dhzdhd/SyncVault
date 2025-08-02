@@ -26,14 +26,15 @@ class RCloneDriveService implements DriveService {
       await $(
         TaskEither.tryCatch(
           () async {
+            // TODO: Add parent path to backend
             // final parentPath = remoteParentPath.match(() => '/', (t) => '/$t/');
-            final parentPath = '';
+            final parentPath = '/';
 
             // TODO: S3 only allows bucket name, not path
             final process = await Process.run(execPath, [
               ...configArgs,
               'mkdir',
-              '${model.remoteName}:$parentPath${model.remoteName}',
+              '${model.remoteName}:$parentPath${model.folderName}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {

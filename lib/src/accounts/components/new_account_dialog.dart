@@ -9,6 +9,7 @@ import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
+import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 
@@ -313,6 +314,21 @@ class _NewAccountDialogWidgetState
                         selected.value,
                         _remoteNameController.text,
                         isRCloneBackend.value,
+                      );
+
+                  final providerModel = ref
+                      .watch(authProvider)
+                      .requireValue
+                      .firstWhere(
+                        (model) =>
+                            model.remoteName == _remoteNameController.text,
+                      );
+
+                  await ref
+                      .read(createFolderControllerProvider.notifier)
+                      .createFolder(
+                        title: providerModel.remoteName,
+                        model: providerModel,
                       );
                 } else {
                   await ref

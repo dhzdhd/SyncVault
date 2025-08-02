@@ -11,6 +11,7 @@ import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
 import 'package:syncvault/src/home/services/file_comparer.dart';
@@ -31,18 +32,13 @@ class CreateFolderController extends _$CreateFolderController {
 
   Future<void> createFolder({
     required String title,
-    required DriveProviderModel firstProviderModel,
-    required DriveProviderModel secondProviderModel,
+    required DriveProviderModel model,
   }) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.create(
-        title: title,
-        firstProviderModel: firstProviderModel,
-        secondProviderModel: secondProviderModel,
-      ),
+      () => folderNotifier.create(title: title, providerModel: model),
     );
   }
 }
@@ -131,16 +127,17 @@ class Folder extends _$Folder {
 
   Future<void> create({
     required String title,
-    required DriveProviderModel firstProviderModel,
-    required DriveProviderModel secondProviderModel,
+    required DriveProviderModel providerModel,
   }) async {
-    // TODO: Segregate by provider
-    final driveService = firstProviderModel.isRCloneBackend
+    final driveService = providerModel.isRCloneBackend
         ? RCloneDriveService()
-        : GoogleDriveService();
+        : switch (providerModel.provider) {
+            GoogleDriveProvider() => GoogleDriveService(),
+            _ => throw UnimplementedError(),
+          };
 
     final model = await driveService
-        .create(title: title, model: firstProviderModel)
+        .create(title: title, model: providerModel)
         .match((l) => throw l, (r) => r)
         .run();
 

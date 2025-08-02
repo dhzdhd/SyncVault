@@ -144,13 +144,13 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                   'One or both of the fields are not filled',
                 ),
                 (t) async {
-                  await ref
-                      .read(createFolderControllerProvider.notifier)
-                      .createFolder(
-                        title: t.$1,
-                        firstProviderModel: t.$2,
-                        secondProviderModel: t.$3,
-                      );
+                  // await ref
+                  //     .read(createFolderControllerProvider.notifier)
+                  //     .createFolder(
+                  //       title: t.$1,
+                  //       firstProviderModel: t.$2,
+                  //       secondProviderModel: t.$3,
+                  //     );
 
                   // TODO: Show this only on no error
                   if (context.mounted) {

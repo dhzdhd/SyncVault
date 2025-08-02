@@ -29,13 +29,16 @@ class AccountCard extends StatelessWidget {
               child: Row(
                 spacing: 10,
                 children: [
+                  // TODO: Badge should change based on remote availability status
                   Badge(backgroundColor: Colors.green),
                   Tooltip(
                     message: providerModel.provider.displayName,
-                    child: SvgPicture.asset(
-                      providerModel.provider.providerIcon,
+                    child: SizedBox(
                       width: MediaQuery.of(context).size.width < 500 ? 50 : 70,
                       height: MediaQuery.of(context).size.width < 500 ? 50 : 70,
+                      child: SvgPicture.asset(
+                        providerModel.provider.providerIcon,
+                      ),
                     ),
                   ),
                   Expanded(
