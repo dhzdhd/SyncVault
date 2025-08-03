@@ -9,6 +9,8 @@ import 'package:syncvault/src/home/controllers/folder_controller.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
+enum SyncDirection { upload, download, bidirectional }
+
 class NewFolderDialogWidget extends StatefulHookConsumerWidget {
   const NewFolderDialogWidget({super.key});
 
@@ -40,6 +42,9 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
     final secondSelectedProvider = useState<Option<DriveProviderModel>>(
       const None(),
     );
+    final selectedDirection = useState<Set<SyncDirection>>({
+      SyncDirection.upload,
+    });
 
     final authInfo = ref.watch(authProvider);
     final createFolderController = ref.watch(createFolderControllerProvider);
@@ -57,7 +62,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
     });
 
     return SimpleDialog(
-      title: const Text('Sync a new folder'),
+      title: const Text('Create a new connection'),
       contentPadding: const EdgeInsets.all(24),
       children: [
         TextField(
@@ -114,6 +119,27 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
             secondSelectedProvider.value = Option.fromNullable(e);
           },
         ),
+        const SizedBox(height: 16),
+        SegmentedButton<SyncDirection>(
+          showSelectedIcon: false,
+          segments: SyncDirection.values
+              .map(
+                (dir) => ButtonSegment(
+                  value: dir,
+                  label: Text(dir.name),
+                  icon: Icon(switch (dir) {
+                    SyncDirection.bidirectional => Icons.sync,
+                    SyncDirection.upload => Icons.upload,
+                    SyncDirection.download => Icons.download,
+                  }),
+                ),
+              )
+              .toList(),
+          selected: selectedDirection.value,
+          onSelectionChanged: (val) {
+            selectedDirection.value = val;
+          },
+        ),
         const SizedBox(height: 24),
         ElevatedButton(
           child: createFolderController.isLoading
@@ -144,14 +170,6 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                   'One or both of the fields are not filled',
                 ),
                 (t) async {
-                  // await ref
-                  //     .read(createFolderControllerProvider.notifier)
-                  //     .createFolder(
-                  //       title: t.$1,
-                  //       firstProviderModel: t.$2,
-                  //       secondProviderModel: t.$3,
-                  //     );
-
                   // TODO: Show this only on no error
                   if (context.mounted) {
                     context.showSuccessSnackBar(
