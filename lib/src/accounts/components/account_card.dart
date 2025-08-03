@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/components/delete_account_dialog.dart';
 import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
+import 'package:syncvault/src/accounts/controllers/connection_controller.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
-class AccountCard extends StatelessWidget {
+class AccountCard extends ConsumerWidget {
   const AccountCard({
     super.key,
     required this.textTheme,
@@ -16,7 +18,9 @@ class AccountCard extends StatelessWidget {
   final DriveProviderModel providerModel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final connectionStatus = ref.watch(connectionStatusProvider(providerModel));
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -29,8 +33,15 @@ class AccountCard extends StatelessWidget {
               child: Row(
                 spacing: 10,
                 children: [
-                  // TODO: Badge should change based on remote availability status
-                  Badge(backgroundColor: Colors.green),
+                  Badge(
+                    backgroundColor: switch (connectionStatus) {
+                      AsyncData(:final value) =>
+                        value ? Colors.green : Colors.red,
+                      AsyncLoading() => Colors.orange,
+                      AsyncError() => Colors.red,
+                      AsyncValue<bool>() => Colors.red,
+                    },
+                  ),
                   Tooltip(
                     message: providerModel.provider.displayName,
                     child: SizedBox(
