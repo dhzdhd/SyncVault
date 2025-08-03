@@ -220,4 +220,10 @@ class GoogleAuthService implements ManualAuthService {
       ),
     );
   }
+
+  @override
+  TaskEither<AppError, bool> isHealthy({required DriveProviderModel model}) {
+    // TODO: implement isHealthy
+    throw UnimplementedError();
+  }
 }

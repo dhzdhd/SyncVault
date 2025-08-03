@@ -14,6 +14,7 @@ abstract interface class AuthService {
   TaskEither<AppError, Option<DriveInfoModel>> driveInfo({
     required DriveProviderModel model,
   });
+  TaskEither<AppError, bool> isHealthy({required DriveProviderModel model});
 }
 
 abstract interface class ManualAuthService extends AuthService {

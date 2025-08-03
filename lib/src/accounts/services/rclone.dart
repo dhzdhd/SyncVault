@@ -24,6 +24,30 @@ const errorMsgMap = {
   r'address already in use': 'Restart the application to proceed',
 };
 
+Future<void> killProcessOnPort(int port) async {
+  final result = await Process.run('lsof', ['-i', ':$port', '-t']);
+  if (result.exitCode != 0 || result.stdout.toString().trim().isEmpty) {
+    debugLogger.e('No process found running on port $port');
+    return;
+  }
+
+  final pid = result.stdout.toString().trim();
+  debugLogger.i('Killing process with PID $pid on port $port');
+
+  final killResult = await Process.run('kill', ['-9', pid]);
+  if (killResult.exitCode == 0) {
+    debugLogger.i('Process killed.');
+  } else {
+    debugLogger.e('Failed to kill process: ${killResult.stderr}');
+  }
+}
+
+Future<bool> checkProcessIsNotUsed(int port) async {
+  final result = await Process.run('lsof', ['-i', ':$port', '-t']);
+
+  return (result.exitCode != 0 || result.stdout.toString().trim().isEmpty);
+}
+
 @singleton
 class RCloneAuthService implements AuthService {
   @override
@@ -53,6 +77,18 @@ class RCloneAuthService implements AuthService {
         OAuth2() => await $(
           TaskEither.tryCatch(
             () async {
+              await killProcessOnPort(53682);
+
+              // if (await checkProcessIsNotUsed(57000)) {
+              //   final server = await Process.run(execPath, [
+              //     'rcd',
+              //     '--rc-addr',
+              //     ':57000',
+              //   ]);
+              //   debugLogger.i(server.stdout);
+              //   debugLogger.i(server.stderr);
+              // }
+
               final process = await Process.start(execPath, [
                 'authorize',
                 '--auth-no-open-browser',
@@ -65,12 +101,28 @@ class RCloneAuthService implements AuthService {
                 r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
               );
 
-              // Listen to stdout, stderr
+              var urlLaunched = false;
+
               process.stdout.transform(utf8.decoder).listen((data) {
                 output.write(data);
               });
               process.stderr.transform(utf8.decoder).listen((data) {
                 errorOutput.write(data);
+
+                // Match url with regex (url is in stderr for whatever reason)
+                if (!urlLaunched) {
+                  final urlMatch = urlPattern.firstMatch(
+                    errorOutput.toString(),
+                  );
+                  if (urlMatch != null) {
+                    final url = urlMatch.group(0);
+                    if (url != null) {
+                      urlLaunched = true;
+                      launchUrlString(url);
+                      debugLogger.i('Auth URL launched: $url');
+                    }
+                  }
+                }
               });
 
               // Wait for process to finish
@@ -85,14 +137,8 @@ class RCloneAuthService implements AuthService {
                 }
               }
 
-              // Match url with regex (url is in stderr for whatever reason)
-              final urlMatch = urlPattern.firstMatch(errorOutput.toString());
-              if (urlMatch != null) {
-                final url = urlMatch.group(0);
-                if (url != null) {
-                  launchUrlString(url);
-                }
-              } else {
+              // Ensure URL was found and launched
+              if (!urlLaunched) {
                 throw const GeneralError(
                   'Could not fetch auth URL from RClone',
                   null,
@@ -103,6 +149,7 @@ class RCloneAuthService implements AuthService {
               final match =
                   RegExp(r'\{.+\}').stringMatch(output.toString()) ?? '';
               final Map<String, dynamic> authJson = jsonDecode(match);
+
               if (authJson case {
                 'access_token': String accessToken,
                 'refresh_token': String refreshToken,
@@ -355,6 +402,36 @@ class RCloneAuthService implements AuthService {
             err,
             stackTrace,
           ).logError(),
+        ),
+      );
+    });
+  }
+
+  @override
+  TaskEither<AppError, bool> isHealthy({required DriveProviderModel model}) {
+    final utils = RCloneUtils();
+
+    return TaskEither.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
+
+      return await $(
+        TaskEither.tryCatch(
+          () async {
+            final process = await Process.run(execPath, [
+              ...configArgs,
+              'lsd',
+              '${model.remoteName}:',
+            ]);
+
+            return process.exitCode == 0;
+          },
+          (err, st) => ProviderError(
+            model.provider,
+            ProviderOperationType.getDriveInfo,
+            err,
+            st,
+          ),
         ),
       );
     });
