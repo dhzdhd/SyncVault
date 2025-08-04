@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/components/delete_account_dialog.dart';
 import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/connection_controller.dart';
+import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
@@ -148,6 +149,24 @@ class AccountCard extends ConsumerWidget {
                         context: context,
                         builder: (ctx) =>
                             DeleteAccountDialogWidget(model: providerModel),
+                      );
+                    }
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Row(
+                    children: [
+                      Text('Tree view'),
+                      Spacer(),
+                      Icon(Icons.account_tree),
+                    ],
+                  ),
+                  onTap: () async {
+                    if (context.mounted) {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (ctx) =>
+                            TreeViewSheetWidget(providerModel: providerModel),
                       );
                     }
                   },

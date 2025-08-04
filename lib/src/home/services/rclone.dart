@@ -161,7 +161,7 @@ class RCloneDriveService implements DriveService {
 
   @override
   TaskEither<AppError, Option<FileModel>> treeView({
-    required FolderModel model,
+    required DriveProviderModel model,
   }) {
     final utils = RCloneUtils();
 
@@ -172,9 +172,11 @@ class RCloneDriveService implements DriveService {
       final Option<FileModel> fileModel = await $(
         TaskEither.tryCatch(
           () async {
-            final parentPath = Option.fromNullable(
-              model.title,
-            ).match(() => '/', (t) => '/$t/');
+            // TODO: Get from parentPath
+            // final parentPath = Option.fromNullable(
+            //   model.remoteName,
+            // ).match(() => '/', (t) => '/$t/');
+            final parentPath = Some('/');
 
             final process = await Process.run(execPath, [
               ...configArgs,
@@ -184,7 +186,7 @@ class RCloneDriveService implements DriveService {
               '--full-path',
               '-s',
               '-Q',
-              '${model.firstRemote}:/$parentPath${model.firstRemote}',
+              '${model.remoteName}:$parentPath${model.folderName}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {

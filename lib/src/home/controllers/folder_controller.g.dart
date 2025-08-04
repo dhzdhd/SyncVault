@@ -6,7 +6,7 @@ part of 'folder_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$treeViewHash() => r'db2c11df99380dda253ad536a68c2d46a956cbf8';
+String _$treeViewHash() => r'63053cf622f32eb3b3b93cfa6abf94448f8e0809';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -39,13 +39,13 @@ class TreeViewFamily extends Family<AsyncValue<Option<FileModel>>> {
   const TreeViewFamily();
 
   /// See also [treeView].
-  TreeViewProvider call(FolderModel folderModel) {
-    return TreeViewProvider(folderModel);
+  TreeViewProvider call(DriveProviderModel model) {
+    return TreeViewProvider(model);
   }
 
   @override
   TreeViewProvider getProviderOverride(covariant TreeViewProvider provider) {
-    return call(provider.folderModel);
+    return call(provider.model);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -66,9 +66,9 @@ class TreeViewFamily extends Family<AsyncValue<Option<FileModel>>> {
 /// See also [treeView].
 class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
   /// See also [treeView].
-  TreeViewProvider(FolderModel folderModel)
+  TreeViewProvider(DriveProviderModel model)
     : this._internal(
-        (ref) => treeView(ref as TreeViewRef, folderModel),
+        (ref) => treeView(ref as TreeViewRef, model),
         from: treeViewProvider,
         name: r'treeViewProvider',
         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -76,7 +76,7 @@ class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
             : _$treeViewHash,
         dependencies: TreeViewFamily._dependencies,
         allTransitiveDependencies: TreeViewFamily._allTransitiveDependencies,
-        folderModel: folderModel,
+        model: model,
       );
 
   TreeViewProvider._internal(
@@ -86,10 +86,10 @@ class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.folderModel,
+    required this.model,
   }) : super.internal();
 
-  final FolderModel folderModel;
+  final DriveProviderModel model;
 
   @override
   Override overrideWith(
@@ -104,7 +104,7 @@ class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        folderModel: folderModel,
+        model: model,
       ),
     );
   }
@@ -116,13 +116,13 @@ class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
 
   @override
   bool operator ==(Object other) {
-    return other is TreeViewProvider && other.folderModel == folderModel;
+    return other is TreeViewProvider && other.model == model;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, folderModel.hashCode);
+    hash = _SystemHash.combine(hash, model.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -131,8 +131,8 @@ class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin TreeViewRef on AutoDisposeFutureProviderRef<Option<FileModel>> {
-  /// The parameter `folderModel` of this provider.
-  FolderModel get folderModel;
+  /// The parameter `model` of this provider.
+  DriveProviderModel get model;
 }
 
 class _TreeViewProviderElement
@@ -141,7 +141,7 @@ class _TreeViewProviderElement
   _TreeViewProviderElement(super.provider);
 
   @override
-  FolderModel get folderModel => (origin as TreeViewProvider).folderModel;
+  DriveProviderModel get model => (origin as TreeViewProvider).model;
 }
 
 String _$createFolderControllerHash() =>

@@ -114,7 +114,7 @@ class GoogleDriveService implements DriveService {
 
   @override
   TaskEither<AppError, Option<FileModel>> treeView({
-    required FolderModel model,
+    required DriveProviderModel model,
   }) {
     // TODO: implement treeView
     throw UnimplementedError();

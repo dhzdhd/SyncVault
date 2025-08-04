@@ -399,26 +399,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Bidirectional sync',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Switch(
-                                      value: folderModel.isTwoWaySync,
-                                      onChanged: (val) => folderNotifier
-                                          .toggleTwoWaySync(folderModel),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
                                   'Delete on sync',
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
@@ -434,20 +414,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   ),
                                 ),
                               ],
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: OutlinedButton(
-                                onPressed: () async {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (ctx) => TreeViewSheetWidget(
-                                      folderModel: folderModel,
-                                    ),
-                                  );
-                                },
-                                child: const Text('Tree view'),
-                              ),
                             ),
                           ],
                         ),

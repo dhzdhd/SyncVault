@@ -68,9 +68,9 @@ class UploadDeleteController extends _$UploadDeleteController {
 }
 
 @riverpod
-Future<Option<FileModel>> treeView(Ref ref, FolderModel folderModel) async {
+Future<Option<FileModel>> treeView(Ref ref, DriveProviderModel model) async {
   return RCloneDriveService()
-      .treeView(model: folderModel)
+      .treeView(model: model)
       .match((l) => throw l, (r) => r)
       .run();
 }
