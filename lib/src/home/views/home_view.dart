@@ -35,7 +35,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   void initState() {
-    final folders = ref.read(folderProvider).toList();
+    final connections = ref.read(folderProvider).toList();
     _watchers = [];
     // _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
     super.initState();
@@ -188,7 +188,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
               delegate: SliverChildListDelegate.fixed(
                 folderInfo
                     .mapWithIndex(
-                      (folderModel, index) => ExpandableCardWidget(
+                      (connectionModel, index) => ExpandableCardWidget(
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,7 +203,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Text(
-                                folderModel.title,
+                                connectionModel.title,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.headlineSmall,
@@ -245,7 +245,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        folderModel.title,
+                                        connectionModel.title,
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge,
@@ -272,7 +272,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                     onPressed: () async {
                                                       await launchUrl(
                                                         Uri.file(
-                                                          folderModel.title,
+                                                          connectionModel.title,
                                                         ),
                                                       );
                                                     },
@@ -303,7 +303,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                                 .notifier,
                                                           )
                                                           .upload(
-                                                            folderModel,
+                                                            connectionModel,
                                                             none(),
                                                           );
 
@@ -345,7 +345,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                                           builder: (ctx) =>
                                                               DeleteFolderDialogWidget(
                                                                 model:
-                                                                    folderModel,
+                                                                    connectionModel,
                                                               ),
                                                         );
                                                       }
@@ -370,7 +370,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 Text(
-                                  folderModel.firstRemote,
+                                  connectionModel.firstRemote,
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                               ],
@@ -387,9 +387,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   child: FittedBox(
                                     fit: BoxFit.fill,
                                     child: Switch(
-                                      value: folderModel.isAutoSync,
+                                      value: connectionModel.isAutoSync,
                                       onChanged: (val) => folderNotifier
-                                          .toggleAutoSync(folderModel),
+                                          .toggleAutoSync(connectionModel),
                                     ),
                                   ),
                                 ),
@@ -407,9 +407,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   child: FittedBox(
                                     fit: BoxFit.fill,
                                     child: Switch(
-                                      value: folderModel.isDeletionEnabled,
-                                      onChanged: (val) => folderNotifier
-                                          .toggleDeletionOnSync(folderModel),
+                                      value: connectionModel.isDeletionEnabled,
+                                      onChanged: (val) =>
+                                          folderNotifier.toggleDeletionOnSync(
+                                            connectionModel,
+                                          ),
                                     ),
                                   ),
                                 ),

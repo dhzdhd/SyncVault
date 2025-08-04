@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'connection_controller.dart';
+part of 'status_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator

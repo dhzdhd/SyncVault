@@ -8,7 +8,7 @@ import 'package:syncvault/errors.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
-import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/accounts/models/connection_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
@@ -20,10 +20,10 @@ import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'folder_controller.g.dart';
 
-final _folderBox = GetIt.I<Box<FolderModel>>();
+final _folderBox = GetIt.I<Box<ConnectionModel>>();
 final _hashBox = GetIt.I<Box<FolderHashModel>>();
 // TODO: Make fetchable from GetIt
-final _folderStorage = HiveStorage<FolderModel>(_folderBox);
+final _folderStorage = HiveStorage<ConnectionModel>(_folderBox);
 
 @riverpod
 class CreateFolderController extends _$CreateFolderController {
@@ -48,21 +48,27 @@ class UploadDeleteController extends _$UploadDeleteController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> upload(FolderModel folderModel, Option<String> filePath) async {
+  Future<void> upload(
+    ConnectionModel connectionModel,
+    Option<String> filePath,
+  ) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.upload(folderModel, filePath),
+      () => folderNotifier.upload(connectionModel, filePath),
     );
   }
 
-  Future<void> delete(FolderModel folderModel, bool deleteRemote) async {
+  Future<void> delete(
+    ConnectionModel connectionModel,
+    bool deleteRemote,
+  ) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.delete(folderModel, deleteRemote),
+      () => folderNotifier.delete(connectionModel, deleteRemote),
     );
   }
 }
@@ -81,15 +87,15 @@ class Folder extends _$Folder {
   final _fileComparer = FileComparer();
 
   @override
-  List<FolderModel> build() {
+  List<ConnectionModel> build() {
     return init();
   }
 
-  static List<FolderModel> init() {
+  static List<ConnectionModel> init() {
     return _folderStorage.fetchAll().toList();
   }
 
-  Future<void> toggleAutoSync(FolderModel model) async {
+  Future<void> toggleAutoSync(ConnectionModel model) async {
     final index = state.indexOf(model);
     state = [
       ...state
@@ -100,7 +106,7 @@ class Folder extends _$Folder {
     _folderStorage.update(state);
   }
 
-  Future<void> toggleDeletionOnSync(FolderModel model) async {
+  Future<void> toggleDeletionOnSync(ConnectionModel model) async {
     final index = state.indexOf(model);
     state = [
       ...state
@@ -114,7 +120,7 @@ class Folder extends _$Folder {
     _folderStorage.update(state);
   }
 
-  Future<void> toggleTwoWaySync(FolderModel model) async {
+  Future<void> toggleTwoWaySync(ConnectionModel model) async {
     final index = state.indexOf(model);
     state = [
       ...state
@@ -146,23 +152,26 @@ class Folder extends _$Folder {
     await _folderStorage.addSingle(model);
   }
 
-  Future<void> upload(FolderModel folderModel, Option<String> filePath) async {
+  Future<void> upload(
+    ConnectionModel connectionModel,
+    Option<String> filePath,
+  ) async {
     final providerModels = ref.watch(authProvider);
     final providerModel = providerModels.requireValue
-        .filter((t) => t.remoteName == folderModel.firstRemote)
+        .filter((t) => t.remoteName == connectionModel.firstRemote)
         .first;
 
     await RCloneDriveService()
         .upload(
           providerModel: providerModel,
-          folderModel: folderModel,
-          localPath: folderModel.title,
+          connectionModel: connectionModel,
+          localPath: connectionModel.title,
         )
         .run();
 
     if (PlatformExtension.isMobile) {
       final files = await Directory(
-        folderModel.title,
+        connectionModel.title,
       ).list(recursive: true).toList();
       final hashResult = await _fileComparer
           .calcHash(files.whereType<File>().toList())
@@ -174,7 +183,7 @@ class Folder extends _$Folder {
           final hashModels = _hashStorage.fetchAll().toList();
           final model = FolderHashModel(
             hash: hash,
-            remoteName: folderModel.firstRemote,
+            remoteName: connectionModel.firstRemote,
           );
           _hashStorage.update(
             hashModels
@@ -188,7 +197,7 @@ class Folder extends _$Folder {
     // TODO: Implement per file
   }
 
-  Future<void> delete(FolderModel model, bool deleteRemote) async {
+  Future<void> delete(ConnectionModel model, bool deleteRemote) async {
     if (deleteRemote) {
       final providerModels = ref.watch(authProvider);
       final providerModel = providerModels.requireValue
@@ -196,7 +205,7 @@ class Folder extends _$Folder {
           .first;
 
       await RCloneDriveService()
-          .delete(providerModel: providerModel, folderModel: model)
+          .delete(providerModel: providerModel, connectionModel: model)
           .run();
     }
 

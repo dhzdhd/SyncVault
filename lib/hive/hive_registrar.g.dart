@@ -7,10 +7,10 @@ import 'package:syncvault/hive/hive_adapters.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(ConnectionModelAdapter());
     registerAdapter(DriveProviderModelAdapter());
     registerAdapter(DropBoxProviderAdapter());
     registerAdapter(FolderHashModelAdapter());
-    registerAdapter(FolderModelAdapter());
     registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
@@ -32,10 +32,10 @@ extension HiveRegistrar on HiveInterface {
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(ConnectionModelAdapter());
     registerAdapter(DriveProviderModelAdapter());
     registerAdapter(DropBoxProviderAdapter());
     registerAdapter(FolderHashModelAdapter());
-    registerAdapter(FolderModelAdapter());
     registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());

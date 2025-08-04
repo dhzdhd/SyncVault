@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hashlib/hashlib.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/accounts/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/workflows/models/workflow_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
@@ -32,7 +32,7 @@ part 'hive_adapters.g.dart';
   AdapterSpec<Webdav>(),
   AdapterSpec<UserPassword>(),
   AdapterSpec<Local>(),
-  AdapterSpec<FolderModel>(),
+  AdapterSpec<ConnectionModel>(),
   AdapterSpec<WorkflowModel>(),
   AdapterSpec<FolderHashModel>(),
   AdapterSpec<HashDigest>(),

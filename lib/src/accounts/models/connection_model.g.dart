@@ -1,22 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'folder_model.dart';
+part of 'connection_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => _FolderModel(
-  title: json['title'] as String,
-  firstRemote: json['firstRemote'] as String,
-  secondRemote: json['secondRemote'] as String,
-  isAutoSync: json['isAutoSync'] as bool,
-  isDeletionEnabled: json['isDeletionEnabled'] as bool,
-  isTwoWaySync: json['isTwoWaySync'] as bool,
-  folderId: json['folderId'] as String?,
-);
+_ConnectionModel _$ConnectionModelFromJson(Map<String, dynamic> json) =>
+    _ConnectionModel(
+      title: json['title'] as String,
+      firstRemote: json['firstRemote'] as String,
+      secondRemote: json['secondRemote'] as String,
+      isAutoSync: json['isAutoSync'] as bool,
+      isDeletionEnabled: json['isDeletionEnabled'] as bool,
+      isTwoWaySync: json['isTwoWaySync'] as bool,
+      folderId: json['folderId'] as String?,
+    );
 
-Map<String, dynamic> _$FolderModelToJson(_FolderModel instance) =>
+Map<String, dynamic> _$ConnectionModelToJson(_ConnectionModel instance) =>
     <String, dynamic>{
       'title': instance.title,
       'firstRemote': instance.firstRemote,

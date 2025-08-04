@@ -3,13 +3,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part 'folder_model.freezed.dart';
-part 'folder_model.g.dart';
+part 'connection_model.freezed.dart';
+part 'connection_model.g.dart';
 
 @freezed
 // TODO: Convert nullables to option when adapter is fixed
-abstract class FolderModel with _$FolderModel {
-  const factory FolderModel({
+abstract class ConnectionModel with _$ConnectionModel {
+  const factory ConnectionModel({
     required String title,
     required String firstRemote,
     required String secondRemote,
@@ -17,8 +17,8 @@ abstract class FolderModel with _$FolderModel {
     required bool isDeletionEnabled,
     required bool isTwoWaySync,
     required String? folderId, // TODO: Move to drive provider
-  }) = _FolderModel;
+  }) = _ConnectionModel;
 
-  factory FolderModel.fromJson(Map<String, Object?> json) =>
-      _$FolderModelFromJson(json);
+  factory ConnectionModel.fromJson(Map<String, Object?> json) =>
+      _$ConnectionModelFromJson(json);
 }

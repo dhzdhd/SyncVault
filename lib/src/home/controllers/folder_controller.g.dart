@@ -162,7 +162,7 @@ final createFolderControllerProvider =
 
 typedef _$CreateFolderController = AutoDisposeAsyncNotifier<void>;
 String _$uploadDeleteControllerHash() =>
-    r'120266902bce20929104826f508f50c0eebf402b';
+    r'2c0897e883dee2e06d841302f9c9a07885657223';
 
 /// See also [UploadDeleteController].
 @ProviderFor(UploadDeleteController)
@@ -178,12 +178,12 @@ final uploadDeleteControllerProvider =
     );
 
 typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<void>;
-String _$folderHash() => r'7f17c353727a2726594beaa94db1ad17bd422d5b';
+String _$folderHash() => r'e09d2fb2206fb980a11b7cecc4c6492614f4836d';
 
 /// See also [Folder].
 @ProviderFor(Folder)
 final folderProvider =
-    AutoDisposeNotifierProvider<Folder, List<FolderModel>>.internal(
+    AutoDisposeNotifierProvider<Folder, List<ConnectionModel>>.internal(
       Folder.new,
       name: r'folderProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -193,6 +193,6 @@ final folderProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$Folder = AutoDisposeNotifier<List<FolderModel>>;
+typedef _$Folder = AutoDisposeNotifier<List<ConnectionModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

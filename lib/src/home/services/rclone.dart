@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
-import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/accounts/models/connection_model.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/common.dart';
@@ -13,13 +13,13 @@ import 'package:syncvault/src/home/services/common.dart';
 @singleton
 class RCloneDriveService implements DriveService {
   @override
-  TaskEither<AppError, FolderModel> create({
+  TaskEither<AppError, ConnectionModel> create({
     required String title,
     required DriveProviderModel model,
   }) {
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, FolderModel>.Do(($) async {
+    return TaskEither<AppError, ConnectionModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
@@ -52,7 +52,7 @@ class RCloneDriveService implements DriveService {
         ),
       );
 
-      final folderModel = FolderModel(
+      final folderModel = ConnectionModel(
         title: model.remoteName,
         firstRemote: model.remoteName,
         secondRemote: model.remoteName,
@@ -68,7 +68,7 @@ class RCloneDriveService implements DriveService {
   @override
   TaskEither<AppError, ()> upload({
     required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required ConnectionModel connectionModel,
     required String localPath,
     String? rCloneExecPath,
   }) {
@@ -82,19 +82,19 @@ class RCloneDriveService implements DriveService {
         TaskEither.tryCatch(
           () async {
             final parentPath = Option.fromNullable(
-              folderModel.title,
+              connectionModel.title,
             ).match(() => '/', (t) => '/$t/');
 
             final process = await Process.run(execPath!, [
               // Use a 2 way copy to avoid deletion
               ...configArgs,
-              folderModel.isTwoWaySync ? 'bisync' : 'sync',
+              connectionModel.isTwoWaySync ? 'bisync' : 'sync',
               '-u', // Do not delete/update on remote if remote file is newer
               '-M',
               '--inplace', // Bisync fails without this
-              if (folderModel.isTwoWaySync) '--resync',
+              if (connectionModel.isTwoWaySync) '--resync',
               localPath,
-              '${folderModel.firstRemote}:/$parentPath${folderModel.firstRemote}',
+              '${connectionModel.firstRemote}:/$parentPath${connectionModel.firstRemote}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -119,7 +119,7 @@ class RCloneDriveService implements DriveService {
   @override
   TaskEither<AppError, ()> delete({
     required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required ConnectionModel connectionModel,
   }) {
     final utils = RCloneUtils();
 
@@ -131,13 +131,13 @@ class RCloneDriveService implements DriveService {
         TaskEither.tryCatch(
           () async {
             final parentPath = Option.fromNullable(
-              folderModel.title,
+              connectionModel.title,
             ).match(() => '/', (t) => '/$t/');
 
             final process = await Process.run(execPath, [
               ...configArgs,
               'purge',
-              '${folderModel.firstRemote}:/$parentPath${folderModel.firstRemote}',
+              '${connectionModel.firstRemote}:/$parentPath${connectionModel.firstRemote}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {

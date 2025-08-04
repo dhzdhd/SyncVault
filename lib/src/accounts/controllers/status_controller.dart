@@ -6,7 +6,7 @@ import 'package:syncvault/src/accounts/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
-part 'connection_controller.g.dart';
+part 'status_controller.g.dart';
 
 @riverpod
 Future<bool> connectionStatus(Ref ref, DriveProviderModel model) async {

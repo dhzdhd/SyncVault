@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/home/controllers/folder_controller.dart';
-import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/accounts/models/connection_model.dart';
 
 class DeleteFolderDialogWidget extends ConsumerWidget {
   const DeleteFolderDialogWidget({super.key, required this.model});
 
-  final FolderModel model;
+  final ConnectionModel model;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

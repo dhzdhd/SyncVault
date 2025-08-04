@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
-import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/accounts/models/connection_model.dart';
 import 'package:syncvault/src/common/services/providers/google_utils.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -14,7 +14,7 @@ import 'package:googleapis_auth/googleapis_auth.dart';
 @singleton
 class GoogleDriveService implements DriveService {
   @override
-  TaskEither<AppError, FolderModel> create({
+  TaskEither<AppError, ConnectionModel> create({
     required String title,
     required DriveProviderModel model,
   }) {
@@ -71,7 +71,7 @@ class GoogleDriveService implements DriveService {
 
         httpClient.close();
 
-        return FolderModel(
+        return ConnectionModel(
           title: '',
           firstRemote: model.remoteName,
           secondRemote: '',
@@ -95,7 +95,7 @@ class GoogleDriveService implements DriveService {
   @override
   TaskEither<AppError, ()> upload({
     required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required ConnectionModel connectionModel,
     required String localPath,
     String? rCloneExecPath,
   }) {
@@ -106,7 +106,7 @@ class GoogleDriveService implements DriveService {
   @override
   TaskEither<AppError, ()> delete({
     required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required ConnectionModel connectionModel,
   }) {
     // TODO: implement delete
     throw UnimplementedError();

@@ -309,58 +309,6 @@ class WebdavAdapter extends TypeAdapter<Webdav> {
           typeId == other.typeId;
 }
 
-class FolderModelAdapter extends TypeAdapter<FolderModel> {
-  @override
-  final typeId = 11;
-
-  @override
-  FolderModel read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return FolderModel(
-      title: fields[14] as String,
-      firstRemote: fields[12] as String,
-      secondRemote: fields[13] as String,
-      isAutoSync: fields[4] as bool,
-      isDeletionEnabled: fields[5] as bool,
-      isTwoWaySync: fields[6] as bool,
-      folderId: fields[9] as String?,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, FolderModel obj) {
-    writer
-      ..writeByte(7)
-      ..writeByte(4)
-      ..write(obj.isAutoSync)
-      ..writeByte(5)
-      ..write(obj.isDeletionEnabled)
-      ..writeByte(6)
-      ..write(obj.isTwoWaySync)
-      ..writeByte(9)
-      ..write(obj.folderId)
-      ..writeByte(12)
-      ..write(obj.firstRemote)
-      ..writeByte(13)
-      ..write(obj.secondRemote)
-      ..writeByte(14)
-      ..write(obj.title);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FolderModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
 class UserPasswordAdapter extends TypeAdapter<UserPassword> {
   @override
   final typeId = 12;
@@ -767,6 +715,58 @@ class LocalAdapter extends TypeAdapter<Local> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is LocalAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
+  @override
+  final typeId = 32;
+
+  @override
+  ConnectionModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ConnectionModel(
+      title: fields[0] as String,
+      firstRemote: fields[1] as String,
+      secondRemote: fields[2] as String,
+      isAutoSync: fields[3] as bool,
+      isDeletionEnabled: fields[4] as bool,
+      isTwoWaySync: fields[5] as bool,
+      folderId: fields[6] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, ConnectionModel obj) {
+    writer
+      ..writeByte(7)
+      ..writeByte(0)
+      ..write(obj.title)
+      ..writeByte(1)
+      ..write(obj.firstRemote)
+      ..writeByte(2)
+      ..write(obj.secondRemote)
+      ..writeByte(3)
+      ..write(obj.isAutoSync)
+      ..writeByte(4)
+      ..write(obj.isDeletionEnabled)
+      ..writeByte(5)
+      ..write(obj.isTwoWaySync)
+      ..writeByte(6)
+      ..write(obj.folderId);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ConnectionModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

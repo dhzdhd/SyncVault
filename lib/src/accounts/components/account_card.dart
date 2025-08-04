@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/components/delete_account_dialog.dart';
 import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
-import 'package:syncvault/src/accounts/controllers/connection_controller.dart';
+import 'package:syncvault/src/accounts/controllers/status_controller.dart';
 import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
