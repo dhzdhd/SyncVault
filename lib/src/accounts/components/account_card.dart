@@ -44,7 +44,15 @@ class AccountCard extends ConsumerWidget {
                     },
                   ),
                   Tooltip(
-                    message: providerModel.provider.displayName,
+                    message:
+                        providerModel.provider.displayName +
+                        switch (connectionStatus) {
+                          AsyncData(:final value) =>
+                            value ? ' | Available' : ' | Unavailable',
+                          AsyncLoading() => ' | Checking',
+                          AsyncError() => ' | Unavailable',
+                          AsyncValue<bool>() => ' | Unavailable',
+                        },
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width < 500 ? 50 : 70,
                       height: MediaQuery.of(context).size.width < 500 ? 50 : 70,
