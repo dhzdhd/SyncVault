@@ -84,7 +84,7 @@ $DriveProviderBackendCopyWith(DriveProviderBackend _, $Res Function(DriveProvide
 @JsonSerializable()
 
 class OAuth2 implements DriveProviderBackend {
-  const OAuth2({required final  Map<String, dynamic> authJson, required this.accessToken, required this.refreshToken, required this.expiresIn, required this.parentPath, final  String? $type}): _authJson = authJson,$type = $type ?? 'oauth2';
+  const OAuth2({required final  Map<String, dynamic> authJson, required this.accessToken, required this.refreshToken, required this.expiresIn, final  String? $type}): _authJson = authJson,$type = $type ?? 'oauth2';
   factory OAuth2.fromJson(Map<String, dynamic> json) => _$OAuth2FromJson(json);
 
  final  Map<String, dynamic> _authJson;
@@ -97,7 +97,6 @@ class OAuth2 implements DriveProviderBackend {
  final  String accessToken;
  final  String refreshToken;
  final  String expiresIn;
- final  String parentPath;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -116,16 +115,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OAuth2&&const DeepCollectionEquality().equals(other._authJson, _authJson)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.expiresIn, expiresIn) || other.expiresIn == expiresIn)&&(identical(other.parentPath, parentPath) || other.parentPath == parentPath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OAuth2&&const DeepCollectionEquality().equals(other._authJson, _authJson)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.expiresIn, expiresIn) || other.expiresIn == expiresIn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_authJson),accessToken,refreshToken,expiresIn,parentPath);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_authJson),accessToken,refreshToken,expiresIn);
 
 @override
 String toString() {
-  return 'DriveProviderBackend.oauth2(authJson: $authJson, accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn, parentPath: $parentPath)';
+  return 'DriveProviderBackend.oauth2(authJson: $authJson, accessToken: $accessToken, refreshToken: $refreshToken, expiresIn: $expiresIn)';
 }
 
 
@@ -136,7 +135,7 @@ abstract mixin class $OAuth2CopyWith<$Res> implements $DriveProviderBackendCopyW
   factory $OAuth2CopyWith(OAuth2 value, $Res Function(OAuth2) _then) = _$OAuth2CopyWithImpl;
 @useResult
 $Res call({
- Map<String, dynamic> authJson, String accessToken, String refreshToken, String expiresIn, String parentPath
+ Map<String, dynamic> authJson, String accessToken, String refreshToken, String expiresIn
 });
 
 
@@ -153,13 +152,12 @@ class _$OAuth2CopyWithImpl<$Res>
 
 /// Create a copy of DriveProviderBackend
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? authJson = null,Object? accessToken = null,Object? refreshToken = null,Object? expiresIn = null,Object? parentPath = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? authJson = null,Object? accessToken = null,Object? refreshToken = null,Object? expiresIn = null,}) {
   return _then(OAuth2(
 authJson: null == authJson ? _self._authJson : authJson // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,expiresIn: null == expiresIn ? _self.expiresIn : expiresIn // ignore: cast_nullable_to_non_nullable
-as String,parentPath: null == parentPath ? _self.parentPath : parentPath // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

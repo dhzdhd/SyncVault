@@ -11,7 +11,6 @@ OAuth2 _$OAuth2FromJson(Map<String, dynamic> json) => OAuth2(
   accessToken: json['accessToken'] as String,
   refreshToken: json['refreshToken'] as String,
   expiresIn: json['expiresIn'] as String,
-  parentPath: json['parentPath'] as String,
   $type: json['runtimeType'] as String?,
 );
 
@@ -20,7 +19,6 @@ Map<String, dynamic> _$OAuth2ToJson(OAuth2 instance) => <String, dynamic>{
   'accessToken': instance.accessToken,
   'refreshToken': instance.refreshToken,
   'expiresIn': instance.expiresIn,
-  'parentPath': instance.parentPath,
   'runtimeType': instance.$type,
 };
 

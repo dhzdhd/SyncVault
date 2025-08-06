@@ -327,7 +327,7 @@ class _NewAccountDialogWidgetState
                   await ref
                       .read(createFolderControllerProvider.notifier)
                       .createFolder(
-                        title: providerModel.remoteName,
+                        folderName: providerModel.remoteName,
                         model: providerModel,
                       );
                 } else {

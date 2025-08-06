@@ -32,7 +32,7 @@ class AccountCard extends ConsumerWidget {
           children: [
             Flexible(
               child: Row(
-                spacing: 10,
+                spacing: 20,
                 children: [
                   Badge(
                     backgroundColor: switch (connectionStatus) {
@@ -108,8 +108,8 @@ class AccountCard extends ConsumerWidget {
                           ),
                           Text(switch (providerModel.backend) {
                             Local(:final folderPath) => folderPath,
-                            OAuth2(:final parentPath) =>
-                              '$parentPath/${providerModel.folderName}',
+                            // OAuth2(:final parentPath) =>
+                            //   '$parentPath/${providerModel.folderName}',
                             _ => 'Unknown path',
                           }),
                         ],

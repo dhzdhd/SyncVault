@@ -16,7 +16,6 @@ abstract class ConnectionModel with _$ConnectionModel {
     required bool isAutoSync,
     required bool isDeletionEnabled,
     required bool isTwoWaySync,
-    required String? folderId, // TODO: Move to drive provider
   }) = _ConnectionModel;
 
   factory ConnectionModel.fromJson(Map<String, Object?> json) =>

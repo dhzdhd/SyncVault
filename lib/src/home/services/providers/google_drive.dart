@@ -15,7 +15,7 @@ import 'package:googleapis_auth/googleapis_auth.dart';
 class GoogleDriveService implements DriveService {
   @override
   TaskEither<AppError, ConnectionModel> create({
-    required String title,
+    required String folderName,
     required DriveProviderModel model,
   }) {
     return TaskEither.tryCatch(
@@ -78,7 +78,6 @@ class GoogleDriveService implements DriveService {
           isAutoSync: false,
           isDeletionEnabled: false,
           isTwoWaySync: false,
-          folderId: folder.id,
         );
       },
       (error, stackTrace) {

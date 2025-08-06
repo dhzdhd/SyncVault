@@ -134,7 +134,6 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
     };
     return DriveProviderModel(
       remoteName: fields[6] as String,
-      folderName: fields[12] as String,
       provider: fields[7] as DriveProvider,
       backend: fields[8] as DriveProviderBackend,
       createdAt: fields[9] as String,
@@ -146,7 +145,7 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
   @override
   void write(BinaryWriter writer, DriveProviderModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(6)
       ..write(obj.remoteName)
       ..writeByte(7)
@@ -158,9 +157,7 @@ class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
       ..writeByte(10)
       ..write(obj.updatedAt)
       ..writeByte(11)
-      ..write(obj.isRCloneBackend)
-      ..writeByte(12)
-      ..write(obj.folderName);
+      ..write(obj.isRCloneBackend);
   }
 
   @override
@@ -189,7 +186,6 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
       accessToken: fields[1] as String,
       refreshToken: fields[2] as String,
       expiresIn: fields[3] as String,
-      parentPath: fields[6] as String,
       $type: fields[5] as String?,
     );
   }
@@ -197,7 +193,7 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
   @override
   void write(BinaryWriter writer, OAuth2 obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(1)
       ..write(obj.accessToken)
       ..writeByte(2)
@@ -207,9 +203,7 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
       ..writeByte(4)
       ..write(obj.authJson)
       ..writeByte(5)
-      ..write(obj.$type)
-      ..writeByte(6)
-      ..write(obj.parentPath);
+      ..write(obj.$type);
   }
 
   @override
@@ -736,14 +730,13 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
       isAutoSync: fields[3] as bool,
       isDeletionEnabled: fields[4] as bool,
       isTwoWaySync: fields[5] as bool,
-      folderId: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ConnectionModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -755,9 +748,7 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
       ..writeByte(4)
       ..write(obj.isDeletionEnabled)
       ..writeByte(5)
-      ..write(obj.isTwoWaySync)
-      ..writeByte(6)
-      ..write(obj.folderId);
+      ..write(obj.isTwoWaySync);
   }
 
   @override

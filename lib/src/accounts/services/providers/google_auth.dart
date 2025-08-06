@@ -75,14 +75,12 @@ class GoogleAuthService implements ManualAuthService {
 
         return DriveProviderModel(
           remoteName: remoteName,
-          folderName: remoteName,
           provider: GoogleDriveProvider(),
           backend: OAuth2(
             authJson: {},
             accessToken: accessToken,
             refreshToken: refreshToken,
             expiresIn: expiresIn.toString(),
-            parentPath: '',
           ),
           createdAt: DateTime.now().toIso8601String(),
           updatedAt: DateTime.now().toIso8601String(),

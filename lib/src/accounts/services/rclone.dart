@@ -157,14 +157,12 @@ class RCloneAuthService implements AuthService {
               }) {
                 final model = DriveProviderModel(
                   remoteName: remoteName,
-                  folderName: remoteName,
                   provider: driveProvider,
                   backend: OAuth2(
                     authJson: authJson,
                     accessToken: accessToken,
                     refreshToken: refreshToken,
                     expiresIn: expiresIn,
-                    parentPath: '',
                   ),
                   createdAt: DateTime.now().toIso8601String(),
                   updatedAt: DateTime.now().toIso8601String(),
@@ -193,7 +191,6 @@ class RCloneAuthService implements AuthService {
             () async {
               final model = DriveProviderModel(
                 remoteName: remoteName,
-                folderName: remoteName,
                 provider: driveProvider,
                 backend: S3(
                   url: url,
@@ -227,7 +224,6 @@ class RCloneAuthService implements AuthService {
 
               final model = DriveProviderModel(
                 remoteName: remoteName,
-                folderName: remoteName,
                 provider: driveProvider,
                 backend: UserPassword(
                   username: username,
@@ -260,7 +256,6 @@ class RCloneAuthService implements AuthService {
 
               final model = DriveProviderModel(
                 remoteName: remoteName,
-                folderName: remoteName,
                 provider: driveProvider,
                 backend: Webdav(url: url, user: user, password: obscPassword),
                 createdAt: DateTime.now().toIso8601String(),
@@ -282,7 +277,6 @@ class RCloneAuthService implements AuthService {
           TaskEither.right(
             DriveProviderModel(
               remoteName: remoteName,
-              folderName: remoteName,
               provider: driveProvider,
               backend: backend,
               createdAt: DateTime.now().toIso8601String(),

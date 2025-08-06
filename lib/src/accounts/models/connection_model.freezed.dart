@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ConnectionModel implements DiagnosticableTreeMixin {
 
- String get title; String get firstRemote; String get secondRemote; bool get isAutoSync; bool get isDeletionEnabled; bool get isTwoWaySync; String? get folderId;
+ String get title; String get firstRemote; String get secondRemote; bool get isAutoSync; bool get isDeletionEnabled; bool get isTwoWaySync;
 /// Create a copy of ConnectionModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,21 +30,21 @@ $ConnectionModelCopyWith<ConnectionModel> get copyWith => _$ConnectionModelCopyW
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ConnectionModel'))
-    ..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('firstRemote', firstRemote))..add(DiagnosticsProperty('secondRemote', secondRemote))..add(DiagnosticsProperty('isAutoSync', isAutoSync))..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync))..add(DiagnosticsProperty('folderId', folderId));
+    ..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('firstRemote', firstRemote))..add(DiagnosticsProperty('secondRemote', secondRemote))..add(DiagnosticsProperty('isAutoSync', isAutoSync))..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConnectionModel&&(identical(other.title, title) || other.title == title)&&(identical(other.firstRemote, firstRemote) || other.firstRemote == firstRemote)&&(identical(other.secondRemote, secondRemote) || other.secondRemote == secondRemote)&&(identical(other.isAutoSync, isAutoSync) || other.isAutoSync == isAutoSync)&&(identical(other.isDeletionEnabled, isDeletionEnabled) || other.isDeletionEnabled == isDeletionEnabled)&&(identical(other.isTwoWaySync, isTwoWaySync) || other.isTwoWaySync == isTwoWaySync)&&(identical(other.folderId, folderId) || other.folderId == folderId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConnectionModel&&(identical(other.title, title) || other.title == title)&&(identical(other.firstRemote, firstRemote) || other.firstRemote == firstRemote)&&(identical(other.secondRemote, secondRemote) || other.secondRemote == secondRemote)&&(identical(other.isAutoSync, isAutoSync) || other.isAutoSync == isAutoSync)&&(identical(other.isDeletionEnabled, isDeletionEnabled) || other.isDeletionEnabled == isDeletionEnabled)&&(identical(other.isTwoWaySync, isTwoWaySync) || other.isTwoWaySync == isTwoWaySync));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,firstRemote,secondRemote,isAutoSync,isDeletionEnabled,isTwoWaySync,folderId);
+int get hashCode => Object.hash(runtimeType,title,firstRemote,secondRemote,isAutoSync,isDeletionEnabled,isTwoWaySync);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ConnectionModel(title: $title, firstRemote: $firstRemote, secondRemote: $secondRemote, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync, folderId: $folderId)';
+  return 'ConnectionModel(title: $title, firstRemote: $firstRemote, secondRemote: $secondRemote, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync)';
 }
 
 
@@ -55,7 +55,7 @@ abstract mixin class $ConnectionModelCopyWith<$Res>  {
   factory $ConnectionModelCopyWith(ConnectionModel value, $Res Function(ConnectionModel) _then) = _$ConnectionModelCopyWithImpl;
 @useResult
 $Res call({
- String title, String firstRemote, String secondRemote, bool isAutoSync, bool isDeletionEnabled, bool isTwoWaySync, String? folderId
+ String title, String firstRemote, String secondRemote, bool isAutoSync, bool isDeletionEnabled, bool isTwoWaySync
 });
 
 
@@ -72,7 +72,7 @@ class _$ConnectionModelCopyWithImpl<$Res>
 
 /// Create a copy of ConnectionModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? firstRemote = null,Object? secondRemote = null,Object? isAutoSync = null,Object? isDeletionEnabled = null,Object? isTwoWaySync = null,Object? folderId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? firstRemote = null,Object? secondRemote = null,Object? isAutoSync = null,Object? isDeletionEnabled = null,Object? isTwoWaySync = null,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,firstRemote: null == firstRemote ? _self.firstRemote : firstRemote // ignore: cast_nullable_to_non_nullable
@@ -80,8 +80,7 @@ as String,secondRemote: null == secondRemote ? _self.secondRemote : secondRemote
 as String,isAutoSync: null == isAutoSync ? _self.isAutoSync : isAutoSync // ignore: cast_nullable_to_non_nullable
 as bool,isDeletionEnabled: null == isDeletionEnabled ? _self.isDeletionEnabled : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
 as bool,isTwoWaySync: null == isTwoWaySync ? _self.isTwoWaySync : isTwoWaySync // ignore: cast_nullable_to_non_nullable
-as bool,folderId: freezed == folderId ? _self.folderId : folderId // ignore: cast_nullable_to_non_nullable
-as String?,
+as bool,
   ));
 }
 
@@ -92,7 +91,7 @@ as String?,
 @JsonSerializable()
 
 class _ConnectionModel with DiagnosticableTreeMixin implements ConnectionModel {
-  const _ConnectionModel({required this.title, required this.firstRemote, required this.secondRemote, required this.isAutoSync, required this.isDeletionEnabled, required this.isTwoWaySync, required this.folderId});
+  const _ConnectionModel({required this.title, required this.firstRemote, required this.secondRemote, required this.isAutoSync, required this.isDeletionEnabled, required this.isTwoWaySync});
   factory _ConnectionModel.fromJson(Map<String, dynamic> json) => _$ConnectionModelFromJson(json);
 
 @override final  String title;
@@ -101,7 +100,6 @@ class _ConnectionModel with DiagnosticableTreeMixin implements ConnectionModel {
 @override final  bool isAutoSync;
 @override final  bool isDeletionEnabled;
 @override final  bool isTwoWaySync;
-@override final  String? folderId;
 
 /// Create a copy of ConnectionModel
 /// with the given fields replaced by the non-null parameter values.
@@ -117,21 +115,21 @@ Map<String, dynamic> toJson() {
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ConnectionModel'))
-    ..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('firstRemote', firstRemote))..add(DiagnosticsProperty('secondRemote', secondRemote))..add(DiagnosticsProperty('isAutoSync', isAutoSync))..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync))..add(DiagnosticsProperty('folderId', folderId));
+    ..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('firstRemote', firstRemote))..add(DiagnosticsProperty('secondRemote', secondRemote))..add(DiagnosticsProperty('isAutoSync', isAutoSync))..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ConnectionModel&&(identical(other.title, title) || other.title == title)&&(identical(other.firstRemote, firstRemote) || other.firstRemote == firstRemote)&&(identical(other.secondRemote, secondRemote) || other.secondRemote == secondRemote)&&(identical(other.isAutoSync, isAutoSync) || other.isAutoSync == isAutoSync)&&(identical(other.isDeletionEnabled, isDeletionEnabled) || other.isDeletionEnabled == isDeletionEnabled)&&(identical(other.isTwoWaySync, isTwoWaySync) || other.isTwoWaySync == isTwoWaySync)&&(identical(other.folderId, folderId) || other.folderId == folderId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ConnectionModel&&(identical(other.title, title) || other.title == title)&&(identical(other.firstRemote, firstRemote) || other.firstRemote == firstRemote)&&(identical(other.secondRemote, secondRemote) || other.secondRemote == secondRemote)&&(identical(other.isAutoSync, isAutoSync) || other.isAutoSync == isAutoSync)&&(identical(other.isDeletionEnabled, isDeletionEnabled) || other.isDeletionEnabled == isDeletionEnabled)&&(identical(other.isTwoWaySync, isTwoWaySync) || other.isTwoWaySync == isTwoWaySync));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,firstRemote,secondRemote,isAutoSync,isDeletionEnabled,isTwoWaySync,folderId);
+int get hashCode => Object.hash(runtimeType,title,firstRemote,secondRemote,isAutoSync,isDeletionEnabled,isTwoWaySync);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ConnectionModel(title: $title, firstRemote: $firstRemote, secondRemote: $secondRemote, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync, folderId: $folderId)';
+  return 'ConnectionModel(title: $title, firstRemote: $firstRemote, secondRemote: $secondRemote, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync)';
 }
 
 
@@ -142,7 +140,7 @@ abstract mixin class _$ConnectionModelCopyWith<$Res> implements $ConnectionModel
   factory _$ConnectionModelCopyWith(_ConnectionModel value, $Res Function(_ConnectionModel) _then) = __$ConnectionModelCopyWithImpl;
 @override @useResult
 $Res call({
- String title, String firstRemote, String secondRemote, bool isAutoSync, bool isDeletionEnabled, bool isTwoWaySync, String? folderId
+ String title, String firstRemote, String secondRemote, bool isAutoSync, bool isDeletionEnabled, bool isTwoWaySync
 });
 
 
@@ -159,7 +157,7 @@ class __$ConnectionModelCopyWithImpl<$Res>
 
 /// Create a copy of ConnectionModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? firstRemote = null,Object? secondRemote = null,Object? isAutoSync = null,Object? isDeletionEnabled = null,Object? isTwoWaySync = null,Object? folderId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? firstRemote = null,Object? secondRemote = null,Object? isAutoSync = null,Object? isDeletionEnabled = null,Object? isTwoWaySync = null,}) {
   return _then(_ConnectionModel(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,firstRemote: null == firstRemote ? _self.firstRemote : firstRemote // ignore: cast_nullable_to_non_nullable
@@ -167,8 +165,7 @@ as String,secondRemote: null == secondRemote ? _self.secondRemote : secondRemote
 as String,isAutoSync: null == isAutoSync ? _self.isAutoSync : isAutoSync // ignore: cast_nullable_to_non_nullable
 as bool,isDeletionEnabled: null == isDeletionEnabled ? _self.isDeletionEnabled : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
 as bool,isTwoWaySync: null == isTwoWaySync ? _self.isTwoWaySync : isTwoWaySync // ignore: cast_nullable_to_non_nullable
-as bool,folderId: freezed == folderId ? _self.folderId : folderId // ignore: cast_nullable_to_non_nullable
-as String?,
+as bool,
   ));
 }
 

@@ -9,7 +9,6 @@ part 'drive_provider_model.g.dart';
 abstract class DriveProviderModel with _$DriveProviderModel {
   const factory DriveProviderModel({
     required String remoteName,
-    required String folderName,
     required DriveProvider provider,
     required DriveProviderBackend backend,
     required String createdAt,

@@ -58,7 +58,6 @@ sealed class DriveProvider with _$DriveProvider {
       accessToken: '',
       refreshToken: '',
       expiresIn: '',
-      parentPath: '',
     ),
     ProtonDriveProvider() => const UserPassword(username: '', password: ''),
     MinioProvider() => const S3(url: '', accessKeyId: '', secretAccessKey: ''),

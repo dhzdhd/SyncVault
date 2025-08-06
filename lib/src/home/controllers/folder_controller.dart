@@ -31,14 +31,14 @@ class CreateFolderController extends _$CreateFolderController {
   FutureOr<void> build() {}
 
   Future<void> createFolder({
-    required String title,
+    required String folderName,
     required DriveProviderModel model,
   }) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.create(title: title, providerModel: model),
+      () => folderNotifier.create(folderName: folderName, providerModel: model),
     );
   }
 }
@@ -132,7 +132,7 @@ class Folder extends _$Folder {
   }
 
   Future<void> create({
-    required String title,
+    required String folderName,
     required DriveProviderModel providerModel,
   }) async {
     final driveService = providerModel.isRCloneBackend
@@ -143,7 +143,7 @@ class Folder extends _$Folder {
           };
 
     final model = await driveService
-        .create(title: title, model: providerModel)
+        .create(folderName: folderName, model: providerModel)
         .match((l) => throw l, (r) => r)
         .run();
 

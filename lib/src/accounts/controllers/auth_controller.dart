@@ -51,6 +51,7 @@ final _box = GetIt.I<Box<DriveProviderModel>>();
 
 // The actual service to handle backend API calls
 // Called from the controller
+// TODO: Change name to provider
 @riverpod
 class Auth extends _$Auth {
   @override
@@ -94,7 +95,6 @@ class Auth extends _$Auth {
         DriveProviderModel(
           backend: backend,
           remoteName: remoteName,
-          folderName: remoteName,
           provider: provider,
           createdAt: DateTime.now().toIso8601String(),
           updatedAt: DateTime.now().toIso8601String(),

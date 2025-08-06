@@ -14,7 +14,7 @@ import 'package:syncvault/src/home/services/common.dart';
 class RCloneDriveService implements DriveService {
   @override
   TaskEither<AppError, ConnectionModel> create({
-    required String title,
+    required String folderName,
     required DriveProviderModel model,
   }) {
     final utils = RCloneUtils();
@@ -34,7 +34,7 @@ class RCloneDriveService implements DriveService {
             final process = await Process.run(execPath, [
               ...configArgs,
               'mkdir',
-              '${model.remoteName}:$parentPath${model.folderName}',
+              '${model.remoteName}:$parentPath$folderName',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -59,7 +59,6 @@ class RCloneDriveService implements DriveService {
         isAutoSync: false,
         isDeletionEnabled: false,
         isTwoWaySync: false,
-        folderId: null,
       );
       return folderModel;
     });
@@ -186,7 +185,7 @@ class RCloneDriveService implements DriveService {
               '--full-path',
               '-s',
               '-Q',
-              '${model.remoteName}:$parentPath${model.folderName}',
+              '${model.remoteName}:$parentPath${model.remoteName}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
