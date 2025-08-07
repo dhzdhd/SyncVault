@@ -5,7 +5,8 @@ import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
-import 'package:syncvault/src/accounts/models/connection_model.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/common.dart';
@@ -13,13 +14,13 @@ import 'package:syncvault/src/home/services/common.dart';
 @singleton
 class RCloneDriveService implements DriveService {
   @override
-  TaskEither<AppError, ConnectionModel> create({
+  TaskEither<AppError, FolderModel> create({
     required String folderName,
     required DriveProviderModel model,
   }) {
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, ConnectionModel>.Do(($) async {
+    return TaskEither<AppError, FolderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
@@ -52,13 +53,11 @@ class RCloneDriveService implements DriveService {
         ),
       );
 
-      final folderModel = ConnectionModel(
-        title: model.remoteName,
-        firstRemote: model.remoteName,
-        secondRemote: model.remoteName,
-        isAutoSync: false,
-        isDeletionEnabled: false,
-        isTwoWaySync: false,
+      final folderModel = FolderModel(
+        folderName: model.remoteName,
+        remoteName: model.remoteName,
+        parentPath: '',
+        folderId: null,
       );
       return folderModel;
     });
@@ -118,7 +117,7 @@ class RCloneDriveService implements DriveService {
   @override
   TaskEither<AppError, ()> delete({
     required DriveProviderModel providerModel,
-    required ConnectionModel connectionModel,
+    required FolderModel folderModel,
   }) {
     final utils = RCloneUtils();
 
@@ -130,13 +129,13 @@ class RCloneDriveService implements DriveService {
         TaskEither.tryCatch(
           () async {
             final parentPath = Option.fromNullable(
-              connectionModel.title,
+              folderModel.folderName,
             ).match(() => '/', (t) => '/$t/');
 
             final process = await Process.run(execPath, [
               ...configArgs,
               'purge',
-              '${connectionModel.firstRemote}:/$parentPath${connectionModel.firstRemote}',
+              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {

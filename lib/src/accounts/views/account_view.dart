@@ -13,7 +13,6 @@ class AccountView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authInfo = ref.watch(authProvider).requireValue;
-    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -35,16 +34,12 @@ class AccountView extends ConsumerWidget {
           SliverPadding(
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
-              delegate: SliverChildListDelegate.fixed(
-                authInfo
-                    .map(
-                      (providerModel) => AccountCard(
-                        textTheme: textTheme,
-                        providerModel: providerModel,
-                      ),
-                    )
-                    .toList(),
-              ),
+              delegate: SliverChildListDelegate.fixed([
+                // AccountCard(providerModel: ),
+                ...authInfo.map(
+                  (providerModel) => AccountCard(providerModel: providerModel),
+                ),
+              ]),
             ),
           ),
         ],

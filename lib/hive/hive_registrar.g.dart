@@ -11,6 +11,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(DriveProviderModelAdapter());
     registerAdapter(DropBoxProviderAdapter());
     registerAdapter(FolderHashModelAdapter());
+    registerAdapter(FolderModelAdapter());
     registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
@@ -36,6 +37,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(DriveProviderModelAdapter());
     registerAdapter(DropBoxProviderAdapter());
     registerAdapter(FolderHashModelAdapter());
+    registerAdapter(FolderModelAdapter());
     registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());

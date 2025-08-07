@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
-import 'package:syncvault/src/home/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import '../controllers/settings_controller.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
-import 'package:syncvault/src/home/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class DeleteAccountDialogWidget extends ConsumerWidget {
@@ -18,13 +18,14 @@ class DeleteAccountDialogWidget extends ConsumerWidget {
       title: const Text('Delete account?'),
       content: Text(
         // Change message depending on account containing linked folders.
-        folders.any(
-              (element) =>
-                  element.firstRemote == model.remoteName ||
-                  element.secondRemote == model.remoteName,
-            )
-            ? 'The account contains dependent folders. Are you sure you want to sign out?\n This action will not delete the folders stored locally/in your drive.'
-            : 'This action will not delete the folders stored locally/in your drive.',
+        '',
+        // folders.any(
+        //       (element) =>
+        //           element.firstRemote == model.remoteName ||
+        //           element.secondRemote == model.remoteName,
+        //     )
+        //     ? 'The account contains dependent folders. Are you sure you want to sign out?\n This action will not delete the folders stored locally/in your drive.'
+        //     : 'This action will not delete the folders stored locally/in your drive.',
         textAlign: TextAlign.left,
       ),
       actions: [

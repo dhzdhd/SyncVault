@@ -10,6 +10,7 @@ import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
@@ -20,8 +21,8 @@ import 'package:syncvault/log.dart';
 import 'package:syncvault/setup.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/workflows/models/workflow_model.dart';
-import 'package:syncvault/src/home/controllers/folder_controller.dart';
-import 'package:syncvault/src/accounts/models/connection_model.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
@@ -99,7 +100,7 @@ void callbackDispatcher() {
     final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
 
     final authProviders = await Auth.init();
-    final folders = Folder.init().filter((folder) => folder.isAutoSync);
+    // final folders = Folder.init().filter((folder) => folder.isAutoSync);
     final hashes = GetIt.I<Box<FolderHashModel>>().values;
 
     final fileComparer = FileComparer();
@@ -229,6 +230,7 @@ void main() async {
   await setupHiveBox<IntroSettingsModel>(boxPath);
   await setupHiveBox<DriveProviderModel>(boxPath);
   await setupHiveBox<ConnectionModel>(boxPath);
+  await setupHiveBox<FolderModel>(boxPath);
   await setupHiveBox<WorkflowModel>(boxPath);
   await setupHiveBox<FolderHashModel>(boxPath);
 

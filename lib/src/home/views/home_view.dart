@@ -8,7 +8,7 @@ import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
 import 'package:syncvault/src/workflows/views/workflow_view.dart';
-import 'package:syncvault/src/home/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
@@ -35,7 +35,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   void initState() {
-    final connections = ref.read(folderProvider).toList();
+    // final connections = ref.read(folderProvider).toList();
     _watchers = [];
     // _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
     super.initState();
@@ -52,7 +52,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      final folders = ref.watch(folderProvider).toList();
+      // final folders = ref.watch(folderProvider).toList();
+      final folders = [];
 
       for (int i = 0; i < _watchers.length; i++) {
         // TODO: Match watcher and folder by remote name instead of index
@@ -63,9 +64,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
               {
                 try {
-                  await ref
-                      .read(folderProvider.notifier)
-                      .upload(folders[i], some(event.path));
+                  // await ref
+                  //     .read(folderProvider.notifier)
+                  //     .upload(folders[i], some(event.path));
                   debugPrint('Success');
                 } catch (e, st) {
                   // TODO:
@@ -97,7 +98,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       };
     }, [ref.watch(folderProvider)]);
 
-    final folderInfo = ref.watch(folderProvider);
+    final folderInfo = [];
     final authProviders = ref.watch(authProvider).requireValue;
     final folderNotifier = ref.read(folderProvider.notifier);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
@@ -297,15 +298,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
                                                     if (!uploadDeleteController
                                                         .isLoading) {
-                                                      await ref
-                                                          .read(
-                                                            uploadDeleteControllerProvider
-                                                                .notifier,
-                                                          )
-                                                          .upload(
-                                                            connectionModel,
-                                                            none(),
-                                                          );
+                                                      // await ref
+                                                      //     .read(
+                                                      //       uploadDeleteControllerProvider
+                                                      //           .notifier,
+                                                      //     )
+                                                      //     .upload(
+                                                      //       connectionModel,
+                                                      //       none(),
+                                                      //     );
 
                                                       if (context.mounted) {
                                                         context
@@ -340,14 +341,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
                                                     if (context.mounted) {
                                                       if (context.mounted) {
-                                                        await showDialog(
-                                                          context: context,
-                                                          builder: (ctx) =>
-                                                              DeleteFolderDialogWidget(
-                                                                model:
-                                                                    connectionModel,
-                                                              ),
-                                                        );
+                                                        // await showDialog(
+                                                        //   context: context,
+                                                        //   builder: (ctx) =>
+                                                        //       DeleteFolderDialogWidget(
+                                                        //         model:
+                                                        //             connectionModel,
+                                                        //       ),
+                                                        // );
                                                       }
                                                     }
                                                   },
@@ -388,8 +389,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     fit: BoxFit.fill,
                                     child: Switch(
                                       value: connectionModel.isAutoSync,
-                                      onChanged: (val) => folderNotifier
-                                          .toggleAutoSync(connectionModel),
+                                      onChanged: (val) => null,
+                                      // folderNotifier
+                                      //     .toggleAutoSync(connectionModel),
                                     ),
                                   ),
                                 ),
@@ -408,10 +410,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     fit: BoxFit.fill,
                                     child: Switch(
                                       value: connectionModel.isDeletionEnabled,
-                                      onChanged: (val) =>
-                                          folderNotifier.toggleDeletionOnSync(
-                                            connectionModel,
-                                          ),
+                                      onChanged: (val) => null,
+                                      // folderNotifier.toggleDeletionOnSync(
+                                      //   connectionModel,
+                                      // ),
                                     ),
                                   ),
                                 ),

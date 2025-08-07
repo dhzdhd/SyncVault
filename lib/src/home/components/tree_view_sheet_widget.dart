@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/src/home/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/home/components/tree_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';

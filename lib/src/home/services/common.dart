@@ -1,11 +1,12 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
-import 'package:syncvault/src/accounts/models/connection_model.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 abstract interface class DriveService {
-  TaskEither<AppError, ConnectionModel> create({
+  TaskEither<AppError, FolderModel> create({
     required String folderName,
     required DriveProviderModel model,
   });
@@ -17,7 +18,7 @@ abstract interface class DriveService {
   });
   TaskEither<AppError, ()> delete({
     required DriveProviderModel providerModel,
-    required ConnectionModel connectionModel,
+    required FolderModel folderModel,
   });
   TaskEither<AppError, Option<FileModel>> treeView({
     required DriveProviderModel model,
