@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/components/account_card.dart';
+import 'package:syncvault/src/accounts/components/local_account_card.dart';
 import 'package:syncvault/src/accounts/components/new_account_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
@@ -35,7 +36,7 @@ class AccountView extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
               delegate: SliverChildListDelegate.fixed([
-                // AccountCard(providerModel: ),
+                LocalAccountCard(),
                 ...authInfo.map(
                   (providerModel) => AccountCard(providerModel: providerModel),
                 ),

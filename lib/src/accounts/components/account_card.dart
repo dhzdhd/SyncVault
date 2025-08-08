@@ -149,7 +149,6 @@ class AccountCard extends ConsumerWidget {
                                   context: context,
                                   builder: (ctx) => NewFolderDialogWidget(
                                     providerModel: providerModel,
-                                    isLocal: false,
                                   ),
                                 ),
                               },

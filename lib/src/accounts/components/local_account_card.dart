@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/components/folder_card.dart';
 import 'package:syncvault/src/accounts/components/new_folder_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
-class AccountCard extends ConsumerWidget {
-  const AccountCard({super.key});
+class LocalAccountCard extends ConsumerWidget {
+  const LocalAccountCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +39,7 @@ class AccountCard extends ConsumerWidget {
                         height: MediaQuery.of(context).size.width < 500
                             ? 50
                             : 70,
-                        child: Icon(Icons.folder),
+                        child: Icon(Icons.folder, size: 50),
                       ),
                       Expanded(
                         child: Padding(
@@ -96,7 +95,6 @@ class AccountCard extends ConsumerWidget {
                                   context: context,
                                   builder: (ctx) => NewFolderDialogWidget(
                                     providerModel: LocalProviderModel(),
-                                    isLocal: false,
                                   ),
                                 ),
                               },
@@ -128,18 +126,6 @@ class AccountCard extends ConsumerWidget {
                             //   },
                           },
                         );
-                      },
-                    ),
-                    PopupMenuItem(
-                      child: const Row(
-                        children: [
-                          Text('Delete'),
-                          Spacer(),
-                          Icon(Icons.delete),
-                        ],
-                      ),
-                      onTap: () async {
-                        if (context.mounted) {}
                       },
                     ),
                   ],

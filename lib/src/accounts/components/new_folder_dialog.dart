@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -15,14 +13,9 @@ import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class NewFolderDialogWidget extends StatefulHookConsumerWidget {
-  const NewFolderDialogWidget({
-    super.key,
-    required this.providerModel,
-    required this.isLocal,
-  });
+  const NewFolderDialogWidget({super.key, required this.providerModel});
 
   final DriveProviderModel providerModel;
-  final bool isLocal;
 
   @override
   ConsumerState<NewFolderDialogWidget> createState() =>
@@ -94,7 +87,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
           ),
         ),
         const SizedBox(height: 16),
-        if (widget.isLocal)
+        if (widget.providerModel is LocalProviderModel)
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
