@@ -9,7 +9,7 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 class DriveInfoDialogWidget extends HookConsumerWidget {
   const DriveInfoDialogWidget({super.key, required this.model});
 
-  final DriveProviderModel model;
+  final RemoteProviderModel model;
 
   String getSize(num val) {
     final mb = val / (1000 * 1000);

@@ -9,7 +9,7 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 class TreeViewSheetWidget extends ConsumerWidget {
   const TreeViewSheetWidget({super.key, required this.providerModel});
 
-  final DriveProviderModel providerModel;
+  final RemoteProviderModel providerModel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

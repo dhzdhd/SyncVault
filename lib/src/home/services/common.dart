@@ -8,19 +8,19 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 abstract interface class DriveService {
   TaskEither<AppError, FolderModel> create({
     required String folderName,
-    required DriveProviderModel model,
+    required RemoteProviderModel model,
   });
   TaskEither<AppError, ()> upload({
-    required DriveProviderModel providerModel,
+    required RemoteProviderModel providerModel,
     required ConnectionModel connectionModel,
     required String localPath,
     String? rCloneExecPath,
   });
   TaskEither<AppError, ()> delete({
-    required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required RemoteProviderModel providerModel,
+    required RemoteFolderModel folderModel,
   });
   TaskEither<AppError, Option<FileModel>> treeView({
-    required DriveProviderModel model,
+    required RemoteProviderModel model,
   });
 }

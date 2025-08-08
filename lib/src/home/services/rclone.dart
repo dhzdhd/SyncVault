@@ -14,13 +14,13 @@ import 'package:syncvault/src/home/services/common.dart';
 @singleton
 class RCloneDriveService implements DriveService {
   @override
-  TaskEither<AppError, FolderModel> create({
+  TaskEither<AppError, RemoteFolderModel> create({
     required String folderName,
-    required DriveProviderModel model,
+    required RemoteProviderModel model,
   }) {
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, FolderModel>.Do(($) async {
+    return TaskEither<AppError, RemoteFolderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
@@ -53,7 +53,7 @@ class RCloneDriveService implements DriveService {
         ),
       );
 
-      final folderModel = FolderModel(
+      final folderModel = RemoteFolderModel(
         folderName: model.remoteName,
         remoteName: model.remoteName,
         parentPath: '',
@@ -65,7 +65,7 @@ class RCloneDriveService implements DriveService {
 
   @override
   TaskEither<AppError, ()> upload({
-    required DriveProviderModel providerModel,
+    required RemoteProviderModel providerModel,
     required ConnectionModel connectionModel,
     required String localPath,
     String? rCloneExecPath,
@@ -116,8 +116,8 @@ class RCloneDriveService implements DriveService {
 
   @override
   TaskEither<AppError, ()> delete({
-    required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required RemoteProviderModel providerModel,
+    required RemoteFolderModel folderModel,
   }) {
     final utils = RCloneUtils();
 
@@ -159,7 +159,7 @@ class RCloneDriveService implements DriveService {
 
   @override
   TaskEither<AppError, Option<FileModel>> treeView({
-    required DriveProviderModel model,
+    required RemoteProviderModel model,
   }) {
     final utils = RCloneUtils();
 

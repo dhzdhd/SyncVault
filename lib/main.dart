@@ -228,7 +228,7 @@ void main() async {
 
   await setupHiveBox<SettingsModel>(boxPath);
   await setupHiveBox<IntroSettingsModel>(boxPath);
-  await setupHiveBox<DriveProviderModel>(boxPath);
+  await setupHiveBox<RemoteProviderModel>(boxPath);
   await setupHiveBox<ConnectionModel>(boxPath);
   await setupHiveBox<FolderModel>(boxPath);
   await setupHiveBox<WorkflowModel>(boxPath);

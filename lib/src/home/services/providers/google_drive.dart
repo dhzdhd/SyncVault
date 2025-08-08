@@ -17,7 +17,7 @@ class GoogleDriveService implements DriveService {
   @override
   TaskEither<AppError, FolderModel> create({
     required String folderName,
-    required DriveProviderModel model,
+    required RemoteProviderModel model,
   }) {
     return TaskEither.tryCatch(
       () async {
@@ -72,7 +72,7 @@ class GoogleDriveService implements DriveService {
 
         httpClient.close();
 
-        return FolderModel(
+        return RemoteFolderModel(
           folderName: '',
           remoteName: model.remoteName,
           parentPath: '',

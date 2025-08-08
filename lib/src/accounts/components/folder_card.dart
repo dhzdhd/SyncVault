@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
-import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class FolderCard extends ConsumerWidget {
@@ -50,7 +49,7 @@ class FolderCard extends ConsumerWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  providerModel.remoteName,
+                                  folderModel.folderName,
                                   style: MediaQuery.of(context).size.width < 500
                                       ? textTheme.titleLarge
                                       : textTheme.headlineSmall,
@@ -59,11 +58,13 @@ class FolderCard extends ConsumerWidget {
                                 ),
                               ],
                             ),
-                            Text(switch (providerModel.backend) {
-                              Local(:final folderPath) => folderPath,
-                              // OAuth2(:final parentPath) =>
-                              //   '$parentPath/${providerModel.folderName}',
-                              _ => 'Unknown path',
+                            Text(switch (folderModel) {
+                              LocalFolderModel(:final folderPath) => folderPath,
+                              RemoteFolderModel(
+                                :final folderName,
+                                :final parentPath,
+                              ) =>
+                                '$parentPath$folderName',
                             }),
                           ],
                         ),
@@ -75,11 +76,11 @@ class FolderCard extends ConsumerWidget {
               IconButton.filledTonal(
                 onPressed: () {
                   if (context.mounted) {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (ctx) =>
-                          TreeViewSheetWidget(providerModel: providerModel),
-                    );
+                    // showModalBottomSheet(
+                    //   context: context,
+                    //   builder: (ctx) =>
+                    //       TreeViewSheetWidget(providerModel: providerModel),
+                    // );
                   }
                 },
                 icon: Icon(Icons.device_hub_rounded),

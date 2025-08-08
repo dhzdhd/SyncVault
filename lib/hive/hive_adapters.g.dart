@@ -122,55 +122,6 @@ class IntroSettingsModelAdapter extends TypeAdapter<IntroSettingsModel> {
           typeId == other.typeId;
 }
 
-class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
-  @override
-  final typeId = 3;
-
-  @override
-  DriveProviderModel read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return DriveProviderModel(
-      remoteName: fields[6] as String,
-      provider: fields[7] as DriveProvider,
-      backend: fields[8] as DriveProviderBackend,
-      createdAt: fields[9] as String,
-      updatedAt: fields[10] as String,
-      isRCloneBackend: fields[11] as bool,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, DriveProviderModel obj) {
-    writer
-      ..writeByte(6)
-      ..writeByte(6)
-      ..write(obj.remoteName)
-      ..writeByte(7)
-      ..write(obj.provider)
-      ..writeByte(8)
-      ..write(obj.backend)
-      ..writeByte(9)
-      ..write(obj.createdAt)
-      ..writeByte(10)
-      ..write(obj.updatedAt)
-      ..writeByte(11)
-      ..write(obj.isRCloneBackend);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriveProviderModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
 class OAuth2Adapter extends TypeAdapter<OAuth2> {
   @override
   final typeId = 5;
@@ -762,36 +713,45 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
           typeId == other.typeId;
 }
 
-class FolderModelAdapter extends TypeAdapter<FolderModel> {
+class RemoteProviderModelAdapter extends TypeAdapter<RemoteProviderModel> {
   @override
-  final typeId = 34;
+  final typeId = 35;
 
   @override
-  FolderModel read(BinaryReader reader) {
+  RemoteProviderModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return FolderModel(
+    return RemoteProviderModel(
       remoteName: fields[0] as String,
-      folderName: fields[1] as String,
-      parentPath: fields[2] as String?,
-      folderId: fields[3] as String?,
+      provider: fields[1] as DriveProvider,
+      backend: fields[2] as DriveProviderBackend,
+      createdAt: fields[3] as String,
+      updatedAt: fields[4] as String,
+      isRCloneBackend: fields[5] as bool,
+      $type: fields[6] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, FolderModel obj) {
+  void write(BinaryWriter writer, RemoteProviderModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.remoteName)
       ..writeByte(1)
-      ..write(obj.folderName)
+      ..write(obj.provider)
       ..writeByte(2)
-      ..write(obj.parentPath)
+      ..write(obj.backend)
       ..writeByte(3)
-      ..write(obj.folderId);
+      ..write(obj.createdAt)
+      ..writeByte(4)
+      ..write(obj.updatedAt)
+      ..writeByte(5)
+      ..write(obj.isRCloneBackend)
+      ..writeByte(6)
+      ..write(obj.$type);
   }
 
   @override
@@ -800,7 +760,125 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FolderModelAdapter &&
+      other is RemoteProviderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class LocalProviderModelAdapter extends TypeAdapter<LocalProviderModel> {
+  @override
+  final typeId = 36;
+
+  @override
+  LocalProviderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return LocalProviderModel($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, LocalProviderModel obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocalProviderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class RemoteFolderModelAdapter extends TypeAdapter<RemoteFolderModel> {
+  @override
+  final typeId = 37;
+
+  @override
+  RemoteFolderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return RemoteFolderModel(
+      remoteName: fields[0] as String,
+      folderName: fields[1] as String,
+      parentPath: fields[2] as String?,
+      folderId: fields[3] as String?,
+      $type: fields[4] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, RemoteFolderModel obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.remoteName)
+      ..writeByte(1)
+      ..write(obj.folderName)
+      ..writeByte(2)
+      ..write(obj.parentPath)
+      ..writeByte(3)
+      ..write(obj.folderId)
+      ..writeByte(4)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RemoteFolderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class LocalFolderModelAdapter extends TypeAdapter<LocalFolderModel> {
+  @override
+  final typeId = 38;
+
+  @override
+  LocalFolderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return LocalFolderModel(
+      folderName: fields[0] as String,
+      folderPath: fields[1] as String,
+      $type: fields[2] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, LocalFolderModel obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.folderName)
+      ..writeByte(1)
+      ..write(obj.folderPath)
+      ..writeByte(2)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocalFolderModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

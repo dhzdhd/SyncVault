@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
@@ -9,7 +8,6 @@ import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/helpers.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
-import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 
@@ -20,8 +18,6 @@ class NewAccountDialogWidget extends StatefulHookConsumerWidget {
   ConsumerState<NewAccountDialogWidget> createState() =>
       _NewAccountDialogWidgetState();
 }
-
-enum AccountSegment { local, remote }
 
 class _NewAccountDialogWidgetState
     extends ConsumerState<NewAccountDialogWidget> {
@@ -60,9 +56,6 @@ class _NewAccountDialogWidgetState
   @override
   Widget build(BuildContext context) {
     final selected = useState<DriveProvider>(OneDriveProvider());
-    final selectedSegment = useState<Set<AccountSegment>>({
-      AccountSegment.remote,
-    });
     final selectedFolder = useState<Option<String>>(const None());
     final isRCloneBackend = useState(!Platform.isIOS);
     final authController = ref.watch(authControllerProvider);
@@ -91,52 +84,9 @@ class _NewAccountDialogWidgetState
           ),
         ),
         const SizedBox(height: 16),
-        SegmentedButton<AccountSegment>(
-          selected: selectedSegment.value,
-          onSelectionChanged: (val) => selectedSegment.value = val,
-          segments: [
-            ButtonSegment<AccountSegment>(
-              value: AccountSegment.local,
-              label: const Text('Local'),
-            ),
-            ButtonSegment<AccountSegment>(
-              value: AccountSegment.remote,
-              label: const Text('Remote'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        if (selectedSegment.value.contains(AccountSegment.local))
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Tooltip(
-                  message:
-                      selectedFolder.value.toNullable() ??
-                      'Select local folder',
-                  child: Text(
-                    selectedFolder.value.toNullable() ?? 'Select local folder',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.folder),
-                tooltip: 'Get directory',
-                onPressed: () async {
-                  final result = await FilePicker.platform.getDirectoryPath();
-                  selectedFolder.value = Option.fromNullable(result);
-                },
-              ),
-            ],
-          ),
+
         // IOS only supports manual
-        if (!Platform.isIOS &&
-            selectedSegment.value.contains(AccountSegment.remote))
+        if (!Platform.isIOS)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -151,35 +101,33 @@ class _NewAccountDialogWidgetState
             ],
           ),
         const SizedBox(height: 16),
-        if (selectedSegment.value.contains(AccountSegment.remote))
-          DropdownButton<DriveProvider>(
-            items: isRCloneBackend.value
-                ? DriveProvider.allProviders
-                      .filter((provider) => provider.defaultBackend is! Local)
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.displayName),
-                        ),
-                      )
-                      .toList()
-                : DriveProvider.allProviders
-                      .filter((e) => e.defaultBackend is OAuth2)
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.displayName),
-                        ),
-                      )
-                      .toList(),
-            value: selected.value,
-            isExpanded: true,
-            onChanged: (DriveProvider? e) {
-              selected.value = e!;
-            },
-          ),
-        if (isRCloneBackend.value &&
-            selectedSegment.value.contains(AccountSegment.remote))
+        DropdownButton<DriveProvider>(
+          items: isRCloneBackend.value
+              ? DriveProvider.allProviders
+                    .filter((provider) => provider.defaultBackend is! Local)
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.displayName),
+                      ),
+                    )
+                    .toList()
+              : DriveProvider.allProviders
+                    .filter((e) => e.defaultBackend is OAuth2)
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.displayName),
+                      ),
+                    )
+                    .toList(),
+          value: selected.value,
+          isExpanded: true,
+          onChanged: (DriveProvider? e) {
+            selected.value = e!;
+          },
+        ),
+        if (isRCloneBackend.value)
           ...switch (selected.value.defaultBackend) {
             OAuth2() => [],
             S3() => [
@@ -286,67 +234,50 @@ class _NewAccountDialogWidgetState
               };
 
               if (valid) {
-                if (selectedSegment.value.contains(AccountSegment.remote)) {
-                  await ref
-                      .read(authControllerProvider.notifier)
-                      .signIn(
-                        switch (selected.value.defaultBackend) {
-                          // Create defaults for OAuth2 as OAuth2 requires additional user auth
-                          OAuth2 backend => backend,
-                          UserPassword() => UserPassword(
-                            username: _userController.text,
-                            password: _passwordController.text,
-                          ),
-                          S3() => S3(
-                            url: _urlController.text,
-                            accessKeyId: _userController.text,
-                            secretAccessKey: _passwordController.text,
-                          ),
-                          Webdav() => Webdav(
-                            url: _urlController.text,
-                            user: _userController.text,
-                            password: _passwordController.text,
-                          ),
-                          Local() => Local(
-                            folderPath: selectedFolder.value.toNullable()!,
-                          ),
-                        },
-                        selected.value,
-                        _remoteNameController.text,
-                        isRCloneBackend.value,
-                      );
-
-                  final providerModel = ref
-                      .watch(authProvider)
-                      .requireValue
-                      .firstWhere(
-                        (model) =>
-                            model.remoteName == _remoteNameController.text,
-                      );
-
-                  await ref
-                      .read(createFolderControllerProvider.notifier)
-                      .createFolder(
-                        folderName: providerModel.remoteName,
-                        model: providerModel,
-                      );
-                } else {
-                  await ref
-                      .read(authControllerProvider.notifier)
-                      .signIn(
-                        Local(folderPath: selectedFolder.value.toNullable()!),
-                        LocalProvider(),
-                        _remoteNameController.text,
-                        false,
-                      );
-                }
-
-                if (context.mounted && !authController.isLoading) {
-                  Navigator.of(context).pop();
-                }
+                await ref
+                    .read(authControllerProvider.notifier)
+                    .signIn(
+                      switch (selected.value.defaultBackend) {
+                        // Create defaults for OAuth2 as OAuth2 requires additional user auth
+                        OAuth2 backend => backend,
+                        UserPassword() => UserPassword(
+                          username: _userController.text,
+                          password: _passwordController.text,
+                        ),
+                        S3() => S3(
+                          url: _urlController.text,
+                          accessKeyId: _userController.text,
+                          secretAccessKey: _passwordController.text,
+                        ),
+                        Webdav() => Webdav(
+                          url: _urlController.text,
+                          user: _userController.text,
+                          password: _passwordController.text,
+                        ),
+                        Local() => Local(
+                          folderPath: selectedFolder.value.toNullable()!,
+                        ),
+                      },
+                      selected.value,
+                      _remoteNameController.text,
+                      isRCloneBackend.value,
+                    );
               } else {
-                context.showErrorSnackBar('Fields are empty');
+                await ref
+                    .read(authControllerProvider.notifier)
+                    .signIn(
+                      Local(folderPath: selectedFolder.value.toNullable()!),
+                      LocalProvider(),
+                      _remoteNameController.text,
+                      false,
+                    );
               }
+
+              if (context.mounted && !authController.isLoading) {
+                Navigator.of(context).pop();
+              }
+            } else {
+              context.showErrorSnackBar('Fields are empty');
             }
           },
           child: authController.isLoading

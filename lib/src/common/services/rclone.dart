@@ -88,12 +88,12 @@ class RCloneUtils {
   /// Local provider is supported by RClone but it treats the remote name as
   /// the folder to target relative to the RClone working directory.
   /// Hence, do not use the local backend.
-  TaskEither<AppError, List<DriveProviderModel>> parseModelFromConfig() {
-    return TaskEither<AppError, List<DriveProviderModel>>.Do(($) async {
+  TaskEither<AppError, List<RemoteProviderModel>> parseModelFromConfig() {
+    return TaskEither<AppError, List<RemoteProviderModel>>.Do(($) async {
       final config = await $(getIniConfig());
 
       return await $(
-        TaskEither<AppError, List<DriveProviderModel>>.tryCatch(
+        TaskEither<AppError, List<RemoteProviderModel>>.tryCatch(
           () async {
             return config.sections().map((sectionName) {
               final remoteName =
@@ -137,7 +137,7 @@ class RCloneUtils {
                 ),
               };
 
-              return DriveProviderModel(
+              return RemoteProviderModel(
                 remoteName: sectionName,
                 provider: provider,
                 backend: backend,

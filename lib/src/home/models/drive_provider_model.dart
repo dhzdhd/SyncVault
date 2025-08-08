@@ -6,15 +6,16 @@ part 'drive_provider_model.freezed.dart';
 part 'drive_provider_model.g.dart';
 
 @freezed
-abstract class DriveProviderModel with _$DriveProviderModel {
-  const factory DriveProviderModel({
+sealed class DriveProviderModel with _$DriveProviderModel {
+  const factory DriveProviderModel.remote({
     required String remoteName,
     required DriveProvider provider,
     required DriveProviderBackend backend,
     required String createdAt,
     required String updatedAt,
     required bool isRCloneBackend,
-  }) = _DriveProviderModel;
+  }) = RemoteProviderModel;
+  const factory DriveProviderModel.local() = LocalProviderModel;
 
   factory DriveProviderModel.fromJson(Map<String, Object?> json) =>
       _$DriveProviderModelFromJson(json);

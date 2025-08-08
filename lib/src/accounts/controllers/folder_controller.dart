@@ -72,7 +72,7 @@ class UploadDeleteController extends _$UploadDeleteController {
 }
 
 @riverpod
-Future<Option<FileModel>> treeView(Ref ref, DriveProviderModel model) async {
+Future<Option<FileModel>> treeView(Ref ref, RemoteProviderModel model) async {
   return RCloneDriveService()
       .treeView(model: model)
       .match((l) => throw l, (r) => r)
@@ -133,21 +133,21 @@ class Folder extends _$Folder {
     required String folderName,
     required DriveProviderModel providerModel,
   }) async {
-    final driveService = providerModel.isRCloneBackend
-        ? RCloneDriveService()
-        : switch (providerModel.provider) {
-            GoogleDriveProvider() => GoogleDriveService(),
-            _ => throw UnimplementedError(),
-          };
+    // final driveService = providerModel.isRCloneBackend
+    //     ? RCloneDriveService()
+    //     : switch (providerModel.provider) {
+    //         GoogleDriveProvider() => GoogleDriveService(),
+    //         _ => throw UnimplementedError(),
+    //       };
 
-    final model = await driveService
-        .create(folderName: folderName, model: providerModel)
-        .match((l) => throw l, (r) => r)
-        .run();
+    // final model = await driveService
+    //     .create(folderName: folderName, model: providerModel)
+    //     .match((l) => throw l, (r) => r)
+    //     .run();
 
-    state = [...state, model];
+    // state = [...state, model];
 
-    await _folderStorage.addSingle(model);
+    // await _folderStorage.addSingle(model);
   }
 
   // Future<void> upload(
@@ -196,19 +196,19 @@ class Folder extends _$Folder {
   // }
 
   Future<void> delete(FolderModel model, bool deleteRemote) async {
-    if (deleteRemote) {
-      final providerModels = ref.watch(authProvider);
-      final providerModel = providerModels.requireValue
-          .filter((t) => t.remoteName == model.remoteName)
-          .first;
+    // if (deleteRemote) {
+    //   final providerModels = ref.watch(authProvider);
+    //   final providerModel = providerModels.requireValue
+    //       .filter((t) => t.remoteName == model.remoteName)
+    //       .first;
 
-      await RCloneDriveService()
-          .delete(providerModel: providerModel, folderModel: model)
-          .run();
-    }
+    //   await RCloneDriveService()
+    //       .delete(providerModel: providerModel, folderModel: model)
+    //       .run();
+    // }
 
-    state = state.where((element) => element != model).toList();
-    await _folderStorage.update(state);
+    // state = state.where((element) => element != model).toList();
+    // await _folderStorage.update(state);
   }
 
   Future<void> clearCache() async {

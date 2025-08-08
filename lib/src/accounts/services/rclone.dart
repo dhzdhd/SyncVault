@@ -51,14 +51,14 @@ Future<bool> checkProcessIsNotUsed(int port) async {
 @singleton
 class RCloneAuthService implements AuthService {
   @override
-  TaskEither<AppError, DriveProviderModel> authorize({
+  TaskEither<AppError, RemoteProviderModel> authorize({
     required DriveProviderBackend backend,
     required DriveProvider driveProvider,
     required String remoteName,
   }) {
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, DriveProviderModel>.Do(($) async {
+    return TaskEither<AppError, RemoteProviderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
       final configFile = await $(utils.getConfig());
       final rCloneConfig = await $(utils.getIniConfig());
@@ -155,7 +155,7 @@ class RCloneAuthService implements AuthService {
                 'refresh_token': String refreshToken,
                 'expiry': String expiresIn,
               }) {
-                final model = DriveProviderModel(
+                final model = RemoteProviderModel(
                   remoteName: remoteName,
                   provider: driveProvider,
                   backend: OAuth2(
@@ -189,7 +189,7 @@ class RCloneAuthService implements AuthService {
         S3(:final url, :final accessKeyId, :final secretAccessKey) => await $(
           TaskEither.tryCatch(
             () async {
-              final model = DriveProviderModel(
+              final model = RemoteProviderModel(
                 remoteName: remoteName,
                 provider: driveProvider,
                 backend: S3(
@@ -222,7 +222,7 @@ class RCloneAuthService implements AuthService {
               ]);
               final obscPassword = process.stdout;
 
-              final model = DriveProviderModel(
+              final model = RemoteProviderModel(
                 remoteName: remoteName,
                 provider: driveProvider,
                 backend: UserPassword(
@@ -254,7 +254,7 @@ class RCloneAuthService implements AuthService {
               ]);
               final obscPassword = process.stdout;
 
-              final model = DriveProviderModel(
+              final model = RemoteProviderModel(
                 remoteName: remoteName,
                 provider: driveProvider,
                 backend: Webdav(url: url, user: user, password: obscPassword),
@@ -275,7 +275,7 @@ class RCloneAuthService implements AuthService {
         ),
         Local() => await $(
           TaskEither.right(
-            DriveProviderModel(
+            RemoteProviderModel(
               remoteName: remoteName,
               provider: driveProvider,
               backend: backend,
@@ -352,7 +352,7 @@ class RCloneAuthService implements AuthService {
 
   @override
   TaskEither<AppError, Option<DriveInfoModel>> driveInfo({
-    required DriveProviderModel model,
+    required RemoteProviderModel model,
   }) {
     final utils = RCloneUtils();
 
@@ -402,7 +402,7 @@ class RCloneAuthService implements AuthService {
   }
 
   @override
-  TaskEither<AppError, bool> isHealthy({required DriveProviderModel model}) {
+  TaskEither<AppError, bool> isHealthy({required RemoteProviderModel model}) {
     final utils = RCloneUtils();
 
     return TaskEither.Do(($) async {

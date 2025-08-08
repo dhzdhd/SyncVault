@@ -8,20 +8,22 @@ import 'package:syncvault/hive/hive_adapters.dart';
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(ConnectionModelAdapter());
-    registerAdapter(DriveProviderModelAdapter());
     registerAdapter(DropBoxProviderAdapter());
     registerAdapter(FolderHashModelAdapter());
-    registerAdapter(FolderModelAdapter());
     registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
     registerAdapter(LocalAdapter());
+    registerAdapter(LocalFolderModelAdapter());
     registerAdapter(LocalProviderAdapter());
+    registerAdapter(LocalProviderModelAdapter());
     registerAdapter(MinioProviderAdapter());
     registerAdapter(NextCloudProviderAdapter());
     registerAdapter(OAuth2Adapter());
     registerAdapter(OneDriveProviderAdapter());
     registerAdapter(ProtonDriveProviderAdapter());
+    registerAdapter(RemoteFolderModelAdapter());
+    registerAdapter(RemoteProviderModelAdapter());
     registerAdapter(S3Adapter());
     registerAdapter(SettingsModelAdapter());
     registerAdapter(ThemeModeAdapter());
@@ -34,20 +36,22 @@ extension HiveRegistrar on HiveInterface {
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(ConnectionModelAdapter());
-    registerAdapter(DriveProviderModelAdapter());
     registerAdapter(DropBoxProviderAdapter());
     registerAdapter(FolderHashModelAdapter());
-    registerAdapter(FolderModelAdapter());
     registerAdapter(GoogleDriveProviderAdapter());
     registerAdapter(HashDigestAdapter());
     registerAdapter(IntroSettingsModelAdapter());
     registerAdapter(LocalAdapter());
+    registerAdapter(LocalFolderModelAdapter());
     registerAdapter(LocalProviderAdapter());
+    registerAdapter(LocalProviderModelAdapter());
     registerAdapter(MinioProviderAdapter());
     registerAdapter(NextCloudProviderAdapter());
     registerAdapter(OAuth2Adapter());
     registerAdapter(OneDriveProviderAdapter());
     registerAdapter(ProtonDriveProviderAdapter());
+    registerAdapter(RemoteFolderModelAdapter());
+    registerAdapter(RemoteProviderModelAdapter());
     registerAdapter(S3Adapter());
     registerAdapter(SettingsModelAdapter());
     registerAdapter(ThemeModeAdapter());

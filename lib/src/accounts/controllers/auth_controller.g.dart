@@ -7,7 +7,7 @@ part of 'auth_controller.dart';
 // **************************************************************************
 
 String _$driveInfoControllerHash() =>
-    r'd64cf2eb4fdae981c745650d7bae50e588c15f3c';
+    r'72ce0919f291ff826caee41078cff3778ad39e98';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -40,7 +40,7 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
   const DriveInfoControllerFamily();
 
   /// See also [driveInfoController].
-  DriveInfoControllerProvider call(DriveProviderModel model) {
+  DriveInfoControllerProvider call(RemoteProviderModel model) {
     return DriveInfoControllerProvider(model);
   }
 
@@ -70,7 +70,7 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
 class DriveInfoControllerProvider
     extends AutoDisposeFutureProvider<DriveInfoModel> {
   /// See also [driveInfoController].
-  DriveInfoControllerProvider(DriveProviderModel model)
+  DriveInfoControllerProvider(RemoteProviderModel model)
     : this._internal(
         (ref) => driveInfoController(ref as DriveInfoControllerRef, model),
         from: driveInfoControllerProvider,
@@ -94,7 +94,7 @@ class DriveInfoControllerProvider
     required this.model,
   }) : super.internal();
 
-  final DriveProviderModel model;
+  final RemoteProviderModel model;
 
   @override
   Override overrideWith(
@@ -137,7 +137,7 @@ class DriveInfoControllerProvider
 // ignore: unused_element
 mixin DriveInfoControllerRef on AutoDisposeFutureProviderRef<DriveInfoModel> {
   /// The parameter `model` of this provider.
-  DriveProviderModel get model;
+  RemoteProviderModel get model;
 }
 
 class _DriveInfoControllerProviderElement
@@ -146,7 +146,8 @@ class _DriveInfoControllerProviderElement
   _DriveInfoControllerProviderElement(super.provider);
 
   @override
-  DriveProviderModel get model => (origin as DriveInfoControllerProvider).model;
+  RemoteProviderModel get model =>
+      (origin as DriveInfoControllerProvider).model;
 }
 
 String _$authControllerHash() => r'2729c5e63ac1c6eb326b90bc83d03058a2996ebb';
@@ -165,12 +166,12 @@ final authControllerProvider =
     );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'08fd347c0024cb2a6f7544c15cc5ca1b2f251042';
+String _$authHash() => r'183de640190e5fe4c455488714e45cc5044c3c3f';
 
 /// See also [Auth].
 @ProviderFor(Auth)
 final authProvider =
-    AutoDisposeAsyncNotifierProvider<Auth, List<DriveProviderModel>>.internal(
+    AutoDisposeAsyncNotifierProvider<Auth, List<RemoteProviderModel>>.internal(
       Auth.new,
       name: r'authProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -180,6 +181,6 @@ final authProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$Auth = AutoDisposeAsyncNotifier<List<DriveProviderModel>>;
+typedef _$Auth = AutoDisposeAsyncNotifier<List<RemoteProviderModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

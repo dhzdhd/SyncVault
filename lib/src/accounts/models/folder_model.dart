@@ -5,13 +5,17 @@ part 'folder_model.g.dart';
 
 @freezed
 // TODO: Convert nullables to option when adapter is fixed
-abstract class FolderModel with _$FolderModel {
-  const factory FolderModel({
+sealed class FolderModel with _$FolderModel {
+  const factory FolderModel.remote({
     required String remoteName,
     required String folderName,
     required String? parentPath,
     required String? folderId,
-  }) = _FolderModel;
+  }) = RemoteFolderModel;
+  const factory FolderModel.local({
+    required String folderName,
+    required String folderPath,
+  }) = LocalFolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>
       _$FolderModelFromJson(json);

@@ -12,16 +12,34 @@ part of 'drive_provider_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+DriveProviderModel _$DriveProviderModelFromJson(
+  Map<String, dynamic> json
+) {
+        switch (json['runtimeType']) {
+                  case 'remote':
+          return RemoteProviderModel.fromJson(
+            json
+          );
+                case 'local':
+          return LocalProviderModel.fromJson(
+            json
+          );
+        
+          default:
+            throw CheckedFromJsonException(
+  json,
+  'runtimeType',
+  'DriveProviderModel',
+  'Invalid union type "${json['runtimeType']}"!'
+);
+        }
+      
+}
 
 /// @nodoc
 mixin _$DriveProviderModel {
 
- String get remoteName; DriveProvider get provider; DriveProviderBackend get backend; String get createdAt; String get updatedAt; bool get isRCloneBackend;
-/// Create a copy of DriveProviderModel
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$DriveProviderModelCopyWith<DriveProviderModel> get copyWith => _$DriveProviderModelCopyWithImpl<DriveProviderModel>(this as DriveProviderModel, _$identity);
+
 
   /// Serializes this DriveProviderModel to a JSON map.
   Map<String, dynamic> toJson();
@@ -29,7 +47,59 @@ $DriveProviderModelCopyWith<DriveProviderModel> get copyWith => _$DriveProviderM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriveProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriveProviderModel);
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'DriveProviderModel()';
+}
+
+
+}
+
+/// @nodoc
+class $DriveProviderModelCopyWith<$Res>  {
+$DriveProviderModelCopyWith(DriveProviderModel _, $Res Function(DriveProviderModel) __);
+}
+
+
+/// @nodoc
+@JsonSerializable()
+
+class RemoteProviderModel implements DriveProviderModel {
+  const RemoteProviderModel({required this.remoteName, required this.provider, required this.backend, required this.createdAt, required this.updatedAt, required this.isRCloneBackend, final  String? $type}): $type = $type ?? 'remote';
+  factory RemoteProviderModel.fromJson(Map<String, dynamic> json) => _$RemoteProviderModelFromJson(json);
+
+ final  String remoteName;
+ final  DriveProvider provider;
+ final  DriveProviderBackend backend;
+ final  String createdAt;
+ final  String updatedAt;
+ final  bool isRCloneBackend;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
+/// Create a copy of DriveProviderModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RemoteProviderModelCopyWith<RemoteProviderModel> get copyWith => _$RemoteProviderModelCopyWithImpl<RemoteProviderModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RemoteProviderModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoteProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -38,15 +108,15 @@ int get hashCode => Object.hash(runtimeType,remoteName,provider,backend,createdA
 
 @override
 String toString() {
-  return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
+  return 'DriveProviderModel.remote(remoteName: $remoteName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $DriveProviderModelCopyWith<$Res>  {
-  factory $DriveProviderModelCopyWith(DriveProviderModel value, $Res Function(DriveProviderModel) _then) = _$DriveProviderModelCopyWithImpl;
+abstract mixin class $RemoteProviderModelCopyWith<$Res> implements $DriveProviderModelCopyWith<$Res> {
+  factory $RemoteProviderModelCopyWith(RemoteProviderModel value, $Res Function(RemoteProviderModel) _then) = _$RemoteProviderModelCopyWithImpl;
 @useResult
 $Res call({
  String remoteName, DriveProvider provider, DriveProviderBackend backend, String createdAt, String updatedAt, bool isRCloneBackend
@@ -57,17 +127,17 @@ $DriveProviderCopyWith<$Res> get provider;$DriveProviderBackendCopyWith<$Res> ge
 
 }
 /// @nodoc
-class _$DriveProviderModelCopyWithImpl<$Res>
-    implements $DriveProviderModelCopyWith<$Res> {
-  _$DriveProviderModelCopyWithImpl(this._self, this._then);
+class _$RemoteProviderModelCopyWithImpl<$Res>
+    implements $RemoteProviderModelCopyWith<$Res> {
+  _$RemoteProviderModelCopyWithImpl(this._self, this._then);
 
-  final DriveProviderModel _self;
-  final $Res Function(DriveProviderModel) _then;
+  final RemoteProviderModel _self;
+  final $Res Function(RemoteProviderModel) _then;
 
 /// Create a copy of DriveProviderModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? remoteName = null,Object? provider = null,Object? backend = null,Object? createdAt = null,Object? updatedAt = null,Object? isRCloneBackend = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') $Res call({Object? remoteName = null,Object? provider = null,Object? backend = null,Object? createdAt = null,Object? updatedAt = null,Object? isRCloneBackend = null,}) {
+  return _then(RemoteProviderModel(
 remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
 as DriveProvider,backend: null == backend ? _self.backend : backend // ignore: cast_nullable_to_non_nullable
@@ -77,6 +147,7 @@ as String,isRCloneBackend: null == isRCloneBackend ? _self.isRCloneBackend : isR
 as bool,
   ));
 }
+
 /// Create a copy of DriveProviderModel
 /// with the given fields replaced by the non-null parameter values.
 @override
@@ -97,103 +168,44 @@ $DriveProviderBackendCopyWith<$Res> get backend {
   });
 }
 }
-
 
 /// @nodoc
 @JsonSerializable()
 
-class _DriveProviderModel implements DriveProviderModel {
-  const _DriveProviderModel({required this.remoteName, required this.provider, required this.backend, required this.createdAt, required this.updatedAt, required this.isRCloneBackend});
-  factory _DriveProviderModel.fromJson(Map<String, dynamic> json) => _$DriveProviderModelFromJson(json);
+class LocalProviderModel implements DriveProviderModel {
+  const LocalProviderModel({final  String? $type}): $type = $type ?? 'local';
+  factory LocalProviderModel.fromJson(Map<String, dynamic> json) => _$LocalProviderModelFromJson(json);
 
-@override final  String remoteName;
-@override final  DriveProvider provider;
-@override final  DriveProviderBackend backend;
-@override final  String createdAt;
-@override final  String updatedAt;
-@override final  bool isRCloneBackend;
 
-/// Create a copy of DriveProviderModel
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$DriveProviderModelCopyWith<_DriveProviderModel> get copyWith => __$DriveProviderModelCopyWithImpl<_DriveProviderModel>(this, _$identity);
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
 
 @override
 Map<String, dynamic> toJson() {
-  return _$DriveProviderModelToJson(this, );
+  return _$LocalProviderModelToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DriveProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalProviderModel);
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,remoteName,provider,backend,createdAt,updatedAt,isRCloneBackend);
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'DriveProviderModel(remoteName: $remoteName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
+  return 'DriveProviderModel.local()';
 }
 
 
 }
 
-/// @nodoc
-abstract mixin class _$DriveProviderModelCopyWith<$Res> implements $DriveProviderModelCopyWith<$Res> {
-  factory _$DriveProviderModelCopyWith(_DriveProviderModel value, $Res Function(_DriveProviderModel) _then) = __$DriveProviderModelCopyWithImpl;
-@override @useResult
-$Res call({
- String remoteName, DriveProvider provider, DriveProviderBackend backend, String createdAt, String updatedAt, bool isRCloneBackend
-});
 
 
-@override $DriveProviderCopyWith<$Res> get provider;@override $DriveProviderBackendCopyWith<$Res> get backend;
-
-}
-/// @nodoc
-class __$DriveProviderModelCopyWithImpl<$Res>
-    implements _$DriveProviderModelCopyWith<$Res> {
-  __$DriveProviderModelCopyWithImpl(this._self, this._then);
-
-  final _DriveProviderModel _self;
-  final $Res Function(_DriveProviderModel) _then;
-
-/// Create a copy of DriveProviderModel
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? remoteName = null,Object? provider = null,Object? backend = null,Object? createdAt = null,Object? updatedAt = null,Object? isRCloneBackend = null,}) {
-  return _then(_DriveProviderModel(
-remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
-as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
-as DriveProvider,backend: null == backend ? _self.backend : backend // ignore: cast_nullable_to_non_nullable
-as DriveProviderBackend,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as String,isRCloneBackend: null == isRCloneBackend ? _self.isRCloneBackend : isRCloneBackend // ignore: cast_nullable_to_non_nullable
-as bool,
-  ));
-}
-
-/// Create a copy of DriveProviderModel
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$DriveProviderCopyWith<$Res> get provider {
-  
-  return $DriveProviderCopyWith<$Res>(_self.provider, (value) {
-    return _then(_self.copyWith(provider: value));
-  });
-}/// Create a copy of DriveProviderModel
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$DriveProviderBackendCopyWith<$Res> get backend {
-  
-  return $DriveProviderBackendCopyWith<$Res>(_self.backend, (value) {
-    return _then(_self.copyWith(backend: value));
-  });
-}
-}
 
 // dart format on

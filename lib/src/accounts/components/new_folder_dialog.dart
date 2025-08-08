@@ -1,0 +1,257 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/helpers.dart';
+import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/common/components/circular_progress_widget.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
+import 'package:syncvault/src/home/models/drive_provider_backend.dart';
+import 'package:syncvault/src/home/models/drive_provider_model.dart';
+
+class NewFolderDialogWidget extends StatefulHookConsumerWidget {
+  const NewFolderDialogWidget({
+    super.key,
+    required this.providerModel,
+    required this.isLocal,
+  });
+
+  final DriveProviderModel providerModel;
+  final bool isLocal;
+
+  @override
+  ConsumerState<NewFolderDialogWidget> createState() =>
+      _NewFolderDialogWidgetState();
+}
+
+enum AccountSegment { local, remote }
+
+class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
+  late final TextEditingController _folderNameController;
+  late final TextEditingController _userController;
+  late final TextEditingController _passwordController;
+  late final TextEditingController _urlController;
+
+  @override
+  void initState() {
+    super.initState();
+    // TODO: Add folderName which is not unique but can be same as remoteName (add switch too)
+    _folderNameController = TextEditingController();
+    _urlController = TextEditingController();
+    _userController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _folderNameController.dispose();
+    _urlController.dispose();
+    _userController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  bool validateControllers(List<TextEditingController> controllers) {
+    return controllers.all((val) => val.text.isNotEmpty);
+  }
+
+  bool validateSelectedFolder(Option<String> path) {
+    return path.isSome();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = useState<DriveProvider>(OneDriveProvider());
+    final selectedFolder = useState<Option<String>>(const None());
+    final authController = ref.watch(authControllerProvider);
+
+    ref.listen<AsyncValue>(authControllerProvider, (prev, state) {
+      if (!state.isLoading && state.hasError) {
+        context.showErrorSnackBar(
+          GeneralError(
+            'Auth controller failed',
+            state.error!,
+            state.stackTrace,
+          ).logError().message,
+        );
+      }
+    });
+
+    return SimpleDialog(
+      title: const Text('Register a new folder'),
+      contentPadding: const EdgeInsets.all(24),
+      children: [
+        TextField(
+          controller: _folderNameController,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Title',
+          ),
+        ),
+        const SizedBox(height: 16),
+        if (widget.isLocal)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Tooltip(
+                  message:
+                      selectedFolder.value.toNullable() ??
+                      'Select local folder',
+                  child: Text(
+                    selectedFolder.value.toNullable() ?? 'Select local folder',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.folder),
+                tooltip: 'Get directory',
+                onPressed: () async {
+                  final result = await FilePicker.platform.getDirectoryPath();
+                  selectedFolder.value = Option.fromNullable(result);
+                },
+              ),
+            ],
+          ),
+        const SizedBox(height: 16),
+        ...switch (selected.value.defaultBackend) {
+          OAuth2() => [],
+          S3() => [
+            const SizedBox(height: 16),
+            TextField(
+              controller: _urlController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Provider URL',
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _userController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Access Key ID',
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Secret Access Key',
+              ),
+            ),
+          ],
+          UserPassword() => [
+            const SizedBox(height: 16),
+            TextField(
+              controller: _userController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Username',
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
+              ),
+            ),
+          ],
+          Webdav() => [
+            const SizedBox(height: 16),
+            TextField(
+              controller: _urlController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Provider URL',
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _userController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'User',
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
+              ),
+            ),
+          ],
+          Local() => [],
+        },
+        const SizedBox(height: 32),
+        ElevatedButton(
+          onPressed: () async {
+            if (!authController.isLoading) {
+              final valid = switch (selected.value.defaultBackend) {
+                OAuth2() => validateControllers([_folderNameController]),
+                S3() => validateControllers([
+                  _folderNameController,
+                  _urlController,
+                  _userController,
+                  _passwordController,
+                ]),
+                UserPassword() => validateControllers([
+                  _folderNameController,
+                  _userController,
+                  _passwordController,
+                ]),
+                Webdav() => validateControllers([
+                  _folderNameController,
+                  _urlController,
+                  _userController,
+                  _passwordController,
+                ]),
+                Local() =>
+                  validateControllers([_folderNameController]) &&
+                      validateSelectedFolder(selectedFolder.value),
+              };
+
+              if (valid) {
+                await ref
+                    .read(createFolderControllerProvider.notifier)
+                    .createFolder(
+                      folderName: _folderNameController.text,
+                      model: widget.providerModel,
+                    );
+
+                if (context.mounted && !authController.isLoading) {
+                  Navigator.of(context).pop();
+                }
+              }
+            } else {
+              context.showErrorSnackBar('Fields are empty');
+            }
+          },
+          child: authController.isLoading
+              ? const SizedBox.square(
+                  dimension: 20.0,
+                  child: CircularProgressWidget(size: 300, isInfinite: true),
+                )
+              : const Text('Submit'),
+        ),
+      ],
+    );
+  }
+}

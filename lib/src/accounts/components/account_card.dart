@@ -5,15 +5,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/components/delete_account_dialog.dart';
 import 'package:syncvault/src/accounts/components/drive_info_dialog.dart';
 import 'package:syncvault/src/accounts/components/folder_card.dart';
+import 'package:syncvault/src/accounts/components/new_folder_dialog.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/controllers/status_controller.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class AccountCard extends ConsumerWidget {
   const AccountCard({super.key, required this.providerModel});
 
-  final DriveProviderModel providerModel;
+  final RemoteProviderModel providerModel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +24,9 @@ class AccountCard extends ConsumerWidget {
     final folders = ref
         .watch(folderProvider)
         .filter(
-          (folderModel) => folderModel.remoteName == providerModel.remoteName,
+          (folderModel) =>
+              folderModel is RemoteFolderModel &&
+              folderModel.remoteName == providerModel.remoteName,
         );
 
     return Column(
@@ -107,13 +111,11 @@ class AccountCard extends ConsumerWidget {
                                       left: 6,
                                       right: 6,
                                     ),
-                                    child: Text(switch (providerModel.backend) {
-                                      Local() => 'Local',
-                                      _ =>
-                                        providerModel.isRCloneBackend
-                                            ? 'RClone'
-                                            : 'Manual',
-                                    }),
+                                    child: Text(
+                                      providerModel.isRCloneBackend
+                                          ? 'RClone'
+                                          : 'Manual',
+                                    ),
                                   ),
                                 ],
                               ),
@@ -126,9 +128,41 @@ class AccountCard extends ConsumerWidget {
                 ),
                 PopupMenuButton(
                   itemBuilder: (ctx) => [
+                    PopupMenuItem(
+                      enabled:
+                          connectionStatus.valueOrNull == true &&
+                          !connectionStatus.hasError,
+                      child: const Row(
+                        children: [
+                          Text('Add folder'),
+                          Spacer(),
+                          Icon(Icons.create_new_folder_rounded),
+                        ],
+                      ),
+                      onTap: () async {
+                        await Future.delayed(
+                          Duration.zero,
+                          () => {
+                            if (context.mounted)
+                              {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) => NewFolderDialogWidget(
+                                    providerModel: providerModel,
+                                    isLocal: false,
+                                  ),
+                                ),
+                              },
+                          },
+                        );
+                      },
+                    ),
                     // TODO: Perhaps show drive info for local too??
                     if (providerModel.backend is! Local)
                       PopupMenuItem(
+                        enabled:
+                            connectionStatus.valueOrNull == true &&
+                            !connectionStatus.hasError,
                         child: const Row(
                           children: [
                             Text('Info'),

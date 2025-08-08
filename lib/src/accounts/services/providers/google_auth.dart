@@ -27,7 +27,7 @@ class GoogleAuthService implements ManualAuthService {
   });
 
   @override
-  TaskEither<AppError, DriveProviderModel> authorize({
+  TaskEither<AppError, RemoteProviderModel> authorize({
     required DriveProviderBackend backend,
     required DriveProvider driveProvider,
     required String remoteName,
@@ -73,7 +73,7 @@ class GoogleAuthService implements ManualAuthService {
         final refreshToken = response.data!['refresh_token'];
         final expiresIn = response.data!['expires_in'];
 
-        return DriveProviderModel(
+        return RemoteProviderModel(
           remoteName: remoteName,
           provider: GoogleDriveProvider(),
           backend: OAuth2(
@@ -98,7 +98,7 @@ class GoogleAuthService implements ManualAuthService {
 
   @override
   TaskEither<AppError, Option<DriveInfoModel>> driveInfo({
-    required DriveProviderModel model,
+    required RemoteProviderModel model,
   }) {
     final backend = model.backend as OAuth2;
     final authOptions = Options(
@@ -141,8 +141,8 @@ class GoogleAuthService implements ManualAuthService {
   }
 
   @override
-  TaskEither<AppError, DriveProviderModel> refresh({
-    required DriveProviderModel model,
+  TaskEither<AppError, RemoteProviderModel> refresh({
+    required RemoteProviderModel model,
   }) {
     return TaskEither.tryCatch(
       () async {

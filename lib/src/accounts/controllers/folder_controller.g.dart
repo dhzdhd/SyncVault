@@ -6,7 +6,7 @@ part of 'folder_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$treeViewHash() => r'63053cf622f32eb3b3b93cfa6abf94448f8e0809';
+String _$treeViewHash() => r'555e8645c84874f9a90498908d7faf7075322f1a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -39,7 +39,7 @@ class TreeViewFamily extends Family<AsyncValue<Option<FileModel>>> {
   const TreeViewFamily();
 
   /// See also [treeView].
-  TreeViewProvider call(DriveProviderModel model) {
+  TreeViewProvider call(RemoteProviderModel model) {
     return TreeViewProvider(model);
   }
 
@@ -66,7 +66,7 @@ class TreeViewFamily extends Family<AsyncValue<Option<FileModel>>> {
 /// See also [treeView].
 class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
   /// See also [treeView].
-  TreeViewProvider(DriveProviderModel model)
+  TreeViewProvider(RemoteProviderModel model)
     : this._internal(
         (ref) => treeView(ref as TreeViewRef, model),
         from: treeViewProvider,
@@ -89,7 +89,7 @@ class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
     required this.model,
   }) : super.internal();
 
-  final DriveProviderModel model;
+  final RemoteProviderModel model;
 
   @override
   Override overrideWith(
@@ -132,7 +132,7 @@ class TreeViewProvider extends AutoDisposeFutureProvider<Option<FileModel>> {
 // ignore: unused_element
 mixin TreeViewRef on AutoDisposeFutureProviderRef<Option<FileModel>> {
   /// The parameter `model` of this provider.
-  DriveProviderModel get model;
+  RemoteProviderModel get model;
 }
 
 class _TreeViewProviderElement
@@ -141,7 +141,7 @@ class _TreeViewProviderElement
   _TreeViewProviderElement(super.provider);
 
   @override
-  DriveProviderModel get model => (origin as TreeViewProvider).model;
+  RemoteProviderModel get model => (origin as TreeViewProvider).model;
 }
 
 String _$createFolderControllerHash() =>
@@ -178,7 +178,7 @@ final uploadDeleteControllerProvider =
     );
 
 typedef _$UploadDeleteController = AutoDisposeAsyncNotifier<void>;
-String _$folderHash() => r'2c0a4b3f6753fe063e49ecf2b94cc35a431ac057';
+String _$folderHash() => r'21bb495dbf1f1473e5ead47b46896025f17c641d';
 
 /// See also [Folder].
 @ProviderFor(Folder)

@@ -40,14 +40,14 @@ class AuthController extends _$AuthController {
 @riverpod
 Future<DriveInfoModel> driveInfoController(
   Ref ref,
-  DriveProviderModel model,
+  RemoteProviderModel model,
 ) async {
   final authNotifier = ref.read(authProvider.notifier);
 
   return authNotifier.getDriveInfo(model);
 }
 
-final _box = GetIt.I<Box<DriveProviderModel>>();
+final _box = GetIt.I<Box<RemoteProviderModel>>();
 
 // The actual service to handle backend API calls
 // Called from the controller
@@ -55,13 +55,13 @@ final _box = GetIt.I<Box<DriveProviderModel>>();
 @riverpod
 class Auth extends _$Auth {
   @override
-  Future<List<DriveProviderModel>> build() async {
+  Future<List<RemoteProviderModel>> build() async {
     // TODO: Change all instances of requireValue to switch cases
     state = AsyncData(_box.values.toList());
     return init();
   }
 
-  static Future<List<DriveProviderModel>> init() async {
+  static Future<List<RemoteProviderModel>> init() async {
     final val = await RCloneUtils().parseModelFromConfig().run();
     return val
         .map(
@@ -91,8 +91,8 @@ class Auth extends _$Auth {
     }
 
     final service = switch (backend is Local) {
-      true => Right<AppError, DriveProviderModel>(
-        DriveProviderModel(
+      true => Right<AppError, RemoteProviderModel>(
+        RemoteProviderModel(
           backend: backend,
           remoteName: remoteName,
           provider: provider,
@@ -137,7 +137,7 @@ class Auth extends _$Auth {
   }
 
   // TODO: Add functionality to delete folders
-  Future<void> signOut(DriveProviderModel model) async {
+  Future<void> signOut(RemoteProviderModel model) async {
     state = AsyncData(
       state.requireValue.where((element) => element != model).toList(),
     );
@@ -155,7 +155,7 @@ class Auth extends _$Auth {
     }
   }
 
-  Future<DriveInfoModel> getDriveInfo(DriveProviderModel model) async {
+  Future<DriveInfoModel> getDriveInfo(RemoteProviderModel model) async {
     final result = switch (model.isRCloneBackend) {
       true => await RCloneAuthService().driveInfo(model: model).run(),
       false =>

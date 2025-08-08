@@ -78,7 +78,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               .filter(
                 (authModel) =>
                     authModel.remoteName !=
-                    secondSelectedProvider.value.toNullable()?.remoteName,
+                    'secondSelectedProvider.value.toNullable()?.remoteName',
               )
               .map(
                 (authModel) => DropdownMenuItem(
@@ -101,7 +101,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               .filter(
                 (authModel) =>
                     authModel.remoteName !=
-                    firstSelectedProvider.value.toNullable()?.remoteName,
+                    'firstSelectedProvider.value.toNullable()?.remoteName',
               )
               .map(
                 (authModel) => DropdownMenuItem(
