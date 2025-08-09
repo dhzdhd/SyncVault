@@ -102,32 +102,6 @@ class LocalAccountCard extends ConsumerWidget {
                         );
                       },
                     ),
-                    // TODO: Perhaps show drive info for local too??
-                    PopupMenuItem(
-                      child: const Row(
-                        children: [
-                          Text('Info'),
-                          Spacer(),
-                          Icon(Icons.info_outline),
-                        ],
-                      ),
-                      onTap: () async {
-                        await Future.delayed(
-                          Duration.zero,
-                          () => {
-                            // if (context.mounted)
-                            //   {
-                            //     showDialog(
-                            //       context: context,
-                            //       builder: (ctx) => DriveInfoDialogWidget(
-                            //         model: LocalProviderModel(),
-                            //       ),
-                            //     ),
-                            //   },
-                          },
-                        );
-                      },
-                    ),
                   ],
                 ),
               ],

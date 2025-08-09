@@ -40,7 +40,7 @@ class AuthController extends _$AuthController {
 @riverpod
 Future<DriveInfoModel> driveInfoController(
   Ref ref,
-  RemoteProviderModel model,
+  DriveProviderModel model,
 ) async {
   final authNotifier = ref.read(authProvider.notifier);
 
@@ -155,17 +155,28 @@ class Auth extends _$Auth {
     }
   }
 
-  Future<DriveInfoModel> getDriveInfo(RemoteProviderModel model) async {
-    final result = switch (model.isRCloneBackend) {
-      true => await RCloneAuthService().driveInfo(model: model).run(),
-      false =>
-        await getManualAuthService(model.provider)
-            .refresh(model: model)
-            .flatMap(
-              (res) =>
-                  getManualAuthService(model.provider).driveInfo(model: res),
-            )
-            .run(),
+  Future<DriveInfoModel> getDriveInfo(DriveProviderModel model) async {
+    final Either<AppError, Option<DriveInfoModel>> result = switch (model) {
+      LocalProviderModel() => Right(
+        Some(
+          DriveInfoModel(
+            remainingStorage: None(),
+            usedStorage: None(),
+            totalStorage: None(),
+          ),
+        ),
+      ),
+      RemoteProviderModel(:final isRCloneBackend) => switch (isRCloneBackend) {
+        true => await RCloneAuthService().driveInfo(model: model).run(),
+        false =>
+          await getManualAuthService(model.provider)
+              .refresh(model: model)
+              .flatMap(
+                (res) =>
+                    getManualAuthService(model.provider).driveInfo(model: res),
+              )
+              .run(),
+      },
     };
 
     return result.match(

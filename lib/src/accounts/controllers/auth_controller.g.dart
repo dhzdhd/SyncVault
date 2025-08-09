@@ -7,7 +7,7 @@ part of 'auth_controller.dart';
 // **************************************************************************
 
 String _$driveInfoControllerHash() =>
-    r'72ce0919f291ff826caee41078cff3778ad39e98';
+    r'd64cf2eb4fdae981c745650d7bae50e588c15f3c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -40,7 +40,7 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
   const DriveInfoControllerFamily();
 
   /// See also [driveInfoController].
-  DriveInfoControllerProvider call(RemoteProviderModel model) {
+  DriveInfoControllerProvider call(DriveProviderModel model) {
     return DriveInfoControllerProvider(model);
   }
 
@@ -70,7 +70,7 @@ class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
 class DriveInfoControllerProvider
     extends AutoDisposeFutureProvider<DriveInfoModel> {
   /// See also [driveInfoController].
-  DriveInfoControllerProvider(RemoteProviderModel model)
+  DriveInfoControllerProvider(DriveProviderModel model)
     : this._internal(
         (ref) => driveInfoController(ref as DriveInfoControllerRef, model),
         from: driveInfoControllerProvider,
@@ -94,7 +94,7 @@ class DriveInfoControllerProvider
     required this.model,
   }) : super.internal();
 
-  final RemoteProviderModel model;
+  final DriveProviderModel model;
 
   @override
   Override overrideWith(
@@ -137,7 +137,7 @@ class DriveInfoControllerProvider
 // ignore: unused_element
 mixin DriveInfoControllerRef on AutoDisposeFutureProviderRef<DriveInfoModel> {
   /// The parameter `model` of this provider.
-  RemoteProviderModel get model;
+  DriveProviderModel get model;
 }
 
 class _DriveInfoControllerProviderElement
@@ -146,8 +146,7 @@ class _DriveInfoControllerProviderElement
   _DriveInfoControllerProviderElement(super.provider);
 
   @override
-  RemoteProviderModel get model =>
-      (origin as DriveInfoControllerProvider).model;
+  DriveProviderModel get model => (origin as DriveInfoControllerProvider).model;
 }
 
 String _$authControllerHash() => r'2729c5e63ac1c6eb326b90bc83d03058a2996ebb';
@@ -166,7 +165,7 @@ final authControllerProvider =
     );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'183de640190e5fe4c455488714e45cc5044c3c3f';
+String _$authHash() => r'9d19b42190d1af6cfebe5e968e33e5a5a37bc13d';
 
 /// See also [Auth].
 @ProviderFor(Auth)
