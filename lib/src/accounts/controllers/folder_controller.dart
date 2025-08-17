@@ -33,13 +33,18 @@ class CreateFolderController extends _$CreateFolderController {
 
   Future<void> createFolder({
     required String folderName,
+    required Option<String> parentPath,
     required DriveProviderModel model,
   }) async {
     final folderNotifier = ref.read(folderProvider.notifier);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.create(folderName: folderName, providerModel: model),
+      () => folderNotifier.create(
+        folderName: folderName,
+        parentPath: parentPath,
+        providerModel: model,
+      ),
     );
   }
 }
@@ -131,23 +136,28 @@ class Folder extends _$Folder {
 
   Future<void> create({
     required String folderName,
+    required Option<String> parentPath,
     required DriveProviderModel providerModel,
   }) async {
-    // final driveService = providerModel.isRCloneBackend
-    //     ? RCloneDriveService()
-    //     : switch (providerModel.provider) {
-    //         GoogleDriveProvider() => GoogleDriveService(),
-    //         _ => throw UnimplementedError(),
-    //       };
+    final driveService = switch (providerModel) {
+      LocalProviderModel() => throw UnimplementedError(),
+      RemoteProviderModel(:final isRCloneBackend, :final provider) =>
+        isRCloneBackend
+            ? RCloneDriveService()
+            : switch (provider) {
+                GoogleDriveProvider() => GoogleDriveService(),
+                _ => throw UnimplementedError(),
+              },
+    };
 
-    // final model = await driveService
-    //     .create(folderName: folderName, model: providerModel)
-    //     .match((l) => throw l, (r) => r)
-    //     .run();
+    final model = await driveService
+        .create(folderName: folderName, model: providerModel)
+        .match((l) => throw l, (r) => r)
+        .run();
 
-    // state = [...state, model];
+    state = [...state, model];
 
-    // await _folderStorage.addSingle(model);
+    await _folderStorage.addSingle(model);
   }
 
   // Future<void> upload(

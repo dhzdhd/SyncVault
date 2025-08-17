@@ -22,30 +22,21 @@ class NewFolderDialogWidget extends StatefulHookConsumerWidget {
       _NewFolderDialogWidgetState();
 }
 
-enum AccountSegment { local, remote }
-
 class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
   late final TextEditingController _folderNameController;
-  late final TextEditingController _userController;
-  late final TextEditingController _passwordController;
-  late final TextEditingController _urlController;
+  late final TextEditingController _parentPathController;
 
   @override
   void initState() {
     super.initState();
-    // TODO: Add folderName which is not unique but can be same as remoteName (add switch too)
     _folderNameController = TextEditingController();
-    _urlController = TextEditingController();
-    _userController = TextEditingController();
-    _passwordController = TextEditingController();
+    _parentPathController = TextEditingController();
   }
 
   @override
   void dispose() {
     _folderNameController.dispose();
-    _urlController.dispose();
-    _userController.dispose();
-    _passwordController.dispose();
+    _parentPathController.dispose();
     super.dispose();
   }
 
@@ -87,8 +78,8 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
           ),
         ),
         const SizedBox(height: 16),
-        if (widget.providerModel is LocalProviderModel)
-          Row(
+        switch (widget.providerModel) {
+          LocalProviderModel() => Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
@@ -115,110 +106,30 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               ),
             ],
           ),
-        const SizedBox(height: 16),
-        ...switch (selected.value.defaultBackend) {
-          OAuth2() => [],
-          S3() => [
-            const SizedBox(height: 16),
-            TextField(
-              controller: _urlController,
+          RemoteProviderModel(:final backend) => (switch (backend) {
+            OAuth2() => TextField(
+              controller: _parentPathController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Provider URL',
+                labelText: 'Parent path',
               ),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _userController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Access Key ID',
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Secret Access Key',
-              ),
-            ),
-          ],
-          UserPassword() => [
-            const SizedBox(height: 16),
-            TextField(
-              controller: _userController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Username',
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
-            ),
-          ],
-          Webdav() => [
-            const SizedBox(height: 16),
-            TextField(
-              controller: _urlController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Provider URL',
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _userController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'User',
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
-            ),
-          ],
-          Local() => [],
+            _ => SizedBox(),
+          }),
         },
         const SizedBox(height: 32),
         ElevatedButton(
           onPressed: () async {
             if (!authController.isLoading) {
               final valid = switch (selected.value.defaultBackend) {
-                OAuth2() => validateControllers([_folderNameController]),
-                S3() => validateControllers([
+                OAuth2() => validateControllers([
                   _folderNameController,
-                  _urlController,
-                  _userController,
-                  _passwordController,
-                ]),
-                UserPassword() => validateControllers([
-                  _folderNameController,
-                  _userController,
-                  _passwordController,
-                ]),
-                Webdav() => validateControllers([
-                  _folderNameController,
-                  _urlController,
-                  _userController,
-                  _passwordController,
+                  _parentPathController,
                 ]),
                 Local() =>
                   validateControllers([_folderNameController]) &&
                       validateSelectedFolder(selectedFolder.value),
+                _ => validateControllers([_folderNameController]),
               };
 
               if (valid) {
@@ -226,6 +137,9 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                     .read(createFolderControllerProvider.notifier)
                     .createFolder(
                       folderName: _folderNameController.text,
+                      parentPath: _parentPathController.text.isEmpty
+                          ? none()
+                          : some(_parentPathController.text),
                       model: widget.providerModel,
                     );
 
