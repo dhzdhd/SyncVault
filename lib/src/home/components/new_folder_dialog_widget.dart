@@ -7,9 +7,8 @@ import 'package:syncvault/helpers.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
+import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
-
-enum SyncDirection { upload, download, bidirectional }
 
 class NewFolderDialogWidget extends StatefulHookConsumerWidget {
   const NewFolderDialogWidget({super.key});

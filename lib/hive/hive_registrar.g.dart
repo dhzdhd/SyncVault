@@ -26,6 +26,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(RemoteProviderModelAdapter());
     registerAdapter(S3Adapter());
     registerAdapter(SettingsModelAdapter());
+    registerAdapter(SyncDirectionAdapter());
     registerAdapter(ThemeModeAdapter());
     registerAdapter(UserPasswordAdapter());
     registerAdapter(WebdavAdapter());
@@ -54,6 +55,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(RemoteProviderModelAdapter());
     registerAdapter(S3Adapter());
     registerAdapter(SettingsModelAdapter());
+    registerAdapter(SyncDirectionAdapter());
     registerAdapter(ThemeModeAdapter());
     registerAdapter(UserPasswordAdapter());
     registerAdapter(WebdavAdapter());

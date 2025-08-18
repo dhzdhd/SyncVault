@@ -6,16 +6,18 @@ import 'package:flutter/foundation.dart';
 part 'connection_model.freezed.dart';
 part 'connection_model.g.dart';
 
+enum SyncDirection { upload, download, bidirectional }
+
 @freezed
 // TODO: Convert nullables to option when adapter is fixed
 abstract class ConnectionModel with _$ConnectionModel {
   const factory ConnectionModel({
     required String title,
-    required String firstRemote,
-    required String secondRemote,
+    required String firstFolderId,
+    required String secondFolderId,
+    required SyncDirection direction,
     required bool isAutoSync,
     required bool isDeletionEnabled,
-    required bool isTwoWaySync,
   }) = _ConnectionModel;
 
   factory ConnectionModel.fromJson(Map<String, Object?> json) =>

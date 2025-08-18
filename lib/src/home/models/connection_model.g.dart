@@ -9,19 +9,25 @@ part of 'connection_model.dart';
 _ConnectionModel _$ConnectionModelFromJson(Map<String, dynamic> json) =>
     _ConnectionModel(
       title: json['title'] as String,
-      firstRemote: json['firstRemote'] as String,
-      secondRemote: json['secondRemote'] as String,
+      firstFolderId: json['firstFolderId'] as String,
+      secondFolderId: json['secondFolderId'] as String,
+      direction: $enumDecode(_$SyncDirectionEnumMap, json['direction']),
       isAutoSync: json['isAutoSync'] as bool,
       isDeletionEnabled: json['isDeletionEnabled'] as bool,
-      isTwoWaySync: json['isTwoWaySync'] as bool,
     );
 
 Map<String, dynamic> _$ConnectionModelToJson(_ConnectionModel instance) =>
     <String, dynamic>{
       'title': instance.title,
-      'firstRemote': instance.firstRemote,
-      'secondRemote': instance.secondRemote,
+      'firstFolderId': instance.firstFolderId,
+      'secondFolderId': instance.secondFolderId,
+      'direction': _$SyncDirectionEnumMap[instance.direction]!,
       'isAutoSync': instance.isAutoSync,
       'isDeletionEnabled': instance.isDeletionEnabled,
-      'isTwoWaySync': instance.isTwoWaySync,
     };
+
+const _$SyncDirectionEnumMap = {
+  SyncDirection.upload: 'upload',
+  SyncDirection.download: 'download',
+  SyncDirection.bidirectional: 'bidirectional',
+};

@@ -676,11 +676,11 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
     };
     return ConnectionModel(
       title: fields[0] as String,
-      firstRemote: fields[1] as String,
-      secondRemote: fields[2] as String,
+      firstFolderId: fields[7] as String,
+      secondFolderId: fields[8] as String,
+      direction: fields[6] as SyncDirection,
       isAutoSync: fields[3] as bool,
       isDeletionEnabled: fields[4] as bool,
-      isTwoWaySync: fields[5] as bool,
     );
   }
 
@@ -690,16 +690,16 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
       ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
-      ..writeByte(1)
-      ..write(obj.firstRemote)
-      ..writeByte(2)
-      ..write(obj.secondRemote)
       ..writeByte(3)
       ..write(obj.isAutoSync)
       ..writeByte(4)
       ..write(obj.isDeletionEnabled)
-      ..writeByte(5)
-      ..write(obj.isTwoWaySync);
+      ..writeByte(6)
+      ..write(obj.direction)
+      ..writeByte(7)
+      ..write(obj.firstFolderId)
+      ..writeByte(8)
+      ..write(obj.secondFolderId);
   }
 
   @override
@@ -808,6 +808,7 @@ class RemoteFolderModelAdapter extends TypeAdapter<RemoteFolderModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return RemoteFolderModel(
+      id: fields[5] as String,
       remoteName: fields[0] as String,
       folderName: fields[1] as String,
       parentPath: fields[2] as String?,
@@ -819,7 +820,7 @@ class RemoteFolderModelAdapter extends TypeAdapter<RemoteFolderModel> {
   @override
   void write(BinaryWriter writer, RemoteFolderModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.remoteName)
       ..writeByte(1)
@@ -829,7 +830,9 @@ class RemoteFolderModelAdapter extends TypeAdapter<RemoteFolderModel> {
       ..writeByte(3)
       ..write(obj.folderId)
       ..writeByte(4)
-      ..write(obj.$type);
+      ..write(obj.$type)
+      ..writeByte(5)
+      ..write(obj.id);
   }
 
   @override
@@ -854,6 +857,7 @@ class LocalFolderModelAdapter extends TypeAdapter<LocalFolderModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return LocalFolderModel(
+      id: fields[3] as String,
       folderName: fields[0] as String,
       folderPath: fields[1] as String,
       $type: fields[2] as String?,
@@ -863,13 +867,15 @@ class LocalFolderModelAdapter extends TypeAdapter<LocalFolderModel> {
   @override
   void write(BinaryWriter writer, LocalFolderModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.folderName)
       ..writeByte(1)
       ..write(obj.folderPath)
       ..writeByte(2)
-      ..write(obj.$type);
+      ..write(obj.$type)
+      ..writeByte(3)
+      ..write(obj.id);
   }
 
   @override
@@ -879,6 +885,47 @@ class LocalFolderModelAdapter extends TypeAdapter<LocalFolderModel> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is LocalFolderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class SyncDirectionAdapter extends TypeAdapter<SyncDirection> {
+  @override
+  final typeId = 39;
+
+  @override
+  SyncDirection read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return SyncDirection.upload;
+      case 1:
+        return SyncDirection.download;
+      case 2:
+        return SyncDirection.bidirectional;
+      default:
+        return SyncDirection.upload;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, SyncDirection obj) {
+    switch (obj) {
+      case SyncDirection.upload:
+        writer.writeByte(0);
+      case SyncDirection.download:
+        writer.writeByte(1);
+      case SyncDirection.bidirectional:
+        writer.writeByte(2);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SyncDirectionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:hashlib/random.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
@@ -73,6 +74,7 @@ class GoogleDriveService implements DriveService {
         httpClient.close();
 
         return RemoteFolderModel(
+          id: uuid.v4(),
           folderName: '',
           remoteName: model.remoteName,
           parentPath: '',

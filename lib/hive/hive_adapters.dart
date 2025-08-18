@@ -19,6 +19,7 @@ part 'hive_adapters.g.dart';
 @GenerateAdapters([
   AdapterSpec<SettingsModel>(),
   AdapterSpec<ThemeMode>(),
+  AdapterSpec<SyncDirection>(),
   AdapterSpec<IntroSettingsModel>(),
   AdapterSpec<RemoteProviderModel>(),
   AdapterSpec<LocalProviderModel>(),

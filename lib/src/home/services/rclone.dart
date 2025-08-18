@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
+import 'package:hashlib/random.dart';
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
@@ -54,6 +55,7 @@ class RCloneDriveService implements DriveService {
       );
 
       final folderModel = RemoteFolderModel(
+        id: uuid.v4(),
         folderName: model.remoteName,
         remoteName: model.remoteName,
         parentPath: '',
@@ -86,13 +88,16 @@ class RCloneDriveService implements DriveService {
             final process = await Process.run(execPath!, [
               // Use a 2 way copy to avoid deletion
               ...configArgs,
-              connectionModel.isTwoWaySync ? 'bisync' : 'sync',
+              connectionModel.direction == SyncDirection.bidirectional
+                  ? 'bisync'
+                  : 'sync',
               '-u', // Do not delete/update on remote if remote file is newer
               '-M',
               '--inplace', // Bisync fails without this
-              if (connectionModel.isTwoWaySync) '--resync',
+              if (connectionModel.direction == SyncDirection.bidirectional)
+                '--resync',
               localPath,
-              '${connectionModel.firstRemote}:/$parentPath${connectionModel.firstRemote}',
+              '${connectionModel.firstFolderId}:/$parentPath${connectionModel.firstFolderId}',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
