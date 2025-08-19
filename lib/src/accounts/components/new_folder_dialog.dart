@@ -8,7 +8,6 @@ import 'package:syncvault/extensions.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
-import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
@@ -50,7 +49,6 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final selected = useState<DriveProvider>(OneDriveProvider());
     final selectedFolder = useState<Option<String>>(const None());
     final authController = ref.watch(authControllerProvider);
 

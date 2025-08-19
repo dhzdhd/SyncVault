@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
@@ -87,7 +88,22 @@ class _NewConnectionDialogWidgetState
               .map(
                 (folder) => DropdownMenuItem(
                   value: folder,
-                  child: Text('${folder.folderName}'),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 10,
+                    children: [
+                      switch (providersMap[folder.id]!.toNullable()!) {
+                        LocalProviderModel() => Icon(Icons.folder),
+                        RemoteProviderModel(:final provider) =>
+                          SvgPicture.asset(provider.providerIcon),
+                      },
+                      Text(switch (providersMap[folder.id]!.toNullable()!) {
+                        LocalProviderModel() => folder.folderName,
+                        RemoteProviderModel(:final remoteName) =>
+                          '$remoteName | ${folder.folderName}',
+                      }),
+                    ],
+                  ),
                 ),
               )
               .toList(),
@@ -107,7 +123,22 @@ class _NewConnectionDialogWidgetState
               .map(
                 (folder) => DropdownMenuItem(
                   value: folder,
-                  child: Text('${folder.id}'),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 10,
+                    children: [
+                      switch (providersMap[folder.id]!.toNullable()!) {
+                        LocalProviderModel() => Icon(Icons.folder),
+                        RemoteProviderModel(:final provider) =>
+                          SvgPicture.asset(provider.providerIcon),
+                      },
+                      Text(switch (providersMap[folder.id]!.toNullable()!) {
+                        LocalProviderModel() => folder.folderName,
+                        RemoteProviderModel(:final remoteName) =>
+                          '$remoteName | ${folder.folderName}',
+                      }),
+                    ],
+                  ),
                 ),
               )
               .toList(),
