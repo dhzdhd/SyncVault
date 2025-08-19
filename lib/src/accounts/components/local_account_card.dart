@@ -108,10 +108,11 @@ class LocalAccountCard extends ConsumerWidget {
             ),
           ),
         ),
-        ...folders.map(
-          (folderModel) => FolderCard(
+        ...folders.mapWithIndex(
+          (folderModel, idx) => FolderCard(
             providerModel: LocalProviderModel(),
             folderModel: folderModel,
+            isLast: idx == folders.length - 1,
           ),
         ),
         SizedBox(height: 16.0),

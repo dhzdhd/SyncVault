@@ -121,15 +121,17 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         ElevatedButton(
           onPressed: () async {
             if (!authController.isLoading) {
-              final valid = switch (selected.value.defaultBackend) {
-                OAuth2() => validateControllers([
-                  _folderNameController,
-                  _parentPathController,
-                ]),
-                Local() =>
+              final valid = switch (widget.providerModel) {
+                RemoteProviderModel(:final backend) => switch (backend) {
+                  OAuth2() => validateControllers([
+                    _folderNameController,
+                    _parentPathController,
+                  ]),
+                  _ => validateControllers([_folderNameController]),
+                },
+                LocalProviderModel() =>
                   validateControllers([_folderNameController]) &&
                       validateSelectedFolder(selectedFolder.value),
-                _ => validateControllers([_folderNameController]),
               };
 
               if (valid) {
@@ -137,9 +139,14 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                     .read(createFolderControllerProvider.notifier)
                     .createFolder(
                       folderName: _folderNameController.text,
-                      parentPath: _parentPathController.text.isEmpty
-                          ? none()
-                          : some(_parentPathController.text),
+                      parentPath: switch (widget.providerModel) {
+                        RemoteProviderModel(:final backend) =>
+                          switch (backend) {
+                            OAuth2() => some(_parentPathController.text),
+                            _ => none(),
+                          },
+                        LocalProviderModel() => selectedFolder.value,
+                      },
                       model: widget.providerModel,
                     );
 

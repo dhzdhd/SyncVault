@@ -9,6 +9,7 @@ abstract interface class DriveService {
   TaskEither<AppError, FolderModel> create({
     required String folderName,
     required RemoteProviderModel model,
+    required Option<String> parentPath,
   });
   TaskEither<AppError, ()> upload({
     required RemoteProviderModel providerModel,

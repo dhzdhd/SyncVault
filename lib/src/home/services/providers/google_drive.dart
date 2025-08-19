@@ -19,6 +19,7 @@ class GoogleDriveService implements DriveService {
   TaskEither<AppError, FolderModel> create({
     required String folderName,
     required RemoteProviderModel model,
+    required Option<String> parentPath,
   }) {
     return TaskEither.tryCatch(
       () async {

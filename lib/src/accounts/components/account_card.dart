@@ -142,10 +142,10 @@ class AccountCard extends ConsumerWidget {
                       onTap: () async {
                         await Future.delayed(
                           Duration.zero,
-                          () => {
+                          () async => {
                             if (context.mounted)
                               {
-                                showDialog(
+                                await showDialog(
                                   context: context,
                                   builder: (ctx) => NewFolderDialogWidget(
                                     providerModel: providerModel,
@@ -210,10 +210,11 @@ class AccountCard extends ConsumerWidget {
             ),
           ),
         ),
-        ...folders.map(
-          (folderModel) => FolderCard(
+        ...folders.mapWithIndex(
+          (folderModel, idx) => FolderCard(
             providerModel: providerModel,
             folderModel: folderModel,
+            isLast: idx == folders.length - 1,
           ),
         ),
         SizedBox(height: 16.0),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hashlib/random.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
@@ -34,7 +35,7 @@ class CreateFolderController extends _$CreateFolderController {
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => folderNotifier.create(
+      () async => await folderNotifier.create(
         folderName: folderName,
         parentPath: parentPath,
         providerModel: model,
@@ -82,21 +83,27 @@ class Folder extends _$Folder {
     required Option<String> parentPath,
     required DriveProviderModel providerModel,
   }) async {
-    final driveService = switch (providerModel) {
-      LocalProviderModel() => throw UnimplementedError(),
+    final model = switch (providerModel) {
+      LocalProviderModel() => LocalFolderModel(
+        id: uuid.v4(),
+        folderName: folderName,
+        folderPath: parentPath.toNullable()!,
+      ),
       RemoteProviderModel(:final isRCloneBackend, :final provider) =>
-        isRCloneBackend
-            ? RCloneDriveService()
-            : switch (provider) {
-                GoogleDriveProvider() => GoogleDriveService(),
-                _ => throw UnimplementedError(),
-              },
+        await (isRCloneBackend
+                ? RCloneDriveService()
+                : switch (provider) {
+                    GoogleDriveProvider() => GoogleDriveService(),
+                    _ => throw UnimplementedError(),
+                  })
+            .create(
+              folderName: folderName,
+              model: providerModel,
+              parentPath: parentPath,
+            )
+            .match((l) => throw l, (r) => r)
+            .run(),
     };
-
-    final model = await driveService
-        .create(folderName: folderName, model: providerModel)
-        .match((l) => throw l, (r) => r)
-        .run();
 
     state = [...state, model];
 

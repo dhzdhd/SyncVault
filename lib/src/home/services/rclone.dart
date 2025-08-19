@@ -18,6 +18,7 @@ class RCloneDriveService implements DriveService {
   TaskEither<AppError, RemoteFolderModel> create({
     required String folderName,
     required RemoteProviderModel model,
+    required Option<String> parentPath,
   }) {
     final utils = RCloneUtils();
 
@@ -28,15 +29,13 @@ class RCloneDriveService implements DriveService {
       await $(
         TaskEither.tryCatch(
           () async {
-            // TODO: Add parent path to backend
-            // final parentPath = remoteParentPath.match(() => '/', (t) => '/$t/');
-            final parentPath = '/';
+            final parentPathStr = parentPath.match(() => '/', (t) => '/$t/');
 
-            // TODO: S3 only allows bucket name, not path
+            // S3 only allows bucket name, not path
             final process = await Process.run(execPath, [
               ...configArgs,
               'mkdir',
-              '${model.remoteName}:$parentPath$folderName',
+              '${model.remoteName}:$parentPathStr$folderName',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -56,9 +55,9 @@ class RCloneDriveService implements DriveService {
 
       final folderModel = RemoteFolderModel(
         id: uuid.v4(),
-        folderName: model.remoteName,
+        folderName: folderName,
         remoteName: model.remoteName,
-        parentPath: '',
+        parentPath: parentPath.toNullable(),
         folderId: null,
       );
       return folderModel;
