@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
-import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class FolderCard extends ConsumerWidget {

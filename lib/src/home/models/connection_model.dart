@@ -9,9 +9,9 @@ part 'connection_model.g.dart';
 enum SyncDirection { upload, download, bidirectional }
 
 @freezed
-// TODO: Convert nullables to option when adapter is fixed
 abstract class ConnectionModel with _$ConnectionModel {
   const factory ConnectionModel({
+    required String id,
     required String title,
     required String firstFolderId,
     required String secondFolderId,

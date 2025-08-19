@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/helpers.dart';
+import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/workflows/views/workflow_editor_view.dart';
 
 class NewWorkflowWidget extends StatefulHookConsumerWidget {

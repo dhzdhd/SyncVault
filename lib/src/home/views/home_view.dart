@@ -10,11 +10,11 @@ import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
 import 'package:syncvault/src/workflows/views/workflow_view.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
-import 'package:syncvault/helpers.dart';
+import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/home/components/delete_folder_dialog.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
-import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
+import 'package:syncvault/src/home/components/new_connection_dialog_widget.dart';
 import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watcher/watcher.dart';
@@ -130,7 +130,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           if (context.mounted) {
             await showDialog(
               context: context,
-              builder: (context) => const NewFolderDialogWidget(),
+              builder: (context) => const NewConnectionDialogWidget(),
             );
           }
         },
@@ -194,13 +194,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // Tooltip(
-                            //   message: e.provider.displayName,
-                            //   child: SvgPicture.asset(
-                            //     e.provider.providerIcon,
-                            //     width: 25,
-                            //   ),
-                            // ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Text(

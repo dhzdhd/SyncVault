@@ -3,22 +3,25 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
-import 'package:syncvault/helpers.dart';
+import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
+import 'package:syncvault/src/common/utils/associations.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
-class NewFolderDialogWidget extends StatefulHookConsumerWidget {
-  const NewFolderDialogWidget({super.key});
+class NewConnectionDialogWidget extends StatefulHookConsumerWidget {
+  const NewConnectionDialogWidget({super.key});
 
   @override
-  ConsumerState<NewFolderDialogWidget> createState() =>
-      _NewFolderDialogWidgetState();
+  ConsumerState<NewConnectionDialogWidget> createState() =>
+      _NewConnectionDialogWidgetState();
 }
 
-class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
+class _NewConnectionDialogWidgetState
+    extends ConsumerState<NewConnectionDialogWidget> {
   late final TextEditingController _titleController;
 
   @override
@@ -35,24 +38,27 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final firstSelectedProvider = useState<Option<DriveProviderModel>>(
-      const None(),
-    );
-    final secondSelectedProvider = useState<Option<DriveProviderModel>>(
-      const None(),
-    );
+    final firstSelectedProvider = useState<Option<FolderModel>>(const None());
+    final secondSelectedProvider = useState<Option<FolderModel>>(const None());
     final selectedDirection = useState<Set<SyncDirection>>({
       SyncDirection.upload,
     });
 
-    final authInfo = ref.watch(authProvider);
+    final allProviders = ref.watch(authProvider).requireValue;
+    final folders = ref.watch(folderProvider);
+
+    final providersMap = Map.fromIterables(
+      folders.map((folder) => folder.id),
+      folders.map((folder) => getProviderFromFolder(allProviders, folder)),
+    );
+
     final createFolderController = ref.watch(createFolderControllerProvider);
 
     ref.listen<AsyncValue>(createFolderControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
           GeneralError(
-            'Create folder controller failed',
+            'Create connection controller failed',
             state.error!,
             state.stackTrace,
           ).logError().message,
@@ -72,49 +78,43 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
           ),
         ),
         const SizedBox(height: 16),
-        DropdownButton<DriveProviderModel?>(
-          items: authInfo.requireValue
+        DropdownButton<FolderModel?>(
+          items: folders
               .filter(
-                (authModel) =>
-                    authModel.remoteName !=
-                    'secondSelectedProvider.value.toNullable()?.remoteName',
+                (folder) =>
+                    folder.id != secondSelectedProvider.value.toNullable()?.id,
               )
               .map(
-                (authModel) => DropdownMenuItem(
-                  value: authModel,
-                  child: Text(
-                    '${authModel.provider.displayName} - ${authModel.remoteName}',
-                  ),
+                (folder) => DropdownMenuItem(
+                  value: folder,
+                  child: Text('${folder.folderName}'),
                 ),
               )
               .toList(),
           value: firstSelectedProvider.value.toNullable(),
           isExpanded: true,
-          hint: const Text('Enter first remote'),
-          onChanged: (DriveProviderModel? e) {
-            firstSelectedProvider.value = Option.fromNullable(e);
+          hint: const Text('Enter first folder'),
+          onChanged: (FolderModel? model) {
+            firstSelectedProvider.value = Option.fromNullable(model);
           },
         ),
-        DropdownButton<DriveProviderModel?>(
-          items: authInfo.requireValue
+        DropdownButton<FolderModel?>(
+          items: folders
               .filter(
-                (authModel) =>
-                    authModel.remoteName !=
-                    'firstSelectedProvider.value.toNullable()?.remoteName',
+                (folder) =>
+                    folder.id != firstSelectedProvider.value.toNullable()?.id,
               )
               .map(
-                (authModel) => DropdownMenuItem(
-                  value: authModel,
-                  child: Text(
-                    '${authModel.provider.displayName} - ${authModel.remoteName}',
-                  ),
+                (folder) => DropdownMenuItem(
+                  value: folder,
+                  child: Text('${folder.id}'),
                 ),
               )
               .toList(),
           value: secondSelectedProvider.value.toNullable(),
           isExpanded: true,
-          hint: const Text('Enter second remote'),
-          onChanged: (DriveProviderModel? e) {
+          hint: const Text('Enter second folder'),
+          onChanged: (FolderModel? e) {
             secondSelectedProvider.value = Option.fromNullable(e);
           },
         ),

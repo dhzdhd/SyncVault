@@ -675,6 +675,7 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ConnectionModel(
+      id: fields[9] as String,
       title: fields[0] as String,
       firstFolderId: fields[7] as String,
       secondFolderId: fields[8] as String,
@@ -687,7 +688,7 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
   @override
   void write(BinaryWriter writer, ConnectionModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(3)
@@ -699,7 +700,9 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
       ..writeByte(7)
       ..write(obj.firstFolderId)
       ..writeByte(8)
-      ..write(obj.secondFolderId);
+      ..write(obj.secondFolderId)
+      ..writeByte(9)
+      ..write(obj.id);
   }
 
   @override

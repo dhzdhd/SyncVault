@@ -6,7 +6,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:syncvault/helpers.dart';
+import 'package:syncvault/extensions.dart';
 import 'package:syncvault/errors.dart';
 
 class IntroductionView extends StatefulHookConsumerWidget {

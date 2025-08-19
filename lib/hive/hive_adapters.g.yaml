@@ -157,7 +157,7 @@ types:
         index: 1
   ConnectionModel:
     typeId: 33
-    nextIndex: 9
+    nextIndex: 10
     fields:
       title:
         index: 0
@@ -171,6 +171,8 @@ types:
         index: 7
       secondFolderId:
         index: 8
+      id:
+        index: 9
   RemoteProviderModel:
     typeId: 35
     nextIndex: 7

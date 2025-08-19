@@ -8,6 +8,7 @@ part of 'connection_model.dart';
 
 _ConnectionModel _$ConnectionModelFromJson(Map<String, dynamic> json) =>
     _ConnectionModel(
+      id: json['id'] as String,
       title: json['title'] as String,
       firstFolderId: json['firstFolderId'] as String,
       secondFolderId: json['secondFolderId'] as String,
@@ -18,6 +19,7 @@ _ConnectionModel _$ConnectionModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ConnectionModelToJson(_ConnectionModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'firstFolderId': instance.firstFolderId,
       'secondFolderId': instance.secondFolderId,
