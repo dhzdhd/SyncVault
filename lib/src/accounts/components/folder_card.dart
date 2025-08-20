@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/accounts/components/tree_view_sheet_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class FolderCard extends ConsumerWidget {
@@ -87,11 +88,13 @@ class FolderCard extends ConsumerWidget {
               IconButton.filledTonal(
                 onPressed: () {
                   if (context.mounted) {
-                    // showModalBottomSheet(
-                    //   context: context,
-                    //   builder: (ctx) =>
-                    //       TreeViewSheetWidget(providerModel: providerModel),
-                    // );
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (ctx) => TreeViewSheetWidget(
+                        folderModel: folderModel,
+                        providerModel: providerModel,
+                      ),
+                    );
                   }
                 },
                 icon: Icon(Icons.device_hub_rounded),

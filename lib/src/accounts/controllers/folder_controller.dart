@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/services/local.dart';
 import 'package:syncvault/src/home/services/providers/google_drive.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 
@@ -60,11 +61,23 @@ class UploadDeleteController extends _$UploadDeleteController {
 }
 
 @riverpod
-Future<Option<FileModel>> treeView(Ref ref, RemoteProviderModel model) async {
-  return RCloneDriveService()
-      .treeView(model: model)
-      .match((l) => throw l, (r) => r)
-      .run();
+Future<Option<FileModel>> treeView(
+  Ref ref,
+  FolderModel folderModel,
+  DriveProviderModel providerModel,
+) async {
+  return switch (providerModel) {
+    RemoteProviderModel() =>
+      await RCloneDriveService()
+          .treeView(folderModel: folderModel, providerModel: providerModel)
+          .match((l) => throw l, (r) => r)
+          .run(),
+    LocalProviderModel() =>
+      await LocalDriveService()
+          .treeView(providerModel: providerModel, folderModel: folderModel)
+          .match((l) => throw l, (r) => r)
+          .run(),
+  };
 }
 
 @riverpod

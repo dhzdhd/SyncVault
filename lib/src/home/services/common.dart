@@ -22,6 +22,7 @@ abstract interface class DriveService {
     required RemoteFolderModel folderModel,
   });
   TaskEither<AppError, Option<FileModel>> treeView({
-    required RemoteProviderModel model,
+    required DriveProviderModel providerModel,
+    required FolderModel folderModel,
   });
 }

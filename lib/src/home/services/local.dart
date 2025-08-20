@@ -13,7 +13,7 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/common.dart';
 
 @singleton
-class RCloneDriveService implements DriveService {
+class LocalDriveService implements DriveService {
   @override
   TaskEither<AppError, RemoteFolderModel> create({
     required String folderName,
@@ -166,158 +166,42 @@ class RCloneDriveService implements DriveService {
     required DriveProviderModel providerModel,
     required FolderModel folderModel,
   }) {
-    final utils = RCloneUtils();
-
     return TaskEither<AppError, Option<FileModel>>.Do(($) async {
-      final execPath = await $(utils.getRCloneExec());
-      final configArgs = await $(utils.getConfigArgs());
-
       final Option<FileModel> fileModel = await $(
         TaskEither.tryCatch(
           () async {
-            // TODO: Get from parentPath
-            // final parentPath = Option.fromNullable(
-            //   model.remoteName,
-            // ).match(() => '/', (t) => '/$t/');
-
-            final (remoteName, parentPath, folderName) = switch (folderModel) {
-              RemoteFolderModel(
-                :final folderName,
-                :final parentPath,
-                :final remoteName,
-              ) =>
-                (
-                  remoteName,
-                  parentPath == null ? '/' : '/$parentPath/',
-                  folderName,
-                ),
-              _ => throw GeneralError(
-                'Only remote folders allowed',
-                null,
-                null,
-              ),
-            };
-            final process = await Process.run(execPath, [
-              ...configArgs,
-              'tree',
-              '-a',
-              '--dirsfirst',
-              '--full-path',
-              '-s',
-              '-Q',
-              '$remoteName:$parentPath$folderName',
-            ]);
-
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr.toString());
-            }
-
-            final List<List<String>> matches = [];
-            final output = process.stdout.toString();
-            final lines = output.split('\n');
-
-            // String is of the pattern - <garbage value> [     123]  "<path>"
-            final regex = RegExp(
-              r'\[\s*(\d+)\s*\]\s*\"([^\"]+)\"',
-              dotAll: true,
+            final rootDir = Directory(
+              (folderModel as LocalFolderModel).folderPath,
             );
-            for (final line in lines) {
-              final matched = regex
-                  .allMatches(line)
-                  .toList()
-                  .map((t) => t.groups([1, 2]))
-                  .firstOrNull;
-              if (matched != [] && matched != null) {
-                matches.add([matched[0]!, matched[1]!.replaceAll('\\', '/')]);
-              }
+
+            if (!await rootDir.exists()) {
+              return none<FileModel>();
             }
 
-            final done = [];
-            FileModel buildFileTree(
-              List<List<String>> paths,
-              String currentPath,
-              String currentSize,
-              Option<Directory> parent,
-            ) {
-              // Get the name of the current path
-              final currentSegments = currentPath
-                  .split('/')
-                  .where((seg) => seg.isNotEmpty)
-                  .toList();
-              final currentName = currentSegments.isEmpty
-                  ? '/'
-                  : currentSegments.last;
+            Future<FileModel> buildFileTree(FileSystemEntity entity) async {
+              final stat = await entity.stat();
+              final isDirectory = entity is Directory;
 
-              // Find direct children of the current path
-              final childrenPaths = paths.where((path) {
-                final segments = path[1]
-                    .split('/')
-                    .where((seg) => seg.isNotEmpty)
-                    .toList();
-                return segments.length > currentSegments.length &&
-                    List.generate(
-                          currentSegments.length,
-                          (i) => segments[i],
-                        ).join('/') ==
-                        currentSegments.join('/');
-              }).toList();
+              List<FileModel> children = [];
 
-              // Create child nodes recursively
-              final List<FileModel> children = [];
-              for (final childPath in childrenPaths) {
-                final segments = childPath[1]
-                    .split('/')
-                    .where((seg) => seg.isNotEmpty)
-                    .toList();
-                final size = childPath[0];
-                final childFullPath = segments.join('/');
-
-                if (!done.contains(childFullPath)) {
-                  done.add(childFullPath);
-                  children.add(
-                    buildFileTree(
-                      paths,
-                      childFullPath,
-                      size,
-                      some(Directory(currentPath)),
-                    ),
-                  );
-                }
+              if (isDirectory) {
+                final contents = await entity.list().toList();
+                children = await Future.wait(
+                  contents.map((child) => buildFileTree(child)),
+                );
               }
-
-              // Determine if the current node is a file or directory
-              final isFile = !paths.any((path) {
-                final segments = path[1]
-                    .split('/')
-                    .where((seg) => seg.isNotEmpty)
-                    .toList();
-                return segments.length > currentSegments.length &&
-                    List.generate(
-                          currentSegments.length,
-                          (i) => segments[i],
-                        ).join('/') ==
-                        currentSegments.join('/');
-              });
-
-              final fileEntity = isFile
-                  ? File(currentPath)
-                  : Directory(currentPath);
 
               return FileModel(
-                name: currentName,
-                size: currentSize,
-                file: fileEntity,
-                parent: parent.toNullable() ?? Directory(''),
+                name: entity.path.split('/').last,
+                size: isDirectory ? '0' : stat.size.toString(),
+                file: entity,
+                parent: entity.parent,
                 children: children,
               );
             }
 
-            if (matches.isNotEmpty) {
-              final model = buildFileTree(matches, '/', '0', none());
-              return some(model);
-            }
-
-            return none();
+            final rootTree = await buildFileTree(rootDir);
+            return some(rootTree);
           },
           (err, stackTrace) {
             return AppError.general('message', err, stackTrace);
