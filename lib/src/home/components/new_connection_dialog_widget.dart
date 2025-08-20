@@ -8,8 +8,8 @@ import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
-import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/common/utils/associations.dart';
+import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
@@ -39,8 +39,8 @@ class _NewConnectionDialogWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final firstSelectedProvider = useState<Option<FolderModel>>(const None());
-    final secondSelectedProvider = useState<Option<FolderModel>>(const None());
+    final firstSelectedFolder = useState<Option<FolderModel>>(const None());
+    final secondSelectedFolder = useState<Option<FolderModel>>(const None());
     final selectedDirection = useState<Set<SyncDirection>>({
       SyncDirection.upload,
     });
@@ -54,6 +54,7 @@ class _NewConnectionDialogWidgetState
     );
 
     final createFolderController = ref.watch(createFolderControllerProvider);
+    final connectionNotifier = ref.read(connectionProvider.notifier);
 
     ref.listen<AsyncValue>(createFolderControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
@@ -83,7 +84,7 @@ class _NewConnectionDialogWidgetState
           items: folders
               .filter(
                 (folder) =>
-                    folder.id != secondSelectedProvider.value.toNullable()?.id,
+                    folder.id != secondSelectedFolder.value.toNullable()?.id,
               )
               .map(
                 (folder) => DropdownMenuItem(
@@ -107,18 +108,18 @@ class _NewConnectionDialogWidgetState
                 ),
               )
               .toList(),
-          value: firstSelectedProvider.value.toNullable(),
+          value: firstSelectedFolder.value.toNullable(),
           isExpanded: true,
-          hint: const Text('Enter first folder'),
+          hint: const Text('Select first folder'),
           onChanged: (FolderModel? model) {
-            firstSelectedProvider.value = Option.fromNullable(model);
+            firstSelectedFolder.value = Option.fromNullable(model);
           },
         ),
         DropdownButton<FolderModel?>(
           items: folders
               .filter(
                 (folder) =>
-                    folder.id != firstSelectedProvider.value.toNullable()?.id,
+                    folder.id != firstSelectedFolder.value.toNullable()?.id,
               )
               .map(
                 (folder) => DropdownMenuItem(
@@ -142,11 +143,11 @@ class _NewConnectionDialogWidgetState
                 ),
               )
               .toList(),
-          value: secondSelectedProvider.value.toNullable(),
+          value: secondSelectedFolder.value.toNullable(),
           isExpanded: true,
-          hint: const Text('Enter second folder'),
+          hint: const Text('Select second folder'),
           onChanged: (FolderModel? e) {
-            secondSelectedProvider.value = Option.fromNullable(e);
+            secondSelectedFolder.value = Option.fromNullable(e);
           },
         ),
         const SizedBox(height: 16),
@@ -172,44 +173,43 @@ class _NewConnectionDialogWidgetState
         ),
         const SizedBox(height: 24),
         ElevatedButton(
-          child: createFolderController.isLoading
-              ? const SizedBox.square(
-                  dimension: 20.0,
-                  child: CircularProgressWidget(size: 300, isInfinite: true),
-                )
-              : const Text('Submit'),
+          child: const Text('Submit'),
           onPressed: () async {
-            // TODO: Create folder on remote provider creation in account screen
-            if (!createFolderController.isLoading) {
-              final content = Option.Do(($) {
-                final title = $(
-                  Option.fromNullable(
-                    _titleController.text.isNotEmpty
-                        ? _titleController.text
-                        : null,
-                  ),
-                );
-                final firstProvider = $(firstSelectedProvider.value);
-                final secondProvider = $(secondSelectedProvider.value);
-
-                return (title, firstProvider, secondProvider);
-              });
-
-              content.match(
-                () => context.showErrorSnackBar(
-                  'One or both of the fields are not filled',
+            final content = Option.Do(($) {
+              final title = $(
+                Option.fromNullable(
+                  _titleController.text.isNotEmpty
+                      ? _titleController.text
+                      : null,
                 ),
-                (t) async {
-                  // TODO: Show this only on no error
-                  if (context.mounted) {
-                    context.showSuccessSnackBar(
-                      content: 'Successfully linked folder',
-                    );
-                    Navigator.of(context).pop();
-                  }
-                },
               );
-            }
+              final firstFolder = $(firstSelectedFolder.value);
+              final secondFolder = $(secondSelectedFolder.value);
+
+              return (title, firstFolder, secondFolder);
+            });
+
+            content.match(
+              () => context.showErrorSnackBar(
+                'One or both of the fields are not filled',
+              ),
+              (t) async {
+                connectionNotifier.create(
+                  title: t.$1,
+                  firstFolder: t.$2,
+                  secondFolder: t.$3,
+                  direction: selectedDirection.value.first,
+                );
+
+                // TODO: Show this only on no error
+                if (context.mounted) {
+                  context.showSuccessSnackBar(
+                    content: 'Successfully created connection',
+                  );
+                  Navigator.of(context).pop();
+                }
+              },
+            );
           },
         ),
       ],

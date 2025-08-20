@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hashlib/random.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
@@ -43,7 +45,7 @@ class Connection extends _$Connection {
         ..insert(index, model.copyWith(isAutoSync: !model.isAutoSync)),
     ];
 
-    _connectionStorage.update(state);
+    await _connectionStorage.update(state);
   }
 
   Future<void> toggleDeletionOnSync(ConnectionModel model) async {
@@ -57,7 +59,7 @@ class Connection extends _$Connection {
         ),
     ];
 
-    _connectionStorage.update(state);
+    await _connectionStorage.update(state);
   }
 
   Future<void> changeDirection(
@@ -71,7 +73,27 @@ class Connection extends _$Connection {
         ..insert(index, model.copyWith(direction: direction)),
     ];
 
-    _connectionStorage.update(state);
+    await _connectionStorage.update(state);
+  }
+
+  Future<void> create({
+    required String title,
+    required FolderModel firstFolder,
+    required FolderModel secondFolder,
+    required SyncDirection direction,
+  }) async {
+    final connection = ConnectionModel(
+      id: uuid.v4(),
+      title: title,
+      firstFolderId: firstFolder.id,
+      secondFolderId: secondFolder.id,
+      direction: direction,
+      isAutoSync: false,
+      isDeletionEnabled: false,
+    );
+
+    state = [...state, connection];
+    await _connectionStorage.update(state);
   }
 
   Future<void> uniSync(

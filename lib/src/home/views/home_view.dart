@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
+import 'package:syncvault/src/home/connection_card_widget.dart';
+import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/workflows/views/workflow_view.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
 import 'package:syncvault/extensions.dart';
-import 'package:syncvault/src/common/components/circular_progress_widget.dart';
-import 'package:syncvault/src/home/components/delete_folder_dialog.dart';
-import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/components/new_connection_dialog_widget.dart';
-import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:watcher/watcher.dart';
 import 'package:syncvault/src/settings/views/settings_view.dart';
 import 'package:window_manager/window_manager.dart';
@@ -99,19 +95,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
     }, [ref.watch(folderProvider)]);
 
     final folderInfo = [];
-    final authProviders = ref.watch(authProvider).requireValue;
-    final folderNotifier = ref.read(folderProvider.notifier);
+    final folders = ref.watch(folderProvider);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
-    final currentLoadingIndex = useState(0);
+
+    final connections = ref.watch(connectionProvider);
 
     ref.listen<AsyncValue>(uploadDeleteControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
-          GeneralError(
-            'Upload/Delete controller failed',
-            state.error!,
-            state.stackTrace,
-          ).message,
+          GeneralError('Upload failed', state.error!, state.stackTrace).message,
         );
       }
     });
@@ -120,9 +112,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Sync new folder',
         onPressed: () async {
-          if (authProviders.length < 2) {
+          if (folders.length < 2) {
             context.showErrorSnackBar(
-              'Atleast two remotes need to be registered',
+              'Atleast two folders need to be created in separate remotes',
             );
             return;
           }
@@ -187,233 +179,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
               delegate: SliverChildListDelegate.fixed(
-                folderInfo
+                connections
                     .mapWithIndex(
-                      (connectionModel, index) => ExpandableCardWidget(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                connectionModel.title,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineSmall,
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Visibility(
-                            visible:
-                                uploadDeleteController.isLoading &&
-                                currentLoadingIndex.value == index,
-                            child: const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressWidget(
-                                size: 300,
-                                isInfinite: true,
-                              ),
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          spacing: 8.0,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(
-                                  context,
-                                ).dialogTheme.backgroundColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        connectionModel.title,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          if (PlatformExtension.isDesktop)
-                                            Flexible(
-                                              child: SizedBox(
-                                                width: 50,
-                                                child: Tooltip(
-                                                  message:
-                                                      'Open in file manager',
-                                                  child: TextButton(
-                                                    child: const Icon(
-                                                      Icons.open_in_new,
-                                                    ),
-                                                    onPressed: () async {
-                                                      await launchUrl(
-                                                        Uri.file(
-                                                          connectionModel.title,
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          Flexible(
-                                            child: SizedBox(
-                                              width: 50,
-                                              child: Tooltip(
-                                                message: 'Sync',
-                                                child: TextButton(
-                                                  child: const Icon(Icons.sync),
-                                                  onPressed: () async {
-                                                    if (uploadDeleteController
-                                                        .isLoading) {
-                                                      return;
-                                                    }
-                                                    currentLoadingIndex.value =
-                                                        index;
-
-                                                    if (!uploadDeleteController
-                                                        .isLoading) {
-                                                      // await ref
-                                                      //     .read(
-                                                      //       uploadDeleteControllerProvider
-                                                      //           .notifier,
-                                                      //     )
-                                                      //     .upload(
-                                                      //       connectionModel,
-                                                      //       none(),
-                                                      //     );
-
-                                                      if (context.mounted) {
-                                                        context
-                                                            .showSuccessSnackBar(
-                                                              content:
-                                                                  'Success',
-                                                            );
-                                                      }
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Flexible(
-                                            child: SizedBox(
-                                              width: 50,
-                                              child: Tooltip(
-                                                message: 'Delete',
-                                                child: TextButton(
-                                                  child: const Icon(
-                                                    Icons.delete,
-                                                  ),
-                                                  onPressed: () async {
-                                                    if (uploadDeleteController
-                                                        .isLoading) {
-                                                      return;
-                                                    }
-                                                    // TODO: Perhaps make loadingIndex an array
-                                                    currentLoadingIndex.value =
-                                                        index;
-
-                                                    if (context.mounted) {
-                                                      if (context.mounted) {
-                                                        // await showDialog(
-                                                        //   context: context,
-                                                        //   builder: (ctx) =>
-                                                        //       DeleteFolderDialogWidget(
-                                                        //         model:
-                                                        //             connectionModel,
-                                                        //       ),
-                                                        // );
-                                                      }
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Account',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                Text(
-                                  connectionModel.firstRemote,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Auto sync',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Switch(
-                                      value: connectionModel.isAutoSync,
-                                      onChanged: (val) => null,
-                                      // folderNotifier
-                                      //     .toggleAutoSync(connectionModel),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Delete on sync',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Switch(
-                                      value: connectionModel.isDeletionEnabled,
-                                      onChanged: (val) => null,
-                                      // folderNotifier.toggleDeletionOnSync(
-                                      //   connectionModel,
-                                      // ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      (connection, index) => ConnectionCardWidget(
+                        uploadDeleteController: uploadDeleteController,
+                        connectionModel: connection,
                       ),
                     )
                     .toList(),
