@@ -4,9 +4,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
-import 'package:syncvault/src/home/connection_card_widget.dart';
+import 'package:syncvault/src/home/components/connection_card_widget.dart';
 import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/workflows/views/workflow_view.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
@@ -64,7 +63,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   //     .read(folderProvider.notifier)
                   //     .upload(folders[i], some(event.path));
                   debugPrint('Success');
-                } catch (e, st) {
+                } catch (e, _) {
                   // TODO:
                   // ProviderError(
                   //   folders[i].provider,

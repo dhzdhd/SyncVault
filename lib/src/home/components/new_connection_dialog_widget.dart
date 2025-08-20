@@ -53,7 +53,6 @@ class _NewConnectionDialogWidgetState
       folders.map((folder) => getProviderFromFolder(allProviders, folder)),
     );
 
-    final createFolderController = ref.watch(createFolderControllerProvider);
     final connectionNotifier = ref.read(connectionProvider.notifier);
 
     ref.listen<AsyncValue>(createFolderControllerProvider, (prev, state) {

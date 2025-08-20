@@ -193,7 +193,7 @@ class LocalDriveService implements DriveService {
 
               return FileModel(
                 name: entity.path.split('/').last,
-                size: isDirectory ? '0' : stat.size.toString(),
+                size: stat.size.toString(),
                 file: entity,
                 parent: entity.parent,
                 children: children,

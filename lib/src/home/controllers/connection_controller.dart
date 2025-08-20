@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hashlib/random.dart';
 import 'package:hive_ce_flutter/adapters.dart';
-import 'package:syncvault/errors.dart';
-import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
@@ -14,7 +10,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
 import 'package:syncvault/src/home/services/file_comparer.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'connection_controller.g.dart';
 
