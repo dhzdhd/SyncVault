@@ -11,12 +11,6 @@ abstract interface class DriveService {
     required RemoteProviderModel model,
     required Option<String> parentPath,
   });
-  TaskEither<AppError, ()> upload({
-    required RemoteProviderModel providerModel,
-    required ConnectionModel connectionModel,
-    required String localPath,
-    String? rCloneExecPath,
-  });
   TaskEither<AppError, ()> delete({
     required RemoteProviderModel providerModel,
     required RemoteFolderModel folderModel,
@@ -24,5 +18,15 @@ abstract interface class DriveService {
   TaskEither<AppError, Option<FileModel>> treeView({
     required DriveProviderModel providerModel,
     required FolderModel folderModel,
+  });
+}
+
+abstract interface class SyncService {
+  TaskEither<AppError, ()> sync_({
+    required ConnectionModel connectionModel,
+    required FolderModel firstFolder,
+    required DriveProviderModel firstProvider,
+    required FolderModel secondFolder,
+    required DriveProviderModel secondProvider,
   });
 }

@@ -65,60 +65,6 @@ class RCloneDriveService implements DriveService {
   }
 
   @override
-  TaskEither<AppError, ()> upload({
-    required RemoteProviderModel providerModel,
-    required ConnectionModel connectionModel,
-    required String localPath,
-    String? rCloneExecPath,
-  }) {
-    final utils = RCloneUtils();
-
-    return TaskEither<AppError, ()>.Do(($) async {
-      final execPath = rCloneExecPath ?? await $(utils.getRCloneExec());
-      final configArgs = await $(utils.getConfigArgs());
-
-      final res = await $(
-        TaskEither.tryCatch(
-          () async {
-            final parentPath = Option.fromNullable(
-              connectionModel.title,
-            ).match(() => '/', (t) => '/$t/');
-
-            final process = await Process.run(execPath!, [
-              // Use a 2 way copy to avoid deletion
-              ...configArgs,
-              connectionModel.direction == SyncDirection.bidirectional
-                  ? 'bisync'
-                  : 'sync',
-              '-u', // Do not delete/update on remote if remote file is newer
-              '-M',
-              '--inplace', // Bisync fails without this
-              if (connectionModel.direction == SyncDirection.bidirectional)
-                '--resync',
-              localPath,
-              '${connectionModel.firstFolderId}:/$parentPath${connectionModel.firstFolderId}',
-            ]);
-
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr.toString());
-            }
-
-            return ();
-          },
-          (err, stackTrace) => ProviderError(
-            providerModel.provider,
-            ProviderOperationType.upload,
-            err,
-            stackTrace,
-          ).logError(),
-        ),
-      );
-
-      return res;
-    });
-  }
-
-  @override
   TaskEither<AppError, ()> delete({
     required RemoteProviderModel providerModel,
     required RemoteFolderModel folderModel,
@@ -331,6 +277,56 @@ class RCloneDriveService implements DriveService {
         ),
       );
       return fileModel;
+    });
+  }
+}
+
+@singleton
+class RCloneSyncService implements SyncService {
+  @override
+  TaskEither<AppError, ()> sync_({
+    required ConnectionModel connectionModel,
+    required FolderModel firstFolder,
+    required DriveProviderModel firstProvider,
+    required FolderModel secondFolder,
+    required DriveProviderModel secondProvider,
+  }) {
+    final utils = RCloneUtils();
+
+    return TaskEither<AppError, ()>.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
+
+      final res = await $(
+        TaskEither.tryCatch(() async {
+          final parentPath = Option.fromNullable(
+            connectionModel.title,
+          ).match(() => '/', (t) => '/$t/');
+
+          final process = await Process.run(execPath, [
+            // Use a 2 way copy to avoid deletion
+            ...configArgs,
+            connectionModel.direction == SyncDirection.bidirectional
+                ? 'bisync'
+                : 'sync',
+            '-u', // Do not delete/update on remote if remote file is newer
+            '-M',
+            '--inplace', // Bisync fails without this
+            if (connectionModel.direction == SyncDirection.bidirectional)
+              '--resync',
+            'localPath',
+            '${connectionModel.firstFolderId}:/$parentPath${connectionModel.firstFolderId}',
+          ]);
+
+          if (process.stderr.toString().trim().isNotEmpty) {
+            debugLogger.e(process.stderr.toString());
+          }
+
+          return ();
+        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
+      );
+
+      return res;
     });
   }
 }

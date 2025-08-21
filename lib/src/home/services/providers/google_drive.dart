@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
-import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/common/services/providers/google_utils.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -91,17 +90,6 @@ class GoogleDriveService implements DriveService {
         ).logError();
       },
     );
-  }
-
-  @override
-  TaskEither<AppError, ()> upload({
-    required DriveProviderModel providerModel,
-    required ConnectionModel connectionModel,
-    required String localPath,
-    String? rCloneExecPath,
-  }) {
-    // TODO: implement upload
-    throw UnimplementedError();
   }
 
   @override

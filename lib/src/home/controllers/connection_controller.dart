@@ -5,11 +5,13 @@ import 'package:hive_ce_flutter/adapters.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/common/utils/associations.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
 import 'package:syncvault/src/home/services/file_comparer.dart';
+import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'connection_controller.g.dart';
 
@@ -95,26 +97,41 @@ class Connection extends _$Connection {
     ConnectionModel connectionModel,
     Option<String> filePath,
   ) async {
-    final providerModels = ref.read(authProvider).requireValue;
+    final providers = ref.read(authProvider).requireValue;
     final folders = ref.read(folderProvider);
 
-    final firstFolder = folders
-        .filter((t) => t.id == connectionModel.firstFolderId)
-        .firstOption;
-    final secondFolder = folders
-        .filter((t) => t.id == connectionModel.secondFolderId)
-        .firstOption;
+    final (
+      firstFolder,
+      firstProvider,
+      secondFolder,
+      secondProvider,
+    ) = Option.Do(($) {
+      final firstFolder = $(
+        folders
+            .filter((t) => t.id == connectionModel.firstFolderId)
+            .firstOption,
+      );
+      final secondFolder = $(
+        folders
+            .filter((t) => t.id == connectionModel.secondFolderId)
+            .firstOption,
+      );
 
-    // If provider is local ignore
-    // final firstProviderModel = providerModels.filter((t) => t.remoteName == firstFolder.toNullable())
+      final firstProvider = $(getProviderFromFolder(providers, firstFolder));
+      final secondProvider = $(getProviderFromFolder(providers, secondFolder));
 
-    // await RCloneDriveService()
-    //     .upload(
-    //       providerModel: providerModel,
-    //       connectionModel: connectionModel,
-    //       localPath: connectionModel.title,
-    //     )
-    //     .run();
+      return (firstFolder, firstProvider, secondFolder, secondProvider);
+    }).toNullable()!;
+
+    await RCloneSyncService()
+        .sync_(
+          connectionModel: connectionModel,
+          firstFolder: firstFolder,
+          firstProvider: firstProvider,
+          secondFolder: secondFolder,
+          secondProvider: secondProvider,
+        )
+        .run();
 
     // if (PlatformExtension.isMobile) {
     //   final files = await Directory(
@@ -140,8 +157,6 @@ class Connection extends _$Connection {
     //     },
     //   );
     // }
-
-    // TODO: Implement per file
   }
 
   Future<void> delete(ConnectionModel model, bool deleteRemote) async {

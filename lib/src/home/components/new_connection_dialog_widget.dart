@@ -81,10 +81,16 @@ class _NewConnectionDialogWidgetState
         const SizedBox(height: 16),
         DropdownButton<FolderModel?>(
           items: folders
-              .filter(
-                (folder) =>
-                    folder.id != secondSelectedFolder.value.toNullable()?.id,
-              )
+              .filter((folder) {
+                final secondFolder = secondSelectedFolder.value.toNullable();
+
+                final isUnique = folder.id != secondFolder?.id;
+                final multipleLocals =
+                    secondFolder is LocalFolderModel &&
+                    folder is LocalFolderModel;
+
+                return isUnique && !multipleLocals;
+              })
               .map(
                 (folder) => DropdownMenuItem(
                   value: folder,
@@ -116,10 +122,16 @@ class _NewConnectionDialogWidgetState
         ),
         DropdownButton<FolderModel?>(
           items: folders
-              .filter(
-                (folder) =>
-                    folder.id != firstSelectedFolder.value.toNullable()?.id,
-              )
+              .filter((folder) {
+                final firstFolder = firstSelectedFolder.value.toNullable();
+
+                final isUnique = folder.id != firstFolder?.id;
+                final multipleLocals =
+                    firstFolder is LocalFolderModel &&
+                    folder is LocalFolderModel;
+
+                return isUnique && !multipleLocals;
+              })
               .map(
                 (folder) => DropdownMenuItem(
                   value: folder,
