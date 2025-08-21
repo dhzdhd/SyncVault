@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/extensions.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
+import 'package:syncvault/src/common/utils/associations.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
+import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class ConnectionCardWidget extends HookConsumerWidget {
   const ConnectionCardWidget({
@@ -22,6 +28,22 @@ class ConnectionCardWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = useState(false);
+    final connectionNotifier = ref.read(connectionProvider.notifier);
+    final folders = ref.watch(folderProvider);
+    final providers = ref.watch(authProvider).value!;
+
+    final (firstFolder, secondFolder) = getFoldersFromConnection(
+      connectionModel,
+      folders,
+    );
+    final firstProvider = getProviderFromFolder(
+      providers,
+      firstFolder.toNullable()!,
+    ).toNullable()!;
+    final secondProvider = getProviderFromFolder(
+      providers,
+      secondFolder.toNullable()!,
+    ).toNullable()!;
 
     return ExpandableCardWidget(
       title: Row(
@@ -53,120 +75,86 @@ class ConnectionCardWidget extends HookConsumerWidget {
               color: Theme.of(context).canvasColor,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 16.0,
+                  ),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      switch (firstProvider) {
+                        LocalProviderModel() => Icon(Icons.folder, size: 42),
+                        RemoteProviderModel(:final provider) =>
+                          SvgPicture.asset(
+                            provider.providerIcon,
+                            width: 42,
+                            height: 42,
+                          ),
+                      },
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(firstFolder.toNullable()!.folderName),
+                          Text(switch (firstFolder.toNullable()!) {
+                            RemoteFolderModel(:final parentPath) =>
+                              parentPath ?? '',
+                            LocalFolderModel(:final folderPath) => folderPath,
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(switch (connectionModel.direction) {
+                  SyncDirection.bidirectional => Icons.sync,
+                  SyncDirection.upload => Icons.arrow_forward_rounded,
+                  SyncDirection.download => Icons.arrow_back_rounded,
+                }),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 16.0,
+                  ),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      switch (secondProvider) {
+                        LocalProviderModel() => Icon(Icons.folder, size: 42),
+                        RemoteProviderModel(:final provider) =>
+                          SvgPicture.asset(
+                            provider.providerIcon,
+                            width: 42,
+                            height: 42,
+                          ),
+                      },
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(secondFolder.toNullable()!.folderName),
+                          Text(switch (secondFolder.toNullable()!) {
+                            RemoteFolderModel(:final parentPath) =>
+                              parentPath ?? '',
+                            LocalFolderModel(:final folderPath) => folderPath,
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                if (MediaQuery.of(context).size.width > 800)
                   Flexible(
-                    child: Text(
-                      connectionModel.title,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    child: ToolBar(
+                      connectionModel: connectionModel,
+                      uploadDeleteController: uploadDeleteController,
+                      isLoading: isLoading,
                     ),
                   ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        if (PlatformExtension.isDesktop)
-                          Flexible(
-                            child: SizedBox(
-                              width: 50,
-                              child: Tooltip(
-                                message: 'Open in file manager',
-                                child: TextButton(
-                                  child: const Icon(Icons.open_in_new),
-                                  onPressed: () async {
-                                    await launchUrl(
-                                      Uri.file(connectionModel.title),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        Flexible(
-                          child: SizedBox(
-                            width: 50,
-                            child: Tooltip(
-                              message: 'Sync',
-                              child: TextButton(
-                                child: const Icon(Icons.sync),
-                                onPressed: () async {
-                                  if (uploadDeleteController.isLoading) {
-                                    return;
-                                  }
-                                  isLoading.value = true;
-
-                                  if (!uploadDeleteController.isLoading) {
-                                    // await ref
-                                    //     .read(
-                                    //       uploadDeleteControllerProvider
-                                    //           .notifier,
-                                    //     )
-                                    //     .upload(
-                                    //       connectionModel,
-                                    //       none(),
-                                    //     );
-
-                                    if (context.mounted) {
-                                      context.showSuccessSnackBar(
-                                        content: 'Success',
-                                      );
-                                    }
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          child: SizedBox(
-                            width: 50,
-                            child: Tooltip(
-                              message: 'Delete',
-                              child: TextButton(
-                                child: const Icon(Icons.delete),
-                                onPressed: () async {
-                                  if (uploadDeleteController.isLoading) {
-                                    return;
-                                  }
-
-                                  if (context.mounted) {
-                                    if (context.mounted) {
-                                      // await showDialog(
-                                      //   context: context,
-                                      //   builder: (ctx) =>
-                                      //       DeleteFolderDialogWidget(
-                                      //         model:
-                                      //             connectionModel,
-                                      //       ),
-                                      // );
-                                    }
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Account', style: Theme.of(context).textTheme.bodyLarge),
-              Text(
-                connectionModel.firstFolderId,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -178,9 +166,8 @@ class ConnectionCardWidget extends HookConsumerWidget {
                   fit: BoxFit.fill,
                   child: Switch(
                     value: connectionModel.isAutoSync,
-                    onChanged: (val) => null,
-                    // folderNotifier
-                    //     .toggleAutoSync(connectionModel),
+                    onChanged: (val) =>
+                        connectionNotifier.toggleAutoSync(connectionModel),
                   ),
                 ),
               ),
@@ -199,17 +186,106 @@ class ConnectionCardWidget extends HookConsumerWidget {
                   fit: BoxFit.fill,
                   child: Switch(
                     value: connectionModel.isDeletionEnabled,
-                    onChanged: (val) => null,
-                    // folderNotifier.toggleDeletionOnSync(
-                    //   connectionModel,
-                    // ),
+                    onChanged: (val) => connectionNotifier.toggleDeletionOnSync(
+                      connectionModel,
+                    ),
                   ),
                 ),
               ),
             ],
           ),
+          if (MediaQuery.of(context).size.width <= 800)
+            ToolBar(
+              connectionModel: connectionModel,
+              uploadDeleteController: uploadDeleteController,
+              isLoading: isLoading,
+            ),
         ],
       ),
+    );
+  }
+}
+
+class ToolBar extends StatelessWidget {
+  const ToolBar({
+    super.key,
+    required this.connectionModel,
+    required this.uploadDeleteController,
+    required this.isLoading,
+  });
+
+  final ConnectionModel connectionModel;
+  final AsyncValue<void> uploadDeleteController;
+  final ValueNotifier<bool> isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Flexible(
+          child: SizedBox(
+            width: 50,
+            child: Tooltip(
+              message: 'Sync',
+              child: TextButton(
+                child: const Icon(Icons.sync),
+                onPressed: () async {
+                  if (uploadDeleteController.isLoading) {
+                    return;
+                  }
+                  isLoading.value = true;
+
+                  if (!uploadDeleteController.isLoading) {
+                    // await ref
+                    //     .read(
+                    //       uploadDeleteControllerProvider
+                    //           .notifier,
+                    //     )
+                    //     .upload(
+                    //       connectionModel,
+                    //       none(),
+                    //     );
+
+                    if (context.mounted) {
+                      context.showSuccessSnackBar(content: 'Success');
+                    }
+                  }
+                },
+              ),
+            ),
+          ),
+        ),
+        Flexible(
+          child: SizedBox(
+            width: 50,
+            child: Tooltip(
+              message: 'Delete',
+              child: TextButton(
+                child: const Icon(Icons.delete),
+                onPressed: () async {
+                  if (uploadDeleteController.isLoading) {
+                    return;
+                  }
+
+                  if (context.mounted) {
+                    if (context.mounted) {
+                      // await showDialog(
+                      //   context: context,
+                      //   builder: (ctx) =>
+                      //       DeleteFolderDialogWidget(
+                      //         model:
+                      //             connectionModel,
+                      //       ),
+                      // );
+                    }
+                  }
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
