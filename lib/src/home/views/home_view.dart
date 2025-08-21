@@ -93,7 +93,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
       };
     }, [ref.watch(folderProvider)]);
 
-    final folderInfo = [];
     final folders = ref.watch(folderProvider);
     final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
 
@@ -131,7 +130,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         slivers: [
           SliverAnimatedAppBar(
             title: 'Home',
-            canExpand: folderInfo.isNotEmpty,
+            canExpand: connections.isNotEmpty,
             hasLeading: false,
             actions: [
               if (PlatformExtension.isDesktop)
@@ -175,7 +174,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ],
           ),
           SliverPadding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.only(
+              left: 16,
+              top: 16,
+              right: 16,
+              bottom: 84,
+            ),
             sliver: SliverList(
               delegate: SliverChildListDelegate.fixed(
                 connections

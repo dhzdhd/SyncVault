@@ -33,7 +33,12 @@ class WorkflowsView extends ConsumerWidget {
             canExpand: workflows.isNotEmpty,
           ),
           SliverPadding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.only(
+              left: 16,
+              top: 16,
+              right: 16,
+              bottom: 84,
+            ),
             sliver: SliverList(
               delegate: SliverChildListDelegate.fixed(
                 workflows
