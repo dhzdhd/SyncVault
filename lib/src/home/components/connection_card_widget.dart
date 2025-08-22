@@ -93,7 +93,6 @@ class ConnectionCardWidget extends HookConsumerWidget {
                       Flexible(
                         child: ToolBar(
                           connectionModel: connectionModel,
-                          uploadDeleteController: uploadDeleteController,
                           isLoading: isLoading,
                           isCentered: false,
                         ),
@@ -113,7 +112,6 @@ class ConnectionCardWidget extends HookConsumerWidget {
                       ),
                       ToolBar(
                         connectionModel: connectionModel,
-                        uploadDeleteController: uploadDeleteController,
                         isLoading: isLoading,
                         isCentered: true,
                       ),
@@ -271,22 +269,20 @@ class FolderBar extends StatelessWidget {
   }
 }
 
-class ToolBar extends StatelessWidget {
+class ToolBar extends ConsumerWidget {
   const ToolBar({
     super.key,
     required this.connectionModel,
-    required this.uploadDeleteController,
     required this.isLoading,
     required this.isCentered,
   });
 
   final ConnectionModel connectionModel;
-  final AsyncValue<void> uploadDeleteController;
   final ValueNotifier<bool> isLoading;
   final bool isCentered;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: isCentered
           ? MainAxisAlignment.center
@@ -300,25 +296,12 @@ class ToolBar extends StatelessWidget {
               child: TextButton(
                 child: const Icon(Icons.sync),
                 onPressed: () async {
-                  if (uploadDeleteController.isLoading) {
-                    return;
-                  }
-                  isLoading.value = true;
+                  await ref
+                      .read(syncControllerProvider.notifier)
+                      .sync_(connectionModel);
 
-                  if (!uploadDeleteController.isLoading) {
-                    // await ref
-                    //     .read(
-                    //       uploadDeleteControllerProvider
-                    //           .notifier,
-                    //     )
-                    //     .upload(
-                    //       connectionModel,
-                    //       none(),
-                    //     );
-
-                    if (context.mounted) {
-                      context.showSuccessSnackBar(content: 'Success');
-                    }
+                  if (context.mounted) {
+                    context.showSuccessSnackBar(content: 'Success');
                   }
                 },
               ),
@@ -333,21 +316,15 @@ class ToolBar extends StatelessWidget {
               child: TextButton(
                 child: const Icon(Icons.delete),
                 onPressed: () async {
-                  if (uploadDeleteController.isLoading) {
-                    return;
-                  }
-
                   if (context.mounted) {
-                    if (context.mounted) {
-                      // await showDialog(
-                      //   context: context,
-                      //   builder: (ctx) =>
-                      //       DeleteFolderDialogWidget(
-                      //         model:
-                      //             connectionModel,
-                      //       ),
-                      // );
-                    }
+                    // await showDialog(
+                    //   context: context,
+                    //   builder: (ctx) =>
+                    //       DeleteFolderDialogWidget(
+                    //         model:
+                    //             connectionModel,
+                    //       ),
+                    // );
                   }
                 },
               ),

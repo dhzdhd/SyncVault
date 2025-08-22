@@ -39,7 +39,7 @@ class ConnectionStatusFamily extends Family<AsyncValue<bool>> {
   const ConnectionStatusFamily();
 
   /// See also [connectionStatus].
-  ConnectionStatusProvider call(RemoteProviderModel model) {
+  ConnectionStatusProvider call(InvalidType model) {
     return ConnectionStatusProvider(model);
   }
 
@@ -68,7 +68,7 @@ class ConnectionStatusFamily extends Family<AsyncValue<bool>> {
 /// See also [connectionStatus].
 class ConnectionStatusProvider extends AutoDisposeFutureProvider<bool> {
   /// See also [connectionStatus].
-  ConnectionStatusProvider(RemoteProviderModel model)
+  ConnectionStatusProvider(InvalidType model)
     : this._internal(
         (ref) => connectionStatus(ref as ConnectionStatusRef, model),
         from: connectionStatusProvider,
@@ -92,7 +92,7 @@ class ConnectionStatusProvider extends AutoDisposeFutureProvider<bool> {
     required this.model,
   }) : super.internal();
 
-  final RemoteProviderModel model;
+  final InvalidType model;
 
   @override
   Override overrideWith(
@@ -135,7 +135,7 @@ class ConnectionStatusProvider extends AutoDisposeFutureProvider<bool> {
 // ignore: unused_element
 mixin ConnectionStatusRef on AutoDisposeFutureProviderRef<bool> {
   /// The parameter `model` of this provider.
-  RemoteProviderModel get model;
+  InvalidType get model;
 }
 
 class _ConnectionStatusProviderElement
@@ -144,7 +144,7 @@ class _ConnectionStatusProviderElement
   _ConnectionStatusProviderElement(super.provider);
 
   @override
-  RemoteProviderModel get model => (origin as ConnectionStatusProvider).model;
+  InvalidType get model => (origin as ConnectionStatusProvider).model;
 }
 
 // ignore_for_file: type=lint

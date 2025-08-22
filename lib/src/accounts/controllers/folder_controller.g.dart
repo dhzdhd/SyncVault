@@ -6,7 +6,7 @@ part of 'folder_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$treeViewHash() => r'093b0bcf0e4da86548824d9e4d4908093232d025';
+String _$treeViewHash() => r'713e46db2ff2701e1cbcb38a9372c9e3659f766e';
 
 /// Copied from Dart SDK
 class _SystemHash {
