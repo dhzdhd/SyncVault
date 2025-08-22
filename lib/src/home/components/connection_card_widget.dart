@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fpdart/src/option.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
@@ -75,85 +76,51 @@ class ConnectionCardWidget extends HookConsumerWidget {
               color: Theme.of(context).canvasColor,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10.0,
-                    horizontal: 16.0,
-                  ),
-                  child: Row(
-                    spacing: 10,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (MediaQuery.of(context).size.width > 800) {
+                  return Row(
                     children: [
-                      switch (firstProvider) {
-                        LocalProviderModel() => Icon(Icons.folder, size: 42),
-                        RemoteProviderModel(:final provider) =>
-                          SvgPicture.asset(
-                            provider.providerIcon,
-                            width: 42,
-                            height: 42,
-                          ),
-                      },
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(firstFolder.toNullable()!.folderName),
-                          Text(switch (firstFolder.toNullable()!) {
-                            RemoteFolderModel(:final parentPath) =>
-                              parentPath ?? '',
-                            LocalFolderModel(:final folderPath) => folderPath,
-                          }),
-                        ],
+                      Expanded(
+                        child: FolderBar(
+                          firstProvider: firstProvider,
+                          firstFolder: firstFolder,
+                          connectionModel: connectionModel,
+                          secondProvider: secondProvider,
+                          secondFolder: secondFolder,
+                        ),
+                      ),
+                      Flexible(
+                        child: ToolBar(
+                          connectionModel: connectionModel,
+                          uploadDeleteController: uploadDeleteController,
+                          isLoading: isLoading,
+                          isCentered: false,
+                        ),
                       ),
                     ],
-                  ),
-                ),
-                Icon(switch (connectionModel.direction) {
-                  SyncDirection.bidirectional => Icons.sync,
-                  SyncDirection.upload => Icons.arrow_forward_rounded,
-                  SyncDirection.download => Icons.arrow_back_rounded,
-                }),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10.0,
-                    horizontal: 16.0,
-                  ),
-                  child: Row(
+                  );
+                } else {
+                  return Column(
                     spacing: 10,
                     children: [
-                      switch (secondProvider) {
-                        LocalProviderModel() => Icon(Icons.folder, size: 42),
-                        RemoteProviderModel(:final provider) =>
-                          SvgPicture.asset(
-                            provider.providerIcon,
-                            width: 42,
-                            height: 42,
-                          ),
-                      },
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(secondFolder.toNullable()!.folderName),
-                          Text(switch (secondFolder.toNullable()!) {
-                            RemoteFolderModel(:final parentPath) =>
-                              parentPath ?? '',
-                            LocalFolderModel(:final folderPath) => folderPath,
-                          }),
-                        ],
+                      FolderBar(
+                        firstProvider: firstProvider,
+                        firstFolder: firstFolder,
+                        connectionModel: connectionModel,
+                        secondProvider: secondProvider,
+                        secondFolder: secondFolder,
+                      ),
+                      ToolBar(
+                        connectionModel: connectionModel,
+                        uploadDeleteController: uploadDeleteController,
+                        isLoading: isLoading,
+                        isCentered: true,
                       ),
                     ],
-                  ),
-                ),
-                if (MediaQuery.of(context).size.width > 800)
-                  Flexible(
-                    child: ToolBar(
-                      connectionModel: connectionModel,
-                      uploadDeleteController: uploadDeleteController,
-                      isLoading: isLoading,
-                    ),
-                  ),
-              ],
+                  );
+                }
+              },
             ),
           ),
           Row(
@@ -194,14 +161,112 @@ class ConnectionCardWidget extends HookConsumerWidget {
               ),
             ],
           ),
-          if (MediaQuery.of(context).size.width <= 800)
-            ToolBar(
-              connectionModel: connectionModel,
-              uploadDeleteController: uploadDeleteController,
-              isLoading: isLoading,
-            ),
         ],
       ),
+    );
+  }
+}
+
+class FolderBar extends StatelessWidget {
+  const FolderBar({
+    super.key,
+    required this.firstProvider,
+    required this.firstFolder,
+    required this.connectionModel,
+    required this.secondProvider,
+    required this.secondFolder,
+  });
+
+  final DriveProviderModel firstProvider;
+  final Option<FolderModel> firstFolder;
+  final ConnectionModel connectionModel;
+  final DriveProviderModel secondProvider;
+  final Option<FolderModel> secondFolder;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          flex: 3,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 16.0,
+            ),
+            child: Row(
+              spacing: 10,
+              children: [
+                switch (firstProvider) {
+                  LocalProviderModel() => Icon(Icons.folder, size: 42),
+                  RemoteProviderModel(:final provider) => SvgPicture.asset(
+                    provider.providerIcon,
+                    width: 42,
+                    height: 42,
+                  ),
+                },
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(firstFolder.toNullable()!.folderName),
+                      Text(switch (firstFolder.toNullable()!) {
+                        RemoteFolderModel(:final parentPath) =>
+                          parentPath ?? '',
+                        LocalFolderModel(:final folderPath) => folderPath,
+                      }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Flexible(
+          child: Icon(switch (connectionModel.direction) {
+            SyncDirection.bidirectional => Icons.sync,
+            SyncDirection.upload => Icons.arrow_forward_rounded,
+            SyncDirection.download => Icons.arrow_back_rounded,
+          }),
+        ),
+        Flexible(
+          flex: 3,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 16.0,
+            ),
+            child: Row(
+              spacing: 10,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                switch (secondProvider) {
+                  LocalProviderModel() => Icon(Icons.folder, size: 42),
+                  RemoteProviderModel(:final provider) => SvgPicture.asset(
+                    provider.providerIcon,
+                    width: 42,
+                    height: 42,
+                  ),
+                },
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(secondFolder.toNullable()!.folderName),
+                      Text(switch (secondFolder.toNullable()!) {
+                        RemoteFolderModel(:final parentPath) =>
+                          parentPath ?? '',
+                        LocalFolderModel(:final folderPath) => folderPath,
+                      }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -212,16 +277,20 @@ class ToolBar extends StatelessWidget {
     required this.connectionModel,
     required this.uploadDeleteController,
     required this.isLoading,
+    required this.isCentered,
   });
 
   final ConnectionModel connectionModel;
   final AsyncValue<void> uploadDeleteController;
   final ValueNotifier<bool> isLoading;
+  final bool isCentered;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: isCentered
+          ? MainAxisAlignment.center
+          : MainAxisAlignment.end,
       children: [
         Flexible(
           child: SizedBox(

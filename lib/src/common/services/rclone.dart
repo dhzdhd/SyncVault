@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
 import 'package:flutter/services.dart';
 import 'package:fpdart/fpdart.dart';
@@ -14,6 +15,13 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 @singleton
 class RCloneUtils {
+  /// Returns the path of the RClone executable for the current platform wrapped in a [TaskEither].
+  ///
+  /// - **Android:** Uses a platform channel to retrieve the native library path and appends `librclone.so`.
+  /// - **Windows:** Returns the path to `rclone.exe` in the application's documents directory.
+  /// - **Linux/MacOS:** Returns the path to `rclone` in the application's documents directory.
+  /// - **iOS:** Throws an [UnimplementedError] as RClone is not implemented for iOS.
+  /// - **Other platforms:** Throws an [UnimplementedError] for unsupported platforms.
   TaskEither<AppError, String> getRCloneExec() {
     return TaskEither.tryCatch(
       () async {
@@ -38,6 +46,11 @@ class RCloneUtils {
     );
   }
 
+  /// Retrieves the RClone configuration file (`rclone.conf`) as a [File] wrapped in a [TaskEither].
+  ///
+  /// The file is exists/is created in the `SyncVault` directory inside the application's documents
+  /// directory of the platform.
+  /// If the configuration file does not exist, it will be created recursively.
   TaskEither<AppError, File> getConfig() {
     return TaskEither.tryCatch(
       () async {
@@ -80,6 +93,18 @@ class RCloneUtils {
         ),
       );
     });
+  }
+
+  /// Constructs a full path by joining a folder name with an optional parent path.
+  ///
+  /// This method handles path construction for RClone operations, ensuring proper
+  /// path formatting with forward slashes as separators (RClone standard). If the
+  /// [parentPath] does not exist, only the folderName is used.
+  String getFullPath(String folderName, Option<String> parentPath) {
+    return switch (parentPath) {
+      Some(:final value) => p.joinAll(['/', value, folderName]),
+      None() => p.joinAll(['/', folderName]),
+    };
   }
 
   /// Parses the RClone INI configuration and returns a list of [DriveProviderModel]
