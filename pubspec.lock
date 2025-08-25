@@ -349,10 +349,10 @@ packages:
     dependency: "direct main"
     description:
       name: fl_nodes
-      sha256: f62383b0a4db9b8093e173fdecfc0218e4ac244664926da0341c6688bb863fec
+      sha256: "1d3593b8d235504ae85bc5766a91c283ef437dd842ffb09b02cbea221529e6df"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0+1"
+    version: "0.4.0+1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -491,14 +491,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_markdown:
-    dependency: transitive
-    description:
-      name: flutter_markdown
-      sha256: "04c4722cc36ec5af38acc38ece70d22d3c2123c61305d555750a091517bbe504"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.23"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -854,14 +846,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.9.5"
-  keymap:
-    dependency: transitive
-    description:
-      name: keymap
-      sha256: "837f37bce794bb41c3a49cd122718544921afec348f34c78f6153c72b43f3c10"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.92"
   launch_at_startup:
     dependency: "direct main"
     description:
@@ -918,14 +902,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
-  markdown:
-    dependency: transitive
-    description:
-      name: markdown
-      sha256: "935e23e1ff3bc02d390bad4d4be001208ee92cc217cb5b5a6c19bc14aaa318c1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.3.0"
   matcher:
     dependency: transitive
     description:
@@ -971,14 +947,6 @@ packages:
     description:
       name: oauth2
       sha256: c84470642cbb2bec450ccab2f8520c079cd1ca546a76ffd5c40589e07f4e8bf4
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
-  os_detect:
-    dependency: transitive
-    description:
-      name: os_detect
-      sha256: "7d87c0dd98c6faf110d5aa498e9a6df02ffce4bb78cc9cfc8ad02929be9bb71f"
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"

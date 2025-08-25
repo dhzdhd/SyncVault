@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/workflows/components/data_handlers.dart';
 import 'package:syncvault/src/workflows/components/hierarchy.dart';
 import 'package:syncvault/src/workflows/components/nodes.dart';
@@ -28,8 +29,15 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
   void initState() {
     super.initState();
 
+    final folders = ref.read(folderProvider);
+
     _nodeEditorController = FlNodeEditorController(
-      style: const FlNodeEditorStyle(),
+      style: const FlNodeEditorStyle(
+        highlightAreaStyle: FlHighlightAreaStyle(
+          borderWidth: 0,
+          color: Colors.transparent,
+        ),
+      ),
       projectSaver: (jsonData) async {
         return true;
       },
@@ -65,7 +73,7 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
     );
 
     registerDataHandlers(_nodeEditorController);
-    registerNodes(context, _nodeEditorController);
+    registerNodes(context, _nodeEditorController, folders);
   }
 
   @override

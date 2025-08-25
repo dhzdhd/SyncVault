@@ -26,8 +26,7 @@ class _HierarchyWidgetState extends State<HierarchyWidget> {
 
   void _subscribeToControllerEvents() {
     widget.controller.eventBus.events.listen((event) {
-      if (event is SelectionEvent ||
-          event is DragSelectionEvent ||
+      if (event is DragSelectionEvent ||
           event is AddNodeEvent ||
           event is RemoveNodeEvent) {
         if (mounted) {
@@ -78,7 +77,7 @@ class _HierarchyWidgetState extends State<HierarchyWidget> {
                       ),
                       child: ListTile(
                         title: Text(
-                          node.prototype.displayName,
+                          node.prototype.displayName.toString(),
                           overflow: TextOverflow.ellipsis,
                         ),
                         subtitle: Text(

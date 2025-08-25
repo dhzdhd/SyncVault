@@ -1,34 +1,19 @@
 import 'dart:convert';
 
 import 'package:fl_nodes/fl_nodes.dart';
-import 'package:syncvault/src/workflows/components/nodes.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/home/models/connection_model.dart';
 
 void registerDataHandlers(FlNodeEditorController controller) {
-  controller.project.registerDataHandler<Operator>(
+  controller.project.registerDataHandler<SyncDirection>(
     toJson: (data) => data.toString().split('.').last,
-    fromJson: (json) =>
-        Operator.values.firstWhere((e) => e.toString().split('.').last == json),
-  );
-
-  controller.project.registerDataHandler<Comparator>(
-    toJson: (data) => data.toString().split('.').last,
-    fromJson: (json) => Comparator.values.firstWhere(
+    fromJson: (json) => SyncDirection.values.firstWhere(
       (e) => e.toString().split('.').last == json,
     ),
   );
 
-  controller.project.registerDataHandler<List<int>>(
-    toJson: (data) => jsonEncode(data),
-    fromJson: (json) => List<int>.from(jsonDecode(json)),
-  );
-
-  controller.project.registerDataHandler<List<bool>>(
-    toJson: (data) => jsonEncode(data),
-    fromJson: (json) => List<bool>.from(jsonDecode(json)),
-  );
-
-  controller.project.registerDataHandler<List<String>>(
-    toJson: (data) => jsonEncode(data),
-    fromJson: (json) => List<String>.from(jsonDecode(json)),
+  controller.project.registerDataHandler<FolderModel>(
+    toJson: (data) => jsonEncode((data as FolderModel).toJson()),
+    fromJson: (json) => FolderModel.fromJson(jsonDecode(json)),
   );
 }

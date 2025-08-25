@@ -107,6 +107,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
                               _searchResults.addAll(
                                 await widget.controller.searchNodesByName(
+                                  context,
                                   value,
                                 ),
                               );
