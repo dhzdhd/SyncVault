@@ -82,6 +82,7 @@ class ConnectionCardWidget extends HookConsumerWidget {
                   return Row(
                     children: [
                       Expanded(
+                        flex: 2,
                         child: FolderBar(
                           firstProvider: firstProvider,
                           firstFolder: firstFolder,
@@ -239,17 +240,9 @@ class FolderBar extends StatelessWidget {
               spacing: 10,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                switch (secondProvider) {
-                  LocalProviderModel() => Icon(Icons.folder, size: 42),
-                  RemoteProviderModel(:final provider) => SvgPicture.asset(
-                    provider.providerIcon,
-                    width: 42,
-                    height: 42,
-                  ),
-                },
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(secondFolder.toNullable()!.folderName),
                       Text(switch (secondFolder.toNullable()!) {
@@ -260,6 +253,14 @@ class FolderBar extends StatelessWidget {
                     ],
                   ),
                 ),
+                switch (secondProvider) {
+                  LocalProviderModel() => Icon(Icons.folder, size: 42),
+                  RemoteProviderModel(:final provider) => SvgPicture.asset(
+                    provider.providerIcon,
+                    width: 42,
+                    height: 42,
+                  ),
+                },
               ],
             ),
           ),
