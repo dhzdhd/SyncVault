@@ -4,11 +4,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hashlib/random.dart';
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
-import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
-import 'package:syncvault/src/home/models/connection_model.dart';
-import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/common.dart';
 
@@ -20,27 +17,11 @@ class LocalDriveService implements DriveService {
     required RemoteProviderModel model,
     required Option<String> parentPath,
   }) {
-    final utils = RCloneUtils();
-
     return TaskEither<AppError, RemoteFolderModel>.Do(($) async {
-      final execPath = await $(utils.getRCloneExec());
-      final configArgs = await $(utils.getConfigArgs());
-
       await $(
         TaskEither.tryCatch(
           () async {
-            final parentPathStr = parentPath.match(() => '/', (t) => '/$t/');
-
-            // S3 only allows bucket name, not path
-            final process = await Process.run(execPath, [
-              ...configArgs,
-              'mkdir',
-              '${model.remoteName}:$parentPathStr$folderName',
-            ]);
-
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr);
-            }
+            await Directory(parentPath.toNullable()!).create(recursive: true);
 
             return ();
           },
@@ -53,68 +34,15 @@ class LocalDriveService implements DriveService {
         ),
       );
 
-      final folderModel = RemoteFolderModel(
+      final _ = LocalFolderModel(
         id: uuid.v4(),
         folderName: folderName,
-        remoteName: model.remoteName,
-        parentPath: parentPath.toNullable(),
-        folderId: null,
+        folderPath: parentPath.toNullable()!,
       );
-      return folderModel;
-    });
-  }
+      // return folderModel;
 
-  @override
-  TaskEither<AppError, ()> upload({
-    required RemoteProviderModel providerModel,
-    required ConnectionModel connectionModel,
-    required String localPath,
-    String? rCloneExecPath,
-  }) {
-    final utils = RCloneUtils();
-
-    return TaskEither<AppError, ()>.Do(($) async {
-      final execPath = rCloneExecPath ?? await $(utils.getRCloneExec());
-      final configArgs = await $(utils.getConfigArgs());
-
-      final res = await $(
-        TaskEither.tryCatch(
-          () async {
-            final parentPath = Option.fromNullable(
-              connectionModel.title,
-            ).match(() => '/', (t) => '/$t/');
-
-            final process = await Process.run(execPath!, [
-              // Use a 2 way copy to avoid deletion
-              ...configArgs,
-              connectionModel.direction == SyncDirection.bidirectional
-                  ? 'bisync'
-                  : 'sync',
-              '-u', // Do not delete/update on remote if remote file is newer
-              '-M',
-              '--inplace', // Bisync fails without this
-              if (connectionModel.direction == SyncDirection.bidirectional)
-                '--resync',
-              localPath,
-              '${connectionModel.firstFolderId}:/$parentPath${connectionModel.firstFolderId}',
-            ]);
-
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr.toString());
-            }
-
-            return ();
-          },
-          (err, stackTrace) => ProviderError(
-            providerModel.provider,
-            ProviderOperationType.upload,
-            err,
-            stackTrace,
-          ).logError(),
-        ),
-      );
-
-      return res;
+      // TODO: Support LocalFolderModel
+      throw UnimplementedError();
     });
   }
 
@@ -123,28 +51,12 @@ class LocalDriveService implements DriveService {
     required RemoteProviderModel providerModel,
     required RemoteFolderModel folderModel,
   }) {
-    final utils = RCloneUtils();
-
     return TaskEither<AppError, ()>.Do(($) async {
-      final execPath = await $(utils.getRCloneExec());
-      final configArgs = await $(utils.getConfigArgs());
-
       final res = await $(
         TaskEither.tryCatch(
           () async {
-            final parentPath = Option.fromNullable(
-              folderModel.folderName,
-            ).match(() => '/', (t) => '/$t/');
-
-            final process = await Process.run(execPath, [
-              ...configArgs,
-              'purge',
-              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}',
-            ]);
-
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr.toString());
-            }
+            // TODO: Support LocalFolderModel
+            await Directory('parentPath').delete();
 
             return ();
           },
@@ -205,12 +117,6 @@ class LocalDriveService implements DriveService {
           },
           (err, stackTrace) {
             return AppError.general('message', err, stackTrace);
-            // return ProviderError(
-            //   model.provider,
-            //   ProviderOperationType.getTreeView,
-            //   err,
-            //   stackTrace,
-            // ).logError();
           },
         ),
       );
