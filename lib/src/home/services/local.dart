@@ -12,61 +12,44 @@ import 'package:syncvault/src/home/services/common.dart';
 @singleton
 class LocalDriveService implements DriveService {
   @override
-  TaskEither<AppError, RemoteFolderModel> create({
+  TaskEither<AppError, LocalFolderModel> create({
     required String folderName,
-    required RemoteProviderModel model,
+    required DriveProviderModel model,
     required Option<String> parentPath,
   }) {
-    return TaskEither<AppError, RemoteFolderModel>.Do(($) async {
-      await $(
-        TaskEither.tryCatch(
-          () async {
-            await Directory(parentPath.toNullable()!).create(recursive: true);
+    return TaskEither<AppError, LocalFolderModel>.Do(($) async {
+      final path = await $(
+        TaskEither.tryCatch(() async {
+          final path = parentPath.toNullable()!;
+          await Directory(path).create(recursive: true);
 
-            return ();
-          },
-          (err, stackTrace) => ProviderError(
-            model.provider,
-            ProviderOperationType.remoteCreation,
-            err,
-            stackTrace,
-          ).logError(),
-        ),
+          return path;
+        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
       );
 
-      final _ = LocalFolderModel(
+      final folderModel = LocalFolderModel(
         id: uuid.v4(),
         folderName: folderName,
-        folderPath: parentPath.toNullable()!,
+        folderPath: path,
       );
-      // return folderModel;
-
-      // TODO: Support LocalFolderModel
-      throw UnimplementedError();
+      return folderModel;
     });
   }
 
   @override
   TaskEither<AppError, ()> delete({
-    required RemoteProviderModel providerModel,
-    required RemoteFolderModel folderModel,
+    required DriveProviderModel providerModel,
+    required FolderModel folderModel,
   }) {
     return TaskEither<AppError, ()>.Do(($) async {
       final res = await $(
-        TaskEither.tryCatch(
-          () async {
-            // TODO: Support LocalFolderModel
+        TaskEither.tryCatch(() async {
+          if (folderModel is LocalFolderModel) {
             await Directory('parentPath').delete();
+          }
 
-            return ();
-          },
-          (err, stackTrace) => ProviderError(
-            providerModel.provider,
-            ProviderOperationType.delete,
-            err,
-            stackTrace,
-          ).logError(),
-        ),
+          return ();
+        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
       );
 
       return res;

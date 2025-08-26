@@ -17,12 +17,12 @@ class GoogleDriveService implements DriveService {
   @override
   TaskEither<AppError, FolderModel> create({
     required String folderName,
-    required RemoteProviderModel model,
+    required DriveProviderModel model,
     required Option<String> parentPath,
   }) {
     return TaskEither.tryCatch(
       () async {
-        final backend = model.backend as OAuth2;
+        final backend = (model as RemoteProviderModel).backend as OAuth2;
         final httpClient = http.Client();
         print(backend.toJson());
 
@@ -82,12 +82,7 @@ class GoogleDriveService implements DriveService {
         );
       },
       (error, stackTrace) {
-        return ProviderError(
-          model.provider,
-          ProviderOperationType.remoteCreation,
-          error,
-          stackTrace,
-        ).logError();
+        return GeneralError('', error, stackTrace).logError();
       },
     );
   }

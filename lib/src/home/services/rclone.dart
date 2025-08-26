@@ -15,9 +15,9 @@ import 'package:syncvault/src/home/services/common.dart';
 @singleton
 class RCloneDriveService implements DriveService {
   @override
-  TaskEither<AppError, RemoteFolderModel> create({
+  TaskEither<AppError, FolderModel> create({
     required String folderName,
-    required RemoteProviderModel model,
+    required DriveProviderModel model,
     required Option<String> parentPath,
   }) {
     final utils = RCloneUtils();
@@ -26,37 +26,29 @@ class RCloneDriveService implements DriveService {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
-      await $(
-        TaskEither.tryCatch(
-          () async {
-            final parentPathStr = parentPath.match(() => '/', (t) => '/$t/');
+      final remoteName = await $(
+        TaskEither.tryCatch(() async {
+          final parentPathStr = parentPath.match(() => '/', (t) => '/$t/');
 
-            // S3 only allows bucket name, not path
-            final process = await Process.run(execPath, [
-              ...configArgs,
-              'mkdir',
-              '${model.remoteName}:$parentPathStr$folderName',
-            ]);
+          // S3 only allows bucket name, not path
+          final process = await Process.run(execPath, [
+            ...configArgs,
+            'mkdir',
+            '${(model as RemoteProviderModel).remoteName}:$parentPathStr$folderName',
+          ]);
 
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr);
-            }
+          if (process.stderr.toString().trim().isNotEmpty) {
+            debugLogger.e(process.stderr);
+          }
 
-            return ();
-          },
-          (err, stackTrace) => ProviderError(
-            model.provider,
-            ProviderOperationType.remoteCreation,
-            err,
-            stackTrace,
-          ).logError(),
-        ),
+          return model.remoteName;
+        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
       );
 
       final folderModel = RemoteFolderModel(
         id: uuid.v4(),
         folderName: folderName,
-        remoteName: model.remoteName,
+        remoteName: remoteName,
         parentPath: parentPath.toNullable(),
         folderId: null,
       );
@@ -66,8 +58,8 @@ class RCloneDriveService implements DriveService {
 
   @override
   TaskEither<AppError, ()> delete({
-    required RemoteProviderModel providerModel,
-    required RemoteFolderModel folderModel,
+    required DriveProviderModel providerModel,
+    required FolderModel folderModel,
   }) {
     final utils = RCloneUtils();
 
@@ -76,31 +68,23 @@ class RCloneDriveService implements DriveService {
       final configArgs = await $(utils.getConfigArgs());
 
       final res = await $(
-        TaskEither.tryCatch(
-          () async {
-            final parentPath = Option.fromNullable(
-              folderModel.folderName,
-            ).match(() => '/', (t) => '/$t/');
+        TaskEither.tryCatch(() async {
+          final parentPath = Option.fromNullable(
+            folderModel.folderName,
+          ).match(() => '/', (t) => '/$t/');
 
-            final process = await Process.run(execPath, [
-              ...configArgs,
-              'purge',
-              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}',
-            ]);
+          final process = await Process.run(execPath, [
+            ...configArgs,
+            'purge',
+            '${(folderModel as RemoteFolderModel).remoteName}:/$parentPath${folderModel.folderName}',
+          ]);
 
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr.toString());
-            }
+          if (process.stderr.toString().trim().isNotEmpty) {
+            debugLogger.e(process.stderr.toString());
+          }
 
-            return ();
-          },
-          (err, stackTrace) => ProviderError(
-            providerModel.provider,
-            ProviderOperationType.delete,
-            err,
-            stackTrace,
-          ).logError(),
-        ),
+          return ();
+        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
       );
 
       return res;

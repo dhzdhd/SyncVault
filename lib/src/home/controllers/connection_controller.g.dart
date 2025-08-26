@@ -6,7 +6,7 @@ part of 'connection_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$syncControllerHash() => r'9333dc8decab172982e3d799ff3e73dca1627b0b';
+String _$syncControllerHash() => r'5b52fed9e6c2b7a3bb1cd8cb7925235a4e3aa9de';
 
 /// See also [SyncController].
 @ProviderFor(SyncController)
@@ -22,7 +22,7 @@ final syncControllerProvider =
     );
 
 typedef _$SyncController = AutoDisposeAsyncNotifier<void>;
-String _$connectionHash() => r'73d5a7f4a9ea3697609c3b807d4af3df16df2d16';
+String _$connectionHash() => r'ea6e9eeea82b6da864668550336e5d65c0f70a51';
 
 /// See also [Connection].
 @ProviderFor(Connection)
