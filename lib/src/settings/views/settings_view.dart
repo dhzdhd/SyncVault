@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/errors.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
+import 'package:syncvault/src/home/controllers/connection_controller.dart';
+import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
 import '../controllers/settings_controller.dart';
 
 class SettingsView extends ConsumerWidget {
@@ -19,6 +22,19 @@ class SettingsView extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
     final folderNotifier = ref.read(folderProvider.notifier);
+    final connectionNotifier = ref.read(connectionProvider.notifier);
+
+    ref.listen<AsyncValue>(rCloneDownloadControllerProvider, (prev, state) {
+      if (!state.isLoading && state.hasError) {
+        context.showErrorSnackBar(
+          GeneralError(
+            'RClone download controller failed',
+            state.error!,
+            state.stackTrace,
+          ).logError().message,
+        );
+      }
+    });
 
     return Scaffold(
       body: CustomScrollView(
@@ -59,7 +75,7 @@ class SettingsView extends ConsumerWidget {
                   trailing: Switch(
                     value: settings.isSentryEnabled,
                     onChanged: (val) {
-                      settingsNotifier.setSentry();
+                      settingsNotifier.toggleSentryEnabled();
                     },
                   ),
                 ),
@@ -73,7 +89,7 @@ class SettingsView extends ConsumerWidget {
                     trailing: Switch(
                       value: settings.isHideOnStartup,
                       onChanged: (val) {
-                        settingsNotifier.setHideOnStartup();
+                        settingsNotifier.toggleHideOnStartup();
                       },
                     ),
                   ),
@@ -87,7 +103,7 @@ class SettingsView extends ConsumerWidget {
                     trailing: Switch(
                       value: settings.isLaunchOnStartup,
                       onChanged: (val) {
-                        settingsNotifier.setLaunchOnStartup();
+                        settingsNotifier.toggleLaunchOnStartup();
                       },
                     ),
                   ),
@@ -102,24 +118,62 @@ class SettingsView extends ConsumerWidget {
                     onTap: () async {
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Are you sure'),
-                          actions: [
-                            const OutlinedButton(
-                              onPressed: null,
-                              child: Text('Yes'),
-                            ),
-                            FilledButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('No'),
-                            ),
-                          ],
+                        builder: (context) => Consumer(
+                          builder: (context, ref, child) {
+                            final rCloneDownloadProgress = ref.watch(
+                              rCloneDownloadControllerProvider,
+                            );
+                            final rCloneDownloadControllerNotifier = ref.read(
+                              rCloneDownloadControllerProvider.notifier,
+                            );
+
+                            final inProgress =
+                                rCloneDownloadProgress.isLoading ||
+                                (rCloneDownloadProgress.value != null &&
+                                    rCloneDownloadProgress.value != 0);
+                            final isComplete =
+                                inProgress &&
+                                rCloneDownloadProgress.value == 100;
+
+                            return AlertDialog(
+                              title: Text(
+                                inProgress
+                                    ? isComplete
+                                          ? 'Downloaded'
+                                          : 'Downloading'
+                                    : 'Are you sure',
+                              ),
+                              actions: [
+                                OutlinedButton(
+                                  onPressed: inProgress
+                                      ? null
+                                      : () async {
+                                          await rCloneDownloadControllerNotifier
+                                              .rCloneDownload();
+                                        },
+                                  child: Text(
+                                    inProgress
+                                        ? rCloneDownloadProgress.value == 100
+                                              ? 'Complete'
+                                              : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
+                                        : 'Yes',
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: !(isComplete || inProgress),
+                                  child: FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('No'),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       );
                     },
-                    // TODO:
                   ),
                 Visibility(
                   visible: kDebugMode && !Platform.isIOS,
@@ -162,7 +216,7 @@ class SettingsView extends ConsumerWidget {
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   subtitle: const Text(
-                    'Clear all local folder storage, does not include settings',
+                    'Clear all local folders and connections, does not include settings',
                   ),
                   onTap: () async {
                     showDialog(
@@ -173,6 +227,7 @@ class SettingsView extends ConsumerWidget {
                           OutlinedButton(
                             onPressed: () async {
                               await folderNotifier.clearCache();
+                              await connectionNotifier.clearCache();
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                               }
