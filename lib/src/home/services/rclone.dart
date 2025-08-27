@@ -281,12 +281,27 @@ class RCloneSyncService implements SyncService {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
+      final firstPath = switch (firstFolder) {
+        LocalFolderModel(:final folderPath) => folderPath,
+        RemoteFolderModel(
+          :final remoteName,
+          :final folderName,
+          :final parentPath,
+        ) =>
+          '$remoteName:/${Option.fromNullable(parentPath).match(() => '/', (t) => '/$t/')}$folderName',
+      };
+      final secondPath = switch (secondFolder) {
+        LocalFolderModel(:final folderPath) => folderPath,
+        RemoteFolderModel(
+          :final remoteName,
+          :final folderName,
+          :final parentPath,
+        ) =>
+          '$remoteName:/${Option.fromNullable(parentPath).match(() => '/', (t) => '/$t/')}$folderName',
+      };
+
       final res = await $(
         TaskEither.tryCatch(() async {
-          final parentPath = Option.fromNullable(
-            connectionModel.title,
-          ).match(() => '/', (t) => '/$t/');
-
           final process = await Process.run(execPath, [
             // Use a 2 way copy to avoid deletion
             ...configArgs,
@@ -298,8 +313,8 @@ class RCloneSyncService implements SyncService {
             '--inplace', // Bisync fails without this
             if (connectionModel.direction == SyncDirection.bidirectional)
               '--resync',
-            'localPath',
-            '${connectionModel.firstFolderId}:/$parentPath${connectionModel.firstFolderId}',
+            firstPath,
+            secondPath,
           ]);
 
           if (process.stderr.toString().trim().isNotEmpty) {
