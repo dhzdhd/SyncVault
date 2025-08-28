@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fpdart/src/option.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
@@ -15,23 +15,20 @@ import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 class ConnectionCardWidget extends HookConsumerWidget {
-  const ConnectionCardWidget({
-    super.key,
-    required this.uploadDeleteController,
-    required this.connectionModel,
-  });
+  const ConnectionCardWidget({super.key, required this.connectionModel});
 
-  final AsyncValue<void> uploadDeleteController;
   final ConnectionModel connectionModel;
 
   final index = 0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = useState(false);
     final connectionNotifier = ref.read(connectionProvider.notifier);
     final folders = ref.watch(folderProvider);
     final providers = ref.watch(authProvider).value!;
+
+    final syncController = ref.watch(syncControllerProvider);
+    final isLoading = useState(false);
 
     final (firstFolder, secondFolder) = getFoldersFromConnection(
       connectionModel,
@@ -60,7 +57,7 @@ class ConnectionCardWidget extends HookConsumerWidget {
       trailing: Padding(
         padding: const EdgeInsets.only(right: 16.0),
         child: Visibility(
-          visible: uploadDeleteController.isLoading && isLoading.value,
+          visible: syncController.isLoading && isLoading.value,
           child: const SizedBox(
             width: 20,
             height: 20,
@@ -295,16 +292,22 @@ class ToolBar extends ConsumerWidget {
             child: Tooltip(
               message: 'Sync',
               child: TextButton(
-                child: const Icon(Icons.sync),
-                onPressed: () async {
-                  await ref
-                      .read(syncControllerProvider.notifier)
-                      .sync_(connectionModel);
+                onPressed: isLoading.value
+                    ? null
+                    : () async {
+                        isLoading.value = true;
 
-                  if (context.mounted) {
-                    context.showSuccessSnackBar(content: 'Success');
-                  }
-                },
+                        await ref
+                            .read(syncControllerProvider.notifier)
+                            .sync_(connectionModel);
+
+                        if (context.mounted) {
+                          context.showSuccessSnackBar(content: 'Success');
+                        }
+
+                        isLoading.value = false;
+                      },
+                child: const Icon(Icons.sync),
               ),
             ),
           ),

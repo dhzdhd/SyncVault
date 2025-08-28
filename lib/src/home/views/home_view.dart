@@ -123,11 +123,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
     }, [ref.watch(folderProvider)]);
 
     final folders = ref.watch(folderProvider);
-    final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
-
     final connections = ref.watch(connectionProvider);
 
-    ref.listen<AsyncValue>(uploadDeleteControllerProvider, (prev, state) {
+    ref.listen<AsyncValue>(syncControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
           GeneralError('Upload failed', state.error!, state.stackTrace).message,
@@ -137,7 +135,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Sync new folder',
+        tooltip: 'Create new connection',
         onPressed: () async {
           if (folders.length < 2) {
             context.showErrorSnackBar(
@@ -213,10 +211,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
               delegate: SliverChildListDelegate.fixed(
                 connections
                     .mapWithIndex(
-                      (connection, index) => ConnectionCardWidget(
-                        uploadDeleteController: uploadDeleteController,
-                        connectionModel: connection,
-                      ),
+                      (connection, index) =>
+                          ConnectionCardWidget(connectionModel: connection),
                     )
                     .toList(),
               ),
