@@ -250,13 +250,7 @@ class RCloneDriveService implements DriveService {
             return none();
           },
           (err, stackTrace) {
-            return AppError.general('message', err, stackTrace);
-            // return ProviderError(
-            //   model.provider,
-            //   ProviderOperationType.getTreeView,
-            //   err,
-            //   stackTrace,
-            // ).logError();
+            return AppError.general('message', err, stackTrace).logError();
           },
         ),
       );

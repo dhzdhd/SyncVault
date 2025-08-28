@@ -4,7 +4,9 @@ import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
+import 'package:syncvault/src/common/utils/associations.dart';
 import 'package:syncvault/src/home/components/connection_card_widget.dart';
 import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/workflows/views/workflow_view.dart';
@@ -26,19 +28,41 @@ class HomeView extends StatefulHookConsumerWidget {
 }
 
 class _HomeViewState extends ConsumerState<HomeView> {
-  late final List<DirectoryWatcher> _watchers;
+  final Map<String, DirectoryWatcher> _connWatcherMap = {};
 
   @override
   void initState() {
-    // final connections = ref.read(folderProvider).toList();
-    _watchers = [];
-    // _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
+    final connections = ref.read(connectionProvider);
+    final folders = ref.read(folderProvider);
+
+    for (final conn in connections) {
+      final (firstFolderOpt, secondFolderOpt) = getFoldersFromConnection(
+        conn,
+        folders,
+      );
+
+      final localFolder = Option<LocalFolderModel>.Do(($) {
+        final firstFolder = $(firstFolderOpt);
+        final secondFolder = $(secondFolderOpt);
+
+        return $(switch ((firstFolder, secondFolder)) {
+          (final x, _) when x is LocalFolderModel => Some(x),
+          (_, final y) when y is LocalFolderModel => Some(y),
+          _ => None(),
+        });
+      });
+
+      localFolder.match(() {}, (val) {
+        _connWatcherMap[conn.id] = DirectoryWatcher(val.folderPath);
+      });
+    }
+
     super.initState();
   }
 
   @override
   void dispose() {
-    for (DirectoryWatcher i in _watchers) {
+    for (DirectoryWatcher i in _connWatcherMap.values) {
       i.events.drain();
     }
     super.dispose();
@@ -47,49 +71,54 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      // final folders = ref.watch(folderProvider).toList();
-      final folders = [];
+      final connections = ref.watch(connectionProvider);
 
-      for (int i = 0; i < _watchers.length; i++) {
-        // TODO: Match watcher and folder by remote name instead of index
-        // Also add/delete watcher with folder
-        _watchers[i].events.listen((event) async {
+      for (final entry in _connWatcherMap.entries) {
+        final watcher = entry.value;
+        final connectionId = entry.key;
+        final connection = connections
+            .filter((conn) => conn.id == connectionId)
+            .firstOrNull;
+
+        if (connection == null) {
+          continue;
+        }
+
+        watcher.events.listen((event) async {
           debugLogger.i(event.toString());
+
           switch (event.type) {
-            case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
+            case ChangeType.ADD || ChangeType.MODIFY when connection.isAutoSync:
               {
                 try {
-                  // await ref
-                  //     .read(folderProvider.notifier)
-                  //     .upload(folders[i], some(event.path));
-                  debugPrint('Success');
-                } catch (e, _) {
+                  await ref
+                      .read(connectionProvider.notifier)
+                      .uniSync(connection);
+                  debugLogger.i('Successfully uploaded for ADD | MODIFY');
+                } catch (e, st) {
                   // TODO:
-                  // ProviderError(
-                  //   folders[i].provider,
-                  //   ProviderOperationType.upload,
-                  //   e,
-                  //   st,
-                  // ).logError();
+                  GeneralError('', e, st).logError();
                 }
               }
             case ChangeType.REMOVE
-                when folders[i].isDeletionEnabled && folders[i].isAutoSync:
+                when connection.isDeletionEnabled && connection.isAutoSync:
               {
-                // final result = await ref
-                //     .read(folderProvider.notifier)
-                //     .delete(folders[i], some(event.path))
-                //     .run();
-
-                // result.match(
-                //     (l) => debugPrint(l.message), (r) => debugPrint('Success'));
+                try {
+                  await ref
+                      .read(connectionProvider.notifier)
+                      .uniSync(connection);
+                  debugLogger.i('Successfully uploaded for DELETE');
+                } catch (e, st) {
+                  // TODO:
+                  GeneralError('', e, st).logError();
+                }
               }
           }
         });
       }
 
       return () => {
-        for (final i in _watchers) {i.events.drain()},
+        for (DirectoryWatcher i in _connWatcherMap.values) {i.events.drain()},
       };
     }, [ref.watch(folderProvider)]);
 
