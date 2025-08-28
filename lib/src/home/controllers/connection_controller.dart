@@ -203,7 +203,7 @@ class Connection extends _$Connection {
     // }
   }
 
-  Future<void> delete(ConnectionModel model, bool deleteRemote) async {
+  Future<void> delete(ConnectionModel model) async {
     state = state.where((element) => element != model).toList();
     await _connectionStorage.update(state);
   }

@@ -321,14 +321,31 @@ class ToolBar extends ConsumerWidget {
                 child: const Icon(Icons.delete),
                 onPressed: () async {
                   if (context.mounted) {
-                    // await showDialog(
-                    //   context: context,
-                    //   builder: (ctx) =>
-                    //       DeleteFolderDialogWidget(
-                    //         model:
-                    //             connectionModel,
-                    //       ),
-                    // );
+                    await showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Are you sure'),
+                        actions: [
+                          OutlinedButton(
+                            onPressed: () async {
+                              await ref
+                                  .read(connectionProvider.notifier)
+                                  .delete(connectionModel);
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            child: const Text('Yes'),
+                          ),
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('No'),
+                          ),
+                        ],
+                      ),
+                    );
                   }
                 },
               ),
