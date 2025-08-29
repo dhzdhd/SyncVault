@@ -25,23 +25,35 @@ class ConnectionCardWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final connectionNotifier = ref.read(connectionProvider.notifier);
     final folders = ref.watch(folderProvider);
-    final providers = ref.watch(authProvider).value!;
+    final providers = ref.watch(authProvider).value;
 
     final syncController = ref.watch(syncControllerProvider);
     final isLoading = useState(false);
 
-    final (firstFolder, secondFolder) = getFoldersFromConnection(
-      connectionModel,
-      folders,
-    );
-    final firstProvider = getProviderFromFolder(
-      providers,
-      firstFolder.toNullable()!,
-    ).toNullable()!;
-    final secondProvider = getProviderFromFolder(
-      providers,
-      secondFolder.toNullable()!,
-    ).toNullable()!;
+    final folderPair = Option.Do(($) {
+      final (firstFolderOpt, secondFolderOpt) = getFoldersFromConnection(
+        connectionModel,
+        folders,
+      );
+
+      final firstFolder = $(firstFolderOpt);
+      final secondFolder = $(secondFolderOpt);
+
+      return (firstFolder, secondFolder);
+    });
+
+    final providerPair = Option.Do(($) {
+      final (firstFolder, secondFolder) = $(folderPair);
+
+      final firstProvider = $(
+        getProviderFromFolder(providers ?? [], firstFolder),
+      );
+      final secondProvider = $(
+        getProviderFromFolder(providers ?? [], secondFolder),
+      );
+
+      return (firstProvider, secondProvider);
+    });
 
     return ExpandableCardWidget(
       title: Row(
@@ -81,11 +93,9 @@ class ConnectionCardWidget extends HookConsumerWidget {
                       Expanded(
                         flex: 2,
                         child: FolderBar(
-                          firstProvider: firstProvider,
-                          firstFolder: firstFolder,
+                          providerPair: providerPair,
+                          folderPair: folderPair,
                           connectionModel: connectionModel,
-                          secondProvider: secondProvider,
-                          secondFolder: secondFolder,
                         ),
                       ),
                       Flexible(
@@ -102,11 +112,9 @@ class ConnectionCardWidget extends HookConsumerWidget {
                     spacing: 10,
                     children: [
                       FolderBar(
-                        firstProvider: firstProvider,
-                        firstFolder: firstFolder,
+                        providerPair: providerPair,
+                        folderPair: folderPair,
                         connectionModel: connectionModel,
-                        secondProvider: secondProvider,
-                        secondFolder: secondFolder,
                       ),
                       ToolBar(
                         connectionModel: connectionModel,
@@ -166,104 +174,108 @@ class ConnectionCardWidget extends HookConsumerWidget {
 class FolderBar extends StatelessWidget {
   const FolderBar({
     super.key,
-    required this.firstProvider,
-    required this.firstFolder,
+    required this.providerPair,
+    required this.folderPair,
     required this.connectionModel,
-    required this.secondProvider,
-    required this.secondFolder,
   });
 
-  final DriveProviderModel firstProvider;
-  final Option<FolderModel> firstFolder;
+  final Option<(DriveProviderModel, DriveProviderModel)> providerPair;
+  final Option<(FolderModel, FolderModel)> folderPair;
   final ConnectionModel connectionModel;
-  final DriveProviderModel secondProvider;
-  final Option<FolderModel> secondFolder;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          flex: 3,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10.0,
-              horizontal: 16.0,
-            ),
-            child: Row(
-              spacing: 10,
-              children: [
-                switch (firstProvider) {
-                  LocalProviderModel() => Icon(Icons.folder, size: 42),
-                  RemoteProviderModel(:final provider) => SvgPicture.asset(
-                    provider.providerIcon,
-                    width: 42,
-                    height: 42,
+    return switch ((providerPair, folderPair)) {
+      (Some(value: final providers), Some(value: final folders)) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10.0,
+                horizontal: 16.0,
+              ),
+              child: Row(
+                spacing: 10,
+                children: [
+                  switch (providers.$1) {
+                    LocalProviderModel() => Icon(Icons.folder, size: 42),
+                    RemoteProviderModel(:final provider) => SvgPicture.asset(
+                      provider.providerIcon,
+                      width: 42,
+                      height: 42,
+                    ),
+                  },
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(folders.$1.folderName),
+                        Text(switch (folders.$1) {
+                          RemoteFolderModel(:final parentPath) =>
+                            parentPath ?? '',
+                          LocalFolderModel(:final folderPath) => folderPath,
+                        }),
+                      ],
+                    ),
                   ),
-                },
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(firstFolder.toNullable()!.folderName),
-                      Text(switch (firstFolder.toNullable()!) {
-                        RemoteFolderModel(:final parentPath) =>
-                          parentPath ?? '',
-                        LocalFolderModel(:final folderPath) => folderPath,
-                      }),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Flexible(
-          child: Icon(switch (connectionModel.direction) {
-            SyncDirection.bidirectional => Icons.sync,
-            SyncDirection.upload => Icons.arrow_forward_rounded,
-            SyncDirection.download => Icons.arrow_back_rounded,
-          }),
-        ),
-        Flexible(
-          flex: 3,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10.0,
-              horizontal: 16.0,
-            ),
-            child: Row(
-              spacing: 10,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(secondFolder.toNullable()!.folderName),
-                      Text(switch (secondFolder.toNullable()!) {
-                        RemoteFolderModel(:final parentPath) =>
-                          parentPath ?? '',
-                        LocalFolderModel(:final folderPath) => folderPath,
-                      }),
-                    ],
-                  ),
-                ),
-                switch (secondProvider) {
-                  LocalProviderModel() => Icon(Icons.folder, size: 42),
-                  RemoteProviderModel(:final provider) => SvgPicture.asset(
-                    provider.providerIcon,
-                    width: 42,
-                    height: 42,
-                  ),
-                },
-              ],
+                ],
+              ),
             ),
           ),
+          Flexible(
+            child: Icon(switch (connectionModel.direction) {
+              SyncDirection.bidirectional => Icons.sync,
+              SyncDirection.upload => Icons.arrow_forward_rounded,
+              SyncDirection.download => Icons.arrow_back_rounded,
+            }),
+          ),
+          Flexible(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10.0,
+                horizontal: 16.0,
+              ),
+              child: Row(
+                spacing: 10,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(folders.$2.folderName),
+                        Text(switch (folders.$2) {
+                          RemoteFolderModel(:final parentPath) =>
+                            parentPath ?? '',
+                          LocalFolderModel(:final folderPath) => folderPath,
+                        }),
+                      ],
+                    ),
+                  ),
+                  switch (providers.$2) {
+                    LocalProviderModel() => Icon(Icons.folder, size: 42),
+                    RemoteProviderModel(:final provider) => SvgPicture.asset(
+                      provider.providerIcon,
+                      width: 42,
+                      height: 42,
+                    ),
+                  },
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      (_, _) => Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: CircularProgressWidget(size: 20, isInfinite: true),
         ),
-      ],
-    );
+      ),
+    };
   }
 }
 

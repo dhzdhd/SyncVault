@@ -45,13 +45,18 @@ class _NewConnectionDialogWidgetState
       SyncDirection.upload,
     });
 
-    final allProviders = ref.watch(authProvider).requireValue;
+    final allProviders = ref.watch(authProvider).value;
     final folders = ref.watch(folderProvider);
 
-    final providersMap = Map.fromIterables(
-      folders.map((folder) => folder.id),
-      folders.map((folder) => getProviderFromFolder(allProviders, folder)),
-    );
+    final Map<String, Option<DriveProviderModel>> providersMap =
+        allProviders == null
+        ? {}
+        : Map.fromIterables(
+            folders.map((folder) => folder.id),
+            folders.map(
+              (folder) => getProviderFromFolder(allProviders, folder),
+            ),
+          );
 
     final connectionNotifier = ref.read(connectionProvider.notifier);
 

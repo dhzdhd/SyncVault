@@ -13,7 +13,7 @@ class AccountView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authInfo = ref.watch(authProvider).requireValue;
+    final authInfo = ref.watch(authProvider).value;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -30,7 +30,7 @@ class AccountView extends ConsumerWidget {
         slivers: [
           SliverAnimatedAppBar(
             title: 'Accounts',
-            canExpand: authInfo.isNotEmpty,
+            canExpand: authInfo?.isNotEmpty ?? false,
           ),
           SliverPadding(
             padding: const EdgeInsets.only(
@@ -42,9 +42,11 @@ class AccountView extends ConsumerWidget {
             sliver: SliverList(
               delegate: SliverChildListDelegate.fixed([
                 LocalAccountCard(),
-                ...authInfo.map(
-                  (providerModel) => AccountCard(providerModel: providerModel),
-                ),
+                ...authInfo?.map(
+                      (providerModel) =>
+                          AccountCard(providerModel: providerModel),
+                    ) ??
+                    [],
               ]),
             ),
           ),

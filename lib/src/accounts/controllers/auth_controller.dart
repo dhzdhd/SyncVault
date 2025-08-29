@@ -56,7 +56,6 @@ final _box = GetIt.I<Box<RemoteProviderModel>>();
 class Auth extends _$Auth {
   @override
   Future<List<RemoteProviderModel>> build() async {
-    // TODO: Change all instances of requireValue to switch cases
     state = AsyncData(_box.values.toList());
     return init();
   }
@@ -86,6 +85,10 @@ class Auth extends _$Auth {
     String remoteName,
     bool isRCloneBackend,
   ) async {
+    if (!state.hasValue) {
+      return;
+    }
+
     if (state.requireValue.any((element) => element.remoteName == remoteName)) {
       throw const GeneralError('The provider already exists', null, null);
     }
@@ -130,7 +133,9 @@ class Auth extends _$Auth {
         ).logError();
       },
       (model) async {
-        state = AsyncData([...state.requireValue, model]);
+        if (state.hasValue) {
+          state = AsyncData([...state.requireValue, model]);
+        }
         await _box.put(model.remoteName, model);
       },
     );
