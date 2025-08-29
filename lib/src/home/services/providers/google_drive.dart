@@ -24,7 +24,6 @@ class GoogleDriveService implements DriveService {
       () async {
         final backend = (model as RemoteProviderModel).backend as OAuth2;
         final httpClient = http.Client();
-        print(backend.toJson());
 
         final authClient = authenticatedClient(
           httpClient,

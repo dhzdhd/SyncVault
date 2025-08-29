@@ -11,14 +11,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
-import 'package:syncvault/src/home/models/folder_hash_model.dart';
-import 'package:syncvault/src/home/services/file_comparer.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'connection_controller.g.dart';
 
 final _connectionBox = GetIt.I<Box<ConnectionModel>>();
-final _hashBox = GetIt.I<Box<FolderHashModel>>();
+// final _hashBox = GetIt.I<Box<FolderHashModel>>();
 // TODO: Make fetchable from GetIt
 final _connectionStorage = HiveStorage<ConnectionModel>(_connectionBox);
 
@@ -39,8 +37,8 @@ class SyncController extends _$SyncController {
 
 @riverpod
 class Connection extends _$Connection {
-  final _hashStorage = HiveStorage<FolderHashModel>(_hashBox);
-  final _fileComparer = FileComparer();
+  // final _hashStorage = HiveStorage<FolderHashModel>(_hashBox);
+  // final _fileComparer = FileComparer();
 
   @override
   List<ConnectionModel> build() {

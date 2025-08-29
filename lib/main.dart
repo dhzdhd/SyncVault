@@ -3,28 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
-import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
-import 'package:syncvault/src/home/services/file_comparer.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/injectable/injectable.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/setup.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/workflows/models/workflow_model.dart';
-import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:workmanager/workmanager.dart';
@@ -92,19 +85,17 @@ void callbackDispatcher() {
 
     // Setup Hive boxes for folder, hash and auth info
     final docDir = await getApplicationDocumentsDirectory();
-    final service = RCloneDriveService();
     final boxPath = '${docDir.path}/SyncVault/hive';
 
     await setupHiveBox<DriveProviderModel>(boxPath);
     await setupHiveBox<ConnectionModel>(boxPath);
-    final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
+    // final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
 
-    final authProviders = await Auth.init();
     // final folders = Folder.init().filter((folder) => folder.isAutoSync);
-    final hashes = GetIt.I<Box<FolderHashModel>>().values;
+    // final hashes = GetIt.I<Box<FolderHashModel>>().values;
 
-    final fileComparer = FileComparer();
-    final hashStorage = HiveStorage<FolderHashModel>(hashBox);
+    // final fileComparer = FileComparer();
+    // final hashStorage = HiveStorage<FolderHashModel>(hashBox);
 
     // File watcher approach does not work on mobile devices
     // FIXME: Change the approach for the new FolderModel

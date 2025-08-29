@@ -63,6 +63,7 @@ dependencies:
   launch_at_startup: ^0.5.1
   package_info_plus: ^8.3.0
   path: ^1.9.1
+  http: ^1.5.0
 
 dev_dependencies:
   flutter_test:
