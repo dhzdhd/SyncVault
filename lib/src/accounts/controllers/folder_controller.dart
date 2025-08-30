@@ -5,11 +5,13 @@ import 'package:get_it/get_it.dart';
 import 'package:hashlib/random.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
+import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/local.dart';
@@ -46,7 +48,7 @@ class CreateFolderController extends _$CreateFolderController {
 }
 
 @riverpod
-class UploadDeleteController extends _$UploadDeleteController {
+class DeleteFolderController extends _$DeleteFolderController {
   @override
   FutureOr<void> build() {}
 
@@ -124,6 +126,15 @@ class Folder extends _$Folder {
   }
 
   Future<void> delete(FolderModel model, bool deleteFolder) async {
+    final connections = ref.watch(connectionProvider);
+    final containsConnections = connections
+        .flatMap((conn) => [conn.firstFolderId, conn.secondFolderId])
+        .contains(model.id);
+
+    if (containsConnections) {
+      throw GeneralError('Folder contains connections', null, null);
+    }
+
     if (deleteFolder) {
       await switch (model) {
         LocalFolderModel(:final folderPath) => () async {

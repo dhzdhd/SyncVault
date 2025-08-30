@@ -72,6 +72,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget build(BuildContext context) {
     useEffect(() {
       final connections = ref.watch(connectionProvider);
+      final folderIds = ref.watch(folderProvider).map((folder) => folder.id);
 
       for (final entry in _connWatcherMap.entries) {
         final watcher = entry.value;
@@ -80,7 +81,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             .filter((conn) => conn.id == connectionId)
             .firstOrNull;
 
-        if (connection == null) {
+        if (connection == null ||
+            !folderIds.contains(connection.firstFolderId) ||
+            !folderIds.contains(connection.secondFolderId)) {
           continue;
         }
 

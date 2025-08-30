@@ -22,7 +22,7 @@ final syncControllerProvider =
     );
 
 typedef _$SyncController = AutoDisposeAsyncNotifier<void>;
-String _$connectionHash() => r'ea6e9eeea82b6da864668550336e5d65c0f70a51';
+String _$connectionHash() => r'c9bd8b0d18d92668fb080d4a8d852399329fbd8f';
 
 /// See also [Connection].
 @ProviderFor(Connection)

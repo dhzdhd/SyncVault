@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/components/delete_folder_dialog.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/accounts/components/tree_view_sheet_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -19,8 +19,6 @@ class FolderCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final folderNotifier = ref.read(folderProvider.notifier);
-
     final textTheme = Theme.of(context).textTheme;
     final radius = isLast ? 16.0 : 0.0;
 
@@ -101,8 +99,11 @@ class FolderCard extends ConsumerWidget {
               ),
               IconButton.filledTonal(
                 onPressed: () async {
-                  // TODO: Add dialog to ask for delete, implement folder deletion
-                  await folderNotifier.delete(folderModel, false);
+                  await showDialog(
+                    context: context,
+                    builder: (context) =>
+                        DeleteFolderDialogWidget(model: folderModel),
+                  );
                 },
                 icon: Icon(Icons.delete),
               ),

@@ -1,22 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 
-class DeleteFolderDialogWidget extends ConsumerWidget {
+class DeleteFolderDialogWidget extends HookConsumerWidget {
   const DeleteFolderDialogWidget({super.key, required this.model});
 
   final FolderModel model;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final folderNotifier = ref.read(uploadDeleteControllerProvider.notifier);
+    final deleteFolderControllerNotifier = ref.read(
+      deleteFolderControllerProvider.notifier,
+    );
+    final isDeleteFolder = useState(false);
 
     return AlertDialog(
       title: Text('Delete ${model.folderName}?'),
-      content: const Text(
-        'Remote delete deletes the local state and uploaded files.\nLocal delete deletes only local state.\nThis does not affect your local files.',
-        textAlign: TextAlign.left,
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: 20,
+        children: [
+          const Text('Delete corresponding local/remote folder'),
+          Switch(
+            value: isDeleteFolder.value,
+            onChanged: (val) {
+              isDeleteFolder.value = val;
+            },
+          ),
+        ],
       ),
       actions: [
         TextButton(
@@ -24,18 +37,12 @@ class DeleteFolderDialogWidget extends ConsumerWidget {
             if (context.mounted) {
               Navigator.of(context).pop();
             }
-            await folderNotifier.delete(model, true);
+            await deleteFolderControllerNotifier.delete(
+              model,
+              isDeleteFolder.value,
+            );
           },
-          child: const Text('Remote Delete'),
-        ),
-        TextButton(
-          onPressed: () async {
-            if (context.mounted) {
-              Navigator.of(context).pop();
-            }
-            await folderNotifier.delete(model, false);
-          },
-          child: const Text('Local Delete'),
+          child: const Text('Delete'),
         ),
         ElevatedButton(
           onPressed: () {
