@@ -9,6 +9,7 @@ import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/common/utils/associations.dart';
+import 'package:syncvault/src/home/components/connection_edit_dialog.dart';
 import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
@@ -320,6 +321,26 @@ class ToolBar extends ConsumerWidget {
                         isLoading.value = false;
                       },
                 child: const Icon(Icons.sync),
+              ),
+            ),
+          ),
+        ),
+        Flexible(
+          child: SizedBox(
+            width: 50,
+            child: Tooltip(
+              message: 'Edit',
+              child: TextButton(
+                onPressed: () async {
+                  if (context.mounted) {
+                    await showDialog(
+                      context: context,
+                      builder: (ctx) =>
+                          ConnectionEditDialogWidget(model: connectionModel),
+                    );
+                  }
+                },
+                child: Icon(Icons.edit),
               ),
             ),
           ),

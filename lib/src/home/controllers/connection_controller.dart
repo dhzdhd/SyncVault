@@ -108,6 +108,19 @@ class Connection extends _$Connection {
     await _connectionStorage.update(state);
   }
 
+  Future<void> edit({
+    required ConnectionModel oldConnection,
+    required ConnectionModel newConnection,
+  }) async {
+    state = [
+      ...state
+        ..removeWhere((conn) => conn.id == oldConnection.id)
+        ..add(newConnection),
+    ];
+
+    await _connectionStorage.update(state);
+  }
+
   Future<void> uniSync(ConnectionModel connectionModel) async {
     final providers = ref.read(authProvider).requireValue;
     final folders = ref.read(folderProvider);
