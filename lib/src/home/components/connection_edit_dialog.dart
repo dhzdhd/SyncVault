@@ -78,14 +78,9 @@ class _ConnectionEditDialogWidgetState
             if (_titleController.text.isNotEmpty) {
               await connectionNotifier.edit(
                 oldConnection: widget.model,
-                newConnection: ConnectionModel(
-                  id: widget.model.id,
+                newConnection: widget.model.copyWith(
                   title: _titleController.text,
-                  firstFolderId: widget.model.firstFolderId,
-                  secondFolderId: widget.model.secondFolderId,
                   direction: selectedDirection.value.first,
-                  isAutoSync: widget.model.isAutoSync,
-                  isDeletionEnabled: widget.model.isDeletionEnabled,
                 ),
               );
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/accounts/components/delete_folder_dialog.dart';
+import 'package:syncvault/src/accounts/components/folder_edit_dialog.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/accounts/components/tree_view_sheet_widget.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -97,6 +98,20 @@ class FolderCard extends ConsumerWidget {
                 },
                 icon: Icon(Icons.device_hub_rounded),
               ),
+
+              IconButton.filledTonal(
+                onPressed: () async {
+                  if (context.mounted) {
+                    await showDialog(
+                      context: context,
+                      builder: (ctx) =>
+                          FolderEditDialogWidget(model: folderModel),
+                    );
+                  }
+                },
+                icon: Icon(Icons.edit),
+              ),
+
               IconButton.filledTonal(
                 onPressed: () async {
                   await showDialog(

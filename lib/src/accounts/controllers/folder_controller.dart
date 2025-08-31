@@ -125,6 +125,18 @@ class Folder extends _$Folder {
     await _folderStorage.addSingle(model);
   }
 
+  Future<void> edit({
+    required FolderModel oldFolder,
+    required FolderModel newFolder,
+  }) async {
+    state = [
+      ...state
+        ..removeWhere((folder) => folder.id == oldFolder.id)
+        ..add(newFolder),
+    ];
+    await _folderStorage.update(state);
+  }
+
   Future<void> delete(FolderModel model, bool deleteFolder) async {
     final connections = ref.watch(connectionProvider);
     final containsConnections = connections
