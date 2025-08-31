@@ -30,10 +30,9 @@ class _MyAppState extends ConsumerState<MyApp>
     super.initState();
 
     if (PlatformExtension.isDesktop) {
-      // TODO: Add icons
       String iconPath = Platform.isWindows
-          ? 'images/tray_icon.ico'
-          : 'images/tray_icon.png';
+          ? 'assets/icons/tray_icon.ico'
+          : 'assets/icons/tray_icon.png';
 
       trayManager.addListener(this);
 
