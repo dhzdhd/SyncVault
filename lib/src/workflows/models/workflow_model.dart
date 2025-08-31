@@ -11,6 +11,8 @@ abstract class WorkflowModel with _$WorkflowModel {
     required String? workflowJson,
     required WorkflowNode nodeType,
     required WorkflowOperation linkType,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = _WorkflowModel;
 
   factory WorkflowModel.fromJson(Map<String, Object?> json) =>

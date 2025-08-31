@@ -15,9 +15,9 @@ RemoteProviderModel _$RemoteProviderModelFromJson(Map<String, dynamic> json) =>
       backend: DriveProviderBackend.fromJson(
         json['backend'] as Map<String, dynamic>,
       ),
-      createdAt: json['createdAt'] as String,
-      updatedAt: json['updatedAt'] as String,
       isRCloneBackend: json['isRCloneBackend'] as bool,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
       $type: json['runtimeType'] as String?,
     );
 
@@ -27,9 +27,9 @@ Map<String, dynamic> _$RemoteProviderModelToJson(
   'remoteName': instance.remoteName,
   'provider': instance.provider,
   'backend': instance.backend,
-  'createdAt': instance.createdAt,
-  'updatedAt': instance.updatedAt,
   'isRCloneBackend': instance.isRCloneBackend,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
   'runtimeType': instance.$type,
 };
 

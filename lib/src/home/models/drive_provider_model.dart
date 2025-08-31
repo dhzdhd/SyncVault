@@ -11,9 +11,9 @@ sealed class DriveProviderModel with _$DriveProviderModel {
     required String remoteName,
     required DriveProvider provider,
     required DriveProviderBackend backend,
-    required String createdAt,
-    required String updatedAt,
     required bool isRCloneBackend,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = RemoteProviderModel;
   const factory DriveProviderModel.local() = LocalProviderModel;
 

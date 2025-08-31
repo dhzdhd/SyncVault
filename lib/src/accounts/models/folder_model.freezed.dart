@@ -39,7 +39,7 @@ FolderModel _$FolderModelFromJson(
 /// @nodoc
 mixin _$FolderModel {
 
- String get id; String get folderName;
+ String get id; String get folderName; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of FolderModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -52,16 +52,16 @@ $FolderModelCopyWith<FolderModel> get copyWith => _$FolderModelCopyWithImpl<Fold
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.folderName, folderName) || other.folderName == folderName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,folderName);
+int get hashCode => Object.hash(runtimeType,id,folderName,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'FolderModel(id: $id, folderName: $folderName)';
+  return 'FolderModel(id: $id, folderName: $folderName, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -72,7 +72,7 @@ abstract mixin class $FolderModelCopyWith<$Res>  {
   factory $FolderModelCopyWith(FolderModel value, $Res Function(FolderModel) _then) = _$FolderModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String folderName
+ String id, String folderName, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -89,11 +89,13 @@ class _$FolderModelCopyWithImpl<$Res>
 
 /// Create a copy of FolderModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? folderName = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? folderName = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,folderName: null == folderName ? _self.folderName : folderName // ignore: cast_nullable_to_non_nullable
-as String,
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -104,7 +106,7 @@ as String,
 @JsonSerializable()
 
 class RemoteFolderModel implements FolderModel {
-  const RemoteFolderModel({required this.id, required this.remoteName, required this.folderName, required this.parentPath, required this.folderId, final  String? $type}): $type = $type ?? 'remote';
+  const RemoteFolderModel({required this.id, required this.remoteName, required this.folderName, required this.parentPath, required this.folderId, required this.createdAt, required this.updatedAt, final  String? $type}): $type = $type ?? 'remote';
   factory RemoteFolderModel.fromJson(Map<String, dynamic> json) => _$RemoteFolderModelFromJson(json);
 
 @override final  String id;
@@ -112,6 +114,8 @@ class RemoteFolderModel implements FolderModel {
 @override final  String folderName;
  final  String? parentPath;
  final  String? folderId;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -130,16 +134,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoteFolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.parentPath, parentPath) || other.parentPath == parentPath)&&(identical(other.folderId, folderId) || other.folderId == folderId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoteFolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.parentPath, parentPath) || other.parentPath == parentPath)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,remoteName,folderName,parentPath,folderId);
+int get hashCode => Object.hash(runtimeType,id,remoteName,folderName,parentPath,folderId,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'FolderModel.remote(id: $id, remoteName: $remoteName, folderName: $folderName, parentPath: $parentPath, folderId: $folderId)';
+  return 'FolderModel.remote(id: $id, remoteName: $remoteName, folderName: $folderName, parentPath: $parentPath, folderId: $folderId, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -150,7 +154,7 @@ abstract mixin class $RemoteFolderModelCopyWith<$Res> implements $FolderModelCop
   factory $RemoteFolderModelCopyWith(RemoteFolderModel value, $Res Function(RemoteFolderModel) _then) = _$RemoteFolderModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String remoteName, String folderName, String? parentPath, String? folderId
+ String id, String remoteName, String folderName, String? parentPath, String? folderId, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -167,14 +171,16 @@ class _$RemoteFolderModelCopyWithImpl<$Res>
 
 /// Create a copy of FolderModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? remoteName = null,Object? folderName = null,Object? parentPath = freezed,Object? folderId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? remoteName = null,Object? folderName = null,Object? parentPath = freezed,Object? folderId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(RemoteFolderModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
 as String,folderName: null == folderName ? _self.folderName : folderName // ignore: cast_nullable_to_non_nullable
 as String,parentPath: freezed == parentPath ? _self.parentPath : parentPath // ignore: cast_nullable_to_non_nullable
 as String?,folderId: freezed == folderId ? _self.folderId : folderId // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -185,12 +191,14 @@ as String?,
 @JsonSerializable()
 
 class LocalFolderModel implements FolderModel {
-  const LocalFolderModel({required this.id, required this.folderName, required this.folderPath, final  String? $type}): $type = $type ?? 'local';
+  const LocalFolderModel({required this.id, required this.folderName, required this.folderPath, required this.createdAt, required this.updatedAt, final  String? $type}): $type = $type ?? 'local';
   factory LocalFolderModel.fromJson(Map<String, dynamic> json) => _$LocalFolderModelFromJson(json);
 
 @override final  String id;
 @override final  String folderName;
  final  String folderPath;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -209,16 +217,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalFolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.folderPath, folderPath) || other.folderPath == folderPath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalFolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.folderPath, folderPath) || other.folderPath == folderPath)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,folderName,folderPath);
+int get hashCode => Object.hash(runtimeType,id,folderName,folderPath,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'FolderModel.local(id: $id, folderName: $folderName, folderPath: $folderPath)';
+  return 'FolderModel.local(id: $id, folderName: $folderName, folderPath: $folderPath, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -229,7 +237,7 @@ abstract mixin class $LocalFolderModelCopyWith<$Res> implements $FolderModelCopy
   factory $LocalFolderModelCopyWith(LocalFolderModel value, $Res Function(LocalFolderModel) _then) = _$LocalFolderModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String folderName, String folderPath
+ String id, String folderName, String folderPath, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -246,12 +254,14 @@ class _$LocalFolderModelCopyWithImpl<$Res>
 
 /// Create a copy of FolderModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? folderName = null,Object? folderPath = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? folderName = null,Object? folderPath = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(LocalFolderModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,folderName: null == folderName ? _self.folderName : folderName // ignore: cast_nullable_to_non_nullable
 as String,folderPath: null == folderPath ? _self.folderPath : folderPath // ignore: cast_nullable_to_non_nullable
-as String,
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

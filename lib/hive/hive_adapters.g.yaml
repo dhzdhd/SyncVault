@@ -81,7 +81,7 @@ types:
         index: 2
   WorkflowModel:
     typeId: 21
-    nextIndex: 4
+    nextIndex: 6
     fields:
       name:
         index: 0
@@ -91,6 +91,10 @@ types:
         index: 2
       linkType:
         index: 3
+      createdAt:
+        index: 4
+      updatedAt:
+        index: 5
   FolderHashModel:
     typeId: 22
     nextIndex: 2
@@ -157,7 +161,7 @@ types:
         index: 1
   ConnectionModel:
     typeId: 33
-    nextIndex: 10
+    nextIndex: 12
     fields:
       title:
         index: 0
@@ -173,6 +177,10 @@ types:
         index: 8
       id:
         index: 9
+      createdAt:
+        index: 10
+      updatedAt:
+        index: 11
   RemoteProviderModel:
     typeId: 35
     nextIndex: 7
@@ -199,7 +207,7 @@ types:
         index: 0
   RemoteFolderModel:
     typeId: 37
-    nextIndex: 6
+    nextIndex: 8
     fields:
       remoteName:
         index: 0
@@ -213,9 +221,13 @@ types:
         index: 4
       id:
         index: 5
+      createdAt:
+        index: 6
+      updatedAt:
+        index: 7
   LocalFolderModel:
     typeId: 38
-    nextIndex: 4
+    nextIndex: 6
     fields:
       folderName:
         index: 0
@@ -225,6 +237,10 @@ types:
         index: 2
       id:
         index: 3
+      createdAt:
+        index: 4
+      updatedAt:
+        index: 5
   SyncDirection:
     typeId: 39
     nextIndex: 3

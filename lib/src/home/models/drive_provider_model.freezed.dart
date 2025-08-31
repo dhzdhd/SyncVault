@@ -72,15 +72,15 @@ $DriveProviderModelCopyWith(DriveProviderModel _, $Res Function(DriveProviderMod
 @JsonSerializable()
 
 class RemoteProviderModel implements DriveProviderModel {
-  const RemoteProviderModel({required this.remoteName, required this.provider, required this.backend, required this.createdAt, required this.updatedAt, required this.isRCloneBackend, final  String? $type}): $type = $type ?? 'remote';
+  const RemoteProviderModel({required this.remoteName, required this.provider, required this.backend, required this.isRCloneBackend, required this.createdAt, required this.updatedAt, final  String? $type}): $type = $type ?? 'remote';
   factory RemoteProviderModel.fromJson(Map<String, dynamic> json) => _$RemoteProviderModelFromJson(json);
 
  final  String remoteName;
  final  DriveProvider provider;
  final  DriveProviderBackend backend;
- final  String createdAt;
- final  String updatedAt;
  final  bool isRCloneBackend;
+ final  DateTime createdAt;
+ final  DateTime updatedAt;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -99,16 +99,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoteProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoteProviderModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.backend, backend) || other.backend == backend)&&(identical(other.isRCloneBackend, isRCloneBackend) || other.isRCloneBackend == isRCloneBackend)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,remoteName,provider,backend,createdAt,updatedAt,isRCloneBackend);
+int get hashCode => Object.hash(runtimeType,remoteName,provider,backend,isRCloneBackend,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'DriveProviderModel.remote(remoteName: $remoteName, provider: $provider, backend: $backend, createdAt: $createdAt, updatedAt: $updatedAt, isRCloneBackend: $isRCloneBackend)';
+  return 'DriveProviderModel.remote(remoteName: $remoteName, provider: $provider, backend: $backend, isRCloneBackend: $isRCloneBackend, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -119,7 +119,7 @@ abstract mixin class $RemoteProviderModelCopyWith<$Res> implements $DriveProvide
   factory $RemoteProviderModelCopyWith(RemoteProviderModel value, $Res Function(RemoteProviderModel) _then) = _$RemoteProviderModelCopyWithImpl;
 @useResult
 $Res call({
- String remoteName, DriveProvider provider, DriveProviderBackend backend, String createdAt, String updatedAt, bool isRCloneBackend
+ String remoteName, DriveProvider provider, DriveProviderBackend backend, bool isRCloneBackend, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -136,15 +136,15 @@ class _$RemoteProviderModelCopyWithImpl<$Res>
 
 /// Create a copy of DriveProviderModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? remoteName = null,Object? provider = null,Object? backend = null,Object? createdAt = null,Object? updatedAt = null,Object? isRCloneBackend = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? remoteName = null,Object? provider = null,Object? backend = null,Object? isRCloneBackend = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(RemoteProviderModel(
 remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
 as DriveProvider,backend: null == backend ? _self.backend : backend // ignore: cast_nullable_to_non_nullable
-as DriveProviderBackend,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as String,isRCloneBackend: null == isRCloneBackend ? _self.isRCloneBackend : isRCloneBackend // ignore: cast_nullable_to_non_nullable
-as bool,
+as DriveProviderBackend,isRCloneBackend: null == isRCloneBackend ? _self.isRCloneBackend : isRCloneBackend // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

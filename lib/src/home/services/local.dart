@@ -31,6 +31,8 @@ class LocalDriveService implements DriveService {
         id: uuid.v4(),
         folderName: folderName,
         folderPath: path,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
       return folderModel;
     });

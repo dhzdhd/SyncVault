@@ -166,8 +166,8 @@ class RCloneUtils {
                 remoteName: sectionName,
                 provider: provider,
                 backend: backend,
-                createdAt: DateTime.now().toIso8601String(),
-                updatedAt: DateTime.now().toIso8601String(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
                 isRCloneBackend: true,
               );
             }).toList();

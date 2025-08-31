@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ConnectionModel implements DiagnosticableTreeMixin {
 
- String get id; String get title; String get firstFolderId; String get secondFolderId; SyncDirection get direction; bool get isAutoSync; bool get isDeletionEnabled;
+ String get id; String get title; String get firstFolderId; String get secondFolderId; SyncDirection get direction; bool get isAutoSync; bool get isDeletionEnabled; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of ConnectionModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,21 +30,21 @@ $ConnectionModelCopyWith<ConnectionModel> get copyWith => _$ConnectionModelCopyW
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ConnectionModel'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('firstFolderId', firstFolderId))..add(DiagnosticsProperty('secondFolderId', secondFolderId))..add(DiagnosticsProperty('direction', direction))..add(DiagnosticsProperty('isAutoSync', isAutoSync))..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled));
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('firstFolderId', firstFolderId))..add(DiagnosticsProperty('secondFolderId', secondFolderId))..add(DiagnosticsProperty('direction', direction))..add(DiagnosticsProperty('isAutoSync', isAutoSync))..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConnectionModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.firstFolderId, firstFolderId) || other.firstFolderId == firstFolderId)&&(identical(other.secondFolderId, secondFolderId) || other.secondFolderId == secondFolderId)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.isAutoSync, isAutoSync) || other.isAutoSync == isAutoSync)&&(identical(other.isDeletionEnabled, isDeletionEnabled) || other.isDeletionEnabled == isDeletionEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConnectionModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.firstFolderId, firstFolderId) || other.firstFolderId == firstFolderId)&&(identical(other.secondFolderId, secondFolderId) || other.secondFolderId == secondFolderId)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.isAutoSync, isAutoSync) || other.isAutoSync == isAutoSync)&&(identical(other.isDeletionEnabled, isDeletionEnabled) || other.isDeletionEnabled == isDeletionEnabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,firstFolderId,secondFolderId,direction,isAutoSync,isDeletionEnabled);
+int get hashCode => Object.hash(runtimeType,id,title,firstFolderId,secondFolderId,direction,isAutoSync,isDeletionEnabled,createdAt,updatedAt);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ConnectionModel(id: $id, title: $title, firstFolderId: $firstFolderId, secondFolderId: $secondFolderId, direction: $direction, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled)';
+  return 'ConnectionModel(id: $id, title: $title, firstFolderId: $firstFolderId, secondFolderId: $secondFolderId, direction: $direction, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -55,7 +55,7 @@ abstract mixin class $ConnectionModelCopyWith<$Res>  {
   factory $ConnectionModelCopyWith(ConnectionModel value, $Res Function(ConnectionModel) _then) = _$ConnectionModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String firstFolderId, String secondFolderId, SyncDirection direction, bool isAutoSync, bool isDeletionEnabled
+ String id, String title, String firstFolderId, String secondFolderId, SyncDirection direction, bool isAutoSync, bool isDeletionEnabled, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -72,7 +72,7 @@ class _$ConnectionModelCopyWithImpl<$Res>
 
 /// Create a copy of ConnectionModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? firstFolderId = null,Object? secondFolderId = null,Object? direction = null,Object? isAutoSync = null,Object? isDeletionEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? firstFolderId = null,Object? secondFolderId = null,Object? direction = null,Object? isAutoSync = null,Object? isDeletionEnabled = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -81,7 +81,9 @@ as String,secondFolderId: null == secondFolderId ? _self.secondFolderId : second
 as String,direction: null == direction ? _self.direction : direction // ignore: cast_nullable_to_non_nullable
 as SyncDirection,isAutoSync: null == isAutoSync ? _self.isAutoSync : isAutoSync // ignore: cast_nullable_to_non_nullable
 as bool,isDeletionEnabled: null == isDeletionEnabled ? _self.isDeletionEnabled : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -92,7 +94,7 @@ as bool,
 @JsonSerializable()
 
 class _ConnectionModel with DiagnosticableTreeMixin implements ConnectionModel {
-  const _ConnectionModel({required this.id, required this.title, required this.firstFolderId, required this.secondFolderId, required this.direction, required this.isAutoSync, required this.isDeletionEnabled});
+  const _ConnectionModel({required this.id, required this.title, required this.firstFolderId, required this.secondFolderId, required this.direction, required this.isAutoSync, required this.isDeletionEnabled, required this.createdAt, required this.updatedAt});
   factory _ConnectionModel.fromJson(Map<String, dynamic> json) => _$ConnectionModelFromJson(json);
 
 @override final  String id;
@@ -102,6 +104,8 @@ class _ConnectionModel with DiagnosticableTreeMixin implements ConnectionModel {
 @override final  SyncDirection direction;
 @override final  bool isAutoSync;
 @override final  bool isDeletionEnabled;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
 
 /// Create a copy of ConnectionModel
 /// with the given fields replaced by the non-null parameter values.
@@ -117,21 +121,21 @@ Map<String, dynamic> toJson() {
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ConnectionModel'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('firstFolderId', firstFolderId))..add(DiagnosticsProperty('secondFolderId', secondFolderId))..add(DiagnosticsProperty('direction', direction))..add(DiagnosticsProperty('isAutoSync', isAutoSync))..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled));
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('firstFolderId', firstFolderId))..add(DiagnosticsProperty('secondFolderId', secondFolderId))..add(DiagnosticsProperty('direction', direction))..add(DiagnosticsProperty('isAutoSync', isAutoSync))..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ConnectionModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.firstFolderId, firstFolderId) || other.firstFolderId == firstFolderId)&&(identical(other.secondFolderId, secondFolderId) || other.secondFolderId == secondFolderId)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.isAutoSync, isAutoSync) || other.isAutoSync == isAutoSync)&&(identical(other.isDeletionEnabled, isDeletionEnabled) || other.isDeletionEnabled == isDeletionEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ConnectionModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.firstFolderId, firstFolderId) || other.firstFolderId == firstFolderId)&&(identical(other.secondFolderId, secondFolderId) || other.secondFolderId == secondFolderId)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.isAutoSync, isAutoSync) || other.isAutoSync == isAutoSync)&&(identical(other.isDeletionEnabled, isDeletionEnabled) || other.isDeletionEnabled == isDeletionEnabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,firstFolderId,secondFolderId,direction,isAutoSync,isDeletionEnabled);
+int get hashCode => Object.hash(runtimeType,id,title,firstFolderId,secondFolderId,direction,isAutoSync,isDeletionEnabled,createdAt,updatedAt);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ConnectionModel(id: $id, title: $title, firstFolderId: $firstFolderId, secondFolderId: $secondFolderId, direction: $direction, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled)';
+  return 'ConnectionModel(id: $id, title: $title, firstFolderId: $firstFolderId, secondFolderId: $secondFolderId, direction: $direction, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -142,7 +146,7 @@ abstract mixin class _$ConnectionModelCopyWith<$Res> implements $ConnectionModel
   factory _$ConnectionModelCopyWith(_ConnectionModel value, $Res Function(_ConnectionModel) _then) = __$ConnectionModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String firstFolderId, String secondFolderId, SyncDirection direction, bool isAutoSync, bool isDeletionEnabled
+ String id, String title, String firstFolderId, String secondFolderId, SyncDirection direction, bool isAutoSync, bool isDeletionEnabled, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -159,7 +163,7 @@ class __$ConnectionModelCopyWithImpl<$Res>
 
 /// Create a copy of ConnectionModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? firstFolderId = null,Object? secondFolderId = null,Object? direction = null,Object? isAutoSync = null,Object? isDeletionEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? firstFolderId = null,Object? secondFolderId = null,Object? direction = null,Object? isAutoSync = null,Object? isDeletionEnabled = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_ConnectionModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -168,7 +172,9 @@ as String,secondFolderId: null == secondFolderId ? _self.secondFolderId : second
 as String,direction: null == direction ? _self.direction : direction // ignore: cast_nullable_to_non_nullable
 as SyncDirection,isAutoSync: null == isAutoSync ? _self.isAutoSync : isAutoSync // ignore: cast_nullable_to_non_nullable
 as bool,isDeletionEnabled: null == isDeletionEnabled ? _self.isDeletionEnabled : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

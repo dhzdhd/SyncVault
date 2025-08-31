@@ -12,11 +12,15 @@ sealed class FolderModel with _$FolderModel {
     required String folderName,
     required String? parentPath,
     required String? folderId,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = RemoteFolderModel;
   const factory FolderModel.local({
     required String id,
     required String folderName,
     required String folderPath,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = LocalFolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>

@@ -102,6 +102,8 @@ class Connection extends _$Connection {
       direction: direction,
       isAutoSync: false,
       isDeletionEnabled: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
 
     state = [...state, connection];

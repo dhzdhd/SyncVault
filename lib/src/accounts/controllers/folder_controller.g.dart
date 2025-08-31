@@ -194,7 +194,7 @@ final deleteFolderControllerProvider =
     );
 
 typedef _$DeleteFolderController = AutoDisposeAsyncNotifier<void>;
-String _$folderHash() => r'13e06dd81f01a549bfbd5b7428d29a92753cd4ad';
+String _$folderHash() => r'88e4fcd481a8b06de3c86e93d59326f1cdb55b0b';
 
 /// See also [Folder].
 @ProviderFor(Folder)

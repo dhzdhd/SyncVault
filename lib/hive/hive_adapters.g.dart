@@ -309,13 +309,15 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
       workflowJson: fields[1] as String?,
       nodeType: fields[2] as WorkflowNode,
       linkType: fields[3] as WorkflowOperation,
+      createdAt: fields[4] as DateTime,
+      updatedAt: fields[5] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, WorkflowModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -323,7 +325,11 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
       ..writeByte(2)
       ..write(obj.nodeType)
       ..writeByte(3)
-      ..write(obj.linkType);
+      ..write(obj.linkType)
+      ..writeByte(4)
+      ..write(obj.createdAt)
+      ..writeByte(5)
+      ..write(obj.updatedAt);
   }
 
   @override
@@ -682,13 +688,15 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
       direction: fields[6] as SyncDirection,
       isAutoSync: fields[3] as bool,
       isDeletionEnabled: fields[4] as bool,
+      createdAt: fields[10] as DateTime,
+      updatedAt: fields[11] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, ConnectionModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(3)
@@ -702,7 +710,11 @@ class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
       ..writeByte(8)
       ..write(obj.secondFolderId)
       ..writeByte(9)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(10)
+      ..write(obj.createdAt)
+      ..writeByte(11)
+      ..write(obj.updatedAt);
   }
 
   @override
@@ -730,9 +742,9 @@ class RemoteProviderModelAdapter extends TypeAdapter<RemoteProviderModel> {
       remoteName: fields[0] as String,
       provider: fields[1] as DriveProvider,
       backend: fields[2] as DriveProviderBackend,
-      createdAt: fields[3] as String,
-      updatedAt: fields[4] as String,
       isRCloneBackend: fields[5] as bool,
+      createdAt: fields[3] as DateTime,
+      updatedAt: fields[4] as DateTime,
       $type: fields[6] as String?,
     );
   }
@@ -816,6 +828,8 @@ class RemoteFolderModelAdapter extends TypeAdapter<RemoteFolderModel> {
       folderName: fields[1] as String,
       parentPath: fields[2] as String?,
       folderId: fields[3] as String?,
+      createdAt: fields[6] as DateTime,
+      updatedAt: fields[7] as DateTime,
       $type: fields[4] as String?,
     );
   }
@@ -823,7 +837,7 @@ class RemoteFolderModelAdapter extends TypeAdapter<RemoteFolderModel> {
   @override
   void write(BinaryWriter writer, RemoteFolderModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.remoteName)
       ..writeByte(1)
@@ -835,7 +849,11 @@ class RemoteFolderModelAdapter extends TypeAdapter<RemoteFolderModel> {
       ..writeByte(4)
       ..write(obj.$type)
       ..writeByte(5)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(6)
+      ..write(obj.createdAt)
+      ..writeByte(7)
+      ..write(obj.updatedAt);
   }
 
   @override
@@ -863,6 +881,8 @@ class LocalFolderModelAdapter extends TypeAdapter<LocalFolderModel> {
       id: fields[3] as String,
       folderName: fields[0] as String,
       folderPath: fields[1] as String,
+      createdAt: fields[4] as DateTime,
+      updatedAt: fields[5] as DateTime,
       $type: fields[2] as String?,
     );
   }
@@ -870,7 +890,7 @@ class LocalFolderModelAdapter extends TypeAdapter<LocalFolderModel> {
   @override
   void write(BinaryWriter writer, LocalFolderModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.folderName)
       ..writeByte(1)
@@ -878,7 +898,11 @@ class LocalFolderModelAdapter extends TypeAdapter<LocalFolderModel> {
       ..writeByte(2)
       ..write(obj.$type)
       ..writeByte(3)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(4)
+      ..write(obj.createdAt)
+      ..writeByte(5)
+      ..write(obj.updatedAt);
   }
 
   @override

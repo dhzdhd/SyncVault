@@ -82,8 +82,8 @@ class GoogleAuthService implements ManualAuthService {
             refreshToken: refreshToken,
             expiresIn: expiresIn.toString(),
           ),
-          createdAt: DateTime.now().toIso8601String(),
-          updatedAt: DateTime.now().toIso8601String(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
           isRCloneBackend: false,
         );
       },
@@ -148,7 +148,7 @@ class GoogleAuthService implements ManualAuthService {
       () async {
         final backend = model.backend as OAuth2;
 
-        final prev = DateTime.parse(model.updatedAt);
+        final prev = model.updatedAt;
         final now = DateTime.now();
         final diff = prev
             .add(Duration(seconds: int.parse(backend.expiresIn)))
@@ -177,7 +177,7 @@ class GoogleAuthService implements ManualAuthService {
               accessToken: response.data!['access_token'],
               expiresIn: response.data!['expires_in'].toString(),
             ),
-            updatedAt: DateTime.now().toIso8601String(),
+            updatedAt: DateTime.now(),
           );
         } else {
           return model;

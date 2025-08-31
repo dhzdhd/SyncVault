@@ -15,6 +15,8 @@ _ConnectionModel _$ConnectionModelFromJson(Map<String, dynamic> json) =>
       direction: $enumDecode(_$SyncDirectionEnumMap, json['direction']),
       isAutoSync: json['isAutoSync'] as bool,
       isDeletionEnabled: json['isDeletionEnabled'] as bool,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$ConnectionModelToJson(_ConnectionModel instance) =>
@@ -26,6 +28,8 @@ Map<String, dynamic> _$ConnectionModelToJson(_ConnectionModel instance) =>
       'direction': _$SyncDirectionEnumMap[instance.direction]!,
       'isAutoSync': instance.isAutoSync,
       'isDeletionEnabled': instance.isDeletionEnabled,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 const _$SyncDirectionEnumMap = {

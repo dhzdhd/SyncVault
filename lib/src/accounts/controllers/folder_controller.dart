@@ -103,6 +103,8 @@ class Folder extends _$Folder {
         id: uuid.v4(),
         folderName: folderName,
         folderPath: parentPath.toNullable()!,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       ),
       RemoteProviderModel(:final isRCloneBackend, :final provider) =>
         await (isRCloneBackend

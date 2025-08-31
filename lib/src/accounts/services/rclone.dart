@@ -164,8 +164,8 @@ class RCloneAuthService implements AuthService {
                     refreshToken: refreshToken,
                     expiresIn: expiresIn,
                   ),
-                  createdAt: DateTime.now().toIso8601String(),
-                  updatedAt: DateTime.now().toIso8601String(),
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
                   isRCloneBackend: true,
                 );
 
@@ -197,8 +197,8 @@ class RCloneAuthService implements AuthService {
                   accessKeyId: accessKeyId,
                   secretAccessKey: secretAccessKey,
                 ),
-                createdAt: DateTime.now().toIso8601String(),
-                updatedAt: DateTime.now().toIso8601String(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
                 isRCloneBackend: true,
               );
 
@@ -229,8 +229,8 @@ class RCloneAuthService implements AuthService {
                   username: username,
                   password: obscPassword,
                 ),
-                createdAt: DateTime.now().toIso8601String(),
-                updatedAt: DateTime.now().toIso8601String(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
                 isRCloneBackend: true,
               );
 
@@ -258,8 +258,8 @@ class RCloneAuthService implements AuthService {
                 remoteName: remoteName,
                 provider: driveProvider,
                 backend: Webdav(url: url, user: user, password: obscPassword),
-                createdAt: DateTime.now().toIso8601String(),
-                updatedAt: DateTime.now().toIso8601String(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
                 isRCloneBackend: true,
               );
 
@@ -279,8 +279,8 @@ class RCloneAuthService implements AuthService {
               remoteName: remoteName,
               provider: driveProvider,
               backend: backend,
-              createdAt: DateTime.now().toIso8601String(),
-              updatedAt: DateTime.now().toIso8601String(),
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
               isRCloneBackend: false,
             ),
           ),

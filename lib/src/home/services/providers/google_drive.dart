@@ -78,6 +78,8 @@ class GoogleDriveService implements DriveService {
           remoteName: model.remoteName,
           parentPath: '',
           folderId: folder.id,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
       },
       (error, stackTrace) {

@@ -12,6 +12,8 @@ _WorkflowModel _$WorkflowModelFromJson(Map<String, dynamic> json) =>
       workflowJson: json['workflowJson'] as String?,
       nodeType: $enumDecode(_$WorkflowNodeEnumMap, json['nodeType']),
       linkType: $enumDecode(_$WorkflowOperationEnumMap, json['linkType']),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$WorkflowModelToJson(_WorkflowModel instance) =>
@@ -20,6 +22,8 @@ Map<String, dynamic> _$WorkflowModelToJson(_WorkflowModel instance) =>
       'workflowJson': instance.workflowJson,
       'nodeType': _$WorkflowNodeEnumMap[instance.nodeType]!,
       'linkType': _$WorkflowOperationEnumMap[instance.linkType]!,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 const _$WorkflowNodeEnumMap = {

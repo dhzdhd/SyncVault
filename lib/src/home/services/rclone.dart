@@ -51,6 +51,8 @@ class RCloneDriveService implements DriveService {
         remoteName: remoteName,
         parentPath: parentPath.toNullable(),
         folderId: null,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
       return folderModel;
     });

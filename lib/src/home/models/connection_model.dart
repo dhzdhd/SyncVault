@@ -18,6 +18,8 @@ abstract class ConnectionModel with _$ConnectionModel {
     required SyncDirection direction,
     required bool isAutoSync,
     required bool isDeletionEnabled,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = _ConnectionModel;
 
   factory ConnectionModel.fromJson(Map<String, Object?> json) =>
