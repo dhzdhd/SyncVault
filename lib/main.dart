@@ -3,27 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:syncvault/errors.dart';
-import 'package:syncvault/src/common/services/hive_storage.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
-import 'package:syncvault/src/home/services/file_comparer.dart';
-import 'package:syncvault/helpers.dart';
+import 'package:syncvault/extensions.dart';
 import 'package:syncvault/injectable/injectable.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/setup.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
-import 'package:syncvault/src/graph/models/workflow_model.dart';
-import 'package:syncvault/src/home/controllers/folder_controller.dart';
-import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/workflows/models/workflow_model.dart';
+import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
-import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:workmanager/workmanager.dart';
@@ -91,111 +85,112 @@ void callbackDispatcher() {
 
     // Setup Hive boxes for folder, hash and auth info
     final docDir = await getApplicationDocumentsDirectory();
-    final service = RCloneDriveService();
     final boxPath = '${docDir.path}/SyncVault/hive';
 
     await setupHiveBox<DriveProviderModel>(boxPath);
-    await setupHiveBox<FolderModel>(boxPath);
-    final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
+    await setupHiveBox<ConnectionModel>(boxPath);
+    // final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
 
-    final authProviders = Auth.init();
-    final folders = Folder.init().filter((folder) => folder.isAutoSync);
-    final hashes = GetIt.I<Box<FolderHashModel>>().values;
+    // final folders = Folder.init().filter((folder) => folder.isAutoSync);
+    // final hashes = GetIt.I<Box<FolderHashModel>>().values;
 
-    final fileComparer = FileComparer();
-    final hashStorage = HiveStorage<FolderHashModel>(hashBox);
+    // final fileComparer = FileComparer();
+    // final hashStorage = HiveStorage<FolderHashModel>(hashBox);
 
     // File watcher approach does not work on mobile devices
-    for (final folderModel in folders) {
-      final entities =
-          await Directory(
-            folderModel.folderPath,
-          ).list(recursive: true).toList();
-      final files = entities.whereType<File>().toList();
+    // FIXME: Change the approach for the new FolderModel
+    // for (final folderModel in folders) {
+    //   final entities = await Directory(
+    //     folderModel.folderPath,
+    //   ).list(recursive: true).toList();
+    //   final files = entities.whereType<File>().toList();
 
-      debugLogger.i(files);
+    //   debugLogger.i(files);
 
-      // Compare calculated and stored hash
-      final calcHashResult = await fileComparer.calcHash(files).run();
-      final storedHashResult = hashes
-          .filter((model) => model.remoteName == folderModel.remoteName)
-          .firstOption
-          .toEither(() => const GeneralError('Stored hash does not exist'));
+    //   // Compare calculated and stored hash
+    //   final calcHashResult = await fileComparer.calcHash(files).run();
+    //   final storedHashResult = hashes
+    //       .filter((model) => model.remoteName == folderModel.remoteName)
+    //       .firstOption
+    //       .toEither(
+    //         () => const GeneralError('Stored hash does not exist', null, null),
+    //       );
 
-      final Either<AppError, bool> hashCompareResult = Either.Do(($) {
-        final calcHash = $(calcHashResult);
-        final storedHash = $(storedHashResult).hash;
+    //   final Either<AppError, bool> hashCompareResult = Either.Do(($) {
+    //     final calcHash = $(calcHashResult);
+    //     final storedHash = $(storedHashResult).hash;
 
-        debugLogger.i(calcHash);
-        debugLogger.i(storedHash);
+    //     debugLogger.i(calcHash);
+    //     debugLogger.i(storedHash);
 
-        return fileComparer.isSameFolder(calcHash, storedHash);
-      });
+    //     return fileComparer.isSameFolder(calcHash, storedHash);
+    //   });
 
-      // If equal, sync files
-      hashCompareResult.match(
-        (err) {
-          debugLogger.e(err);
-        },
-        (isSameFolder) async {
-          if (!isSameFolder) {
-            final providerModel =
-                authProviders
-                    .filter(
-                      (provider) =>
-                          provider.remoteName == folderModel.remoteName,
-                    )
-                    .firstOption;
+    //   // If equal, sync files
+    //   hashCompareResult.match(
+    //     (err) {
+    //       GeneralError(
+    //         'Error in comparing hashes',
+    //         err,
+    //         err.stackTrace,
+    //       ).logError();
+    //     },
+    //     (isSameFolder) async {
+    //       if (!isSameFolder) {
+    //         final providerModel = authProviders
+    //             .filter(
+    //               (provider) => provider.remoteName == folderModel.remoteName,
+    //             )
+    //             .firstOption;
 
-            final uploadRes =
-                await service
-                    .upload(
-                      providerModel: providerModel.toNullable()!,
-                      folderModel: folderModel,
-                      localPath: folderModel.folderPath,
-                      rCloneExecPath: execPath,
-                    )
-                    .run();
+    //         final uploadRes = await service
+    //             .upload(
+    //               providerModel: providerModel.toNullable()!,
+    //               folderModel: folderModel,
+    //               localPath: folderModel.folderPath,
+    //               rCloneExecPath: execPath,
+    //             )
+    //             .run();
 
-            uploadRes.match(
-              // FIXME: Fails by - no impl found for getNativeLibraryPath
-              // Workaround - pass the path to bg after calling it in main isolate
-              (err) => err.handleError(
-                'Failed to do background sync',
-                StackTrace.empty,
-              ),
-              (_) async {
-                debugLogger.i('Background sync completed');
+    //         uploadRes.match(
+    //           // FIXME: Fails by - no impl found for getNativeLibraryPath
+    //           // Workaround - pass the path to bg after calling it in main isolate
+    //           (err) => GeneralError(
+    //             'Failed to do background sync',
+    //             err,
+    //             err.stackTrace,
+    //           ).logError(),
+    //           (_) async {
+    //             debugLogger.i('Background sync completed');
 
-                final files =
-                    await Directory(
-                      folderModel.folderPath,
-                    ).list(recursive: true).toList();
-                final hashResult =
-                    await fileComparer
-                        .calcHash(files.whereType<File>().toList())
-                        .run();
-                hashResult.match(
-                  (err) => err.handleError(err.message, StackTrace.empty),
-                  (hash) {
-                    final hashModels = hashStorage.fetchAll().toList();
-                    final model = FolderHashModel(
-                      hash: hash,
-                      remoteName: folderModel.remoteName,
-                    );
-                    hashStorage.update(
-                      hashModels
-                        ..removeWhere((e) => e.remoteName == model.remoteName)
-                        ..add(model),
-                    );
-                  },
-                );
-              },
-            );
-          }
-        },
-      );
-    }
+    //             final files = await Directory(
+    //               folderModel.folderPath,
+    //             ).list(recursive: true).toList();
+    //             final hashResult = await fileComparer
+    //                 .calcHash(files.whereType<File>().toList())
+    //                 .run();
+    //             hashResult.match(
+    //               (err) =>
+    //                   GeneralError(err.message, err, err.stackTrace).logError(),
+    //               (hash) {
+    //                 final hashModels = hashStorage.fetchAll().toList();
+    //                 final model = FolderHashModel(
+    //                   hash: hash,
+    //                   remoteName: folderModel.remoteName,
+    //                 );
+    //                 hashStorage.update(
+    //                   hashModels
+    //                     ..removeWhere((e) => e.remoteName == model.remoteName)
+    //                     ..add(model),
+    //                 );
+    //               },
+    //             );
+    //           },
+    //         );
+    //       }
+    //     },
+    //   );
+    // }
 
     return Future.value(true);
   });
@@ -224,7 +219,8 @@ void main() async {
 
   await setupHiveBox<SettingsModel>(boxPath);
   await setupHiveBox<IntroSettingsModel>(boxPath);
-  await setupHiveBox<DriveProviderModel>(boxPath);
+  await setupHiveBox<RemoteProviderModel>(boxPath);
+  await setupHiveBox<ConnectionModel>(boxPath);
   await setupHiveBox<FolderModel>(boxPath);
   await setupHiveBox<WorkflowModel>(boxPath);
   await setupHiveBox<FolderHashModel>(boxPath);

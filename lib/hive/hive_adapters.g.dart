@@ -8,7 +8,7 @@ part of 'hive_adapters.dart';
 
 class ThemeModeAdapter extends TypeAdapter<ThemeMode> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   ThemeMode read(BinaryReader reader) {
@@ -49,7 +49,7 @@ class ThemeModeAdapter extends TypeAdapter<ThemeMode> {
 
 class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
   @override
-  final int typeId = 1;
+  final typeId = 1;
 
   @override
   SettingsModel read(BinaryReader reader) {
@@ -92,7 +92,7 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
 
 class IntroSettingsModelAdapter extends TypeAdapter<IntroSettingsModel> {
   @override
-  final int typeId = 2;
+  final typeId = 2;
 
   @override
   IntroSettingsModel read(BinaryReader reader) {
@@ -122,111 +122,9 @@ class IntroSettingsModelAdapter extends TypeAdapter<IntroSettingsModel> {
           typeId == other.typeId;
 }
 
-class DriveProviderModelAdapter extends TypeAdapter<DriveProviderModel> {
-  @override
-  final int typeId = 3;
-
-  @override
-  DriveProviderModel read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return DriveProviderModel(
-      remoteName: fields[6] as String,
-      provider: fields[7] as DriveProvider,
-      backend: fields[8] as DriveProviderBackend,
-      createdAt: fields[9] as String,
-      updatedAt: fields[10] as String,
-      isRCloneBackend: fields[11] as bool,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, DriveProviderModel obj) {
-    writer
-      ..writeByte(6)
-      ..writeByte(6)
-      ..write(obj.remoteName)
-      ..writeByte(7)
-      ..write(obj.provider)
-      ..writeByte(8)
-      ..write(obj.backend)
-      ..writeByte(9)
-      ..write(obj.createdAt)
-      ..writeByte(10)
-      ..write(obj.updatedAt)
-      ..writeByte(11)
-      ..write(obj.isRCloneBackend);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriveProviderModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class DriveProviderAdapter extends TypeAdapter<DriveProvider> {
-  @override
-  final int typeId = 4;
-
-  @override
-  DriveProvider read(BinaryReader reader) {
-    switch (reader.readByte()) {
-      case 0:
-        return DriveProvider.oneDrive;
-      case 1:
-        return DriveProvider.googleDrive;
-      case 2:
-        return DriveProvider.dropBox;
-      case 3:
-        return DriveProvider.minio;
-      case 4:
-        return DriveProvider.nextCloud;
-      case 5:
-        return DriveProvider.protonDrive;
-      default:
-        return DriveProvider.oneDrive;
-    }
-  }
-
-  @override
-  void write(BinaryWriter writer, DriveProvider obj) {
-    switch (obj) {
-      case DriveProvider.oneDrive:
-        writer.writeByte(0);
-      case DriveProvider.googleDrive:
-        writer.writeByte(1);
-      case DriveProvider.dropBox:
-        writer.writeByte(2);
-      case DriveProvider.minio:
-        writer.writeByte(3);
-      case DriveProvider.nextCloud:
-        writer.writeByte(4);
-      case DriveProvider.protonDrive:
-        writer.writeByte(5);
-    }
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriveProviderAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
 class OAuth2Adapter extends TypeAdapter<OAuth2> {
   @override
-  final int typeId = 5;
+  final typeId = 5;
 
   @override
   OAuth2 read(BinaryReader reader) {
@@ -272,7 +170,7 @@ class OAuth2Adapter extends TypeAdapter<OAuth2> {
 
 class S3Adapter extends TypeAdapter<S3> {
   @override
-  final int typeId = 6;
+  final typeId = 6;
 
   @override
   S3 read(BinaryReader reader) {
@@ -315,7 +213,7 @@ class S3Adapter extends TypeAdapter<S3> {
 
 class WebdavAdapter extends TypeAdapter<Webdav> {
   @override
-  final int typeId = 7;
+  final typeId = 7;
 
   @override
   Webdav read(BinaryReader reader) {
@@ -356,70 +254,9 @@ class WebdavAdapter extends TypeAdapter<Webdav> {
           typeId == other.typeId;
 }
 
-class FolderModelAdapter extends TypeAdapter<FolderModel> {
-  @override
-  final int typeId = 11;
-
-  @override
-  FolderModel read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return FolderModel(
-      remoteName: fields[0] as String,
-      provider: fields[1] as DriveProvider,
-      folderPath: fields[2] as String,
-      folderName: fields[3] as String,
-      remoteParentPath: fields[7] as String?,
-      isAutoSync: fields[4] as bool,
-      isDeletionEnabled: fields[5] as bool,
-      isTwoWaySync: fields[6] as bool,
-      folderId: fields[9] as String?,
-      isRCloneBackend: fields[11] as bool,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, FolderModel obj) {
-    writer
-      ..writeByte(10)
-      ..writeByte(0)
-      ..write(obj.remoteName)
-      ..writeByte(1)
-      ..write(obj.provider)
-      ..writeByte(2)
-      ..write(obj.folderPath)
-      ..writeByte(3)
-      ..write(obj.folderName)
-      ..writeByte(4)
-      ..write(obj.isAutoSync)
-      ..writeByte(5)
-      ..write(obj.isDeletionEnabled)
-      ..writeByte(6)
-      ..write(obj.isTwoWaySync)
-      ..writeByte(7)
-      ..write(obj.remoteParentPath)
-      ..writeByte(9)
-      ..write(obj.folderId)
-      ..writeByte(11)
-      ..write(obj.isRCloneBackend);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FolderModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
 class UserPasswordAdapter extends TypeAdapter<UserPassword> {
   @override
-  final int typeId = 12;
+  final typeId = 12;
 
   @override
   UserPassword read(BinaryReader reader) {
@@ -459,7 +296,7 @@ class UserPasswordAdapter extends TypeAdapter<UserPassword> {
 
 class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
   @override
-  final int typeId = 21;
+  final typeId = 21;
 
   @override
   WorkflowModel read(BinaryReader reader) {
@@ -470,17 +307,29 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
     return WorkflowModel(
       name: fields[0] as String,
       workflowJson: fields[1] as String?,
+      nodeType: fields[2] as WorkflowNode,
+      linkType: fields[3] as WorkflowOperation,
+      createdAt: fields[4] as DateTime,
+      updatedAt: fields[5] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, WorkflowModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.workflowJson);
+      ..write(obj.workflowJson)
+      ..writeByte(2)
+      ..write(obj.nodeType)
+      ..writeByte(3)
+      ..write(obj.linkType)
+      ..writeByte(4)
+      ..write(obj.createdAt)
+      ..writeByte(5)
+      ..write(obj.updatedAt);
   }
 
   @override
@@ -496,7 +345,7 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
 
 class FolderHashModelAdapter extends TypeAdapter<FolderHashModel> {
   @override
-  final int typeId = 22;
+  final typeId = 22;
 
   @override
   FolderHashModel read(BinaryReader reader) {
@@ -533,7 +382,7 @@ class FolderHashModelAdapter extends TypeAdapter<FolderHashModel> {
 
 class HashDigestAdapter extends TypeAdapter<HashDigest> {
   @override
-  final int typeId = 23;
+  final typeId = 23;
 
   @override
   HashDigest read(BinaryReader reader) {
@@ -559,6 +408,551 @@ class HashDigestAdapter extends TypeAdapter<HashDigest> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HashDigestAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class OneDriveProviderAdapter extends TypeAdapter<OneDriveProvider> {
+  @override
+  final typeId = 24;
+
+  @override
+  OneDriveProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return OneDriveProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, OneDriveProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OneDriveProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class GoogleDriveProviderAdapter extends TypeAdapter<GoogleDriveProvider> {
+  @override
+  final typeId = 25;
+
+  @override
+  GoogleDriveProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return GoogleDriveProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, GoogleDriveProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GoogleDriveProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class DropBoxProviderAdapter extends TypeAdapter<DropBoxProvider> {
+  @override
+  final typeId = 26;
+
+  @override
+  DropBoxProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return DropBoxProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, DropBoxProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DropBoxProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ProtonDriveProviderAdapter extends TypeAdapter<ProtonDriveProvider> {
+  @override
+  final typeId = 27;
+
+  @override
+  ProtonDriveProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ProtonDriveProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, ProtonDriveProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProtonDriveProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class MinioProviderAdapter extends TypeAdapter<MinioProvider> {
+  @override
+  final typeId = 28;
+
+  @override
+  MinioProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return MinioProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, MinioProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MinioProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class NextCloudProviderAdapter extends TypeAdapter<NextCloudProvider> {
+  @override
+  final typeId = 29;
+
+  @override
+  NextCloudProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return NextCloudProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, NextCloudProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NextCloudProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class LocalProviderAdapter extends TypeAdapter<LocalProvider> {
+  @override
+  final typeId = 30;
+
+  @override
+  LocalProvider read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return LocalProvider($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, LocalProvider obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocalProviderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class LocalAdapter extends TypeAdapter<Local> {
+  @override
+  final typeId = 31;
+
+  @override
+  Local read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Local(folderPath: fields[0] as String, $type: fields[1] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, Local obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.folderPath)
+      ..writeByte(1)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocalAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ConnectionModelAdapter extends TypeAdapter<ConnectionModel> {
+  @override
+  final typeId = 33;
+
+  @override
+  ConnectionModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ConnectionModel(
+      id: fields[9] as String,
+      title: fields[0] as String,
+      firstFolderId: fields[7] as String,
+      secondFolderId: fields[8] as String,
+      direction: fields[6] as SyncDirection,
+      isAutoSync: fields[3] as bool,
+      isDeletionEnabled: fields[4] as bool,
+      createdAt: fields[10] as DateTime,
+      updatedAt: fields[11] as DateTime,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, ConnectionModel obj) {
+    writer
+      ..writeByte(9)
+      ..writeByte(0)
+      ..write(obj.title)
+      ..writeByte(3)
+      ..write(obj.isAutoSync)
+      ..writeByte(4)
+      ..write(obj.isDeletionEnabled)
+      ..writeByte(6)
+      ..write(obj.direction)
+      ..writeByte(7)
+      ..write(obj.firstFolderId)
+      ..writeByte(8)
+      ..write(obj.secondFolderId)
+      ..writeByte(9)
+      ..write(obj.id)
+      ..writeByte(10)
+      ..write(obj.createdAt)
+      ..writeByte(11)
+      ..write(obj.updatedAt);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ConnectionModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class RemoteProviderModelAdapter extends TypeAdapter<RemoteProviderModel> {
+  @override
+  final typeId = 35;
+
+  @override
+  RemoteProviderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return RemoteProviderModel(
+      remoteName: fields[0] as String,
+      provider: fields[1] as DriveProvider,
+      backend: fields[2] as DriveProviderBackend,
+      isRCloneBackend: fields[5] as bool,
+      createdAt: fields[3] as DateTime,
+      updatedAt: fields[4] as DateTime,
+      $type: fields[6] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, RemoteProviderModel obj) {
+    writer
+      ..writeByte(7)
+      ..writeByte(0)
+      ..write(obj.remoteName)
+      ..writeByte(1)
+      ..write(obj.provider)
+      ..writeByte(2)
+      ..write(obj.backend)
+      ..writeByte(3)
+      ..write(obj.createdAt)
+      ..writeByte(4)
+      ..write(obj.updatedAt)
+      ..writeByte(5)
+      ..write(obj.isRCloneBackend)
+      ..writeByte(6)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RemoteProviderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class LocalProviderModelAdapter extends TypeAdapter<LocalProviderModel> {
+  @override
+  final typeId = 36;
+
+  @override
+  LocalProviderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return LocalProviderModel($type: fields[0] as String?);
+  }
+
+  @override
+  void write(BinaryWriter writer, LocalProviderModel obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.$type);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocalProviderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class RemoteFolderModelAdapter extends TypeAdapter<RemoteFolderModel> {
+  @override
+  final typeId = 37;
+
+  @override
+  RemoteFolderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return RemoteFolderModel(
+      id: fields[5] as String,
+      remoteName: fields[0] as String,
+      folderName: fields[1] as String,
+      parentPath: fields[2] as String?,
+      folderId: fields[3] as String?,
+      createdAt: fields[6] as DateTime,
+      updatedAt: fields[7] as DateTime,
+      $type: fields[4] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, RemoteFolderModel obj) {
+    writer
+      ..writeByte(8)
+      ..writeByte(0)
+      ..write(obj.remoteName)
+      ..writeByte(1)
+      ..write(obj.folderName)
+      ..writeByte(2)
+      ..write(obj.parentPath)
+      ..writeByte(3)
+      ..write(obj.folderId)
+      ..writeByte(4)
+      ..write(obj.$type)
+      ..writeByte(5)
+      ..write(obj.id)
+      ..writeByte(6)
+      ..write(obj.createdAt)
+      ..writeByte(7)
+      ..write(obj.updatedAt);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RemoteFolderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class LocalFolderModelAdapter extends TypeAdapter<LocalFolderModel> {
+  @override
+  final typeId = 38;
+
+  @override
+  LocalFolderModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return LocalFolderModel(
+      id: fields[3] as String,
+      folderName: fields[0] as String,
+      folderPath: fields[1] as String,
+      createdAt: fields[4] as DateTime,
+      updatedAt: fields[5] as DateTime,
+      $type: fields[2] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, LocalFolderModel obj) {
+    writer
+      ..writeByte(6)
+      ..writeByte(0)
+      ..write(obj.folderName)
+      ..writeByte(1)
+      ..write(obj.folderPath)
+      ..writeByte(2)
+      ..write(obj.$type)
+      ..writeByte(3)
+      ..write(obj.id)
+      ..writeByte(4)
+      ..write(obj.createdAt)
+      ..writeByte(5)
+      ..write(obj.updatedAt);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocalFolderModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class SyncDirectionAdapter extends TypeAdapter<SyncDirection> {
+  @override
+  final typeId = 39;
+
+  @override
+  SyncDirection read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return SyncDirection.upload;
+      case 1:
+        return SyncDirection.download;
+      case 2:
+        return SyncDirection.bidirectional;
+      default:
+        return SyncDirection.upload;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, SyncDirection obj) {
+    switch (obj) {
+      case SyncDirection.upload:
+        writer.writeByte(0);
+      case SyncDirection.download:
+        writer.writeByte(1);
+      case SyncDirection.bidirectional:
+        writer.writeByte(2);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SyncDirectionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

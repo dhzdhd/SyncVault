@@ -6,38 +6,46 @@ part of 'folder_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => _FolderModel(
-  remoteName: json['remoteName'] as String,
-  provider: $enumDecode(_$DriveProviderEnumMap, json['provider']),
-  folderPath: json['folderPath'] as String,
-  folderName: json['folderName'] as String,
-  remoteParentPath: json['remoteParentPath'] as String?,
-  isAutoSync: json['isAutoSync'] as bool,
-  isDeletionEnabled: json['isDeletionEnabled'] as bool,
-  isTwoWaySync: json['isTwoWaySync'] as bool,
-  folderId: json['folderId'] as String?,
-  isRCloneBackend: json['isRCloneBackend'] as bool,
-);
+RemoteFolderModel _$RemoteFolderModelFromJson(Map<String, dynamic> json) =>
+    RemoteFolderModel(
+      id: json['id'] as String,
+      remoteName: json['remoteName'] as String,
+      folderName: json['folderName'] as String,
+      parentPath: json['parentPath'] as String?,
+      folderId: json['folderId'] as String?,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      $type: json['runtimeType'] as String?,
+    );
 
-Map<String, dynamic> _$FolderModelToJson(_FolderModel instance) =>
+Map<String, dynamic> _$RemoteFolderModelToJson(RemoteFolderModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'remoteName': instance.remoteName,
-      'provider': _$DriveProviderEnumMap[instance.provider]!,
-      'folderPath': instance.folderPath,
       'folderName': instance.folderName,
-      'remoteParentPath': instance.remoteParentPath,
-      'isAutoSync': instance.isAutoSync,
-      'isDeletionEnabled': instance.isDeletionEnabled,
-      'isTwoWaySync': instance.isTwoWaySync,
+      'parentPath': instance.parentPath,
       'folderId': instance.folderId,
-      'isRCloneBackend': instance.isRCloneBackend,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'runtimeType': instance.$type,
     };
 
-const _$DriveProviderEnumMap = {
-  DriveProvider.oneDrive: 'oneDrive',
-  DriveProvider.googleDrive: 'googleDrive',
-  DriveProvider.dropBox: 'dropBox',
-  DriveProvider.protonDrive: 'protonDrive',
-  DriveProvider.minio: 'minio',
-  DriveProvider.nextCloud: 'nextCloud',
-};
+LocalFolderModel _$LocalFolderModelFromJson(Map<String, dynamic> json) =>
+    LocalFolderModel(
+      id: json['id'] as String,
+      folderName: json['folderName'] as String,
+      folderPath: json['folderPath'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      $type: json['runtimeType'] as String?,
+    );
+
+Map<String, dynamic> _$LocalFolderModelToJson(LocalFolderModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'folderName': instance.folderName,
+      'folderPath': instance.folderPath,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'runtimeType': instance.$type,
+    };

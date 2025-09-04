@@ -1,52 +1,110 @@
-import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:syncvault/log.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 
 part 'errors.freezed.dart';
 
-extension ErrorSegregation on Object {
-  AppError handleError(String message, StackTrace stackTrace) {
-    if (this is Error || this is AppError) {
+enum ProviderOperationType {
+  authorize,
+  getDriveInfo,
+  getTreeView,
+  remoteCreation,
+  upload,
+  download,
+  delete,
+}
+
+enum AuthErrorType { unauthorized, forbidden, tokenExpired }
+
+enum StorageErrorType { create, update, delete }
+
+enum StorageProviderType { rCloneConfig, hive }
+
+@freezed
+sealed class AppError with _$AppError implements Exception {
+  const AppError._();
+
+  const factory AppError.http(
+    String endpoint,
+    int status,
+    dynamic response,
+    Object? error,
+    StackTrace? stackTrace,
+  ) = HttpError;
+  const factory AppError.auth(
+    AuthErrorType type,
+    Object? error,
+    StackTrace? stackTrace,
+  ) = AuthError;
+  const factory AppError.provider(
+    DriveProvider provider,
+    ProviderOperationType operation,
+    Object? error,
+    StackTrace? stackTrace,
+  ) = ProviderError;
+  const factory AppError.storage(
+    StorageErrorType type,
+    StorageProviderType provider,
+    Object? error,
+    StackTrace? stackTrace,
+  ) = StorageError;
+  const factory AppError.validation(
+    // TODO: Add which field failed
+    String reason,
+    Object? error,
+    StackTrace? stackTrace,
+  ) = ValidationError;
+  const factory AppError.general(
+    String message,
+    Object? error,
+    StackTrace? stackTrace,
+  ) = GeneralError;
+
+  String get message => switch (this) {
+    HttpError(:final endpoint, :final status) =>
+      'HttpError: $endpoint responded with status code $status',
+    AuthError(:final type) =>
+      """AuthError: ${switch (type) {
+        AuthErrorType.unauthorized => 'Unauthorized',
+        AuthErrorType.forbidden => 'Forbidden',
+        AuthErrorType.tokenExpired => 'Token expired',
+      }}""",
+    ProviderError(:final provider) =>
+      'ProviderError: $provider raised an error',
+    StorageError(:final type) =>
+      """StorageError: ${switch (type) {
+        StorageErrorType.create => 'Error in storing created entity',
+        StorageErrorType.update => 'Error in updating entity',
+        StorageErrorType.delete => 'Error in deleting entity',
+      }}""",
+    ValidationError(:final reason) =>
+      'ValidationError: The input is invalid due to $reason',
+    GeneralError(:final message) => 'GeneralError: $message',
+  };
+
+  AppError logError() {
+    if (kDebugMode) {
       debugLogger.e(
         message,
-        error: this,
-        stackTrace: stackTrace,
-        time: DateTime.now(),
-      );
-      fileLogger.e(
-        message,
-        error: this,
-        stackTrace: stackTrace,
-        time: DateTime.now(),
-      );
-      sentryLogger.e(message, stackTrace: stackTrace, time: DateTime.now());
-    } else {
-      debugLogger.e(
-        message,
-        error: this,
+        error: error ?? this,
         stackTrace: stackTrace,
         time: DateTime.now(),
       );
     }
+    fileLogger.e(
+      message,
+      error: error ?? this,
+      stackTrace: stackTrace,
+      time: DateTime.now(),
+    );
+    sentryLogger.e(
+      message,
+      error: error ?? this,
+      stackTrace: stackTrace,
+      time: DateTime.now(),
+    );
 
-    // TODO: Log errors and return readable errors
-    return switch (this) {
-      AppError err => err,
-      DioException err => HttpError(err.response.toString()),
-      StateError err => GeneralError(err.toString()),
-      Exception err => GeneralError(err.toString()),
-      Error err => GeneralError(err.toString()),
-      Object err =>
-        throw NoSuchMethodError.withInvocation(
-          err,
-          Invocation.method(const Symbol('handleError'), null),
-        ),
-    };
+    return this;
   }
-}
-
-@freezed
-sealed class AppError with _$AppError {
-  const factory AppError.http(String message) = HttpError;
-  const factory AppError.general(String message) = GeneralError;
 }

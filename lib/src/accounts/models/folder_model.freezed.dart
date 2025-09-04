@@ -12,385 +12,260 @@ part of 'folder_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+FolderModel _$FolderModelFromJson(
+  Map<String, dynamic> json
+) {
+        switch (json['runtimeType']) {
+                  case 'remote':
+          return RemoteFolderModel.fromJson(
+            json
+          );
+                case 'local':
+          return LocalFolderModel.fromJson(
+            json
+          );
+        
+          default:
+            throw CheckedFromJsonException(
+  json,
+  'runtimeType',
+  'FolderModel',
+  'Invalid union type "${json['runtimeType']}"!'
+);
+        }
+      
+}
 
 /// @nodoc
-mixin _$FolderModel implements DiagnosticableTreeMixin {
-  String get remoteName;
-  DriveProvider get provider;
-  String get folderPath;
-  String get folderName;
-  String? get remoteParentPath;
-  bool get isAutoSync;
-  bool get isDeletionEnabled;
-  bool get isTwoWaySync;
-  String? get folderId;
-  bool get isRCloneBackend;
+mixin _$FolderModel {
 
-  /// Create a copy of FolderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $FolderModelCopyWith<FolderModel> get copyWith =>
-      _$FolderModelCopyWithImpl<FolderModel>(this as FolderModel, _$identity);
+ String get id; String get folderName; DateTime get createdAt; DateTime get updatedAt;
+/// Create a copy of FolderModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FolderModelCopyWith<FolderModel> get copyWith => _$FolderModelCopyWithImpl<FolderModel>(this as FolderModel, _$identity);
 
   /// Serializes this FolderModel to a JSON map.
   Map<String, dynamic> toJson();
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties
-      ..add(DiagnosticsProperty('type', 'FolderModel'))
-      ..add(DiagnosticsProperty('remoteName', remoteName))
-      ..add(DiagnosticsProperty('provider', provider))
-      ..add(DiagnosticsProperty('folderPath', folderPath))
-      ..add(DiagnosticsProperty('folderName', folderName))
-      ..add(DiagnosticsProperty('remoteParentPath', remoteParentPath))
-      ..add(DiagnosticsProperty('isAutoSync', isAutoSync))
-      ..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))
-      ..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync))
-      ..add(DiagnosticsProperty('folderId', folderId))
-      ..add(DiagnosticsProperty('isRCloneBackend', isRCloneBackend));
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is FolderModel &&
-            (identical(other.remoteName, remoteName) ||
-                other.remoteName == remoteName) &&
-            (identical(other.provider, provider) ||
-                other.provider == provider) &&
-            (identical(other.folderPath, folderPath) ||
-                other.folderPath == folderPath) &&
-            (identical(other.folderName, folderName) ||
-                other.folderName == folderName) &&
-            (identical(other.remoteParentPath, remoteParentPath) ||
-                other.remoteParentPath == remoteParentPath) &&
-            (identical(other.isAutoSync, isAutoSync) ||
-                other.isAutoSync == isAutoSync) &&
-            (identical(other.isDeletionEnabled, isDeletionEnabled) ||
-                other.isDeletionEnabled == isDeletionEnabled) &&
-            (identical(other.isTwoWaySync, isTwoWaySync) ||
-                other.isTwoWaySync == isTwoWaySync) &&
-            (identical(other.folderId, folderId) ||
-                other.folderId == folderId) &&
-            (identical(other.isRCloneBackend, isRCloneBackend) ||
-                other.isRCloneBackend == isRCloneBackend));
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+}
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      remoteName,
-      provider,
-      folderPath,
-      folderName,
-      remoteParentPath,
-      isAutoSync,
-      isDeletionEnabled,
-      isTwoWaySync,
-      folderId,
-      isRCloneBackend);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,folderName,createdAt,updatedAt);
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(remoteName: $remoteName, provider: $provider, folderPath: $folderPath, folderName: $folderName, remoteParentPath: $remoteParentPath, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync, folderId: $folderId, isRCloneBackend: $isRCloneBackend)';
-  }
+@override
+String toString() {
+  return 'FolderModel(id: $id, folderName: $folderName, createdAt: $createdAt, updatedAt: $updatedAt)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $FolderModelCopyWith<$Res> {
-  factory $FolderModelCopyWith(
-          FolderModel value, $Res Function(FolderModel) _then) =
-      _$FolderModelCopyWithImpl;
-  @useResult
-  $Res call(
-      {String remoteName,
-      DriveProvider provider,
-      String folderPath,
-      String folderName,
-      String? remoteParentPath,
-      bool isAutoSync,
-      bool isDeletionEnabled,
-      bool isTwoWaySync,
-      String? folderId,
-      bool isRCloneBackend});
-}
+abstract mixin class $FolderModelCopyWith<$Res>  {
+  factory $FolderModelCopyWith(FolderModel value, $Res Function(FolderModel) _then) = _$FolderModelCopyWithImpl;
+@useResult
+$Res call({
+ String id, String folderName, DateTime createdAt, DateTime updatedAt
+});
 
+
+
+
+}
 /// @nodoc
-class _$FolderModelCopyWithImpl<$Res> implements $FolderModelCopyWith<$Res> {
+class _$FolderModelCopyWithImpl<$Res>
+    implements $FolderModelCopyWith<$Res> {
   _$FolderModelCopyWithImpl(this._self, this._then);
 
   final FolderModel _self;
   final $Res Function(FolderModel) _then;
 
-  /// Create a copy of FolderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? remoteName = null,
-    Object? provider = null,
-    Object? folderPath = null,
-    Object? folderName = null,
-    Object? remoteParentPath = freezed,
-    Object? isAutoSync = null,
-    Object? isDeletionEnabled = null,
-    Object? isTwoWaySync = null,
-    Object? folderId = freezed,
-    Object? isRCloneBackend = null,
-  }) {
-    return _then(_self.copyWith(
-      remoteName: null == remoteName
-          ? _self.remoteName
-          : remoteName // ignore: cast_nullable_to_non_nullable
-              as String,
-      provider: null == provider
-          ? _self.provider
-          : provider // ignore: cast_nullable_to_non_nullable
-              as DriveProvider,
-      folderPath: null == folderPath
-          ? _self.folderPath
-          : folderPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      folderName: null == folderName
-          ? _self.folderName
-          : folderName // ignore: cast_nullable_to_non_nullable
-              as String,
-      remoteParentPath: freezed == remoteParentPath
-          ? _self.remoteParentPath
-          : remoteParentPath // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isAutoSync: null == isAutoSync
-          ? _self.isAutoSync
-          : isAutoSync // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isDeletionEnabled: null == isDeletionEnabled
-          ? _self.isDeletionEnabled
-          : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isTwoWaySync: null == isTwoWaySync
-          ? _self.isTwoWaySync
-          : isTwoWaySync // ignore: cast_nullable_to_non_nullable
-              as bool,
-      folderId: freezed == folderId
-          ? _self.folderId
-          : folderId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isRCloneBackend: null == isRCloneBackend
-          ? _self.isRCloneBackend
-          : isRCloneBackend // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Create a copy of FolderModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? folderName = null,Object? createdAt = null,Object? updatedAt = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,folderName: null == folderName ? _self.folderName : folderName // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+}
+
+
+/// @nodoc
+@JsonSerializable()
+
+class RemoteFolderModel implements FolderModel {
+  const RemoteFolderModel({required this.id, required this.remoteName, required this.folderName, required this.parentPath, required this.folderId, required this.createdAt, required this.updatedAt, final  String? $type}): $type = $type ?? 'remote';
+  factory RemoteFolderModel.fromJson(Map<String, dynamic> json) => _$RemoteFolderModelFromJson(json);
+
+@override final  String id;
+ final  String remoteName;
+@override final  String folderName;
+ final  String? parentPath;
+ final  String? folderId;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
+/// Create a copy of FolderModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RemoteFolderModelCopyWith<RemoteFolderModel> get copyWith => _$RemoteFolderModelCopyWithImpl<RemoteFolderModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RemoteFolderModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoteFolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.parentPath, parentPath) || other.parentPath == parentPath)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,remoteName,folderName,parentPath,folderId,createdAt,updatedAt);
+
+@override
+String toString() {
+  return 'FolderModel.remote(id: $id, remoteName: $remoteName, folderName: $folderName, parentPath: $parentPath, folderId: $folderId, createdAt: $createdAt, updatedAt: $updatedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RemoteFolderModelCopyWith<$Res> implements $FolderModelCopyWith<$Res> {
+  factory $RemoteFolderModelCopyWith(RemoteFolderModel value, $Res Function(RemoteFolderModel) _then) = _$RemoteFolderModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String remoteName, String folderName, String? parentPath, String? folderId, DateTime createdAt, DateTime updatedAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$RemoteFolderModelCopyWithImpl<$Res>
+    implements $RemoteFolderModelCopyWith<$Res> {
+  _$RemoteFolderModelCopyWithImpl(this._self, this._then);
+
+  final RemoteFolderModel _self;
+  final $Res Function(RemoteFolderModel) _then;
+
+/// Create a copy of FolderModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? remoteName = null,Object? folderName = null,Object? parentPath = freezed,Object? folderId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+  return _then(RemoteFolderModel(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
+as String,folderName: null == folderName ? _self.folderName : folderName // ignore: cast_nullable_to_non_nullable
+as String,parentPath: freezed == parentPath ? _self.parentPath : parentPath // ignore: cast_nullable_to_non_nullable
+as String?,folderId: freezed == folderId ? _self.folderId : folderId // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _FolderModel with DiagnosticableTreeMixin implements FolderModel {
-  const _FolderModel(
-      {required this.remoteName,
-      required this.provider,
-      required this.folderPath,
-      required this.folderName,
-      required this.remoteParentPath,
-      required this.isAutoSync,
-      required this.isDeletionEnabled,
-      required this.isTwoWaySync,
-      required this.folderId,
-      required this.isRCloneBackend});
-  factory _FolderModel.fromJson(Map<String, dynamic> json) =>
-      _$FolderModelFromJson(json);
 
-  @override
-  final String remoteName;
-  @override
-  final DriveProvider provider;
-  @override
-  final String folderPath;
-  @override
-  final String folderName;
-  @override
-  final String? remoteParentPath;
-  @override
-  final bool isAutoSync;
-  @override
-  final bool isDeletionEnabled;
-  @override
-  final bool isTwoWaySync;
-  @override
-  final String? folderId;
-  @override
-  final bool isRCloneBackend;
+class LocalFolderModel implements FolderModel {
+  const LocalFolderModel({required this.id, required this.folderName, required this.folderPath, required this.createdAt, required this.updatedAt, final  String? $type}): $type = $type ?? 'local';
+  factory LocalFolderModel.fromJson(Map<String, dynamic> json) => _$LocalFolderModelFromJson(json);
 
-  /// Create a copy of FolderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$FolderModelCopyWith<_FolderModel> get copyWith =>
-      __$FolderModelCopyWithImpl<_FolderModel>(this, _$identity);
+@override final  String id;
+@override final  String folderName;
+ final  String folderPath;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
 
-  @override
-  Map<String, dynamic> toJson() {
-    return _$FolderModelToJson(
-      this,
-    );
-  }
+@JsonKey(name: 'runtimeType')
+final String $type;
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties
-      ..add(DiagnosticsProperty('type', 'FolderModel'))
-      ..add(DiagnosticsProperty('remoteName', remoteName))
-      ..add(DiagnosticsProperty('provider', provider))
-      ..add(DiagnosticsProperty('folderPath', folderPath))
-      ..add(DiagnosticsProperty('folderName', folderName))
-      ..add(DiagnosticsProperty('remoteParentPath', remoteParentPath))
-      ..add(DiagnosticsProperty('isAutoSync', isAutoSync))
-      ..add(DiagnosticsProperty('isDeletionEnabled', isDeletionEnabled))
-      ..add(DiagnosticsProperty('isTwoWaySync', isTwoWaySync))
-      ..add(DiagnosticsProperty('folderId', folderId))
-      ..add(DiagnosticsProperty('isRCloneBackend', isRCloneBackend));
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _FolderModel &&
-            (identical(other.remoteName, remoteName) ||
-                other.remoteName == remoteName) &&
-            (identical(other.provider, provider) ||
-                other.provider == provider) &&
-            (identical(other.folderPath, folderPath) ||
-                other.folderPath == folderPath) &&
-            (identical(other.folderName, folderName) ||
-                other.folderName == folderName) &&
-            (identical(other.remoteParentPath, remoteParentPath) ||
-                other.remoteParentPath == remoteParentPath) &&
-            (identical(other.isAutoSync, isAutoSync) ||
-                other.isAutoSync == isAutoSync) &&
-            (identical(other.isDeletionEnabled, isDeletionEnabled) ||
-                other.isDeletionEnabled == isDeletionEnabled) &&
-            (identical(other.isTwoWaySync, isTwoWaySync) ||
-                other.isTwoWaySync == isTwoWaySync) &&
-            (identical(other.folderId, folderId) ||
-                other.folderId == folderId) &&
-            (identical(other.isRCloneBackend, isRCloneBackend) ||
-                other.isRCloneBackend == isRCloneBackend));
-  }
+/// Create a copy of FolderModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LocalFolderModelCopyWith<LocalFolderModel> get copyWith => _$LocalFolderModelCopyWithImpl<LocalFolderModel>(this, _$identity);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      remoteName,
-      provider,
-      folderPath,
-      folderName,
-      remoteParentPath,
-      isAutoSync,
-      isDeletionEnabled,
-      isTwoWaySync,
-      folderId,
-      isRCloneBackend);
+@override
+Map<String, dynamic> toJson() {
+  return _$LocalFolderModelToJson(this, );
+}
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FolderModel(remoteName: $remoteName, provider: $provider, folderPath: $folderPath, folderName: $folderName, remoteParentPath: $remoteParentPath, isAutoSync: $isAutoSync, isDeletionEnabled: $isDeletionEnabled, isTwoWaySync: $isTwoWaySync, folderId: $folderId, isRCloneBackend: $isRCloneBackend)';
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalFolderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.folderName, folderName) || other.folderName == folderName)&&(identical(other.folderPath, folderPath) || other.folderPath == folderPath)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,folderName,folderPath,createdAt,updatedAt);
+
+@override
+String toString() {
+  return 'FolderModel.local(id: $id, folderName: $folderName, folderPath: $folderPath, createdAt: $createdAt, updatedAt: $updatedAt)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class _$FolderModelCopyWith<$Res>
-    implements $FolderModelCopyWith<$Res> {
-  factory _$FolderModelCopyWith(
-          _FolderModel value, $Res Function(_FolderModel) _then) =
-      __$FolderModelCopyWithImpl;
-  @override
-  @useResult
-  $Res call(
-      {String remoteName,
-      DriveProvider provider,
-      String folderPath,
-      String folderName,
-      String? remoteParentPath,
-      bool isAutoSync,
-      bool isDeletionEnabled,
-      bool isTwoWaySync,
-      String? folderId,
-      bool isRCloneBackend});
+abstract mixin class $LocalFolderModelCopyWith<$Res> implements $FolderModelCopyWith<$Res> {
+  factory $LocalFolderModelCopyWith(LocalFolderModel value, $Res Function(LocalFolderModel) _then) = _$LocalFolderModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String folderName, String folderPath, DateTime createdAt, DateTime updatedAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$LocalFolderModelCopyWithImpl<$Res>
+    implements $LocalFolderModelCopyWith<$Res> {
+  _$LocalFolderModelCopyWithImpl(this._self, this._then);
+
+  final LocalFolderModel _self;
+  final $Res Function(LocalFolderModel) _then;
+
+/// Create a copy of FolderModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? folderName = null,Object? folderPath = null,Object? createdAt = null,Object? updatedAt = null,}) {
+  return _then(LocalFolderModel(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,folderName: null == folderName ? _self.folderName : folderName // ignore: cast_nullable_to_non_nullable
+as String,folderPath: null == folderPath ? _self.folderPath : folderPath // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
 }
 
-/// @nodoc
-class __$FolderModelCopyWithImpl<$Res> implements _$FolderModelCopyWith<$Res> {
-  __$FolderModelCopyWithImpl(this._self, this._then);
 
-  final _FolderModel _self;
-  final $Res Function(_FolderModel) _then;
-
-  /// Create a copy of FolderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? remoteName = null,
-    Object? provider = null,
-    Object? folderPath = null,
-    Object? folderName = null,
-    Object? remoteParentPath = freezed,
-    Object? isAutoSync = null,
-    Object? isDeletionEnabled = null,
-    Object? isTwoWaySync = null,
-    Object? folderId = freezed,
-    Object? isRCloneBackend = null,
-  }) {
-    return _then(_FolderModel(
-      remoteName: null == remoteName
-          ? _self.remoteName
-          : remoteName // ignore: cast_nullable_to_non_nullable
-              as String,
-      provider: null == provider
-          ? _self.provider
-          : provider // ignore: cast_nullable_to_non_nullable
-              as DriveProvider,
-      folderPath: null == folderPath
-          ? _self.folderPath
-          : folderPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      folderName: null == folderName
-          ? _self.folderName
-          : folderName // ignore: cast_nullable_to_non_nullable
-              as String,
-      remoteParentPath: freezed == remoteParentPath
-          ? _self.remoteParentPath
-          : remoteParentPath // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isAutoSync: null == isAutoSync
-          ? _self.isAutoSync
-          : isAutoSync // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isDeletionEnabled: null == isDeletionEnabled
-          ? _self.isDeletionEnabled
-          : isDeletionEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isTwoWaySync: null == isTwoWaySync
-          ? _self.isTwoWaySync
-          : isTwoWaySync // ignore: cast_nullable_to_non_nullable
-              as bool,
-      folderId: freezed == folderId
-          ? _self.folderId
-          : folderId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isRCloneBackend: null == isRCloneBackend
-          ? _self.isRCloneBackend
-          : isRCloneBackend // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
 }
 
 // dart format on

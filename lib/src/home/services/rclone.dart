@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
+import 'package:hashlib/random.dart';
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/common.dart';
@@ -14,102 +16,45 @@ import 'package:syncvault/src/home/services/common.dart';
 class RCloneDriveService implements DriveService {
   @override
   TaskEither<AppError, FolderModel> create({
-    required DriveProviderModel model,
-    required String folderPath,
     required String folderName,
-    required Option<String> remoteParentPath,
+    required DriveProviderModel model,
+    required Option<String> parentPath,
   }) {
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, FolderModel>.Do(($) async {
+    return TaskEither<AppError, RemoteFolderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
       final configArgs = await $(utils.getConfigArgs());
 
-      await $(
-        TaskEither.tryCatch(
-          () async {
-            final parentPath = remoteParentPath.match(() => '/', (t) => '/$t/');
+      final remoteName = await $(
+        TaskEither.tryCatch(() async {
+          final parentPathStr = parentPath.match(() => '/', (t) => '/$t/');
 
-            // TODO: S3 only allows bucket name, not path
-            final process = await Process.run(execPath, [
-              ...configArgs,
-              'mkdir',
-              '${model.remoteName}:$parentPath$folderName',
-            ]);
+          // S3 only allows bucket name, not path
+          final process = await Process.run(execPath, [
+            ...configArgs,
+            'mkdir',
+            '${(model as RemoteProviderModel).remoteName}:$parentPathStr$folderName',
+          ]);
 
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr);
-            }
+          if (process.stderr.toString().trim().isNotEmpty) {
+            debugLogger.e(process.stderr);
+          }
 
-            return ();
-          },
-          (err, stackTrace) => err.handleError(
-            'Failed to create directory in remote',
-            stackTrace,
-          ),
-        ),
+          return model.remoteName;
+        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
       );
 
-      final folderModel = FolderModel(
-        remoteName: model.remoteName,
-        provider: model.provider,
-        folderPath: folderPath,
+      final folderModel = RemoteFolderModel(
+        id: uuid.v4(),
         folderName: folderName,
-        remoteParentPath: remoteParentPath.toNullable(),
-        isAutoSync: false,
-        isDeletionEnabled: false,
-        isTwoWaySync: false,
+        remoteName: remoteName,
+        parentPath: parentPath.toNullable(),
         folderId: null,
-        isRCloneBackend: true,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
       return folderModel;
-    });
-  }
-
-  @override
-  TaskEither<AppError, ()> upload({
-    required DriveProviderModel providerModel,
-    required FolderModel folderModel,
-    required String localPath,
-    String? rCloneExecPath,
-  }) {
-    final utils = RCloneUtils();
-
-    return TaskEither<AppError, ()>.Do(($) async {
-      final execPath = rCloneExecPath ?? await $(utils.getRCloneExec());
-      final configArgs = await $(utils.getConfigArgs());
-
-      final res = await $(
-        TaskEither.tryCatch(
-          () async {
-            final parentPath = Option.fromNullable(
-              folderModel.remoteParentPath,
-            ).match(() => '/', (t) => '/$t/');
-
-            final process = await Process.run(execPath!, [
-              // Use a 2 way copy to avoid deletion
-              ...configArgs,
-              folderModel.isTwoWaySync ? 'bisync' : 'sync',
-              '-u', // Do not delete/update on remote if remote file is newer
-              '-M',
-              '--inplace', // Bisync fails without this
-              if (folderModel.isTwoWaySync) '--resync',
-              localPath,
-              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}',
-            ]);
-
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr.toString());
-            }
-
-            return ();
-          },
-          (err, stackTrace) =>
-              err.handleError('Failed to upload files', stackTrace),
-        ),
-      );
-
-      return res;
     });
   }
 
@@ -125,27 +70,23 @@ class RCloneDriveService implements DriveService {
       final configArgs = await $(utils.getConfigArgs());
 
       final res = await $(
-        TaskEither.tryCatch(
-          () async {
-            final parentPath = Option.fromNullable(
-              folderModel.remoteParentPath,
-            ).match(() => '/', (t) => '/$t/');
+        TaskEither.tryCatch(() async {
+          final parentPath = Option.fromNullable(
+            folderModel.folderName,
+          ).match(() => '/', (t) => '/$t/');
 
-            final process = await Process.run(execPath, [
-              ...configArgs,
-              'purge',
-              '${folderModel.remoteName}:/$parentPath${folderModel.folderName}',
-            ]);
+          final process = await Process.run(execPath, [
+            ...configArgs,
+            'purge',
+            '${(folderModel as RemoteFolderModel).remoteName}:/$parentPath${folderModel.folderName}',
+          ]);
 
-            if (process.stderr.toString().trim().isNotEmpty) {
-              debugLogger.e(process.stderr.toString());
-            }
+          if (process.stderr.toString().trim().isNotEmpty) {
+            debugLogger.e(process.stderr.toString());
+          }
 
-            return ();
-          },
-          (err, stackTrace) =>
-              err.handleError('Failed to delete remote', stackTrace),
-        ),
+          return ();
+        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
       );
 
       return res;
@@ -154,7 +95,8 @@ class RCloneDriveService implements DriveService {
 
   @override
   TaskEither<AppError, Option<FileModel>> treeView({
-    required FolderModel model,
+    required DriveProviderModel providerModel,
+    required FolderModel folderModel,
   }) {
     final utils = RCloneUtils();
 
@@ -165,10 +107,28 @@ class RCloneDriveService implements DriveService {
       final Option<FileModel> fileModel = await $(
         TaskEither.tryCatch(
           () async {
-            final parentPath = Option.fromNullable(
-              model.remoteParentPath,
-            ).match(() => '/', (t) => '/$t/');
+            // TODO: Get from parentPath
+            // final parentPath = Option.fromNullable(
+            //   model.remoteName,
+            // ).match(() => '/', (t) => '/$t/');
 
+            final (remoteName, parentPath, folderName) = switch (folderModel) {
+              RemoteFolderModel(
+                :final folderName,
+                :final parentPath,
+                :final remoteName,
+              ) =>
+                (
+                  remoteName,
+                  parentPath == null ? '/' : '/$parentPath/',
+                  folderName,
+                ),
+              _ => throw GeneralError(
+                'Only remote folders allowed',
+                null,
+                null,
+              ),
+            };
             final process = await Process.run(execPath, [
               ...configArgs,
               'tree',
@@ -177,7 +137,7 @@ class RCloneDriveService implements DriveService {
               '--full-path',
               '-s',
               '-Q',
-              '${model.remoteName}:/$parentPath${model.folderName}',
+              '$remoteName:$parentPath$folderName',
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -194,12 +154,11 @@ class RCloneDriveService implements DriveService {
               dotAll: true,
             );
             for (final line in lines) {
-              final matched =
-                  regex
-                      .allMatches(line)
-                      .toList()
-                      .map((t) => t.groups([1, 2]))
-                      .firstOrNull;
+              final matched = regex
+                  .allMatches(line)
+                  .toList()
+                  .map((t) => t.groups([1, 2]))
+                  .firstOrNull;
               if (matched != [] && matched != null) {
                 matches.add([matched[0]!, matched[1]!.replaceAll('\\', '/')]);
               }
@@ -213,38 +172,35 @@ class RCloneDriveService implements DriveService {
               Option<Directory> parent,
             ) {
               // Get the name of the current path
-              final currentSegments =
-                  currentPath
-                      .split('/')
-                      .where((seg) => seg.isNotEmpty)
-                      .toList();
-              final currentName =
-                  currentSegments.isEmpty ? '/' : currentSegments.last;
+              final currentSegments = currentPath
+                  .split('/')
+                  .where((seg) => seg.isNotEmpty)
+                  .toList();
+              final currentName = currentSegments.isEmpty
+                  ? '/'
+                  : currentSegments.last;
 
               // Find direct children of the current path
-              final childrenPaths =
-                  paths.where((path) {
-                    final segments =
-                        path[1]
-                            .split('/')
-                            .where((seg) => seg.isNotEmpty)
-                            .toList();
-                    return segments.length > currentSegments.length &&
-                        List.generate(
-                              currentSegments.length,
-                              (i) => segments[i],
-                            ).join('/') ==
-                            currentSegments.join('/');
-                  }).toList();
+              final childrenPaths = paths.where((path) {
+                final segments = path[1]
+                    .split('/')
+                    .where((seg) => seg.isNotEmpty)
+                    .toList();
+                return segments.length > currentSegments.length &&
+                    List.generate(
+                          currentSegments.length,
+                          (i) => segments[i],
+                        ).join('/') ==
+                        currentSegments.join('/');
+              }).toList();
 
               // Create child nodes recursively
               final List<FileModel> children = [];
               for (final childPath in childrenPaths) {
-                final segments =
-                    childPath[1]
-                        .split('/')
-                        .where((seg) => seg.isNotEmpty)
-                        .toList();
+                final segments = childPath[1]
+                    .split('/')
+                    .where((seg) => seg.isNotEmpty)
+                    .toList();
                 final size = childPath[0];
                 final childFullPath = segments.join('/');
 
@@ -262,23 +218,22 @@ class RCloneDriveService implements DriveService {
               }
 
               // Determine if the current node is a file or directory
-              final isFile =
-                  !paths.any((path) {
-                    final segments =
-                        path[1]
-                            .split('/')
-                            .where((seg) => seg.isNotEmpty)
-                            .toList();
-                    return segments.length > currentSegments.length &&
-                        List.generate(
-                              currentSegments.length,
-                              (i) => segments[i],
-                            ).join('/') ==
-                            currentSegments.join('/');
-                  });
+              final isFile = !paths.any((path) {
+                final segments = path[1]
+                    .split('/')
+                    .where((seg) => seg.isNotEmpty)
+                    .toList();
+                return segments.length > currentSegments.length &&
+                    List.generate(
+                          currentSegments.length,
+                          (i) => segments[i],
+                        ).join('/') ==
+                        currentSegments.join('/');
+              });
 
-              final fileEntity =
-                  isFile ? File(currentPath) : Directory(currentPath);
+              final fileEntity = isFile
+                  ? File(currentPath)
+                  : Directory(currentPath);
 
               return FileModel(
                 name: currentName,
@@ -296,11 +251,77 @@ class RCloneDriveService implements DriveService {
 
             return none();
           },
-          (err, stackTrace) =>
-              err.handleError('Failed to get file tree', stackTrace),
+          (err, stackTrace) {
+            return AppError.general('message', err, stackTrace).logError();
+          },
         ),
       );
       return fileModel;
+    });
+  }
+}
+
+@singleton
+class RCloneSyncService implements SyncService {
+  @override
+  TaskEither<AppError, ()> sync_({
+    required ConnectionModel connectionModel,
+    required FolderModel firstFolder,
+    required DriveProviderModel firstProvider,
+    required FolderModel secondFolder,
+    required DriveProviderModel secondProvider,
+  }) {
+    final utils = RCloneUtils();
+
+    return TaskEither<AppError, ()>.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
+
+      final firstPath = switch (firstFolder) {
+        LocalFolderModel(:final folderPath) => folderPath,
+        RemoteFolderModel(
+          :final remoteName,
+          :final folderName,
+          :final parentPath,
+        ) =>
+          '$remoteName:/${Option.fromNullable(parentPath).match(() => '/', (t) => '/$t/')}$folderName',
+      };
+      final secondPath = switch (secondFolder) {
+        LocalFolderModel(:final folderPath) => folderPath,
+        RemoteFolderModel(
+          :final remoteName,
+          :final folderName,
+          :final parentPath,
+        ) =>
+          '$remoteName:/${Option.fromNullable(parentPath).match(() => '/', (t) => '/$t/')}$folderName',
+      };
+
+      final res = await $(
+        TaskEither.tryCatch(() async {
+          final process = await Process.run(execPath, [
+            // Use a 2 way copy to avoid deletion
+            ...configArgs,
+            connectionModel.direction == SyncDirection.bidirectional
+                ? 'bisync'
+                : 'sync',
+            '-u', // Do not delete/update on remote if remote file is newer
+            '-M',
+            '--inplace', // Bisync fails without this
+            if (connectionModel.direction == SyncDirection.bidirectional)
+              '--resync',
+            firstPath,
+            secondPath,
+          ]);
+
+          if (process.stderr.toString().trim().isNotEmpty) {
+            debugLogger.e(process.stderr.toString());
+          }
+
+          return ();
+        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
+      );
+
+      return res;
     });
   }
 }

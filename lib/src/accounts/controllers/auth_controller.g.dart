@@ -75,10 +75,9 @@ class DriveInfoControllerProvider
         (ref) => driveInfoController(ref as DriveInfoControllerRef, model),
         from: driveInfoControllerProvider,
         name: r'driveInfoControllerProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$driveInfoControllerHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$driveInfoControllerHash,
         dependencies: DriveInfoControllerFamily._dependencies,
         allTransitiveDependencies:
             DriveInfoControllerFamily._allTransitiveDependencies,
@@ -158,29 +157,29 @@ final authControllerProvider =
     AutoDisposeAsyncNotifierProvider<AuthController, void>.internal(
       AuthController.new,
       name: r'authControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$authControllerHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$authControllerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
 typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'99ba390fed63330161dcd88171fcf94a851c4647';
+String _$authHash() => r'20a4134f6fae683db31cc801f61848e866d69fd7';
 
 /// See also [Auth].
 @ProviderFor(Auth)
 final authProvider =
-    AutoDisposeNotifierProvider<Auth, List<DriveProviderModel>>.internal(
+    AutoDisposeAsyncNotifierProvider<Auth, List<RemoteProviderModel>>.internal(
       Auth.new,
       name: r'authProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$authHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$authHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$Auth = AutoDisposeNotifier<List<DriveProviderModel>>;
+typedef _$Auth = AutoDisposeAsyncNotifier<List<RemoteProviderModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

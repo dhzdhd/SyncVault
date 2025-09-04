@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
-import 'package:syncvault/src/graph/views/workflow_view.dart';
-import 'package:syncvault/src/home/controllers/folder_controller.dart';
+import 'package:syncvault/src/common/utils/associations.dart';
+import 'package:syncvault/src/home/components/connection_card_widget.dart';
+import 'package:syncvault/src/home/controllers/connection_controller.dart';
+import 'package:syncvault/src/workflows/views/workflow_view.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
-import 'package:syncvault/helpers.dart';
-import 'package:syncvault/src/common/components/circular_progress_widget.dart';
-import 'package:syncvault/src/home/components/delete_folder_dialog.dart';
-import 'package:syncvault/src/home/components/expandable_card_widget.dart';
-import 'package:syncvault/src/home/components/new_folder_dialog_widget.dart';
-import 'package:syncvault/src/home/components/tree_view_sheet_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:syncvault/extensions.dart';
+import 'package:syncvault/src/home/components/new_connection_dialog_widget.dart';
 import 'package:watcher/watcher.dart';
 import 'package:syncvault/src/settings/views/settings_view.dart';
 import 'package:window_manager/window_manager.dart';
@@ -31,18 +28,41 @@ class HomeView extends StatefulHookConsumerWidget {
 }
 
 class _HomeViewState extends ConsumerState<HomeView> {
-  late final List<DirectoryWatcher> _watchers;
+  final Map<String, DirectoryWatcher> _connWatcherMap = {};
 
   @override
   void initState() {
-    final folders = ref.read(folderProvider).toList();
-    _watchers = folders.map((e) => DirectoryWatcher(e.folderPath)).toList();
+    final connections = ref.read(connectionProvider);
+    final folders = ref.read(folderProvider);
+
+    for (final conn in connections) {
+      final (firstFolderOpt, secondFolderOpt) = getFoldersFromConnection(
+        conn,
+        folders,
+      );
+
+      final localFolder = Option<LocalFolderModel>.Do(($) {
+        final firstFolder = $(firstFolderOpt);
+        final secondFolder = $(secondFolderOpt);
+
+        return $(switch ((firstFolder, secondFolder)) {
+          (final x, _) when x is LocalFolderModel => Some(x),
+          (_, final y) when y is LocalFolderModel => Some(y),
+          _ => None(),
+        });
+      });
+
+      localFolder.match(() {}, (val) {
+        _connWatcherMap[conn.id] = DirectoryWatcher(val.folderPath);
+      });
+    }
+
     super.initState();
   }
 
   @override
   void dispose() {
-    for (DirectoryWatcher i in _watchers) {
+    for (DirectoryWatcher i in _connWatcherMap.values) {
       i.events.drain();
     }
     super.dispose();
@@ -51,78 +71,86 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      final folders = ref.watch(folderProvider).toList();
+      final connections = ref.watch(connectionProvider);
+      final folderIds = ref.watch(folderProvider).map((folder) => folder.id);
 
-      for (int i = 0; i < _watchers.length; i++) {
-        // TODO: Match watcher and folder by remote name instead of index
-        // Also add/delete watcher with folder
-        _watchers[i].events.listen((event) async {
+      for (final entry in _connWatcherMap.entries) {
+        final watcher = entry.value;
+        final connectionId = entry.key;
+        final connection = connections
+            .filter((conn) => conn.id == connectionId)
+            .firstOrNull;
+
+        if (connection == null ||
+            !folderIds.contains(connection.firstFolderId) ||
+            !folderIds.contains(connection.secondFolderId)) {
+          continue;
+        }
+
+        watcher.events.listen((event) async {
           debugLogger.i(event.toString());
+
           switch (event.type) {
-            case ChangeType.ADD || ChangeType.MODIFY when folders[i].isAutoSync:
+            case ChangeType.ADD || ChangeType.MODIFY when connection.isAutoSync:
               {
                 try {
                   await ref
-                      .read(folderProvider.notifier)
-                      .upload(folders[i], some(event.path));
-                  debugPrint('Success');
+                      .read(connectionProvider.notifier)
+                      .uniSync(connection);
+                  debugLogger.i('Successfully uploaded for ADD | MODIFY');
                 } catch (e, st) {
-                  debugPrint(
-                    e.handleError('Failed to sync folders', st).message,
-                  );
+                  // TODO:
+                  GeneralError('', e, st).logError();
                 }
               }
             case ChangeType.REMOVE
-                when folders[i].isDeletionEnabled && folders[i].isAutoSync:
+                when connection.isDeletionEnabled && connection.isAutoSync:
               {
-                // final result = await ref
-                //     .read(folderProvider.notifier)
-                //     .delete(folders[i], some(event.path))
-                //     .run();
-
-                // result.match(
-                //     (l) => debugPrint(l.message), (r) => debugPrint('Success'));
+                try {
+                  await ref
+                      .read(connectionProvider.notifier)
+                      .uniSync(connection);
+                  debugLogger.i('Successfully uploaded for DELETE');
+                } catch (e, st) {
+                  // TODO:
+                  GeneralError('', e, st).logError();
+                }
               }
           }
         });
       }
 
       return () => {
-        for (final i in _watchers) {i.events.drain()},
+        for (DirectoryWatcher i in _connWatcherMap.values) {i.events.drain()},
       };
     }, [ref.watch(folderProvider)]);
 
-    final folderInfo = ref.watch(folderProvider);
-    final folderNotifier = ref.read(folderProvider.notifier);
-    final uploadDeleteController = ref.watch(uploadDeleteControllerProvider);
-    final currentLoadingIndex = useState(0);
+    final folders = ref.watch(folderProvider);
+    final connections = ref.watch(connectionProvider);
 
-    ref.listen<AsyncValue>(uploadDeleteControllerProvider, (prev, state) {
+    ref.listen<AsyncValue>(syncControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
-          state.error!
-              .handleError(
-                'Upload/Delete controller failed',
-                state.stackTrace ?? StackTrace.empty,
-              )
-              .message,
+          GeneralError('Upload failed', state.error!, state.stackTrace).message,
         );
       }
     });
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Sync new folder',
+        tooltip: 'Create new connection',
         onPressed: () async {
-          if (ref.watch(authProvider).isEmpty) {
-            context.showErrorSnackBar('No accounts registered yet');
+          if (folders.length < 2) {
+            context.showErrorSnackBar(
+              'Atleast two folders need to be created in separate remotes',
+            );
             return;
           }
 
           if (context.mounted) {
             await showDialog(
               context: context,
-              builder: (context) => const NewFolderDialogWidget(),
+              builder: (context) => const NewConnectionDialogWidget(),
             );
           }
         },
@@ -132,7 +160,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         slivers: [
           SliverAnimatedAppBar(
             title: 'Home',
-            canExpand: folderInfo.isNotEmpty,
+            canExpand: connections.isNotEmpty,
             hasLeading: false,
             actions: [
               if (PlatformExtension.isDesktop)
@@ -176,271 +204,18 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ],
           ),
           SliverPadding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.only(
+              left: 16,
+              top: 16,
+              right: 16,
+              bottom: 84,
+            ),
             sliver: SliverList(
               delegate: SliverChildListDelegate.fixed(
-                folderInfo
+                connections
                     .mapWithIndex(
-                      (e, index) => ExpandableCardWidget(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Tooltip(
-                              message: e.provider.displayName,
-                              child: SvgPicture.asset(
-                                e.provider.providerIcon,
-                                width: 25,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                e.folderName,
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Visibility(
-                            visible:
-                                uploadDeleteController.isLoading &&
-                                currentLoadingIndex.value == index,
-                            child: const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressWidget(
-                                size: 300,
-                                isInfinite: true,
-                              ),
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          spacing: 8.0,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).dialogBackgroundColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        e.folderPath,
-                                        style:
-                                            Theme.of(
-                                              context,
-                                            ).textTheme.bodyLarge,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          if (PlatformExtension.isDesktop)
-                                            Flexible(
-                                              child: SizedBox(
-                                                width: 50,
-                                                child: Tooltip(
-                                                  message:
-                                                      'Open in file manager',
-                                                  child: TextButton(
-                                                    child: const Icon(
-                                                      Icons.open_in_new,
-                                                    ),
-                                                    onPressed: () async {
-                                                      await launchUrl(
-                                                        Uri.file(e.folderPath),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          Flexible(
-                                            child: SizedBox(
-                                              width: 50,
-                                              child: Tooltip(
-                                                message: 'Sync',
-                                                child: TextButton(
-                                                  child: const Icon(Icons.sync),
-                                                  onPressed: () async {
-                                                    if (uploadDeleteController
-                                                        .isLoading) {
-                                                      return;
-                                                    }
-                                                    currentLoadingIndex.value =
-                                                        index;
-
-                                                    if (!uploadDeleteController
-                                                        .isLoading) {
-                                                      await ref
-                                                          .read(
-                                                            uploadDeleteControllerProvider
-                                                                .notifier,
-                                                          )
-                                                          .upload(e, none());
-
-                                                      if (context.mounted) {
-                                                        context
-                                                            .showSuccessSnackBar(
-                                                              content:
-                                                                  'Success',
-                                                            );
-                                                      }
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Flexible(
-                                            child: SizedBox(
-                                              width: 50,
-                                              child: Tooltip(
-                                                message: 'Delete',
-                                                child: TextButton(
-                                                  child: const Icon(
-                                                    Icons.delete,
-                                                  ),
-                                                  onPressed: () async {
-                                                    if (uploadDeleteController
-                                                        .isLoading) {
-                                                      return;
-                                                    }
-                                                    // TODO: Perhaps make loadingIndex an array
-                                                    currentLoadingIndex.value =
-                                                        index;
-
-                                                    if (context.mounted) {
-                                                      if (context.mounted) {
-                                                        await showDialog(
-                                                          context: context,
-                                                          builder:
-                                                              (ctx) =>
-                                                                  DeleteFolderDialogWidget(
-                                                                    model: e,
-                                                                  ),
-                                                        );
-                                                      }
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Account',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                Text(
-                                  e.remoteName,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Auto sync',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Switch(
-                                      value: e.isAutoSync,
-                                      onChanged:
-                                          (val) =>
-                                              folderNotifier.toggleAutoSync(e),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Bidirectional sync',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Switch(
-                                      value: e.isTwoWaySync,
-                                      onChanged:
-                                          (val) => folderNotifier
-                                              .toggleTwoWaySync(e),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Delete on sync',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Switch(
-                                      value: e.isDeletionEnabled,
-                                      onChanged:
-                                          (val) => folderNotifier
-                                              .toggleDeletionOnSync(e),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: OutlinedButton(
-                                onPressed: () async {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder:
-                                        (ctx) =>
-                                            TreeViewSheetWidget(folderModel: e),
-                                  );
-                                },
-                                child: const Text('Tree view'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      (connection, index) =>
+                          ConnectionCardWidget(connectionModel: connection),
                     )
                     .toList(),
               ),

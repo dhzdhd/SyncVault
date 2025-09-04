@@ -31,12 +31,13 @@ class SliverAnimatedAppBar extends StatelessWidget {
           const expandedHeight = 160.0;
           final collapsedHeight =
               kToolbarHeight + MediaQuery.of(context).padding.top;
-          final expansionProgress = ((top - collapsedHeight) /
-                  (expandedHeight - collapsedHeight))
-              .clamp(0.0, 1.0);
+          final expansionProgress =
+              ((top - collapsedHeight) / (expandedHeight - collapsedHeight))
+                  .clamp(0.0, 1.0);
 
-          final leftPadding =
-              hasLeading ? 56.0 - (30.0 * expansionProgress) : 56.0 - 30.0;
+          final leftPadding = hasLeading
+              ? 56.0 - (30.0 * expansionProgress)
+              : 56.0 - 30.0;
 
           return FlexibleSpaceBar(
             expandedTitleScale: canExpand ? 1.75 : 1,
@@ -46,12 +47,11 @@ class SliverAnimatedAppBar extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             titlePadding: EdgeInsets.only(
-              left:
-                  canExpand
-                      ? leftPadding
-                      : hasLeading
-                      ? 56.0
-                      : 56.0 - 30.0,
+              left: canExpand
+                  ? leftPadding
+                  : hasLeading
+                  ? 56.0
+                  : 56.0 - 30.0,
               bottom: 14.0,
             ),
             centerTitle: false,

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/helpers.dart';
+import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/views/account_view.dart';
-import 'package:syncvault/src/graph/views/workflow_view.dart';
+import 'package:syncvault/src/workflows/views/workflow_view.dart';
 import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
 import 'package:syncvault/src/introduction/views/intro_view.dart';
 import 'package:syncvault/src/localization/generated/i18n/app_localizations.dart';
@@ -30,9 +30,9 @@ class _MyAppState extends ConsumerState<MyApp>
     super.initState();
 
     if (PlatformExtension.isDesktop) {
-      // TODO: Add icons
-      String iconPath =
-          Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png';
+      String iconPath = Platform.isWindows
+          ? 'assets/icons/tray_icon.ico'
+          : 'assets/icons/tray_icon.png';
 
       trayManager.addListener(this);
 
@@ -79,8 +79,8 @@ class _MyAppState extends ConsumerState<MyApp>
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en', '')],
-      onGenerateTitle:
-          (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+      onGenerateTitle: (BuildContext context) =>
+          AppLocalizations.of(context)!.appTitle,
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: settings.themeMode,

@@ -62,3 +62,13 @@ Map<String, dynamic> _$UserPasswordToJson(UserPassword instance) =>
       'password': instance.password,
       'runtimeType': instance.$type,
     };
+
+Local _$LocalFromJson(Map<String, dynamic> json) => Local(
+  folderPath: json['folderPath'] as String,
+  $type: json['runtimeType'] as String?,
+);
+
+Map<String, dynamic> _$LocalToJson(Local instance) => <String, dynamic>{
+  'folderPath': instance.folderPath,
+  'runtimeType': instance.$type,
+};

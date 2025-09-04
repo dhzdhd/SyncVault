@@ -24,7 +24,7 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
     return driveInfoModel.usedStorage.isSome() &&
             driveInfoModel.totalStorage.isSome()
         ? driveInfoModel.usedStorage.toNullable()! /
-            (driveInfoModel.totalStorage.toNullable()! + 0.0001)
+              (driveInfoModel.totalStorage.toNullable()! + 0.0001)
         : 0;
   }
 
@@ -65,11 +65,12 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
                     height: 100,
                     // TODO: Use custom progress widget
                     child: CircularProgressIndicator(
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).scaffoldBackgroundColor,
                       value:
-                      // Avoid zero div error
-                      getPercent(value),
+                          // Avoid zero div error
+                          getPercent(value),
                     ),
                   ),
                 ],
@@ -141,9 +142,11 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              error
-                  .handleError('Failed to render drive information', stackTrace)
-                  .message,
+              GeneralError(
+                'Failed to render drive information',
+                error,
+                stackTrace,
+              ).logError().message,
             ),
           ),
         ],

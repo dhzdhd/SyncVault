@@ -6,7 +6,7 @@ part of 'settings_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$settingsHash() => r'87c40e970e63ffc2403861573b88ad25510ed1f3';
+String _$settingsHash() => r'ddf60ce3505356133927bed1341671773cdd18ca';
 
 /// See also [Settings].
 @ProviderFor(Settings)
@@ -14,8 +14,9 @@ final settingsProvider =
     AutoDisposeNotifierProvider<Settings, SettingsModel>.internal(
       Settings.new,
       name: r'settingsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$settingsHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$settingsHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

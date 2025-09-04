@@ -2,9 +2,9 @@ name: Dart lint and test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
@@ -15,7 +15,8 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
+          flutter-version: 3.32.0
 
       - name: Install dependencies
         run: flutter pub get

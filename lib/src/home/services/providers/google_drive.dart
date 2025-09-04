@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:hashlib/random.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
@@ -15,16 +16,14 @@ import 'package:googleapis_auth/googleapis_auth.dart';
 class GoogleDriveService implements DriveService {
   @override
   TaskEither<AppError, FolderModel> create({
-    required DriveProviderModel model,
-    required String folderPath,
     required String folderName,
-    required Option<String> remoteParentPath,
+    required DriveProviderModel model,
+    required Option<String> parentPath,
   }) {
     return TaskEither.tryCatch(
       () async {
-        final backend = model.backend as OAuth2;
+        final backend = (model as RemoteProviderModel).backend as OAuth2;
         final httpClient = http.Client();
-        print(backend.toJson());
 
         final authClient = authenticatedClient(
           httpClient,
@@ -50,10 +49,11 @@ class GoogleDriveService implements DriveService {
         late final String parentFolderId;
         if (fileList.files!.isEmpty) {
           final folderMetadata = drive.File(
-            name: remoteParentPath.match(
-              () => 'SyncVault/',
-              (t) => t.replaceAll('/', ''),
-            ),
+            // name: remoteParentPath.match(
+            //   () => 'SyncVault/',
+            //   (t) => t.replaceAll('/', ''),
+            // ),
+            name: '',
             mimeType: 'application/vnd.google-apps.folder',
           );
           final syncVaultFolder = await api.files.create(folderMetadata);
@@ -64,7 +64,7 @@ class GoogleDriveService implements DriveService {
 
         // Create the new folder
         final folderMetadata = drive.File(
-          name: folderName,
+          name: model.remoteName,
           mimeType: 'application/vnd.google-apps.folder',
           parents: [parentFolderId],
         );
@@ -72,34 +72,20 @@ class GoogleDriveService implements DriveService {
 
         httpClient.close();
 
-        return FolderModel(
+        return RemoteFolderModel(
+          id: uuid.v4(),
+          folderName: '',
           remoteName: model.remoteName,
-          provider: model.provider,
-          folderPath: folderPath,
-          folderName: folderName,
-          remoteParentPath: remoteParentPath.toNullable(),
-          isAutoSync: false,
-          isDeletionEnabled: false,
-          isTwoWaySync: false,
+          parentPath: '',
           folderId: folder.id,
-          isRCloneBackend: false,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
       },
       (error, stackTrace) {
-        return error.handleError('Gdrive folder creation failed', stackTrace);
+        return GeneralError('', error, stackTrace).logError();
       },
     );
-  }
-
-  @override
-  TaskEither<AppError, ()> upload({
-    required DriveProviderModel providerModel,
-    required FolderModel folderModel,
-    required String localPath,
-    String? rCloneExecPath,
-  }) {
-    // TODO: implement upload
-    throw UnimplementedError();
   }
 
   @override
@@ -113,7 +99,8 @@ class GoogleDriveService implements DriveService {
 
   @override
   TaskEither<AppError, Option<FileModel>> treeView({
-    required FolderModel model,
+    required DriveProviderModel providerModel,
+    required FolderModel folderModel,
   }) {
     // TODO: implement treeView
     throw UnimplementedError();

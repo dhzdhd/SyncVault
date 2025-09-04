@@ -9,8 +9,8 @@ import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/common.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -18,31 +18,58 @@ import 'package:ini_v2/ini.dart';
 
 final _dio = GetIt.I<Dio>();
 
+// FIXME:
+const errorMsgMap = {
+  'No code returned': 'Drive auth servers are not responding',
+  r'address already in use': 'Restart the application to proceed',
+};
+
+Future<void> killProcessOnPort(int port) async {
+  final result = await Process.run('lsof', ['-i', ':$port', '-t']);
+  if (result.exitCode != 0 || result.stdout.toString().trim().isEmpty) {
+    debugLogger.e('No process found running on port $port');
+    return;
+  }
+
+  final pid = result.stdout.toString().trim();
+  debugLogger.i('Killing process with PID $pid on port $port');
+
+  final killResult = await Process.run('kill', ['-9', pid]);
+  if (killResult.exitCode == 0) {
+    debugLogger.i('Process killed.');
+  } else {
+    debugLogger.e('Failed to kill process: ${killResult.stderr}');
+  }
+}
+
+Future<bool> checkProcessIsNotUsed(int port) async {
+  final result = await Process.run('lsof', ['-i', ':$port', '-t']);
+
+  return (result.exitCode != 0 || result.stdout.toString().trim().isEmpty);
+}
+
 @singleton
 class RCloneAuthService implements AuthService {
   @override
-  TaskEither<AppError, DriveProviderModel> authorize({
+  TaskEither<AppError, RemoteProviderModel> authorize({
     required DriveProviderBackend backend,
     required DriveProvider driveProvider,
     required String remoteName,
   }) {
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, DriveProviderModel>.Do(($) async {
+    return TaskEither<AppError, RemoteProviderModel>.Do(($) async {
       final execPath = await $(utils.getRCloneExec());
       final configFile = await $(utils.getConfig());
       final rCloneConfig = await $(utils.getIniConfig());
 
+      // TODO: Remove unnecessary try catch
       await $(
-        TaskEither.tryCatch(
-          () async {
-            if (rCloneConfig.hasSection(remoteName)) {
-              throw const AppError.general('Remote already exists');
-            }
-          },
-          (err, stackTrace) =>
-              err.handleError('Remote already exists', stackTrace),
-        ),
+        TaskEither.tryCatch(() async {
+          if (rCloneConfig.hasSection(remoteName)) {
+            throw const GeneralError('Remote already exists', null, null);
+          }
+        }, (err, stackTrace) => err as AppError),
       );
 
       // Authorize with rclone for given provider
@@ -50,6 +77,18 @@ class RCloneAuthService implements AuthService {
         OAuth2() => await $(
           TaskEither.tryCatch(
             () async {
+              await killProcessOnPort(53682);
+
+              // if (await checkProcessIsNotUsed(57000)) {
+              //   final server = await Process.run(execPath, [
+              //     'rcd',
+              //     '--rc-addr',
+              //     ':57000',
+              //   ]);
+              //   debugLogger.i(server.stdout);
+              //   debugLogger.i(server.stderr);
+              // }
+
               final process = await Process.start(execPath, [
                 'authorize',
                 '--auth-no-open-browser',
@@ -62,7 +101,8 @@ class RCloneAuthService implements AuthService {
                 r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
               );
 
-              // Listen to stdout, stderr
+              var urlLaunched = false;
+
               process.stdout.transform(utf8.decoder).listen((data) {
                 output.write(data);
               });
@@ -70,29 +110,52 @@ class RCloneAuthService implements AuthService {
                 errorOutput.write(data);
 
                 // Match url with regex (url is in stderr for whatever reason)
-                final match = urlPattern.firstMatch(data);
-                if (match != null) {
-                  final url = match.group(0);
-                  if (url != null) {
-                    launchUrlString(url);
+                if (!urlLaunched) {
+                  final urlMatch = urlPattern.firstMatch(
+                    errorOutput.toString(),
+                  );
+                  if (urlMatch != null) {
+                    final url = urlMatch.group(0);
+                    if (url != null) {
+                      urlLaunched = true;
+                      launchUrlString(url);
+                      debugLogger.i('Auth URL launched: $url');
+                    }
                   }
                 }
               });
-              print(output);
-              print(errorOutput);
 
               // Wait for process to finish
               await process.exitCode;
 
+              debugLogger.i(output.toString());
+              debugLogger.i(errorOutput.toString());
+
+              for (final errorMsg in errorMsgMap.values) {
+                if (errorOutput.toString().allMatches(errorMsg).isNotEmpty) {
+                  throw GeneralError(errorMsgMap[errorMsg]!, null, null);
+                }
+              }
+
+              // Ensure URL was found and launched
+              if (!urlLaunched) {
+                throw const GeneralError(
+                  'Could not fetch auth URL from RClone',
+                  null,
+                  null,
+                );
+              }
+
               final match =
                   RegExp(r'\{.+\}').stringMatch(output.toString()) ?? '';
               final Map<String, dynamic> authJson = jsonDecode(match);
+
               if (authJson case {
                 'access_token': String accessToken,
                 'refresh_token': String refreshToken,
                 'expiry': String expiresIn,
               }) {
-                final model = DriveProviderModel(
+                final model = RemoteProviderModel(
                   remoteName: remoteName,
                   provider: driveProvider,
                   backend: OAuth2(
@@ -101,24 +164,32 @@ class RCloneAuthService implements AuthService {
                     refreshToken: refreshToken,
                     expiresIn: expiresIn,
                   ),
-                  createdAt: DateTime.now().toIso8601String(),
-                  updatedAt: DateTime.now().toIso8601String(),
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
                   isRCloneBackend: true,
                 );
 
                 return model;
               } else {
-                throw const GeneralError('Authorization response invalid');
+                throw const GeneralError(
+                  'Authorization response invalid',
+                  null,
+                  null,
+                );
               }
             },
-            (err, stackTrace) =>
-                err.handleError('OAuth2 auth failed', stackTrace),
+            (err, stackTrace) => ProviderError(
+              driveProvider,
+              ProviderOperationType.authorize,
+              err,
+              stackTrace,
+            ).logError(),
           ),
         ),
         S3(:final url, :final accessKeyId, :final secretAccessKey) => await $(
           TaskEither.tryCatch(
             () async {
-              final model = DriveProviderModel(
+              final model = RemoteProviderModel(
                 remoteName: remoteName,
                 provider: driveProvider,
                 backend: S3(
@@ -126,14 +197,19 @@ class RCloneAuthService implements AuthService {
                   accessKeyId: accessKeyId,
                   secretAccessKey: secretAccessKey,
                 ),
-                createdAt: DateTime.now().toIso8601String(),
-                updatedAt: DateTime.now().toIso8601String(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
                 isRCloneBackend: true,
               );
 
               return model;
             },
-            (err, stackTrace) => err.handleError('S3 auth failed', stackTrace),
+            (err, stackTrace) => ProviderError(
+              driveProvider,
+              ProviderOperationType.authorize,
+              err,
+              stackTrace,
+            ).logError(),
           ),
         ),
         UserPassword(:final password, :final username) => await $(
@@ -146,22 +222,26 @@ class RCloneAuthService implements AuthService {
               ]);
               final obscPassword = process.stdout;
 
-              final model = DriveProviderModel(
+              final model = RemoteProviderModel(
                 remoteName: remoteName,
                 provider: driveProvider,
                 backend: UserPassword(
                   username: username,
                   password: obscPassword,
                 ),
-                createdAt: DateTime.now().toIso8601String(),
-                updatedAt: DateTime.now().toIso8601String(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
                 isRCloneBackend: true,
               );
 
               return model;
             },
-            (err, stackTrace) =>
-                err.handleError('UserPassword auth failed', stackTrace),
+            (err, stackTrace) => ProviderError(
+              driveProvider,
+              ProviderOperationType.authorize,
+              err,
+              stackTrace,
+            ).logError(),
           ),
         ),
         Webdav(:final password, :final url, :final user) => await $(
@@ -174,19 +254,35 @@ class RCloneAuthService implements AuthService {
               ]);
               final obscPassword = process.stdout;
 
-              final model = DriveProviderModel(
+              final model = RemoteProviderModel(
                 remoteName: remoteName,
                 provider: driveProvider,
                 backend: Webdav(url: url, user: user, password: obscPassword),
-                createdAt: DateTime.now().toIso8601String(),
-                updatedAt: DateTime.now().toIso8601String(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
                 isRCloneBackend: true,
               );
 
               return model;
             },
-            (err, stackTrace) =>
-                err.handleError('Webdav auth failed', stackTrace),
+            (err, stackTrace) => ProviderError(
+              driveProvider,
+              ProviderOperationType.authorize,
+              err,
+              stackTrace,
+            ).logError(),
+          ),
+        ),
+        Local() => await $(
+          TaskEither.right(
+            RemoteProviderModel(
+              remoteName: remoteName,
+              provider: driveProvider,
+              backend: backend,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+              isRCloneBackend: false,
+            ),
           ),
         ),
       };
@@ -195,17 +291,20 @@ class RCloneAuthService implements AuthService {
       await $(
         TaskEither.tryCatch(
           () async {
+            // TODO: Use Either instead of Option
             final toWrite = driveProvider
-                .template(backend: model.backend)
+                .rCloneTemplate(model.backend)
+                .toOption()
                 .getOrElse(
-                  () =>
-                      throw const GeneralError(
-                        'Unable to fetch template for given provider.',
-                      ),
+                  () => throw const GeneralError(
+                    'Unable to fetch template for given provider.',
+                    null,
+                    null,
+                  ),
                 );
 
             // OneDrive requires drive ID which is not provided by rclone
-            if (model.provider == DriveProvider.oneDrive) {
+            if (model.provider is OneDriveProvider) {
               final backend = model.backend as OAuth2;
               final response = await _dio.get(
                 'https://graph.microsoft.com/v1.0/me/drive',
@@ -217,8 +316,12 @@ class RCloneAuthService implements AuthService {
                 ),
               );
               if (response.statusCode != 200) {
-                throw const HttpError(
+                throw HttpError(
                   'Microsoft Graph API cannot be accessed right now.',
+                  response.statusCode!,
+                  response.data,
+                  null,
+                  null,
                 );
               }
 
@@ -234,8 +337,12 @@ class RCloneAuthService implements AuthService {
 
             await configFile.writeAsString(iniConfig.toString());
           },
-          (err, stackTrace) =>
-              err.handleError('Failed to write output to config', stackTrace),
+          (err, stackTrace) => StorageError(
+            StorageErrorType.update,
+            StorageProviderType.rCloneConfig,
+            err,
+            stackTrace,
+          ),
         ),
       );
 
@@ -245,7 +352,7 @@ class RCloneAuthService implements AuthService {
 
   @override
   TaskEither<AppError, Option<DriveInfoModel>> driveInfo({
-    required DriveProviderModel model,
+    required RemoteProviderModel model,
   }) {
     final utils = RCloneUtils();
 
@@ -284,8 +391,41 @@ class RCloneAuthService implements AuthService {
               ),
             );
           },
-          (err, stackTrace) =>
-              err.handleError('Failed to get drive information', stackTrace),
+          (err, stackTrace) => GeneralError(
+            'Failed to get drive information',
+            err,
+            stackTrace,
+          ).logError(),
+        ),
+      );
+    });
+  }
+
+  @override
+  TaskEither<AppError, bool> isHealthy({required RemoteProviderModel model}) {
+    final utils = RCloneUtils();
+
+    return TaskEither.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
+
+      return await $(
+        TaskEither.tryCatch(
+          () async {
+            final process = await Process.run(execPath, [
+              ...configArgs,
+              'lsd',
+              '${model.remoteName}:',
+            ]);
+
+            return process.exitCode == 0;
+          },
+          (err, st) => ProviderError(
+            model.provider,
+            ProviderOperationType.getDriveInfo,
+            err,
+            st,
+          ),
         ),
       );
     });

@@ -6,7 +6,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:syncvault/helpers.dart';
+import 'package:syncvault/extensions.dart';
 import 'package:syncvault/errors.dart';
 
 class IntroductionView extends StatefulHookConsumerWidget {
@@ -32,12 +32,11 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
     ref.listen<AsyncValue>(rCloneDownloadControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
-          state.error!
-              .handleError(
-                'RClone download controller failed',
-                state.stackTrace ?? StackTrace.empty,
-              )
-              .message,
+          GeneralError(
+            'RClone download controller failed',
+            state.error!,
+            state.stackTrace,
+          ).logError().message,
         );
       }
     });
@@ -152,20 +151,20 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
                 child: FilledButton(
                   onPressed:
                       (rCloneDownloadProgress.isLoading ||
-                              (rCloneDownloadProgress.value != null &&
-                                  rCloneDownloadProgress.value != 0))
-                          ? null
-                          : () async {
-                            await rCloneDownloadControllerNotifier
-                                .rCloneDownload();
-                          },
+                          (rCloneDownloadProgress.value != null &&
+                              rCloneDownloadProgress.value != 0))
+                      ? null
+                      : () async {
+                          await rCloneDownloadControllerNotifier
+                              .rCloneDownload();
+                        },
                   child: Text(
                     rCloneDownloadProgress.isLoading ||
                             rCloneDownloadProgress.value != null &&
                                 rCloneDownloadProgress.value != 0
                         ? rCloneDownloadProgress.value == 100
-                            ? 'Complete'
-                            : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
+                              ? 'Complete'
+                              : 'Progress ${rCloneDownloadProgress.value ?? 0}%'
                         : 'Download RClone',
                   ),
                 ),

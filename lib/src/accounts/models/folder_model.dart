@@ -1,27 +1,27 @@
-// dart run build_runner build
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter/foundation.dart';
-import 'package:syncvault/src/common/models/drive_provider.dart';
 
 part 'folder_model.freezed.dart';
 part 'folder_model.g.dart';
 
 @freezed
 // TODO: Convert nullables to option when adapter is fixed
-abstract class FolderModel with _$FolderModel {
-  const factory FolderModel({
+sealed class FolderModel with _$FolderModel {
+  const factory FolderModel.remote({
+    required String id,
     required String remoteName,
-    required DriveProvider provider,
-    required String folderPath,
     required String folderName,
-    required String? remoteParentPath,
-    required bool isAutoSync,
-    required bool isDeletionEnabled,
-    required bool isTwoWaySync,
+    required String? parentPath,
     required String? folderId,
-    required bool isRCloneBackend,
-  }) = _FolderModel;
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = RemoteFolderModel;
+  const factory FolderModel.local({
+    required String id,
+    required String folderName,
+    required String folderPath,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = LocalFolderModel;
 
   factory FolderModel.fromJson(Map<String, Object?> json) =>
       _$FolderModelFromJson(json);
