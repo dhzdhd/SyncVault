@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
 import 'package:syncvault/src/workflows/components/new_workflow_dialog.dart';
 import 'package:syncvault/src/workflows/controllers/workflow_controller.dart';
+import 'package:syncvault/src/workflows/views/workflow_editor_view.dart';
 
 class WorkflowsView extends ConsumerWidget {
   const WorkflowsView({super.key});
@@ -47,9 +48,14 @@ class WorkflowsView extends ConsumerWidget {
                         title: Text(workflow.name),
                         subtitle: Text(workflow.name),
                         onTap: () {
-                          Navigator.of(
-                            context,
-                          ).pushNamed('/workflows/${workflow.name}');
+                          if (context.mounted) {
+                            Navigator.of(context).push<void>(
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    WorkflowEditorView(workflowModel: workflow),
+                              ),
+                            );
+                          }
                         },
                       ),
                     )

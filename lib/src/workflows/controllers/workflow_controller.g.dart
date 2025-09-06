@@ -6,7 +6,7 @@ part of 'workflow_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$workflowHash() => r'5525682c106281dceaa61b5451193aa5d51f8c47';
+String _$workflowHash() => r'164f625e7691b9e7593b600c7a357cd5af6834e1';
 
 /// See also [Workflow].
 @ProviderFor(Workflow)

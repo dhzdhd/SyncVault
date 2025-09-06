@@ -305,10 +305,9 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return WorkflowModel(
+      id: fields[6] as String,
       name: fields[0] as String,
-      workflowJson: fields[1] as String?,
-      nodeType: fields[2] as WorkflowNode,
-      linkType: fields[3] as WorkflowOperation,
+      workflowJson: (fields[1] as Map?)?.cast<String, Object>(),
       createdAt: fields[4] as DateTime,
       updatedAt: fields[5] as DateTime,
     );
@@ -317,19 +316,17 @@ class WorkflowModelAdapter extends TypeAdapter<WorkflowModel> {
   @override
   void write(BinaryWriter writer, WorkflowModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.workflowJson)
-      ..writeByte(2)
-      ..write(obj.nodeType)
-      ..writeByte(3)
-      ..write(obj.linkType)
       ..writeByte(4)
       ..write(obj.createdAt)
       ..writeByte(5)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(6)
+      ..write(obj.id);
   }
 
   @override

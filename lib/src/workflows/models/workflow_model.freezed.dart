@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WorkflowModel {
 
- String get name; String? get workflowJson; WorkflowNode get nodeType; WorkflowOperation get linkType; DateTime get createdAt; DateTime get updatedAt;
+ String get id; String get name; Map<String, Object>? get workflowJson; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of WorkflowModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $WorkflowModelCopyWith<WorkflowModel> get copyWith => _$WorkflowModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkflowModel&&(identical(other.name, name) || other.name == name)&&(identical(other.workflowJson, workflowJson) || other.workflowJson == workflowJson)&&(identical(other.nodeType, nodeType) || other.nodeType == nodeType)&&(identical(other.linkType, linkType) || other.linkType == linkType)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkflowModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.workflowJson, workflowJson)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,workflowJson,nodeType,linkType,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(workflowJson),createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'WorkflowModel(name: $name, workflowJson: $workflowJson, nodeType: $nodeType, linkType: $linkType, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'WorkflowModel(id: $id, name: $name, workflowJson: $workflowJson, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $WorkflowModelCopyWith<$Res>  {
   factory $WorkflowModelCopyWith(WorkflowModel value, $Res Function(WorkflowModel) _then) = _$WorkflowModelCopyWithImpl;
 @useResult
 $Res call({
- String name, String? workflowJson, WorkflowNode nodeType, WorkflowOperation linkType, DateTime createdAt, DateTime updatedAt
+ String id, String name, Map<String, Object>? workflowJson, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -66,13 +66,12 @@ class _$WorkflowModelCopyWithImpl<$Res>
 
 /// Create a copy of WorkflowModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? workflowJson = freezed,Object? nodeType = null,Object? linkType = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? workflowJson = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
-name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,workflowJson: freezed == workflowJson ? _self.workflowJson : workflowJson // ignore: cast_nullable_to_non_nullable
-as String?,nodeType: null == nodeType ? _self.nodeType : nodeType // ignore: cast_nullable_to_non_nullable
-as WorkflowNode,linkType: null == linkType ? _self.linkType : linkType // ignore: cast_nullable_to_non_nullable
-as WorkflowOperation,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as Map<String, Object>?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -85,13 +84,20 @@ as DateTime,
 @JsonSerializable()
 
 class _WorkflowModel implements WorkflowModel {
-  const _WorkflowModel({required this.name, required this.workflowJson, required this.nodeType, required this.linkType, required this.createdAt, required this.updatedAt});
+  const _WorkflowModel({required this.id, required this.name, required final  Map<String, Object>? workflowJson, required this.createdAt, required this.updatedAt}): _workflowJson = workflowJson;
   factory _WorkflowModel.fromJson(Map<String, dynamic> json) => _$WorkflowModelFromJson(json);
 
+@override final  String id;
 @override final  String name;
-@override final  String? workflowJson;
-@override final  WorkflowNode nodeType;
-@override final  WorkflowOperation linkType;
+ final  Map<String, Object>? _workflowJson;
+@override Map<String, Object>? get workflowJson {
+  final value = _workflowJson;
+  if (value == null) return null;
+  if (_workflowJson is EqualUnmodifiableMapView) return _workflowJson;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 
@@ -108,16 +114,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkflowModel&&(identical(other.name, name) || other.name == name)&&(identical(other.workflowJson, workflowJson) || other.workflowJson == workflowJson)&&(identical(other.nodeType, nodeType) || other.nodeType == nodeType)&&(identical(other.linkType, linkType) || other.linkType == linkType)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkflowModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._workflowJson, _workflowJson)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,workflowJson,nodeType,linkType,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(_workflowJson),createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'WorkflowModel(name: $name, workflowJson: $workflowJson, nodeType: $nodeType, linkType: $linkType, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'WorkflowModel(id: $id, name: $name, workflowJson: $workflowJson, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -128,7 +134,7 @@ abstract mixin class _$WorkflowModelCopyWith<$Res> implements $WorkflowModelCopy
   factory _$WorkflowModelCopyWith(_WorkflowModel value, $Res Function(_WorkflowModel) _then) = __$WorkflowModelCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String? workflowJson, WorkflowNode nodeType, WorkflowOperation linkType, DateTime createdAt, DateTime updatedAt
+ String id, String name, Map<String, Object>? workflowJson, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -145,13 +151,12 @@ class __$WorkflowModelCopyWithImpl<$Res>
 
 /// Create a copy of WorkflowModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? workflowJson = freezed,Object? nodeType = null,Object? linkType = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? workflowJson = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_WorkflowModel(
-name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,workflowJson: freezed == workflowJson ? _self.workflowJson : workflowJson // ignore: cast_nullable_to_non_nullable
-as String?,nodeType: null == nodeType ? _self.nodeType : nodeType // ignore: cast_nullable_to_non_nullable
-as WorkflowNode,linkType: null == linkType ? _self.linkType : linkType // ignore: cast_nullable_to_non_nullable
-as WorkflowOperation,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,workflowJson: freezed == workflowJson ? _self._workflowJson : workflowJson // ignore: cast_nullable_to_non_nullable
+as Map<String, Object>?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

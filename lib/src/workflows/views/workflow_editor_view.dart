@@ -3,18 +3,21 @@ import 'dart:convert';
 import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/workflows/components/data_handlers.dart';
 import 'package:syncvault/src/workflows/components/hierarchy.dart';
 import 'package:syncvault/src/workflows/components/nodes.dart';
 import 'package:syncvault/src/workflows/components/search.dart';
+import 'package:syncvault/src/workflows/controllers/workflow_controller.dart';
+import 'package:syncvault/src/workflows/models/workflow_model.dart';
 
 class WorkflowEditorView extends StatefulHookConsumerWidget {
-  const WorkflowEditorView({super.key, required this.workflowName});
+  const WorkflowEditorView({super.key, required this.workflowModel});
 
-  final String workflowName;
+  final WorkflowModel workflowModel;
 
-  String get routeName => '/workflows/$workflowName';
+  String get routeName => '/workflows/${workflowModel.name}';
 
   @override
   ConsumerState<WorkflowEditorView> createState() => _WorkflowEditorViewState();
@@ -30,50 +33,17 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
     super.initState();
 
     final folders = ref.read(folderProvider);
-
-    _nodeEditorController = FlNodeEditorController(
-      style: const FlNodeEditorStyle(
-        highlightAreaStyle: FlHighlightAreaStyle(
-          borderWidth: 0,
-          color: Colors.transparent,
-        ),
-      ),
-      projectSaver: (jsonData) async {
-        return true;
-      },
-      projectLoader: (isSaved) async {
-        if (!isSaved) {
-          final bool? proceed = await showDialog<bool>(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Unsaved Changes'),
-                content: const Text(
-                  'You have unsaved changes. Do you want to proceed without saving?',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: const Text('Proceed'),
-                  ),
-                ],
-              );
-            },
-          );
-
-          if (proceed != true) return null;
-        }
-
-        return jsonDecode('');
-      },
-    );
+    _nodeEditorController = FlNodeEditorController();
 
     registerDataHandlers(_nodeEditorController);
     registerNodes(context, _nodeEditorController, folders);
+
+    if (widget.workflowModel.workflowJson != null) {
+      final json = widget.workflowModel.workflowJson;
+
+      // Encode and decode necessary to ensure resulting type is Map<String, dynamic>
+      _nodeEditorController.project.load(data: jsonDecode(jsonEncode(json)));
+    }
   }
 
   @override
@@ -84,12 +54,42 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
 
   @override
   Widget build(BuildContext context) {
+    final workflowNotifier = ref.read(workflowProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Workflow Editor',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final nodesJson = _nodeEditorController.nodes.values
+                  .map(
+                    (node) =>
+                        node.toJson(_nodeEditorController.project.dataHandlers),
+                  )
+                  .toList();
+
+              final json = {
+                'viewport': {
+                  'offset': [
+                    _nodeEditorController.project.viewportOffset.dx,
+                    _nodeEditorController.project.viewportOffset.dy,
+                  ],
+                  'zoom': _nodeEditorController.project.viewportZoom,
+                },
+                'nodes': nodesJson,
+              };
+
+              await workflowNotifier.updateJson(
+                model: widget.workflowModel.copyWith(workflowJson: json),
+              );
+            },
+            icon: Icon(Icons.save),
+          ),
+        ],
       ),
       body: Center(
         child: Row(

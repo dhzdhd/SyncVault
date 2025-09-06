@@ -81,20 +81,18 @@ types:
         index: 2
   WorkflowModel:
     typeId: 21
-    nextIndex: 6
+    nextIndex: 7
     fields:
       name:
         index: 0
       workflowJson:
         index: 1
-      nodeType:
-        index: 2
-      linkType:
-        index: 3
       createdAt:
         index: 4
       updatedAt:
         index: 5
+      id:
+        index: 6
   FolderHashModel:
     typeId: 22
     nextIndex: 2

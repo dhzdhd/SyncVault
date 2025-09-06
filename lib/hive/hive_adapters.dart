@@ -12,7 +12,6 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
 import 'package:syncvault/src/introduction/models/intro_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
-import 'package:syncvault/src/workflows/models/workflow_type.dart';
 
 part 'hive_adapters.g.dart';
 

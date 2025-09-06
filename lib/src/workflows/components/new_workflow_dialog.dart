@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hashlib/random.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/extensions.dart';
+import 'package:syncvault/src/workflows/controllers/workflow_controller.dart';
+import 'package:syncvault/src/workflows/models/workflow_model.dart';
 import 'package:syncvault/src/workflows/views/workflow_editor_view.dart';
 
 class NewWorkflowWidget extends StatefulHookConsumerWidget {
@@ -27,6 +30,8 @@ class _NewWorkflowWidgetState extends ConsumerState<NewWorkflowWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final workflowNotifier = ref.read(workflowProvider.notifier);
+
     return SimpleDialog(
       title: const Text('Create new workflow'),
       contentPadding: const EdgeInsets.all(24),
@@ -47,13 +52,24 @@ class _NewWorkflowWidgetState extends ConsumerState<NewWorkflowWidget> {
               return;
             }
 
-            Navigator.of(context).pop();
-            Navigator.of(context).push<void>(
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) =>
-                    WorkflowEditorView(workflowName: _nameController.text),
-              ),
+            final model = WorkflowModel(
+              id: uuid.v4(),
+              name: _nameController.text,
+              workflowJson: null,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
             );
+            await workflowNotifier.create(model: model);
+
+            if (context.mounted) {
+              Navigator.of(context).pop();
+              Navigator.of(context).push<void>(
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) =>
+                      WorkflowEditorView(workflowModel: model),
+                ),
+              );
+            }
           },
         ),
       ],
