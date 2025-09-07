@@ -3,18 +3,26 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
+import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
+import 'package:syncvault/src/common/utils/associations.dart';
+import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/home/models/folder_hash_model.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/injectable/injectable.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/setup.dart';
+import 'package:syncvault/src/home/services/file_comparer.dart';
 import 'package:syncvault/src/workflows/models/workflow_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -89,108 +97,86 @@ void callbackDispatcher() {
 
     await setupHiveBox<DriveProviderModel>(boxPath);
     await setupHiveBox<ConnectionModel>(boxPath);
-    // final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
+    final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
 
-    // final folders = Folder.init().filter((folder) => folder.isAutoSync);
-    // final hashes = GetIt.I<Box<FolderHashModel>>().values;
+    final connections = Connection.init().filter((conn) => conn.isAutoSync);
+    final folders = Folder.init();
+    final providers = await Auth.init();
+    final hashes = GetIt.I<Box<FolderHashModel>>().values;
 
-    // final fileComparer = FileComparer();
-    // final hashStorage = HiveStorage<FolderHashModel>(hashBox);
+    final fileComparer = FileComparer();
+    final _ = HiveStorage<FolderHashModel>(hashBox);
 
     // File watcher approach does not work on mobile devices
-    // FIXME: Change the approach for the new FolderModel
-    // for (final folderModel in folders) {
-    //   final entities = await Directory(
-    //     folderModel.folderPath,
-    //   ).list(recursive: true).toList();
-    //   final files = entities.whereType<File>().toList();
+    for (final connection in connections) {
+      final (firstFolderOpt, secondFolderOpt) = getFoldersFromConnection(
+        connection,
+        folders,
+      );
 
-    //   debugLogger.i(files);
+      if (firstFolderOpt.isNone() || secondFolderOpt.isNone()) {
+        continue;
+      }
 
-    //   // Compare calculated and stored hash
-    //   final calcHashResult = await fileComparer.calcHash(files).run();
-    //   final storedHashResult = hashes
-    //       .filter((model) => model.remoteName == folderModel.remoteName)
-    //       .firstOption
-    //       .toEither(
-    //         () => const GeneralError('Stored hash does not exist', null, null),
-    //       );
+      final firstFolder = firstFolderOpt.toNullable()!;
+      final secondFolder = secondFolderOpt.toNullable()!;
 
-    //   final Either<AppError, bool> hashCompareResult = Either.Do(($) {
-    //     final calcHash = $(calcHashResult);
-    //     final storedHash = $(storedHashResult).hash;
+      final Option<LocalFolderModel> localFolder = switch ((
+        firstFolder,
+        secondFolder,
+      )) {
+        (final x, _) when x is LocalFolderModel => Some(x),
+        (_, final y) when y is LocalFolderModel => Some(y),
+        _ => None(),
+      };
 
-    //     debugLogger.i(calcHash);
-    //     debugLogger.i(storedHash);
+      localFolder.match(() {}, (localFolder) async {
+        final _ = getProviderFromFolder(providers, firstFolder);
+        final _ = getProviderFromFolder(providers, secondFolder);
 
-    //     return fileComparer.isSameFolder(calcHash, storedHash);
-    //   });
+        final entities = await Directory(
+          localFolder.folderPath,
+        ).list(recursive: true).toList();
+        final files = entities.whereType<File>().toList();
 
-    //   // If equal, sync files
-    //   hashCompareResult.match(
-    //     (err) {
-    //       GeneralError(
-    //         'Error in comparing hashes',
-    //         err,
-    //         err.stackTrace,
-    //       ).logError();
-    //     },
-    //     (isSameFolder) async {
-    //       if (!isSameFolder) {
-    //         final providerModel = authProviders
-    //             .filter(
-    //               (provider) => provider.remoteName == folderModel.remoteName,
-    //             )
-    //             .firstOption;
+        debugLogger.i(files);
 
-    //         final uploadRes = await service
-    //             .upload(
-    //               providerModel: providerModel.toNullable()!,
-    //               folderModel: folderModel,
-    //               localPath: folderModel.folderPath,
-    //               rCloneExecPath: execPath,
-    //             )
-    //             .run();
+        // Compare calculated and stored hash
+        final calcHashResult = await fileComparer.calcHash(files).run();
+        final storedHashResult = hashes
+            .filter((hash) => hash.id == localFolder.id)
+            .firstOption
+            .toEither(
+              () =>
+                  const GeneralError('Stored hash does not exist', null, null),
+            );
 
-    //         uploadRes.match(
-    //           // FIXME: Fails by - no impl found for getNativeLibraryPath
-    //           // Workaround - pass the path to bg after calling it in main isolate
-    //           (err) => GeneralError(
-    //             'Failed to do background sync',
-    //             err,
-    //             err.stackTrace,
-    //           ).logError(),
-    //           (_) async {
-    //             debugLogger.i('Background sync completed');
+        final Either<AppError, bool> hashCompareResult = Either.Do(($) {
+          final calcHash = $(calcHashResult);
+          final storedHash = $(storedHashResult).hash;
 
-    //             final files = await Directory(
-    //               folderModel.folderPath,
-    //             ).list(recursive: true).toList();
-    //             final hashResult = await fileComparer
-    //                 .calcHash(files.whereType<File>().toList())
-    //                 .run();
-    //             hashResult.match(
-    //               (err) =>
-    //                   GeneralError(err.message, err, err.stackTrace).logError(),
-    //               (hash) {
-    //                 final hashModels = hashStorage.fetchAll().toList();
-    //                 final model = FolderHashModel(
-    //                   hash: hash,
-    //                   remoteName: folderModel.remoteName,
-    //                 );
-    //                 hashStorage.update(
-    //                   hashModels
-    //                     ..removeWhere((e) => e.remoteName == model.remoteName)
-    //                     ..add(model),
-    //                 );
-    //               },
-    //             );
-    //           },
-    //         );
-    //       }
-    //     },
-    //   );
-    // }
+          debugLogger.i(calcHash);
+          debugLogger.i(storedHash);
+
+          return fileComparer.isSameFolder(calcHash, storedHash);
+        });
+
+        // If equal, sync files
+        hashCompareResult.match(
+          (err) {
+            GeneralError(
+              'Error in comparing hashes',
+              err,
+              err.stackTrace,
+            ).logError();
+          },
+          (val) {
+            debugLogger.i(val);
+            // TODO:
+          },
+        );
+      });
+    }
 
     return Future.value(true);
   });

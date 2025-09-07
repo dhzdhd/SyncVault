@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FolderHashModel {
 
- String get remoteName;@HashDigestConverter() HashDigest get hash;
+ String get id;@HashDigestConverter() HashDigest get hash;
 /// Create a copy of FolderHashModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $FolderHashModelCopyWith<FolderHashModel> get copyWith => _$FolderHashModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FolderHashModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.hash, hash) || other.hash == hash));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FolderHashModel&&(identical(other.id, id) || other.id == id)&&(identical(other.hash, hash) || other.hash == hash));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,remoteName,hash);
+int get hashCode => Object.hash(runtimeType,id,hash);
 
 @override
 String toString() {
-  return 'FolderHashModel(remoteName: $remoteName, hash: $hash)';
+  return 'FolderHashModel(id: $id, hash: $hash)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $FolderHashModelCopyWith<$Res>  {
   factory $FolderHashModelCopyWith(FolderHashModel value, $Res Function(FolderHashModel) _then) = _$FolderHashModelCopyWithImpl;
 @useResult
 $Res call({
- String remoteName,@HashDigestConverter() HashDigest hash
+ String id,@HashDigestConverter() HashDigest hash
 });
 
 
@@ -66,9 +66,9 @@ class _$FolderHashModelCopyWithImpl<$Res>
 
 /// Create a copy of FolderHashModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? remoteName = null,Object? hash = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? hash = null,}) {
   return _then(_self.copyWith(
-remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,hash: null == hash ? _self.hash : hash // ignore: cast_nullable_to_non_nullable
 as HashDigest,
   ));
@@ -81,10 +81,10 @@ as HashDigest,
 @JsonSerializable()
 
 class _FolderHashModel implements FolderHashModel {
-  const _FolderHashModel({required this.remoteName, @HashDigestConverter() required this.hash});
+  const _FolderHashModel({required this.id, @HashDigestConverter() required this.hash});
   factory _FolderHashModel.fromJson(Map<String, dynamic> json) => _$FolderHashModelFromJson(json);
 
-@override final  String remoteName;
+@override final  String id;
 @override@HashDigestConverter() final  HashDigest hash;
 
 /// Create a copy of FolderHashModel
@@ -100,16 +100,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FolderHashModel&&(identical(other.remoteName, remoteName) || other.remoteName == remoteName)&&(identical(other.hash, hash) || other.hash == hash));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FolderHashModel&&(identical(other.id, id) || other.id == id)&&(identical(other.hash, hash) || other.hash == hash));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,remoteName,hash);
+int get hashCode => Object.hash(runtimeType,id,hash);
 
 @override
 String toString() {
-  return 'FolderHashModel(remoteName: $remoteName, hash: $hash)';
+  return 'FolderHashModel(id: $id, hash: $hash)';
 }
 
 
@@ -120,7 +120,7 @@ abstract mixin class _$FolderHashModelCopyWith<$Res> implements $FolderHashModel
   factory _$FolderHashModelCopyWith(_FolderHashModel value, $Res Function(_FolderHashModel) _then) = __$FolderHashModelCopyWithImpl;
 @override @useResult
 $Res call({
- String remoteName,@HashDigestConverter() HashDigest hash
+ String id,@HashDigestConverter() HashDigest hash
 });
 
 
@@ -137,9 +137,9 @@ class __$FolderHashModelCopyWithImpl<$Res>
 
 /// Create a copy of FolderHashModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? remoteName = null,Object? hash = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? hash = null,}) {
   return _then(_FolderHashModel(
-remoteName: null == remoteName ? _self.remoteName : remoteName // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,hash: null == hash ? _self.hash : hash // ignore: cast_nullable_to_non_nullable
 as HashDigest,
   ));

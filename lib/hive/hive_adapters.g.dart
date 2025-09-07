@@ -351,7 +351,7 @@ class FolderHashModelAdapter extends TypeAdapter<FolderHashModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FolderHashModel(
-      remoteName: fields[0] as String,
+      id: fields[2] as String,
       hash: fields[1] as HashDigest,
     );
   }
@@ -360,10 +360,10 @@ class FolderHashModelAdapter extends TypeAdapter<FolderHashModel> {
   void write(BinaryWriter writer, FolderHashModel obj) {
     writer
       ..writeByte(2)
-      ..writeByte(0)
-      ..write(obj.remoteName)
       ..writeByte(1)
-      ..write(obj.hash);
+      ..write(obj.hash)
+      ..writeByte(2)
+      ..write(obj.id);
   }
 
   @override

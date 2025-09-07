@@ -8,12 +8,12 @@ part of 'folder_hash_model.dart';
 
 _FolderHashModel _$FolderHashModelFromJson(Map<String, dynamic> json) =>
     _FolderHashModel(
-      remoteName: json['remoteName'] as String,
+      id: json['id'] as String,
       hash: const HashDigestConverter().fromJson(json['hash'] as String),
     );
 
 Map<String, dynamic> _$FolderHashModelToJson(_FolderHashModel instance) =>
     <String, dynamic>{
-      'remoteName': instance.remoteName,
+      'id': instance.id,
       'hash': const HashDigestConverter().toJson(instance.hash),
     };

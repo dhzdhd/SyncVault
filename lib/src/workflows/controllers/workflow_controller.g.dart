@@ -7,7 +7,7 @@ part of 'workflow_controller.dart';
 // **************************************************************************
 
 String _$workflowControllerHash() =>
-    r'34cc280f4ff4c69f739c5ef739ddae09f9e60832';
+    r'ae1768f35b4bbeb36e3edf07bf6bd7f8c878cbba';
 
 /// See also [WorkflowController].
 @ProviderFor(WorkflowController)

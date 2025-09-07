@@ -95,12 +95,12 @@ types:
         index: 6
   FolderHashModel:
     typeId: 22
-    nextIndex: 2
+    nextIndex: 3
     fields:
-      remoteName:
-        index: 0
       hash:
         index: 1
+      id:
+        index: 2
   HashDigest:
     typeId: 23
     nextIndex: 1
