@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/workflows/components/data_handlers.dart';
 import 'package:syncvault/src/workflows/components/hierarchy.dart';
@@ -39,10 +38,10 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
     registerNodes(context, _nodeEditorController, folders);
 
     if (widget.workflowModel.workflowJson != null) {
-      final json = widget.workflowModel.workflowJson;
-
       // Encode and decode necessary to ensure resulting type is Map<String, dynamic>
-      _nodeEditorController.project.load(data: jsonDecode(jsonEncode(json)));
+      final json = jsonDecode(jsonEncode(widget.workflowModel.workflowJson));
+
+      _nodeEditorController.project.load(data: json);
     }
   }
 

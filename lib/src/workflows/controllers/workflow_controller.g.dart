@@ -6,7 +6,24 @@ part of 'workflow_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$workflowHash() => r'164f625e7691b9e7593b600c7a357cd5af6834e1';
+String _$workflowControllerHash() =>
+    r'34cc280f4ff4c69f739c5ef739ddae09f9e60832';
+
+/// See also [WorkflowController].
+@ProviderFor(WorkflowController)
+final workflowControllerProvider =
+    AutoDisposeAsyncNotifierProvider<WorkflowController, void>.internal(
+      WorkflowController.new,
+      name: r'workflowControllerProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$workflowControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$WorkflowController = AutoDisposeAsyncNotifier<void>;
+String _$workflowHash() => r'4e23b05d9f15737012a475270ca4186c30299bea';
 
 /// See also [Workflow].
 @ProviderFor(Workflow)

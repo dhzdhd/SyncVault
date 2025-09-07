@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:fl_nodes/fl_nodes.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,6 +11,21 @@ part 'workflow_controller.g.dart';
 
 final _box = GetIt.I<Box<WorkflowModel>>();
 final _storage = HiveStorage<WorkflowModel>(_box);
+
+@riverpod
+class WorkflowController extends _$WorkflowController {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> run({required WorkflowModel workflow}) async {
+    final workflowNotifier = ref.read(workflowProvider.notifier);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => workflowNotifier.run(workflow: workflow),
+    );
+  }
+}
 
 @riverpod
 class Workflow extends _$Workflow {
@@ -24,6 +42,21 @@ class Workflow extends _$Workflow {
     state = [...state, model];
 
     await _storage.addSingle(model);
+  }
+
+  Future<void> delete({required WorkflowModel workflow}) async {
+    state = [...state..removeWhere((item) => item.id == workflow.id)];
+
+    await _storage.update(state);
+  }
+
+  Future<void> run({required WorkflowModel workflow}) async {
+    // Encode and decode necessary to ensure resulting type is Map<String, dynamic>
+    final json = jsonDecode(jsonEncode(workflow.workflowJson));
+
+    final controller = FlNodeEditorController();
+    controller.project.load(data: jsonDecode(jsonEncode(json)));
+    await controller.runner.executeGraph();
   }
 
   Future<void> updateJson({required WorkflowModel model}) async {
