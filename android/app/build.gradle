@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.syncvault"
-    compileSdkVersion 35
+    compileSdkVersion 36
     ndkVersion flutter.ndkVersion
 
     defaultConfig {

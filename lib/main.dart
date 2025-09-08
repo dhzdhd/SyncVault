@@ -23,6 +23,7 @@ import 'package:syncvault/injectable/injectable.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/setup.dart';
 import 'package:syncvault/src/home/services/file_comparer.dart';
+import 'package:syncvault/src/home/services/rclone.dart';
 import 'package:syncvault/src/workflows/models/workflow_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -105,7 +106,7 @@ void callbackDispatcher() {
     final hashes = GetIt.I<Box<FolderHashModel>>().values;
 
     final fileComparer = FileComparer();
-    final _ = HiveStorage<FolderHashModel>(hashBox);
+    final hashStorage = HiveStorage<FolderHashModel>(hashBox);
 
     // File watcher approach does not work on mobile devices
     for (final connection in connections) {
@@ -130,10 +131,20 @@ void callbackDispatcher() {
         _ => None(),
       };
 
-      localFolder.match(() {}, (localFolder) async {
-        final _ = getProviderFromFolder(providers, firstFolder);
-        final _ = getProviderFromFolder(providers, secondFolder);
+      final firstProvider = getProviderFromFolder(
+        providers,
+        firstFolder,
+      ).toNullable();
+      final secondProvider = getProviderFromFolder(
+        providers,
+        secondFolder,
+      ).toNullable();
 
+      if (firstProvider == null || secondProvider == null) {
+        continue;
+      }
+
+      localFolder.match(() {}, (localFolder) async {
         final entities = await Directory(
           localFolder.folderPath,
         ).list(recursive: true).toList();
@@ -162,7 +173,7 @@ void callbackDispatcher() {
         });
 
         // If equal, sync files
-        hashCompareResult.match(
+        await hashCompareResult.match(
           (err) {
             GeneralError(
               'Error in comparing hashes',
@@ -170,9 +181,52 @@ void callbackDispatcher() {
               err.stackTrace,
             ).logError();
           },
-          (val) {
-            debugLogger.i(val);
-            // TODO:
+          (isSameFolder) async {
+            debugLogger.i(isSameFolder);
+
+            final result = await RCloneSyncService()
+                .sync_(
+                  connectionModel: connection,
+                  firstFolder: firstFolder,
+                  firstProvider: firstProvider,
+                  secondFolder: secondFolder,
+                  secondProvider: secondProvider,
+                )
+                .run();
+
+            result.match(
+              (err) => GeneralError(
+                'Failed to do background sync',
+                err,
+                err.stackTrace,
+              ).logError(),
+              (_) async {
+                debugLogger.i('Background sync completed');
+
+                final files = await Directory(
+                  localFolder.folderPath,
+                ).list(recursive: true).toList();
+                final hashResult = await fileComparer
+                    .calcHash(files.whereType<File>().toList())
+                    .run();
+                hashResult.match(
+                  (err) =>
+                      GeneralError(err.message, err, err.stackTrace).logError(),
+                  (hash) {
+                    final hashModels = hashStorage.fetchAll().toList();
+                    final model = FolderHashModel(
+                      hash: hash,
+                      id: localFolder.id,
+                    );
+                    hashStorage.update(
+                      hashModels
+                        ..removeWhere((hash) => hash.id == localFolder.id)
+                        ..add(model),
+                    );
+                  },
+                );
+              },
+            );
           },
         );
       });
