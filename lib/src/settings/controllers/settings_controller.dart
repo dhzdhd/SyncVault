@@ -79,6 +79,11 @@ class Settings extends _$Settings {
     _box.put(settingsKey, state);
   }
 
+  void updateRClonePath({required String path}) {
+    state = state.copyWith(rClonePath: path);
+    _box.put(settingsKey, state);
+  }
+
   void resetSettings() async {
     state = defaultValue;
     _box.put(settingsKey, state);

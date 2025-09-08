@@ -12,13 +12,34 @@ import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
 import '../controllers/settings_controller.dart';
 
-class SettingsView extends ConsumerWidget {
+class SettingsView extends ConsumerStatefulWidget {
   const SettingsView({super.key});
 
   static const routeName = '/settings';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends ConsumerState<SettingsView> {
+  late final TextEditingController _rClonePathController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final settings = ref.read(settingsProvider);
+    _rClonePathController = TextEditingController(text: settings.rClonePath);
+  }
+
+  @override
+  void dispose() {
+    _rClonePathController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
     final folderNotifier = ref.read(folderProvider.notifier);
@@ -104,9 +125,53 @@ class SettingsView extends ConsumerWidget {
                       value: settings.isLaunchOnStartup,
                       onChanged: (val) {
                         settingsNotifier.toggleLaunchOnStartup();
+                        Navigator.of(context).pop();
                       },
                     ),
                   ),
+                Visibility(
+                  visible: PlatformExtension.isDesktop,
+                  child: ListTile(
+                    minTileHeight: 64,
+                    title: Text(
+                      'Change RClone path',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    subtitle: const Text(
+                      'Change RClone path from the default of - <documents_directory>/SyncVault/rclone.conf',
+                    ),
+                    onTap: () async {
+                      final config = await RCloneUtils().getIniConfig().run();
+                      config.match((e) => {}, (ini) async {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => SimpleDialog(
+                            contentPadding: EdgeInsetsGeometry.all(24),
+                            title: const Text('Change RClone path'),
+                            children: [
+                              TextField(
+                                controller: _rClonePathController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Path',
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: () {
+                                  settingsNotifier.updateRClonePath(
+                                    path: _rClonePathController.text,
+                                  );
+                                },
+                                child: Text('Submit'),
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                    },
+                  ),
+                ),
                 if (PlatformExtension.isDesktop)
                   ListTile(
                     minTileHeight: 64,

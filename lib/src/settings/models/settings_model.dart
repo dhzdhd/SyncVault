@@ -12,6 +12,7 @@ abstract class SettingsModel with _$SettingsModel {
     required bool isSentryEnabled,
     required bool isHideOnStartup,
     required bool isLaunchOnStartup,
+    required String? rClonePath,
     required ThemeMode themeMode,
   }) = _SettingsModel;
 
@@ -22,6 +23,7 @@ abstract class SettingsModel with _$SettingsModel {
     isSentryEnabled: false,
     isHideOnStartup: false,
     isLaunchOnStartup: false,
+    rClonePath: null,
     themeMode: ThemeMode.system,
   );
 }
