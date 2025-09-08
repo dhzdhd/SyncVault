@@ -29,7 +29,11 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
     super.initState();
 
     final settings = ref.read(settingsProvider);
-    _rClonePathController = TextEditingController(text: settings.rClonePath);
+    if (settings.hasValue) {
+      _rClonePathController = TextEditingController(
+        text: settings.value!.rClonePath,
+      );
+    }
   }
 
   @override
@@ -75,8 +79,11 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                     width: 180,
                     enableSearch: false,
                     enableFilter: false,
-                    initialSelection: settings.themeMode,
-                    onSelected: settingsNotifier.updateThemeMode,
+                    initialSelection: settings.value?.themeMode,
+                    onSelected: settings is! AsyncData
+                        ? null
+                        : (val) async =>
+                              await settingsNotifier.updateThemeMode(val),
                     dropdownMenuEntries: ThemeMode.values
                         .map(
                           (val) => DropdownMenuEntry(
@@ -94,10 +101,12 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   trailing: Switch(
-                    value: settings.isSentryEnabled,
-                    onChanged: (val) {
-                      settingsNotifier.toggleSentryEnabled();
-                    },
+                    value: settings.value?.isSentryEnabled ?? false,
+                    onChanged: settings is! AsyncData
+                        ? null
+                        : (val) async {
+                            await settingsNotifier.toggleSentryEnabled();
+                          },
                   ),
                 ),
                 if (PlatformExtension.isDesktop)
@@ -108,10 +117,12 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     trailing: Switch(
-                      value: settings.isHideOnStartup,
-                      onChanged: (val) {
-                        settingsNotifier.toggleHideOnStartup();
-                      },
+                      value: settings.value?.isHideOnStartup ?? false,
+                      onChanged: settings is! AsyncData
+                          ? null
+                          : (val) async {
+                              await settingsNotifier.toggleHideOnStartup();
+                            },
                     ),
                   ),
                 if (PlatformExtension.isDesktop)
@@ -122,11 +133,16 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     trailing: Switch(
-                      value: settings.isLaunchOnStartup,
-                      onChanged: (val) {
-                        settingsNotifier.toggleLaunchOnStartup();
-                        Navigator.of(context).pop();
-                      },
+                      value: settings.value?.isLaunchOnStartup ?? false,
+                      onChanged: settings is! AsyncData
+                          ? null
+                          : (val) async {
+                              await settingsNotifier.toggleLaunchOnStartup();
+
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            },
                     ),
                   ),
                 Visibility(
@@ -158,8 +174,8 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                               ),
                               SizedBox(height: 16),
                               ElevatedButton(
-                                onPressed: () {
-                                  settingsNotifier.updateRClonePath(
+                                onPressed: () async {
+                                  await settingsNotifier.updateRClonePath(
                                     path: _rClonePathController.text,
                                   );
                                 },
@@ -325,7 +341,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                         actions: [
                           OutlinedButton(
                             onPressed: () async {
-                              settingsNotifier.resetSettings();
+                              await settingsNotifier.resetSettings();
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                               }

@@ -1,12 +1,11 @@
 import 'package:hive_ce/hive.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HiveStorage<T> {
-  late final Box<T> _box;
+  final Box<T> _box;
+  final boxName = '${T.toString().toLowerCase()}_box';
 
   HiveStorage(this._box);
-  // final boxName = '${T.toString().toLowerCase()}_box';
-
-  // HiveStorage(this._box);
 
   // @PostConstruct(preResolve: true)
   // Future<void> init() async {
@@ -41,5 +40,19 @@ class HiveStorage<T> {
   Future<void> clear() async {
     await _box.clear();
     await _box.flush();
+  }
+
+  Future<void> updateAsyncValue(AsyncValue<Iterable<T>> val) async {
+    if (val is AsyncData<Iterable<T>>) {
+      final values = val.value;
+      update(values);
+    }
+  }
+
+  Future<void> updateSingleAsyncValue(String key, AsyncValue<T> val) async {
+    if (val is AsyncData<T>) {
+      final value = val.value;
+      updateSingle(key, value);
+    }
   }
 }

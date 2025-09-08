@@ -83,7 +83,7 @@ class _MyAppState extends ConsumerState<MyApp>
           AppLocalizations.of(context)!.appTitle,
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: settings.themeMode,
+      themeMode: settings.value?.themeMode,
       onGenerateRoute: (RouteSettings routeSettings) {
         return MaterialPageRoute<void>(
           settings: routeSettings,

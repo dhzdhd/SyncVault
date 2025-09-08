@@ -267,7 +267,7 @@ void main() async {
 
   configureDependencies();
 
-  final settings = Settings.init();
+  final settings = await Settings.init();
 
   if (PlatformExtension.isDesktop) {
     await windowManager.ensureInitialized();
