@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
+## 0.9.0 | 13-09-2025 (Prerelease)
+
+### Additions
+
+- Added Workflows, a new route that contains sync pipelines that you can edit in a drag and drop editor.
+- Added status indicators for accounts that indicate whether the account connection is established/pending or errored out.
+- Added reading of rclone.conf file on startup and creation of accounts from it.
+- Added deletion of RClone config section for a particular account when account is deleted. 
+- Replaced bidirectional sync button with a segmented button wherein you can choose to upload/download or bidirectional sync.
+- Added tree view for local folders.
+- Added parent path text field when creating a new OAuth2 RClone account.
+- Added option to change RClone executable path in settings. (Desktop only)
+- Added edit connection/folder dialogs.
+
+### Fixes / Improvements
+
+- Moved folders to accounts route and replaced folders with connections in the home route. All local folders fall under the permanent local account card.
+- Fixed Android background sync task.
+- Fixed broken MacOS builds.
+- Fixed RClone download button in settings route.
+- Fixed tray icons on desktop platforms.
+- Moved tree view to accounts, per folder.
+- Improved overall UI/UX.
+
+
 ## 0.8.1 | 05-03-2025 (Prerelease)
 
 ### Fixes / Improvements
