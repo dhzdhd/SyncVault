@@ -263,6 +263,12 @@ class RCloneDriveService implements DriveService {
 
 @singleton
 class RCloneSyncService implements SyncService {
+  Option<String> rClonePath = const None();
+
+  void setRClonePath(String path) {
+    rClonePath = Some(path);
+  }
+
   @override
   TaskEither<AppError, ()> sync_({
     required ConnectionModel connectionModel,
@@ -274,7 +280,20 @@ class RCloneSyncService implements SyncService {
     final utils = RCloneUtils();
 
     return TaskEither<AppError, ()>.Do(($) async {
-      final execPath = await $(utils.getRCloneExec());
+      final calledExecPath = utils.getRCloneExec();
+
+      final execPath = await $(
+        calledExecPath.orElse<AppError>(
+          (err) => TaskEither<AppError, String>.fromOption(
+            rClonePath,
+            () => GeneralError(
+              'RClone path not supplied by background task',
+              err,
+              err.stackTrace,
+            ).logError(),
+          ),
+        ),
+      );
       final configArgs = await $(utils.getConfigArgs());
 
       final firstPath = switch (firstFolder) {

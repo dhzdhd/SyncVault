@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
@@ -39,55 +38,59 @@ import 'src/settings/controllers/settings_controller.dart';
 
 const notifID = 2352;
 
+Future<void> _showBackgroundNotification() async {
+  final notifService = FlutterLocalNotificationsPlugin();
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    iOS: null,
+  );
+  const AndroidNotificationDetails androidNotificationDetails =
+      AndroidNotificationDetails(
+        'sync_notif',
+        'SyncVault',
+        channelDescription: 'Notifies user of app running in background',
+        importance: Importance.min,
+        priority: Priority.min,
+        silent: true,
+        ticker: 'SyncVault sync running in background',
+        actions: [
+          AndroidNotificationAction('cancel_sync', 'Stop background sync'),
+        ],
+      );
+  const NotificationDetails notificationDetails = NotificationDetails(
+    android: androidNotificationDetails,
+  );
+
+  await notifService.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: notificationHandler,
+  );
+  await notifService.show(
+    notifID,
+    'File sync',
+    'Syncing files in the background',
+    notificationDetails,
+  );
+}
+
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    debugLogger.i('Background sync started');
+    fileLogger.i('Background sync started');
+    sentryLogger.i('Background sync started');
+
     final execPath = inputData?['execPath'] as String?;
     if (execPath == null) {
       debugLogger.e('RClone exec path is null');
+      fileLogger.e('RClone exec path is null');
+      sentryLogger.e('RClone exec path is null');
       return Future.value(false);
     }
 
-    // Setup and show notification
-    final notifService = FlutterLocalNotificationsPlugin();
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-          iOS: null,
-        );
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
-          'sync_notif',
-          'SyncVault',
-          channelDescription: 'Notifies user of app running in background',
-          importance: Importance.max,
-          priority: Priority.max,
-          ticker: 'SyncVault sync running in background',
-          actions: [
-            AndroidNotificationAction('cancel_sync', 'Stop background sync'),
-          ],
-        );
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-    );
-
-    final notifs = await notifService.getActiveNotifications();
-    final notif = notifs.filter((notif) => notif.id == notifID);
-
-    debugLogger.i('Notif: $notifID: $notif');
-
-    if (notif.isEmpty) {
-      await notifService.initialize(
-        initializationSettings,
-        onDidReceiveNotificationResponse: notificationHandler,
-      );
-      await notifService.show(
-        notifID,
-        'File sync',
-        'Syncing files in the background',
-        notificationDetails,
-      );
-    }
+    debugLogger.i('RClone exec path is $execPath');
+    fileLogger.i('RClone exec path is $execPath');
+    sentryLogger.i('RClone exec path is $execPath');
 
     await Hive.initFlutter();
     Hive.registerAdapters();
@@ -96,17 +99,25 @@ void callbackDispatcher() {
     final docDir = await getApplicationDocumentsDirectory();
     final boxPath = '${docDir.path}/SyncVault/hive';
 
+    await setupHiveBox<SettingsModel>(boxPath);
+    await setupHiveBox<IntroSettingsModel>(boxPath);
+    await setupHiveBox<RemoteProviderModel>(boxPath);
     await setupHiveBox<DriveProviderModel>(boxPath);
     await setupHiveBox<ConnectionModel>(boxPath);
+    await setupHiveBox<FolderModel>(boxPath);
+    await setupHiveBox<WorkflowModel>(boxPath);
+
     final hashBox = await setupHiveBox<FolderHashModel>(boxPath);
+    final hashStorage = HiveStorage<FolderHashModel>(hashBox);
+
+    configureDependencies();
 
     final connections = Connection.init().filter((conn) => conn.isAutoSync);
     final folders = Folder.init();
     final providers = await Auth.init();
-    final hashes = GetIt.I<Box<FolderHashModel>>().values;
+    final hashes = hashBox.values;
 
     final fileComparer = FileComparer();
-    final hashStorage = HiveStorage<FolderHashModel>(hashBox);
 
     // File watcher approach does not work on mobile devices
     for (final connection in connections) {
@@ -116,6 +127,7 @@ void callbackDispatcher() {
       );
 
       if (firstFolderOpt.isNone() || secondFolderOpt.isNone()) {
+        debugLogger.i('First or second folder is none');
         continue;
       }
 
@@ -141,95 +153,118 @@ void callbackDispatcher() {
       ).toNullable();
 
       if (firstProvider == null || secondProvider == null) {
+        debugLogger.e('One/Both providers are null');
         continue;
       }
 
-      localFolder.match(() {}, (localFolder) async {
-        final entities = await Directory(
-          localFolder.folderPath,
-        ).list(recursive: true).toList();
-        final files = entities.whereType<File>().toList();
+      await localFolder.match(
+        () {
+          debugLogger.e('Local folder does not exist');
+        },
+        (localFolder) async {
+          late final List<File> files;
 
-        debugLogger.i(files);
+          try {
+            final entities = await Directory(
+              localFolder.folderPath,
+            ).list(recursive: true).toList();
+            files = entities.whereType<File>().toList();
+          } catch (err) {
+            debugLogger.e('Failed to fetch local files', error: err);
+          }
 
-        // Compare calculated and stored hash
-        final calcHashResult = await fileComparer.calcHash(files).run();
-        final storedHashResult = hashes
-            .filter((hash) => hash.id == localFolder.id)
-            .firstOption
-            .toEither(
-              () =>
-                  const GeneralError('Stored hash does not exist', null, null),
-            );
+          debugLogger.i(files);
 
-        final Either<AppError, bool> hashCompareResult = Either.Do(($) {
-          final calcHash = $(calcHashResult);
-          final storedHash = $(storedHashResult).hash;
+          // Compare calculated and stored hash
+          final calcHashResult = await fileComparer.calcHash(files).run();
+          final storedHashResult = hashes
+              .filter((hash) => hash.id == localFolder.id)
+              .firstOption
+              .toEither(
+                () => const GeneralError(
+                  'Stored hash does not exist',
+                  null,
+                  null,
+                ),
+              );
 
-          debugLogger.i(calcHash);
-          debugLogger.i(storedHash);
-
-          return fileComparer.isSameFolder(calcHash, storedHash);
-        });
-
-        // If equal, sync files
-        await hashCompareResult.match(
-          (err) {
-            GeneralError(
-              'Error in comparing hashes',
-              err,
-              err.stackTrace,
-            ).logError();
-          },
-          (isSameFolder) async {
-            debugLogger.i(isSameFolder);
-
-            final result = await RCloneSyncService()
-                .sync_(
-                  connectionModel: connection,
-                  firstFolder: firstFolder,
-                  firstProvider: firstProvider,
-                  secondFolder: secondFolder,
-                  secondProvider: secondProvider,
-                )
-                .run();
-
-            result.match(
-              (err) => GeneralError(
-                'Failed to do background sync',
-                err,
-                err.stackTrace,
-              ).logError(),
-              (_) async {
-                debugLogger.i('Background sync completed');
-
-                final files = await Directory(
-                  localFolder.folderPath,
-                ).list(recursive: true).toList();
-                final hashResult = await fileComparer
-                    .calcHash(files.whereType<File>().toList())
-                    .run();
-                hashResult.match(
-                  (err) =>
-                      GeneralError(err.message, err, err.stackTrace).logError(),
-                  (hash) {
-                    final hashModels = hashStorage.fetchAll().toList();
-                    final model = FolderHashModel(
-                      hash: hash,
-                      id: localFolder.id,
-                    );
-                    hashStorage.update(
-                      hashModels
-                        ..removeWhere((hash) => hash.id == localFolder.id)
-                        ..add(model),
-                    );
-                  },
-                );
+          final Either<AppError, bool> hashCompareResult = Either.Do(($) {
+            final calcHash = $(calcHashResult);
+            return storedHashResult.match(
+              (err) {
+                return false;
+              },
+              (storedHash) {
+                return fileComparer.isSameFolder(calcHash, storedHash.hash);
               },
             );
-          },
-        );
-      });
+          });
+
+          // If not equal, sync files
+          await hashCompareResult.match(
+            (err) {
+              GeneralError(
+                'Error in comparing hashes',
+                err,
+                err.stackTrace,
+              ).logError();
+            },
+            (isSameFolder) async {
+              debugLogger.i(isSameFolder);
+
+              final syncService = RCloneSyncService();
+              syncService.setRClonePath(execPath);
+
+              final result = await syncService
+                  .sync_(
+                    connectionModel: connection,
+                    firstFolder: firstFolder,
+                    firstProvider: firstProvider,
+                    secondFolder: secondFolder,
+                    secondProvider: secondProvider,
+                  )
+                  .run();
+
+              result.match(
+                (err) => GeneralError(
+                  'Failed to do background sync',
+                  err,
+                  err.stackTrace,
+                ).logError(),
+                (_) async {
+                  debugLogger.i('Background sync completed');
+
+                  final files = await Directory(
+                    localFolder.folderPath,
+                  ).list(recursive: true).toList();
+                  final hashResult = await fileComparer
+                      .calcHash(files.whereType<File>().toList())
+                      .run();
+                  hashResult.match(
+                    (err) => GeneralError(
+                      err.message,
+                      err,
+                      err.stackTrace,
+                    ).logError(),
+                    (hash) async {
+                      final hashModels = hashStorage.fetchAll().toList();
+                      final model = FolderHashModel(
+                        hash: hash,
+                        id: localFolder.id,
+                      );
+                      await hashStorage.update(
+                        hashModels
+                          ..removeWhere((hash) => hash.id == localFolder.id)
+                          ..add(model),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          );
+        },
+      );
     }
 
     return Future.value(true);
@@ -290,6 +325,7 @@ void main() async {
       await windowManager.hide();
     }
   } else if (Platform.isAndroid) {
+    await _showBackgroundNotification();
     final execPath = await RCloneUtils().getRCloneExec().run();
 
     Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
