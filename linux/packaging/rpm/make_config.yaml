@@ -7,18 +7,17 @@ packagerEmail: dhzdhd@proton.me
 license: GPLv3
 url: https://github.com/dhzdhd/SyncVault/
 
-display_name: Hello World
+display_name: SyncVault
 
 keywords:
-  - Hello
-  - World
-  - Test
   - Application
+  - Cloud
+  - Sync
 
-generic_name: Cool Application
+generic_name: SyncVault
 
 categories:
-  - Cool
-  - Awesome
+  - Sync
+  - Cloud
 
 startup_notify: true

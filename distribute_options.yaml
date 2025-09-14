@@ -24,7 +24,3 @@ releases:
         package:
           platform: windows
           target: msix
-      - name: release-windows-zip
-        package:
-          platform: windows
-          target: zip
