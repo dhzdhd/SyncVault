@@ -21,6 +21,10 @@ jobs:
         with:
           channel: "stable"
 
+      - name: Install Fastforge deps
+        run: |
+          choco install innosetup -y
+          
       - name: Enable Windows
         run: |
           flutter config --enable-windows-desktop
