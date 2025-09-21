@@ -7,14 +7,14 @@ part 'status_controller.g.dart';
 
 @riverpod
 Future<bool> connectionStatus(Ref ref, RemoteProviderModel model) async {
-  if(model is RemoteProviderModel){
-  return switch (model.isRCloneBackend) {
-    true => (await RCloneAuthService().isHealthy(model: model).run()).getOrElse(
-      (err) => false,
-    ),
-    // TODO: Support manual
-    false => false,
-  };
-}
-return false;
+  if (model is RemoteProviderModel) {
+    return switch (model.isRCloneBackend) {
+      true => (await RCloneAuthService().isHealthy(model: model).run()).getOrElse(
+        (err) => false,
+      ),
+      // TODO: Support manual
+      false => false,
+    };
+  }
+  return false;
 }
