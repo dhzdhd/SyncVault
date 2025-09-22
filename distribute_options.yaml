@@ -28,3 +28,17 @@ releases:
         package:
           platform: windows
           target: zip
+  - name: macos
+    jobs:
+      - name: release-macos-dmg
+        package:
+          platform: macos
+          target: dmg
+      - name: release-macos-app
+        package:
+          platform: macos
+          target: pkg
+      - name: release-macos-zip
+        package:
+          platform: macos
+          target: zip

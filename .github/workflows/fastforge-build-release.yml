@@ -39,10 +39,10 @@ jobs:
       - name: Debug tree
         run: tree dist/
 
-      # - name: Save Windows app
+      # - name: Save Windows bundle
       #   uses: actions/upload-artifact@v4
       #   with:
-      #     name: win
+      #     name: windows
       #     path: build\windows\x64\runner\Release\*
 
   build-linux:
@@ -83,10 +83,58 @@ jobs:
 
       - name: Debug tree
         run: tree dist/
-
+      
       # - name: Save Linux bundle
       #   uses: actions/upload-artifact@v4
       #   with:
       #     name: linux
       #     path: |
       #       build/linux/x64/release/bundle/*
+
+  
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+
+      - name: Install Fastforge deps
+        run: |
+          brew install p7zip
+          npm install -g appdmg
+
+      - name: Enable macOS
+        run: |
+          flutter config --enable-macos-desktop
+          flutter pub get
+          pod install --project-directory=macos
+        
+      - name: Install Fastforge
+        run: dart pub global activate fastforge
+
+      - name: Build and export
+        run: fastforge release --name macos
+
+      - name: Debug tree
+        run: tree dist/
+
+      # - name: Save macOS bundle
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: macos
+      #     path: build/macos/Build/Products/Release/*.app
