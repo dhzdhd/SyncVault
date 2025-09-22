@@ -116,6 +116,7 @@ jobs:
       - name: Install Fastforge deps
         run: |
           brew install p7zip
+          brew install tree
           npm install -g appdmg
 
       - name: Enable macOS
