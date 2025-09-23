@@ -1,14 +1,15 @@
 import Cocoa
 import FlutterMacOS
 import LaunchAtLogin
+
 class MainFlutterWindow: NSWindow {
   override func awakeFromNib() {
     let flutterViewController = FlutterViewController()
     let windowFrame = self.frame
+    
     self.contentViewController = flutterViewController
     self.setFrame(windowFrame, display: true)
 
-    // Add FlutterMethodChannel platform code
     FlutterMethodChannel(
       name: "launch_at_startup", binaryMessenger: flutterViewController.engine.binaryMessenger
     )
@@ -25,7 +26,6 @@ class MainFlutterWindow: NSWindow {
         result(FlutterMethodNotImplemented)
       }
     }
-    //
 
     RegisterGeneratedPlugins(registry: flutterViewController)
 
