@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
+## 0.9.1 | 23-09-2025 (Prerelease)
+
+### Additions
+
+- Added other native formats per desktop platform instead of only a ZIP file.
+
+### Fixes / Improvements
+
+- Fixed MacOS launch on startup errors. (@lakshay007)
+
+
 ## 0.9.0 | 13-09-2025 (Prerelease)
 
 ### Additions
