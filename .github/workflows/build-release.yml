@@ -65,17 +65,29 @@ jobs:
         with:
           channel: "stable"
 
-      - name: Build Windows
+      - name: Install Fastforge deps
+        run: |
+          choco install innosetup -y
+          
+      - name: Enable Windows
         run: |
           flutter config --enable-windows-desktop
           flutter pub get
-          flutter build windows --release
 
-      - name: Save Windows app
+      - name: Install Fastforge
+        run: dart pub global activate fastforge
+
+      - name: Build and export
+        run: fastforge release --name windows
+
+      - name: Debug tree
+        run: tree dist/
+
+      - name: Save Windows bundle
         uses: actions/upload-artifact@v4
         with:
-          name: win
-          path: build\windows\x64\runner\Release\*
+          name: windows
+          path: dist/**/*
 
   build-linux:
     runs-on: ubuntu-latest
@@ -98,19 +110,30 @@ jobs:
           sudo apt-get install curl libcurl4-openssl-dev
           sudo apt-get install libayatana-appindicator3-dev
 
-      - name: Build Linux
+      - name: Install Fastforge deps
+        run: |
+          sudo apt-get install rpm patchelf locate
+
+      - name: Enable Linux
         run: |
           flutter config --enable-linux-desktop
           flutter pub get
-          flutter build linux --release
 
+      - name: Install Fastforge
+        run: dart pub global activate fastforge
+
+      - name: Build and export
+        run: fastforge release --name linux
+
+      - name: Debug tree
+        run: tree dist/
+      
       - name: Save Linux bundle
         uses: actions/upload-artifact@v4
         with:
           name: linux
-          path: |
-            build/linux/x64/release/bundle/*
-
+          path: dist/**/*
+  
   build-macos:
     runs-on: macos-latest
 
@@ -122,23 +145,42 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
 
       - name: Install CocoaPods
         run: |
           sudo gem install cocoapods
 
-      - name: Build macOS
+      - name: Install Fastforge deps
+        run: |
+          brew install p7zip
+          brew install tree
+          npm install -g appdmg
+
+      - name: Enable macOS
         run: |
           flutter config --enable-macos-desktop
           flutter pub get
           pod install --project-directory=macos
-          flutter build macos --release
+        
+      - name: Install Fastforge
+        run: dart pub global activate fastforge
 
-      - name: Save macOS app
+      - name: Build and export
+        run: fastforge release --name macos
+
+      - name: Debug tree
+        run: tree dist/
+
+      - name: Save macOS bundle
         uses: actions/upload-artifact@v4
         with:
           name: macos
-          path: build/macos/Build/Products/Release/*.app
+          path: dist/**/*
 
   release:
     runs-on: ubuntu-latest
@@ -152,15 +194,6 @@ jobs:
         with:
           path: exec/
 
-      - name: Zip Windows programs
-        run: 7z a -tZip SyncVault-${{ github.ref_name }}-windows.zip exec/win
-
-      - name: Zip Linux bundle
-        run: tar -czvf SyncVault-${{ github.ref_name }}-linux.tar.gz exec/linux
-
-      - name: Zip macOS app
-        run: tar -czvf SyncVault-${{ github.ref_name }}-macos.tar.gz exec/macos
-
       - name: Display structure of downloaded files
         run: tree exec/
 
@@ -172,11 +205,9 @@ jobs:
           prerelease: true
           generate_release_notes: true
           files: |
+            exec/syncvault*
             exec/android/bundle/release/app-release.aab
             exec/android/flutter-apk/*
-            SyncVault-${{ github.ref_name }}-windows.zip
-            SyncVault-${{ github.ref_name }}-linux.tar.gz
-            SyncVault-${{ github.ref_name }}-macos.tar.gz
           body_path: CHANGELOG.md
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
