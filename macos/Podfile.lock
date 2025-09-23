@@ -45,6 +45,7 @@ PODS:
   - GTMSessionFetcher/Core (3.5.0)
   - GTMSessionFetcher/Full (3.5.0):
     - GTMSessionFetcher/Core
+  - LaunchAtLogin (2.5.0)
   - package_info_plus (0.0.1):
     - FlutterMacOS
   - path_provider_foundation (0.0.1):
@@ -74,6 +75,7 @@ DEPENDENCIES:
   - flutter_web_auth_2 (from `Flutter/ephemeral/.symlinks/plugins/flutter_web_auth_2/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - google_sign_in_ios (from `Flutter/ephemeral/.symlinks/plugins/google_sign_in_ios/darwin`)
+  - LaunchAtLogin
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - screen_retriever_macos (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever_macos/macos`)
@@ -91,6 +93,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
+    - LaunchAtLogin
     - PromisesObjC
     - Sentry
 
@@ -137,6 +140,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMAppAuth: 217a876b249c3c585a54fd6f73e6b58c4f5c4238
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
+  LaunchAtLogin: 94138ff26baefa09a29f5e6679a6f4c41ca6b416
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
@@ -148,6 +152,6 @@ SPEC CHECKSUMS:
   window_manager: b729e31d38fb04905235df9ea896128991cad99e
   window_to_front: 9e76fd432e36700a197dac86a0011e49c89abe0a
 
-PODFILE CHECKSUM: 5bc6a71ad752a68d2b4bce2aeb96d0f7aab52719
+PODFILE CHECKSUM: 51824b490520c5c975a9d5d9bfc1b8c8ec6d9172
 
 COCOAPODS: 1.16.2
