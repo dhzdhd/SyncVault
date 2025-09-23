@@ -11,7 +11,7 @@ For currently known issues, check the [GitHub issues tab](https://github.com/dhz
 
 ### Fixes / Improvements
 
-- Fixed MacOS launch on startup errors. (@lakshay007)
+- Fixed MacOS launch on startup errors. ([@lakshay007](https://www.github.com/lakshay007))
 
 
 ## 0.9.0 | 13-09-2025 (Prerelease)
@@ -210,3 +210,4 @@ For currently known issues, check the [GitHub issues tab](https://github.com/dhz
 - Supports file uploads of upto 60MB per file only
 - Does not check drive size while uploading
 - Does not check for invalid file names
+
