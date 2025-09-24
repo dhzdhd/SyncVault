@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 For currently known issues, check the [GitHub issues tab](https://github.com/dhzdhd/SyncVault/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
-## 0.9.1 | 23-09-2025 (Prerelease)
+## 0.9.2 | 23-09-2025 (Prerelease)
 
 ### Additions
 
