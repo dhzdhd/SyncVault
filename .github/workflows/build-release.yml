@@ -197,6 +197,10 @@ jobs:
       - name: Display structure of downloaded files
         run: tree exec/
 
+      - name: Find and flatten executable files
+        run: |
+          find exec/ -name "syncvault*" -type f -exec mv {} exec/ \;
+
       - name: Create release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
