@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
@@ -50,13 +49,13 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
   @override
   Widget build(BuildContext context) {
     final selectedFolder = useState<Option<String>>(const None());
-    final authController = ref.watch(authControllerProvider);
+    final createFolderController = ref.watch(createFolderControllerProvider);
 
-    ref.listen<AsyncValue>(authControllerProvider, (prev, state) {
+    ref.listen<AsyncValue>(createFolderControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
         context.showErrorSnackBar(
           GeneralError(
-            'Auth controller failed',
+            'Failed to create folder',
             state.error!,
             state.stackTrace,
           ).logError().message,
@@ -118,7 +117,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         const SizedBox(height: 32),
         ElevatedButton(
           onPressed: () async {
-            if (!authController.isLoading) {
+            if (!createFolderController.isLoading) {
               final valid = switch (widget.providerModel) {
                 RemoteProviderModel(:final backend) => switch (backend) {
                   OAuth2() => validateControllers([
@@ -148,7 +147,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                       model: widget.providerModel,
                     );
 
-                if (context.mounted && !authController.isLoading) {
+                if (context.mounted && !createFolderController.isLoading) {
                   Navigator.of(context).pop();
                 }
               }
@@ -156,7 +155,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               context.showErrorSnackBar('Fields are empty');
             }
           },
-          child: authController.isLoading
+          child: createFolderController.isLoading
               ? const SizedBox.square(
                   dimension: 20.0,
                   child: CircularProgressWidget(size: 300, isInfinite: true),

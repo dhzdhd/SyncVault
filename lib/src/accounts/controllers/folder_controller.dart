@@ -38,7 +38,7 @@ class CreateFolderController extends _$CreateFolderController {
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () async => await folderNotifier.create(
+      () => folderNotifier.create(
         folderName: folderName,
         parentPath: parentPath,
         providerModel: model,
