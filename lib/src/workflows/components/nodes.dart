@@ -3,14 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:fl_nodes/fl_nodes.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
+import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 void registerNodes(
   BuildContext context,
   FlNodeEditorController controller,
   List<FolderModel> folders,
+  Map<String, Option<DriveProviderModel>> providersMap,
 ) {
   controller.registerNodePrototype(
     NodePrototype(
@@ -54,12 +58,27 @@ void registerNodes(
           visualizerBuilder: (val) => Text(val.folderName),
           editorBuilder: (context, removeOverlay, data, setData) => SizedBox(
             width: 200,
-            height: 300,
+            height: 250,
             child: ListView(
               children: folders
                   .map(
                     (folder) => ListTile(
-                      title: Text(folder.folderName),
+                      title: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: 10,
+                        children: [
+                          switch (providersMap[folder.id]!.toNullable()!) {
+                            LocalProviderModel() => Icon(Icons.folder),
+                            RemoteProviderModel(:final provider) =>
+                              SvgPicture.asset(provider.providerIcon),
+                          },
+                          Text(switch (providersMap[folder.id]!.toNullable()!) {
+                            LocalProviderModel() => folder.folderName,
+                            RemoteProviderModel(:final remoteName) =>
+                              '$remoteName | ${folder.folderName}',
+                          }),
+                        ],
+                      ),
                       onTap: () {
                         setData(folder, eventType: FieldEventType.submit);
                         removeOverlay();
@@ -142,6 +161,8 @@ void registerNodes(
           dataType: SyncDirection,
           defaultData: SyncDirection.upload,
           visualizerBuilder: (data) => Text(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             data.toString().split('.').last,
             style: const TextStyle(color: Colors.white),
           ),

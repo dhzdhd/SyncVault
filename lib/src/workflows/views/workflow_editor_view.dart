@@ -2,9 +2,13 @@ import 'dart:convert';
 
 import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/extensions.dart';
+import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/common/utils/associations.dart';
+import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/workflows/components/data_handlers.dart';
 import 'package:syncvault/src/workflows/components/hierarchy.dart';
 import 'package:syncvault/src/workflows/components/nodes.dart';
@@ -35,8 +39,19 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
     final folders = ref.read(folderProvider);
     _nodeEditorController = FlNodeEditorController();
 
+    final allProviders = ref.read(authProvider).value;
+    final Map<String, Option<DriveProviderModel>> providersMap =
+        allProviders == null
+        ? {}
+        : Map.fromIterables(
+            folders.map((folder) => folder.id),
+            folders.map(
+              (folder) => getProviderFromFolder(allProviders, folder),
+            ),
+          );
+
     registerDataHandlers(_nodeEditorController);
-    registerNodes(context, _nodeEditorController, folders);
+    registerNodes(context, _nodeEditorController, folders, providersMap);
 
     if (widget.workflowModel.workflowJson != null) {
       // Encode and decode necessary to ensure resulting type is Map<String, dynamic>
