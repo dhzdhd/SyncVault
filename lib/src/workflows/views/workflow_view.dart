@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/errors.dart';
 import 'package:syncvault/extensions.dart';
+import 'package:syncvault/src/common/components/circular_progress_widget.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
 import 'package:syncvault/src/workflows/components/new_workflow_dialog.dart';
 import 'package:syncvault/src/workflows/controllers/workflow_controller.dart';
@@ -14,10 +16,23 @@ class WorkflowsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final workflows = ref.watch(workflowProvider);
+    final workflowController = ref.watch(workflowControllerProvider);
     final workflowNotifier = ref.read(workflowProvider.notifier);
     final workflowControllerNotifier = ref.read(
       workflowControllerProvider.notifier,
     );
+
+    ref.listen<AsyncValue>(workflowControllerProvider, (prev, state) {
+      if (!state.isLoading && state.hasError) {
+        context.showErrorSnackBar(
+          GeneralError(
+            'Failed to run workflow',
+            state.error!,
+            state.stackTrace,
+          ).logError().message,
+        );
+      }
+    });
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -81,19 +96,31 @@ class WorkflowsView extends ConsumerWidget {
                                     child: Icon(Icons.play_arrow_rounded),
                                   ),
                                   TextButton(
-                                    onPressed: () {
-                                      if (context.mounted) {
-                                        Navigator.of(context).push<void>(
-                                          MaterialPageRoute<void>(
-                                            builder: (BuildContext context) =>
-                                                WorkflowEditorView(
-                                                  workflowModel: workflow,
+                                    onPressed: workflowController.isLoading
+                                        ? null
+                                        : () {
+                                            if (context.mounted) {
+                                              Navigator.of(context).push<void>(
+                                                MaterialPageRoute<void>(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          WorkflowEditorView(
+                                                            workflowModel:
+                                                                workflow,
+                                                          ),
                                                 ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: Icon(Icons.edit),
+                                              );
+                                            }
+                                          },
+                                    child: workflowController.isLoading
+                                        ? const SizedBox.square(
+                                            dimension: 20.0,
+                                            child: CircularProgressWidget(
+                                              size: 300,
+                                              isInfinite: true,
+                                            ),
+                                          )
+                                        : Icon(Icons.edit),
                                   ),
                                   TextButton(
                                     onPressed: () async {

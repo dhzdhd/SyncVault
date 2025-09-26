@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:fl_nodes/fl_nodes.dart';
+import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 
@@ -20,8 +21,30 @@ void registerNodes(
         DataOutputPortPrototype<FolderModel>(
           idName: 'value',
           displayName: (ctx) => 'Value',
+          styleBuilder: (state) => FlPortStyle(
+            color: Theme.of(context).buttonTheme.colorScheme!.primary,
+            shape: FlPortShape.circle,
+          ),
         ),
       ],
+      headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
+        decoration: BoxDecoration(
+          color: Theme.of(context).buttonTheme.colorScheme!.primaryContainer,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
+        ),
+      ),
+      styleBuilder: (state) => FlNodeStyle(
+        decoration: BoxDecoration(
+          color: Theme.of(context).buttonTheme.colorScheme!.surfaceContainer,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(12),
+            bottomRight: Radius.circular(12),
+          ),
+        ),
+      ),
       fields: [
         FieldPrototype(
           idName: 'value',
@@ -29,22 +52,23 @@ void registerNodes(
           dataType: FolderModel,
           defaultData: folders.first,
           visualizerBuilder: (val) => Text(val.folderName),
-          editorBuilder: (context, removeOverlay, data, setData) =>
-              DropdownButton<FolderModel>(
-                items: folders
-                    .map(
-                      (folder) => DropdownMenuItem(
-                        value: folder,
-                        child: Text(folder.folderName),
-                      ),
-                    )
-                    .toList(),
-                value: data,
-                onChanged: (newSelection) {
-                  setData(newSelection, eventType: FieldEventType.submit);
-                  removeOverlay();
-                },
-              ),
+          editorBuilder: (context, removeOverlay, data, setData) => SizedBox(
+            width: 200,
+            height: 300,
+            child: ListView(
+              children: folders
+                  .map(
+                    (folder) => ListTile(
+                      title: Text(folder.folderName),
+                      onTap: () {
+                        setData(folder, eventType: FieldEventType.submit);
+                        removeOverlay();
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
         ),
       ],
       onExecute: (ports, fields, state, f, p) async {
@@ -59,32 +83,56 @@ void registerNodes(
       idName: 'connector',
       displayName: (ctx) => 'Connector',
       description: (ctx) => 'Applies a chosen operation to two folders.',
-      styleBuilder: (state) =>
-          FlNodeStyle(decoration: defaultNodeStyle(state).decoration),
+      headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
+        decoration: BoxDecoration(
+          color: Theme.of(context).buttonTheme.colorScheme!.primaryContainer,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
+        ),
+      ),
+      styleBuilder: (state) => FlNodeStyle(
+        decoration: BoxDecoration(
+          color: Theme.of(context).buttonTheme.colorScheme!.surfaceContainer,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(12),
+            bottomRight: Radius.circular(12),
+          ),
+        ),
+      ),
       ports: [
         DataInputPortPrototype<FolderModel>(
           idName: 'firstFolder',
           displayName: (ctx) => 'First folder',
-          // style: FlPortStyle(
-          //   color: Theme.of(context).canvasColor,
-          //   shape: FlPortShape.circle,
-          // ),
+          styleBuilder: (state) => FlPortStyle(
+            color: Theme.of(context).buttonTheme.colorScheme!.primary,
+            shape: FlPortShape.circle,
+          ),
         ),
         DataInputPortPrototype<FolderModel>(
           idName: 'secondFolder',
           displayName: (ctx) => 'Second folder',
-          // style: FlPortStyle(
-          //   color: Theme.of(context).canvasColor,
-          //   shape: FlPortShape.circle,
-          // ),
+          styleBuilder: (state) => FlPortStyle(
+            color: Theme.of(context).buttonTheme.colorScheme!.primary,
+            shape: FlPortShape.circle,
+          ),
         ),
         DataOutputPortPrototype<FolderModel>(
           idName: 'firstFolderOut',
           displayName: (ctx) => 'First folder',
+          styleBuilder: (state) => FlPortStyle(
+            color: Theme.of(context).buttonTheme.colorScheme!.primary,
+            shape: FlPortShape.circle,
+          ),
         ),
         DataOutputPortPrototype<FolderModel>(
           idName: 'secondFolderOut',
           displayName: (ctx) => 'Second folder',
+          styleBuilder: (state) => FlPortStyle(
+            color: Theme.of(context).buttonTheme.colorScheme!.primary,
+            shape: FlPortShape.circle,
+          ),
         ),
       ],
       fields: [
@@ -114,6 +162,8 @@ void registerNodes(
         ),
       ],
       onExecute: (ports, fields, state, f, p) async {
+        debugLogger.i('conn ports $ports');
+        debugLogger.i('conn fields $fields');
         final a = ports['firstFolder']! as FolderModel;
         final b = ports['secondFolder']! as FolderModel;
         final op = fields['operation']! as SyncDirection;

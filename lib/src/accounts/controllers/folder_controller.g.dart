@@ -161,7 +161,7 @@ class _TreeViewProviderElement
 }
 
 String _$createFolderControllerHash() =>
-    r'c27fa69e7dec88ab5188064e82ffbe6f9055aca9';
+    r'b3846ff820cf0d106b980f0548eb80fbbb35daa3';
 
 /// See also [CreateFolderController].
 @ProviderFor(CreateFolderController)

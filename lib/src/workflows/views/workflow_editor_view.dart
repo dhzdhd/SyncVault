@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/workflows/components/data_handlers.dart';
 import 'package:syncvault/src/workflows/components/hierarchy.dart';
@@ -85,6 +86,10 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
               await workflowNotifier.updateJson(
                 model: widget.workflowModel.copyWith(workflowJson: json),
               );
+
+              if (context.mounted) {
+                context.showSuccessSnackBar(content: 'Saved workflow');
+              }
             },
             icon: Icon(Icons.save),
           ),

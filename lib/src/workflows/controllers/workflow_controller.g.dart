@@ -23,7 +23,7 @@ final workflowControllerProvider =
     );
 
 typedef _$WorkflowController = AutoDisposeAsyncNotifier<void>;
-String _$workflowHash() => r'4e23b05d9f15737012a475270ca4186c30299bea';
+String _$workflowHash() => r'af041779978d8508a66b05c57e455dab79b2aa41';
 
 /// See also [Workflow].
 @ProviderFor(Workflow)

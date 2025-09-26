@@ -4,6 +4,7 @@ import 'package:fl_nodes/fl_nodes.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:syncvault/log.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/workflows/models/workflow_model.dart';
 
@@ -52,11 +53,16 @@ class Workflow extends _$Workflow {
 
   Future<void> run({required WorkflowModel workflow}) async {
     // Encode and decode necessary to ensure resulting type is Map<String, dynamic>
-    final json = jsonDecode(jsonEncode(workflow.workflowJson));
+    try {
+      final json = jsonDecode(jsonEncode(workflow.workflowJson));
 
-    final controller = FlNodeEditorController();
-    controller.project.load(data: jsonDecode(jsonEncode(json)));
-    await controller.runner.executeGraph();
+      final controller = FlNodeEditorController();
+      controller.project.load(data: jsonDecode(jsonEncode(json)));
+
+      await controller.runner.executeGraph();
+    } catch (err) {
+      debugLogger.e(err);
+    }
   }
 
   Future<void> updateJson({required WorkflowModel model}) async {

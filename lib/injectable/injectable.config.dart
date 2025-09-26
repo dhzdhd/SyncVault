@@ -35,9 +35,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i709.RCloneAuthService>(() => _i709.RCloneAuthService());
     gh.singleton<_i867.RCloneUtils>(() => _i867.RCloneUtils());
     gh.singleton<_i712.GoogleDriveService>(() => _i712.GoogleDriveService());
+    gh.singleton<_i930.LocalDriveService>(() => _i930.LocalDriveService());
     gh.singleton<_i303.RCloneDriveService>(() => _i303.RCloneDriveService());
     gh.singleton<_i303.RCloneSyncService>(() => _i303.RCloneSyncService());
-    gh.singleton<_i930.LocalDriveService>(() => _i930.LocalDriveService());
     gh.singleton<_i808.IntroService>(() => _i808.IntroService());
     return this;
   }
