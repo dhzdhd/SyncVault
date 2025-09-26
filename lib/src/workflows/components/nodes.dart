@@ -22,6 +22,14 @@ void registerNodes(
       displayName: (ctx) => 'Folder',
       description: (ctx) => 'Holds a folder.',
       ports: [
+        ControlOutputPortPrototype(
+          idName: 'completed',
+          displayName: (context) => 'Completed',
+          styleBuilder: (state) => FlPortStyle(
+            color: Theme.of(context).buttonTheme.colorScheme!.primary,
+            shape: FlPortShape.triangle,
+          ),
+        ),
         DataOutputPortPrototype<FolderModel>(
           idName: 'value',
           displayName: (ctx) => 'Value',
@@ -121,6 +129,14 @@ void registerNodes(
         ),
       ),
       ports: [
+        ControlInputPortPrototype(
+          idName: 'exec',
+          displayName: (ctx) => 'Exec',
+          styleBuilder: (state) => FlPortStyle(
+            color: Theme.of(context).buttonTheme.colorScheme!.primary,
+            shape: FlPortShape.triangle,
+          ),
+        ),
         DataInputPortPrototype<FolderModel>(
           idName: 'firstFolder',
           displayName: (ctx) => 'First folder',
@@ -135,6 +151,14 @@ void registerNodes(
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.circle,
+          ),
+        ),
+        ControlOutputPortPrototype(
+          idName: 'completed',
+          displayName: (ctx) => 'Completed',
+          styleBuilder: (state) => FlPortStyle(
+            color: Theme.of(context).buttonTheme.colorScheme!.primary,
+            shape: FlPortShape.triangle,
           ),
         ),
         DataOutputPortPrototype<FolderModel>(
@@ -183,8 +207,6 @@ void registerNodes(
         ),
       ],
       onExecute: (ports, fields, state, f, p) async {
-        debugLogger.i('conn ports $ports');
-        debugLogger.i('conn fields $fields');
         final a = ports['firstFolder']! as FolderModel;
         final b = ports['secondFolder']! as FolderModel;
         final op = fields['operation']! as SyncDirection;
