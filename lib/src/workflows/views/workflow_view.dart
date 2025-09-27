@@ -90,6 +90,7 @@ class WorkflowsView extends ConsumerWidget {
                                       } else {
                                         await workflowControllerNotifier.run(
                                           workflow: workflow,
+                                          ctx: context,
                                         );
                                       }
                                     },
