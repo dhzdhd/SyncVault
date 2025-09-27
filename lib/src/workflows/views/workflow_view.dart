@@ -121,7 +121,7 @@ class WorkflowsView extends ConsumerWidget {
                                               isInfinite: true,
                                             ),
                                           )
-                                        : Icon(Icons.edit),
+                                        : Icon(Icons.open_in_new),
                                   ),
                                   TextButton(
                                     onPressed: () async {

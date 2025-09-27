@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_nodes/fl_nodes.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
@@ -206,6 +207,7 @@ void registerNodes(
         ),
       ],
       onExecute: (ports, fields, state, f, p) async {
+        debugLogger.i('entered exec');
         final a = ports['firstFolder']! as FolderModel;
         final b = ports['secondFolder']! as FolderModel;
         final op = fields['operation']! as SyncDirection;

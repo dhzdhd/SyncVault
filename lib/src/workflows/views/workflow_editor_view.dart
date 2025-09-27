@@ -80,33 +80,49 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
         actions: [
           IconButton(
             onPressed: () async {
-              final nodesJson = _nodeEditorController.nodes.values
-                  .map(
-                    (node) =>
-                        node.toJson(_nodeEditorController.project.dataHandlers),
-                  )
-                  .toList();
-
-              final json = {
-                'viewport': {
-                  'offset': [
-                    _nodeEditorController.project.viewportOffset.dx,
-                    _nodeEditorController.project.viewportOffset.dy,
-                  ],
-                  'zoom': _nodeEditorController.project.viewportZoom,
-                },
-                'nodes': nodesJson,
-              };
-
-              await workflowNotifier.updateJson(
-                model: widget.workflowModel.copyWith(workflowJson: json),
-              );
+              await _nodeEditorController.runner.executeGraph();
 
               if (context.mounted) {
-                context.showSuccessSnackBar(content: 'Saved workflow');
+                context.showSuccessSnackBar(
+                  content: 'Workflow run successfully',
+                );
               }
             },
-            icon: Icon(Icons.save),
+            icon: Icon(Icons.play_arrow_rounded),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              onPressed: () async {
+                final nodesJson = _nodeEditorController.nodes.values
+                    .map(
+                      (node) => node.toJson(
+                        _nodeEditorController.project.dataHandlers,
+                      ),
+                    )
+                    .toList();
+
+                final json = {
+                  'viewport': {
+                    'offset': [
+                      _nodeEditorController.project.viewportOffset.dx,
+                      _nodeEditorController.project.viewportOffset.dy,
+                    ],
+                    'zoom': _nodeEditorController.project.viewportZoom,
+                  },
+                  'nodes': nodesJson,
+                };
+
+                await workflowNotifier.updateJson(
+                  model: widget.workflowModel.copyWith(workflowJson: json),
+                );
+
+                if (context.mounted) {
+                  context.showSuccessSnackBar(content: 'Saved workflow');
+                }
+              },
+              icon: Icon(Icons.save),
+            ),
           ),
         ],
       ),
@@ -160,12 +176,6 @@ class _WorkflowEditorViewState extends ConsumerState<WorkflowEditorView> {
                                     : Icons.grid_off,
                                 size: 32,
                               ),
-                            ),
-                            IconButton.filled(
-                              tooltip: 'Execute Graph',
-                              onPressed: () =>
-                                  _nodeEditorController.runner.executeGraph(),
-                              icon: const Icon(Icons.play_arrow, size: 32),
                             ),
                           ],
                         ),
