@@ -114,6 +114,59 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
             _ => SizedBox(),
           }),
         },
+        const SizedBox(height: 16),
+        switch (widget.providerModel) {
+          RemoteProviderModel(:final backend, :final isRCloneBackend)
+              when backend is OAuth2 && isRCloneBackend =>
+            ElevatedButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (ctx) => BottomSheet(
+                    onClosing: () {},
+                    builder: (ctx) {
+                      return Consumer(
+                        builder: (ctx, ref, child) {
+                          var files = ref.watch(
+                            listViewProvider(widget.providerModel, '/'),
+                          );
+
+                          return switch (files) {
+                            AsyncData(:final value) => ListView(
+                              padding: EdgeInsets.all(8),
+                              children: value
+                                  .map(
+                                    (file) => ListTile(
+                                      title: Text(file.name),
+                                      onTap: file.isDirectory
+                                          ? () {
+                                              _folderNameController.text =
+                                                  file.name;
+                                              _parentPathController.text =
+                                                  file.parent.path;
+                                            }
+                                          : null,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            AsyncLoading() => CircularProgressWidget(
+                              size: 200,
+                              isInfinite: true,
+                            ),
+                            AsyncError(:final error) => Text(error.toString()),
+                            _ => Text('Error'),
+                          };
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
+              child: Text('Pick folder'),
+            ),
+          _ => SizedBox(),
+        },
         const SizedBox(height: 32),
         ElevatedButton(
           onPressed: () async {

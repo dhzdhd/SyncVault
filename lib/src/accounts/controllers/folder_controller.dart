@@ -65,7 +65,7 @@ class DeleteFolderController extends _$DeleteFolderController {
 @riverpod
 Future<Option<FileModel>> treeView(
   Ref ref,
-  FolderModel folderModel,
+  Option<FolderModel> folderModel,
   DriveProviderModel providerModel,
 ) async {
   return switch (providerModel) {
@@ -77,6 +77,26 @@ Future<Option<FileModel>> treeView(
     LocalProviderModel() =>
       await LocalDriveService()
           .treeView(providerModel: providerModel, folderModel: folderModel)
+          .match((l) => throw l, (r) => r)
+          .run(),
+  };
+}
+
+@riverpod
+Future<List<FileModel>> listView(
+  Ref ref,
+  DriveProviderModel providerModel,
+  String path,
+) async {
+  return switch (providerModel) {
+    RemoteProviderModel() =>
+      await RCloneDriveService()
+          .listView(providerModel: providerModel, path: path)
+          .match((l) => throw l, (r) => r)
+          .run(),
+    LocalProviderModel() =>
+      await LocalDriveService()
+          .listView(providerModel: providerModel, path: path)
           .match((l) => throw l, (r) => r)
           .run(),
   };

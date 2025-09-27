@@ -17,7 +17,11 @@ abstract interface class DriveService {
   });
   TaskEither<AppError, Option<FileModel>> treeView({
     required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required Option<FolderModel> folderModel,
+  });
+  TaskEither<AppError, List<FileModel>> listView({
+    required DriveProviderModel providerModel,
+    required String path,
   });
 }
 

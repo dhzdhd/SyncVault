@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FileModel implements DiagnosticableTreeMixin {
 
- String get name; String get size;@FileSystemEntityConverter() FileSystemEntity get file;@DirectoryConverter() Directory get parent; List<FileModel> get children;
+ String get name; String get size;@FileSystemEntityConverter() FileSystemEntity get file;@DirectoryConverter() Directory get parent; bool get isDirectory; List<FileModel> get children;
 /// Create a copy of FileModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,21 +30,21 @@ $FileModelCopyWith<FileModel> get copyWith => _$FileModelCopyWithImpl<FileModel>
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'FileModel'))
-    ..add(DiagnosticsProperty('name', name))..add(DiagnosticsProperty('size', size))..add(DiagnosticsProperty('file', file))..add(DiagnosticsProperty('parent', parent))..add(DiagnosticsProperty('children', children));
+    ..add(DiagnosticsProperty('name', name))..add(DiagnosticsProperty('size', size))..add(DiagnosticsProperty('file', file))..add(DiagnosticsProperty('parent', parent))..add(DiagnosticsProperty('isDirectory', isDirectory))..add(DiagnosticsProperty('children', children));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FileModel&&(identical(other.name, name) || other.name == name)&&(identical(other.size, size) || other.size == size)&&(identical(other.file, file) || other.file == file)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other.children, children));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FileModel&&(identical(other.name, name) || other.name == name)&&(identical(other.size, size) || other.size == size)&&(identical(other.file, file) || other.file == file)&&(identical(other.parent, parent) || other.parent == parent)&&(identical(other.isDirectory, isDirectory) || other.isDirectory == isDirectory)&&const DeepCollectionEquality().equals(other.children, children));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,size,file,parent,const DeepCollectionEquality().hash(children));
+int get hashCode => Object.hash(runtimeType,name,size,file,parent,isDirectory,const DeepCollectionEquality().hash(children));
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'FileModel(name: $name, size: $size, file: $file, parent: $parent, children: $children)';
+  return 'FileModel(name: $name, size: $size, file: $file, parent: $parent, isDirectory: $isDirectory, children: $children)';
 }
 
 
@@ -55,7 +55,7 @@ abstract mixin class $FileModelCopyWith<$Res>  {
   factory $FileModelCopyWith(FileModel value, $Res Function(FileModel) _then) = _$FileModelCopyWithImpl;
 @useResult
 $Res call({
- String name, String size,@FileSystemEntityConverter() FileSystemEntity file,@DirectoryConverter() Directory parent, List<FileModel> children
+ String name, String size,@FileSystemEntityConverter() FileSystemEntity file,@DirectoryConverter() Directory parent, bool isDirectory, List<FileModel> children
 });
 
 
@@ -72,13 +72,14 @@ class _$FileModelCopyWithImpl<$Res>
 
 /// Create a copy of FileModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? size = null,Object? file = null,Object? parent = null,Object? children = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? size = null,Object? file = null,Object? parent = null,Object? isDirectory = null,Object? children = null,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as String,file: null == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
 as FileSystemEntity,parent: null == parent ? _self.parent : parent // ignore: cast_nullable_to_non_nullable
-as Directory,children: null == children ? _self.children : children // ignore: cast_nullable_to_non_nullable
+as Directory,isDirectory: null == isDirectory ? _self.isDirectory : isDirectory // ignore: cast_nullable_to_non_nullable
+as bool,children: null == children ? _self.children : children // ignore: cast_nullable_to_non_nullable
 as List<FileModel>,
   ));
 }
@@ -90,13 +91,14 @@ as List<FileModel>,
 @JsonSerializable()
 
 class _FileModel with DiagnosticableTreeMixin implements FileModel {
-  const _FileModel({required this.name, required this.size, @FileSystemEntityConverter() required this.file, @DirectoryConverter() required this.parent, required final  List<FileModel> children}): _children = children;
+  const _FileModel({required this.name, required this.size, @FileSystemEntityConverter() required this.file, @DirectoryConverter() required this.parent, required this.isDirectory, required final  List<FileModel> children}): _children = children;
   factory _FileModel.fromJson(Map<String, dynamic> json) => _$FileModelFromJson(json);
 
 @override final  String name;
 @override final  String size;
 @override@FileSystemEntityConverter() final  FileSystemEntity file;
 @override@DirectoryConverter() final  Directory parent;
+@override final  bool isDirectory;
  final  List<FileModel> _children;
 @override List<FileModel> get children {
   if (_children is EqualUnmodifiableListView) return _children;
@@ -119,21 +121,21 @@ Map<String, dynamic> toJson() {
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'FileModel'))
-    ..add(DiagnosticsProperty('name', name))..add(DiagnosticsProperty('size', size))..add(DiagnosticsProperty('file', file))..add(DiagnosticsProperty('parent', parent))..add(DiagnosticsProperty('children', children));
+    ..add(DiagnosticsProperty('name', name))..add(DiagnosticsProperty('size', size))..add(DiagnosticsProperty('file', file))..add(DiagnosticsProperty('parent', parent))..add(DiagnosticsProperty('isDirectory', isDirectory))..add(DiagnosticsProperty('children', children));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FileModel&&(identical(other.name, name) || other.name == name)&&(identical(other.size, size) || other.size == size)&&(identical(other.file, file) || other.file == file)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other._children, _children));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FileModel&&(identical(other.name, name) || other.name == name)&&(identical(other.size, size) || other.size == size)&&(identical(other.file, file) || other.file == file)&&(identical(other.parent, parent) || other.parent == parent)&&(identical(other.isDirectory, isDirectory) || other.isDirectory == isDirectory)&&const DeepCollectionEquality().equals(other._children, _children));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,size,file,parent,const DeepCollectionEquality().hash(_children));
+int get hashCode => Object.hash(runtimeType,name,size,file,parent,isDirectory,const DeepCollectionEquality().hash(_children));
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'FileModel(name: $name, size: $size, file: $file, parent: $parent, children: $children)';
+  return 'FileModel(name: $name, size: $size, file: $file, parent: $parent, isDirectory: $isDirectory, children: $children)';
 }
 
 
@@ -144,7 +146,7 @@ abstract mixin class _$FileModelCopyWith<$Res> implements $FileModelCopyWith<$Re
   factory _$FileModelCopyWith(_FileModel value, $Res Function(_FileModel) _then) = __$FileModelCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String size,@FileSystemEntityConverter() FileSystemEntity file,@DirectoryConverter() Directory parent, List<FileModel> children
+ String name, String size,@FileSystemEntityConverter() FileSystemEntity file,@DirectoryConverter() Directory parent, bool isDirectory, List<FileModel> children
 });
 
 
@@ -161,13 +163,14 @@ class __$FileModelCopyWithImpl<$Res>
 
 /// Create a copy of FileModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? size = null,Object? file = null,Object? parent = null,Object? children = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? size = null,Object? file = null,Object? parent = null,Object? isDirectory = null,Object? children = null,}) {
   return _then(_FileModel(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as String,file: null == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
 as FileSystemEntity,parent: null == parent ? _self.parent : parent // ignore: cast_nullable_to_non_nullable
-as Directory,children: null == children ? _self._children : children // ignore: cast_nullable_to_non_nullable
+as Directory,isDirectory: null == isDirectory ? _self.isDirectory : isDirectory // ignore: cast_nullable_to_non_nullable
+as bool,children: null == children ? _self._children : children // ignore: cast_nullable_to_non_nullable
 as List<FileModel>,
   ));
 }

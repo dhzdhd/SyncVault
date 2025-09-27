@@ -15,6 +15,7 @@ abstract class FileModel with _$FileModel {
     required String size,
     @FileSystemEntityConverter() required FileSystemEntity file,
     @DirectoryConverter() required Directory parent,
+    required bool isDirectory,
     required List<FileModel> children,
   }) = _FileModel;
 

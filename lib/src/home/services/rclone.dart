@@ -9,6 +9,7 @@ import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/common.dart';
 
@@ -96,7 +97,7 @@ class RCloneDriveService implements DriveService {
   @override
   TaskEither<AppError, Option<FileModel>> treeView({
     required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required Option<FolderModel> folderModel,
   }) {
     final utils = RCloneUtils();
 
@@ -107,28 +108,33 @@ class RCloneDriveService implements DriveService {
       final Option<FileModel> fileModel = await $(
         TaskEither.tryCatch(
           () async {
-            // TODO: Get from parentPath
-            // final parentPath = Option.fromNullable(
-            //   model.remoteName,
-            // ).match(() => '/', (t) => '/$t/');
-
-            final (remoteName, parentPath, folderName) = switch (folderModel) {
-              RemoteFolderModel(
-                :final folderName,
-                :final parentPath,
-                :final remoteName,
-              ) =>
-                (
-                  remoteName,
-                  parentPath == null ? '/' : '/$parentPath/',
-                  folderName,
-                ),
+            final remoteName = switch (providerModel) {
+              RemoteProviderModel(:final remoteName) => remoteName,
               _ => throw GeneralError(
                 'Only remote folders allowed',
                 null,
                 null,
               ),
             };
+
+            final isOneDrive = providerModel.provider is OneDriveProvider;
+
+            final fullPath = switch (folderModel) {
+              Some(
+                value: RemoteFolderModel(:final folderName, :final parentPath),
+              ) =>
+                Uri.file(
+                  '${parentPath == null ? '/' : '/$parentPath/'}$folderName',
+                ).toFilePath(windows: false),
+              // No model passed implies root of remote
+              None() => '',
+              _ => throw GeneralError(
+                'Only remote folders allowed',
+                null,
+                null,
+              ),
+            };
+
             final process = await Process.run(execPath, [
               ...configArgs,
               'tree',
@@ -137,7 +143,9 @@ class RCloneDriveService implements DriveService {
               '--full-path',
               '-s',
               '-Q',
-              '$remoteName:$parentPath$folderName',
+              '$remoteName:$fullPath',
+              // Personal Vault folder is restricted in OneDrive
+              if (isOneDrive) ...['--exclude', '"Personal Vault/**"'],
             ]);
 
             if (process.stderr.toString().trim().isNotEmpty) {
@@ -240,6 +248,7 @@ class RCloneDriveService implements DriveService {
                 size: currentSize,
                 file: fileEntity,
                 parent: parent.toNullable() ?? Directory(''),
+                isDirectory: false, // FIXME:
                 children: children,
               );
             }
@@ -256,6 +265,76 @@ class RCloneDriveService implements DriveService {
           },
         ),
       );
+      return fileModel;
+    });
+  }
+
+  @override
+  TaskEither<AppError, List<FileModel>> listView({
+    required DriveProviderModel providerModel,
+    required String path,
+  }) {
+    final utils = RCloneUtils();
+
+    return TaskEither<AppError, List<FileModel>>.Do(($) async {
+      final execPath = await $(utils.getRCloneExec());
+      final configArgs = await $(utils.getConfigArgs());
+
+      final List<FileModel> fileModel = await $(
+        TaskEither.tryCatch(
+          () async {
+            final remoteName = switch (providerModel) {
+              RemoteProviderModel(:final remoteName) => remoteName,
+              _ => throw GeneralError(
+                'Only remote folders allowed',
+                null,
+                null,
+              ),
+            };
+
+            final isOneDrive = providerModel.provider is OneDriveProvider;
+
+            final process = await Process.run(execPath, [
+              ...configArgs,
+              'lsf',
+              '--format',
+              'psm',
+              '$remoteName:$path',
+              // Personal Vault folder is restricted in OneDrive
+              if (isOneDrive) ...['--exclude', '"Personal Vault/**"'],
+            ]);
+
+            if (process.stderr.toString().trim().isNotEmpty) {
+              debugLogger.e(process.stderr.toString());
+            }
+
+            final output = process.stdout.toString();
+            final lines = output.split('\n');
+            final files = lines
+                .filter((x) => x.isNotEmpty)
+                .map((x) => x.split(';'))
+                .map(
+                  (l) => FileModel(
+                    name: Uri.file(
+                      l[0],
+                    ).pathSegments.lastWhere((x) => x.isNotEmpty),
+                    size: l[1],
+                    file: File(l[0]),
+                    parent: Directory(path),
+                    isDirectory: l[2].contains('dir'),
+                    children: [],
+                  ),
+                )
+                .toList();
+
+            return files;
+          },
+          (err, stackTrace) {
+            return AppError.general('message', err, stackTrace).logError();
+          },
+        ),
+      );
+
       return fileModel;
     });
   }

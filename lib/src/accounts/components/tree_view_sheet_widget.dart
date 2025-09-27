@@ -19,7 +19,9 @@ class TreeViewSheetWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final treeState = ref.watch(treeViewProvider(folderModel, providerModel));
+    final treeState = ref.watch(
+      treeViewProvider(Some(folderModel), providerModel),
+    );
 
     return SizedBox.expand(
       child: Padding(
@@ -35,7 +37,7 @@ class TreeViewSheetWidget extends ConsumerWidget {
             Some(:final value) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
-              children: <Widget>[Flexible(child: TreeWidget(file: value))],
+              children: [Flexible(child: TreeWidget(file: value))],
             ),
             None() => const Center(
               child: Text('No data found', style: TextStyle(fontSize: 24)),

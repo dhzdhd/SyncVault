@@ -7,7 +7,7 @@ part of 'workflow_controller.dart';
 // **************************************************************************
 
 String _$workflowControllerHash() =>
-    r'ae1768f35b4bbeb36e3edf07bf6bd7f8c878cbba';
+    r'5c735142c6abeb5e447ff714130f159c6bc8b5a7';
 
 /// See also [WorkflowController].
 @ProviderFor(WorkflowController)
@@ -23,7 +23,7 @@ final workflowControllerProvider =
     );
 
 typedef _$WorkflowController = AutoDisposeAsyncNotifier<void>;
-String _$workflowHash() => r'af041779978d8508a66b05c57e455dab79b2aa41';
+String _$workflowHash() => r'5942ba997a8c593030238c859b51b3f90569fd1a';
 
 /// See also [Workflow].
 @ProviderFor(Workflow)

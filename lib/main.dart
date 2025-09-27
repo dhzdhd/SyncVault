@@ -76,21 +76,11 @@ Future<void> _showBackgroundNotification() async {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    debugLogger.i('Background sync started');
-    fileLogger.i('Background sync started');
-    sentryLogger.i('Background sync started');
-
     final execPath = inputData?['execPath'] as String?;
+
     if (execPath == null) {
-      debugLogger.e('RClone exec path is null');
-      fileLogger.e('RClone exec path is null');
-      sentryLogger.e('RClone exec path is null');
       return Future.value(false);
     }
-
-    debugLogger.i('RClone exec path is $execPath');
-    fileLogger.i('RClone exec path is $execPath');
-    sentryLogger.i('RClone exec path is $execPath');
 
     await Hive.initFlutter();
     Hive.registerAdapters();

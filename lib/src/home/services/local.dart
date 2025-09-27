@@ -61,15 +61,22 @@ class LocalDriveService implements DriveService {
   @override
   TaskEither<AppError, Option<FileModel>> treeView({
     required DriveProviderModel providerModel,
-    required FolderModel folderModel,
+    required Option<FolderModel> folderModel,
   }) {
     return TaskEither<AppError, Option<FileModel>>.Do(($) async {
       final Option<FileModel> fileModel = await $(
         TaskEither.tryCatch(
           () async {
-            final rootDir = Directory(
-              (folderModel as LocalFolderModel).folderPath,
-            );
+            final path = switch (folderModel) {
+              Some(value: LocalFolderModel(:final folderPath)) => folderPath,
+              None() => '/',
+              _ => throw GeneralError(
+                'Remote folders not supported',
+                null,
+                null,
+              ),
+            };
+            final rootDir = Directory(path);
 
             if (!await rootDir.exists()) {
               return none<FileModel>();
@@ -93,6 +100,7 @@ class LocalDriveService implements DriveService {
                 size: stat.size.toString(),
                 file: entity,
                 parent: entity.parent,
+                isDirectory: false, // FIXME:
                 children: children,
               );
             }
@@ -106,6 +114,58 @@ class LocalDriveService implements DriveService {
         ),
       );
       return fileModel;
+    });
+  }
+
+  @override
+  TaskEither<AppError, List<FileModel>> listView({
+    required DriveProviderModel providerModel,
+    required String path,
+  }) {
+    // TODO:
+
+    return TaskEither<AppError, List<FileModel>>.Do(($) async {
+      final Option<FileModel> _ = await $(
+        TaskEither.tryCatch(
+          () async {
+            final rootDir = Directory(path);
+
+            if (!await rootDir.exists()) {
+              return none<FileModel>();
+            }
+
+            Future<FileModel> buildFileTree(FileSystemEntity entity) async {
+              final stat = await entity.stat();
+              final isDirectory = entity is Directory;
+
+              List<FileModel> children = [];
+
+              if (isDirectory) {
+                final contents = await entity.list().toList();
+                children = await Future.wait(
+                  contents.map((child) => buildFileTree(child)),
+                );
+              }
+
+              return FileModel(
+                name: entity.path.split('/').last,
+                size: stat.size.toString(),
+                file: entity,
+                parent: entity.parent,
+                isDirectory: false, // FIXME:
+                children: children,
+              );
+            }
+
+            final rootTree = await buildFileTree(rootDir);
+            return some(rootTree);
+          },
+          (err, stackTrace) {
+            return AppError.general('message', err, stackTrace);
+          },
+        ),
+      );
+      return [];
     });
   }
 }
