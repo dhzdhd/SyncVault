@@ -163,136 +163,6 @@ class _TreeViewProviderElement
       (origin as TreeViewProvider).providerModel;
 }
 
-String _$listViewHash() => r'f16c435f706bc18d3a0166849f7073dab7696239';
-
-/// See also [listView].
-@ProviderFor(listView)
-const listViewProvider = ListViewFamily();
-
-/// See also [listView].
-class ListViewFamily extends Family<AsyncValue<List<FileModel>>> {
-  /// See also [listView].
-  const ListViewFamily();
-
-  /// See also [listView].
-  ListViewProvider call(DriveProviderModel providerModel, String path) {
-    return ListViewProvider(providerModel, path);
-  }
-
-  @override
-  ListViewProvider getProviderOverride(covariant ListViewProvider provider) {
-    return call(provider.providerModel, provider.path);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'listViewProvider';
-}
-
-/// See also [listView].
-class ListViewProvider extends AutoDisposeFutureProvider<List<FileModel>> {
-  /// See also [listView].
-  ListViewProvider(DriveProviderModel providerModel, String path)
-    : this._internal(
-        (ref) => listView(ref as ListViewRef, providerModel, path),
-        from: listViewProvider,
-        name: r'listViewProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$listViewHash,
-        dependencies: ListViewFamily._dependencies,
-        allTransitiveDependencies: ListViewFamily._allTransitiveDependencies,
-        providerModel: providerModel,
-        path: path,
-      );
-
-  ListViewProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.providerModel,
-    required this.path,
-  }) : super.internal();
-
-  final DriveProviderModel providerModel;
-  final String path;
-
-  @override
-  Override overrideWith(
-    FutureOr<List<FileModel>> Function(ListViewRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ListViewProvider._internal(
-        (ref) => create(ref as ListViewRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        providerModel: providerModel,
-        path: path,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<List<FileModel>> createElement() {
-    return _ListViewProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ListViewProvider &&
-        other.providerModel == providerModel &&
-        other.path == path;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, providerModel.hashCode);
-    hash = _SystemHash.combine(hash, path.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ListViewRef on AutoDisposeFutureProviderRef<List<FileModel>> {
-  /// The parameter `providerModel` of this provider.
-  DriveProviderModel get providerModel;
-
-  /// The parameter `path` of this provider.
-  String get path;
-}
-
-class _ListViewProviderElement
-    extends AutoDisposeFutureProviderElement<List<FileModel>>
-    with ListViewRef {
-  _ListViewProviderElement(super.provider);
-
-  @override
-  DriveProviderModel get providerModel =>
-      (origin as ListViewProvider).providerModel;
-  @override
-  String get path => (origin as ListViewProvider).path;
-}
-
 String _$createFolderControllerHash() =>
     r'b3846ff820cf0d106b980f0548eb80fbbb35daa3';
 
@@ -327,6 +197,156 @@ final deleteFolderControllerProvider =
     );
 
 typedef _$DeleteFolderController = AutoDisposeAsyncNotifier<void>;
+String _$listViewHash() => r'76fa236abe97aad2379a0f99044e3fc1954280f2';
+
+abstract class _$ListView
+    extends BuildlessAutoDisposeAsyncNotifier<List<FileModel>> {
+  late final DriveProviderModel providerModel;
+  late final String path;
+
+  FutureOr<List<FileModel>> build(
+    DriveProviderModel providerModel,
+    String path,
+  );
+}
+
+/// See also [ListView].
+@ProviderFor(ListView)
+const listViewProvider = ListViewFamily();
+
+/// See also [ListView].
+class ListViewFamily extends Family<AsyncValue<List<FileModel>>> {
+  /// See also [ListView].
+  const ListViewFamily();
+
+  /// See also [ListView].
+  ListViewProvider call(DriveProviderModel providerModel, String path) {
+    return ListViewProvider(providerModel, path);
+  }
+
+  @override
+  ListViewProvider getProviderOverride(covariant ListViewProvider provider) {
+    return call(provider.providerModel, provider.path);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'listViewProvider';
+}
+
+/// See also [ListView].
+class ListViewProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<ListView, List<FileModel>> {
+  /// See also [ListView].
+  ListViewProvider(DriveProviderModel providerModel, String path)
+    : this._internal(
+        () => ListView()
+          ..providerModel = providerModel
+          ..path = path,
+        from: listViewProvider,
+        name: r'listViewProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$listViewHash,
+        dependencies: ListViewFamily._dependencies,
+        allTransitiveDependencies: ListViewFamily._allTransitiveDependencies,
+        providerModel: providerModel,
+        path: path,
+      );
+
+  ListViewProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.providerModel,
+    required this.path,
+  }) : super.internal();
+
+  final DriveProviderModel providerModel;
+  final String path;
+
+  @override
+  FutureOr<List<FileModel>> runNotifierBuild(covariant ListView notifier) {
+    return notifier.build(providerModel, path);
+  }
+
+  @override
+  Override overrideWith(ListView Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: ListViewProvider._internal(
+        () => create()
+          ..providerModel = providerModel
+          ..path = path,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        providerModel: providerModel,
+        path: path,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<ListView, List<FileModel>>
+  createElement() {
+    return _ListViewProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ListViewProvider &&
+        other.providerModel == providerModel &&
+        other.path == path;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, providerModel.hashCode);
+    hash = _SystemHash.combine(hash, path.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin ListViewRef on AutoDisposeAsyncNotifierProviderRef<List<FileModel>> {
+  /// The parameter `providerModel` of this provider.
+  DriveProviderModel get providerModel;
+
+  /// The parameter `path` of this provider.
+  String get path;
+}
+
+class _ListViewProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<ListView, List<FileModel>>
+    with ListViewRef {
+  _ListViewProviderElement(super.provider);
+
+  @override
+  DriveProviderModel get providerModel =>
+      (origin as ListViewProvider).providerModel;
+  @override
+  String get path => (origin as ListViewProvider).path;
+}
+
 String _$folderHash() => r'88e4fcd481a8b06de3c86e93d59326f1cdb55b0b';
 
 /// See also [Folder].

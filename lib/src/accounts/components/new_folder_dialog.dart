@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path/path.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/common/components/circular_progress_widget.dart';
-import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
+import 'package:syncvault/src/accounts/controllers/folder_controller.dart'
+    hide ListView;
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
@@ -122,45 +124,153 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (ctx) => BottomSheet(
-                    onClosing: () {},
-                    builder: (ctx) {
-                      return Consumer(
-                        builder: (ctx, ref, child) {
-                          var files = ref.watch(
-                            listViewProvider(widget.providerModel, '/'),
-                          );
+                  builder: (ctx) {
+                    return BottomSheet(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height / 1.5,
+                        maxHeight: MediaQuery.of(context).size.height / 1.5,
+                      ),
+                      onClosing: () {},
+                      builder: (ctx) {
+                        return HookConsumer(
+                          builder: (ctx, ref, child) {
+                            final currentLocationUri = useState(Uri.file('/'));
+                            final files = ref.watch(
+                              listViewProvider(widget.providerModel, '/'),
+                            );
 
-                          return switch (files) {
-                            AsyncData(:final value) => ListView(
-                              padding: EdgeInsets.all(8),
-                              children: value
-                                  .map(
+                            return switch (files) {
+                              AsyncData(:final value) => ListView(
+                                padding: EdgeInsets.all(8),
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: IconButton(
+                                          icon: Icon(Icons.arrow_back),
+                                          onPressed: () async {
+                                            if (currentLocationUri
+                                                    .value
+                                                    .pathSegments
+                                                    .length <=
+                                                1) {
+                                              return;
+                                            }
+
+                                            final parent = joinAll(
+                                              currentLocationUri
+                                                  .value
+                                                  .pathSegments
+                                                  .dropRight(2),
+                                            );
+                                            await ref
+                                                .read(
+                                                  listViewProvider(
+                                                    widget.providerModel,
+                                                    '/',
+                                                  ).notifier,
+                                                )
+                                                .updateList(
+                                                  widget.providerModel,
+                                                  parent,
+                                                );
+                                            currentLocationUri.value = Uri.file(
+                                              parent,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: IconButton(
+                                          icon: Icon(Icons.home),
+                                          onPressed: () async {
+                                            if (currentLocationUri
+                                                    .value
+                                                    .pathSegments
+                                                    .length <=
+                                                1) {
+                                              return;
+                                            }
+
+                                            await ref
+                                                .read(
+                                                  listViewProvider(
+                                                    widget.providerModel,
+                                                    '/',
+                                                  ).notifier,
+                                                )
+                                                .updateList(
+                                                  widget.providerModel,
+                                                  '/',
+                                                );
+                                            currentLocationUri.value = Uri.file(
+                                              '/',
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.location_on_sharp),
+                                    title: Text(currentLocationUri.value.path),
+                                  ),
+                                  ...value.map(
                                     (file) => ListTile(
+                                      leading: Icon(
+                                        file.isDirectory
+                                            ? Icons.folder
+                                            : Icons.file_copy_rounded,
+                                      ),
                                       title: Text(file.name),
+                                      trailing: file.isDirectory
+                                          ? IconButton.outlined(
+                                              onPressed: () async {
+                                                _folderNameController.text =
+                                                    file.name;
+                                                _parentPathController.text =
+                                                    file.parent.path;
+
+                                                Navigator.of(context).pop();
+                                              },
+                                              icon: Icon(Icons.check),
+                                            )
+                                          : null,
                                       onTap: file.isDirectory
-                                          ? () {
-                                              _folderNameController.text =
-                                                  file.name;
-                                              _parentPathController.text =
-                                                  file.parent.path;
+                                          ? () async {
+                                              currentLocationUri.value =
+                                                  file.file.uri;
+                                              await ref
+                                                  .read(
+                                                    listViewProvider(
+                                                      widget.providerModel,
+                                                      '/',
+                                                    ).notifier,
+                                                  )
+                                                  .updateList(
+                                                    widget.providerModel,
+                                                    file.file.path,
+                                                  );
                                             }
                                           : null,
                                     ),
-                                  )
-                                  .toList(),
-                            ),
-                            AsyncLoading() => CircularProgressWidget(
-                              size: 200,
-                              isInfinite: true,
-                            ),
-                            AsyncError(:final error) => Text(error.toString()),
-                            _ => Text('Error'),
-                          };
-                        },
-                      );
-                    },
-                  ),
+                                  ),
+                                ],
+                              ),
+                              AsyncLoading() => CircularProgressWidget(
+                                size: 200,
+                                isInfinite: true,
+                              ),
+                              AsyncError(:final error) => Text(
+                                error.toString(),
+                              ),
+                              _ => Text('Error'),
+                            };
+                          },
+                        );
+                      },
+                    );
+                  },
                 );
               },
               child: Text('Pick folder'),

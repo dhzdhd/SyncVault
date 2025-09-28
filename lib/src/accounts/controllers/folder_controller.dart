@@ -82,24 +82,62 @@ Future<Option<FileModel>> treeView(
   };
 }
 
+// @riverpod
+// Future<List<FileModel>> listView(
+//   Ref ref,
+//   DriveProviderModel providerModel,
+//   String path,
+// ) async {
+//   return switch (providerModel) {
+//     RemoteProviderModel() =>
+//       await RCloneDriveService()
+//           .listView(providerModel: providerModel, path: path)
+//           .match((l) => throw l, (r) => r)
+//           .run(),
+//     LocalProviderModel() =>
+//       await LocalDriveService()
+//           .listView(providerModel: providerModel, path: path)
+//           .match((l) => throw l, (r) => r)
+//           .run(),
+//   };
+// }
+
 @riverpod
-Future<List<FileModel>> listView(
-  Ref ref,
-  DriveProviderModel providerModel,
-  String path,
-) async {
-  return switch (providerModel) {
+class ListView extends _$ListView {
+  @override
+  FutureOr<List<FileModel>> build(
+    DriveProviderModel providerModel,
+    String path,
+  ) => switch (providerModel) {
     RemoteProviderModel() =>
-      await RCloneDriveService()
+      RCloneDriveService()
           .listView(providerModel: providerModel, path: path)
           .match((l) => throw l, (r) => r)
           .run(),
     LocalProviderModel() =>
-      await LocalDriveService()
+      LocalDriveService()
           .listView(providerModel: providerModel, path: path)
           .match((l) => throw l, (r) => r)
           .run(),
   };
+
+  Future<void> updateList(DriveProviderModel providerModel, String path) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => switch (providerModel) {
+        RemoteProviderModel() =>
+          RCloneDriveService()
+              .listView(providerModel: providerModel, path: path)
+              .match((l) => throw l, (r) => r)
+              .run(),
+        LocalProviderModel() =>
+          LocalDriveService()
+              .listView(providerModel: providerModel, path: path)
+              .match((l) => throw l, (r) => r)
+              .run(),
+      },
+    );
+  }
 }
 
 @riverpod
