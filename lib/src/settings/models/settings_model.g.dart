@@ -12,6 +12,7 @@ _SettingsModel _$SettingsModelFromJson(Map<String, dynamic> json) =>
       isHideOnStartup: json['isHideOnStartup'] as bool,
       isLaunchOnStartup: json['isLaunchOnStartup'] as bool,
       rClonePath: json['rClonePath'] as String?,
+      rCloneConfigPath: json['rCloneConfigPath'] as String?,
       themeMode: $enumDecode(_$ThemeModeEnumMap, json['themeMode']),
     );
 
@@ -21,6 +22,7 @@ Map<String, dynamic> _$SettingsModelToJson(_SettingsModel instance) =>
       'isHideOnStartup': instance.isHideOnStartup,
       'isLaunchOnStartup': instance.isLaunchOnStartup,
       'rClonePath': instance.rClonePath,
+      'rCloneConfigPath': instance.rCloneConfigPath,
       'themeMode': _$ThemeModeEnumMap[instance.themeMode]!,
     };
 

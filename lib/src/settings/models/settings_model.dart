@@ -13,6 +13,7 @@ abstract class SettingsModel with _$SettingsModel {
     required bool isHideOnStartup,
     required bool isLaunchOnStartup,
     required String? rClonePath,
+    required String? rCloneConfigPath,
     required ThemeMode themeMode,
   }) = _SettingsModel;
 
@@ -24,6 +25,7 @@ abstract class SettingsModel with _$SettingsModel {
     isHideOnStartup: false,
     isLaunchOnStartup: false,
     rClonePath: null,
+    rCloneConfigPath: null,
     themeMode: ThemeMode.system,
   );
 }

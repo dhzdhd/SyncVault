@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/extensions.dart';
@@ -10,9 +13,10 @@ import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/introduction/controllers/intro_controller.dart';
+import 'package:syncvault/src/settings/services/validator.dart';
 import '../controllers/settings_controller.dart';
 
-class SettingsView extends ConsumerStatefulWidget {
+class SettingsView extends StatefulHookConsumerWidget {
   const SettingsView({super.key});
 
   static const routeName = '/settings';
@@ -22,26 +26,6 @@ class SettingsView extends ConsumerStatefulWidget {
 }
 
 class _SettingsViewState extends ConsumerState<SettingsView> {
-  late final TextEditingController _rClonePathController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final settings = ref.read(settingsProvider);
-    if (settings.hasValue) {
-      _rClonePathController = TextEditingController(
-        text: settings.value!.rClonePath,
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _rClonePathController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
@@ -145,12 +129,104 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                             },
                     ),
                   ),
-                Visibility(
-                  visible: PlatformExtension.isDesktop,
-                  child: ListTile(
+                if (PlatformExtension.isDesktop)
+                  ListTile(
                     minTileHeight: 64,
                     title: Text(
                       'Change RClone path',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    subtitle: const Text(
+                      'Change RClone path from the default of - <documents_directory>/SyncVault/rclone',
+                    ),
+                    onTap: () async {
+                      final config = await RCloneUtils().getIniConfig().run();
+                      config.match((e) => {}, (ini) async {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => HookBuilder(
+                            builder: (ctx) {
+                              final selectedRClonePath =
+                                  useState<Option<String>>(const None());
+
+                              return SimpleDialog(
+                                contentPadding: EdgeInsetsGeometry.all(24),
+                                title: const Text('Change RClone path'),
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Tooltip(
+                                          message:
+                                              selectedRClonePath.value
+                                                  .toNullable() ??
+                                              'Select RClone path',
+                                          child: Text(
+                                            selectedRClonePath.value
+                                                    .toNullable() ??
+                                                'Select RClone path',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleMedium,
+                                            textAlign: TextAlign.left,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.file_open_rounded,
+                                        ),
+                                        tooltip: 'Get path',
+                                        onPressed: () async {
+                                          final result = await FilePicker
+                                              .platform
+                                              .pickFiles();
+                                          selectedRClonePath.value =
+                                              Option.fromNullable(
+                                                result!.paths.first,
+                                              );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final path = selectedRClonePath.value
+                                          .toNullable();
+
+                                      if (path != null) {
+                                        final isValid =
+                                            await SettingsValidator.isRClonePathValid(
+                                              path,
+                                            ).run();
+
+                                        return switch (isValid) {
+                                          Right(:final value) when value =>
+                                            await settingsNotifier
+                                                .updateRClonePath(path: path),
+                                          _ => null,
+                                        };
+                                      }
+                                    },
+                                    child: Text('Submit'),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        );
+                      });
+                    },
+                  ),
+                if (PlatformExtension.isDesktop)
+                  ListTile(
+                    minTileHeight: 64,
+                    title: Text(
+                      'Change RClone configuration path',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     subtitle: const Text(
@@ -161,33 +237,91 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                       config.match((e) => {}, (ini) async {
                         showDialog(
                           context: context,
-                          builder: (ctx) => SimpleDialog(
-                            contentPadding: EdgeInsetsGeometry.all(24),
-                            title: const Text('Change RClone path'),
-                            children: [
-                              TextField(
-                                controller: _rClonePathController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Path',
+                          builder: (ctx) => HookBuilder(
+                            builder: (context) {
+                              final selectedRCloneConfigPath =
+                                  useState<Option<String>>(const None());
+
+                              return SimpleDialog(
+                                contentPadding: EdgeInsetsGeometry.all(24),
+                                title: const Text(
+                                  'Change RClone configuration path',
                                 ),
-                              ),
-                              SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  await settingsNotifier.updateRClonePath(
-                                    path: _rClonePathController.text,
-                                  );
-                                },
-                                child: Text('Submit'),
-                              ),
-                            ],
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Tooltip(
+                                          message:
+                                              selectedRCloneConfigPath.value
+                                                  .toNullable() ??
+                                              'Select config path',
+                                          child: Text(
+                                            selectedRCloneConfigPath.value
+                                                    .toNullable() ??
+                                                'Select config path',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleMedium,
+                                            textAlign: TextAlign.left,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.file_open_rounded,
+                                        ),
+                                        tooltip: 'Get path',
+                                        onPressed: () async {
+                                          final result = await FilePicker
+                                              .platform
+                                              .pickFiles();
+                                          selectedRCloneConfigPath.value =
+                                              Option.fromNullable(
+                                                result!.paths.first,
+                                              );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final path = selectedRCloneConfigPath
+                                          .value
+                                          .toNullable();
+
+                                      if (path != null) {
+                                        final isValid =
+                                            await SettingsValidator.isRCloneConfigPathValid(
+                                              // FIXME:
+                                              '',
+                                              path,
+                                            ).run();
+
+                                        return switch (isValid) {
+                                          Right(:final value) when value =>
+                                            await settingsNotifier
+                                                .updateRCloneConfigPath(
+                                                  path: path,
+                                                ),
+                                          _ => null,
+                                        };
+                                      }
+                                    },
+                                    child: Text('Submit'),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         );
                       });
                     },
                   ),
-                ),
                 if (PlatformExtension.isDesktop)
                   ListTile(
                     minTileHeight: 64,

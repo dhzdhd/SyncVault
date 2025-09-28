@@ -15,7 +15,7 @@ types:
         index: 2
   SettingsModel:
     typeId: 1
-    nextIndex: 10
+    nextIndex: 11
     fields:
       isSentryEnabled:
         index: 3
@@ -27,6 +27,8 @@ types:
         index: 8
       rClonePath:
         index: 9
+      rCloneConfigPath:
+        index: 10
   IntroSettingsModel:
     typeId: 2
     nextIndex: 1

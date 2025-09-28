@@ -119,6 +119,16 @@ class Settings extends _$Settings {
     await _storage.updateSingleAsyncValue(settingsKey, state);
   }
 
+  Future<void> updateRCloneConfigPath({required String path}) async {
+    state = switch (state) {
+      AsyncData(:final value) => AsyncData(
+        value.copyWith(rCloneConfigPath: path),
+      ),
+      final x => x,
+    };
+    await _storage.updateSingleAsyncValue(settingsKey, state);
+  }
+
   Future<void> resetSettings() async {
     final rCloneExecResult = await RCloneUtils().getRCloneExec().run();
 

@@ -82,26 +82,6 @@ Future<Option<FileModel>> treeView(
   };
 }
 
-// @riverpod
-// Future<List<FileModel>> listView(
-//   Ref ref,
-//   DriveProviderModel providerModel,
-//   String path,
-// ) async {
-//   return switch (providerModel) {
-//     RemoteProviderModel() =>
-//       await RCloneDriveService()
-//           .listView(providerModel: providerModel, path: path)
-//           .match((l) => throw l, (r) => r)
-//           .run(),
-//     LocalProviderModel() =>
-//       await LocalDriveService()
-//           .listView(providerModel: providerModel, path: path)
-//           .match((l) => throw l, (r) => r)
-//           .run(),
-//   };
-// }
-
 @riverpod
 class ListView extends _$ListView {
   @override

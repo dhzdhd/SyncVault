@@ -62,6 +62,7 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
       isHideOnStartup: fields[4] as bool,
       isLaunchOnStartup: fields[8] as bool,
       rClonePath: fields[9] as String?,
+      rCloneConfigPath: fields[10] as String?,
       themeMode: fields[5] as ThemeMode,
     );
   }
@@ -69,7 +70,7 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
   @override
   void write(BinaryWriter writer, SettingsModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(3)
       ..write(obj.isSentryEnabled)
       ..writeByte(4)
@@ -79,7 +80,9 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
       ..writeByte(8)
       ..write(obj.isLaunchOnStartup)
       ..writeByte(9)
-      ..write(obj.rClonePath);
+      ..write(obj.rClonePath)
+      ..writeByte(10)
+      ..write(obj.rCloneConfigPath);
   }
 
   @override

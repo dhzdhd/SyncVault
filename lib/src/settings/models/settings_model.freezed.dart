@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SettingsModel {
 
- bool get isSentryEnabled; bool get isHideOnStartup; bool get isLaunchOnStartup; String? get rClonePath; ThemeMode get themeMode;
+ bool get isSentryEnabled; bool get isHideOnStartup; bool get isLaunchOnStartup; String? get rClonePath; String? get rCloneConfigPath; ThemeMode get themeMode;
 /// Create a copy of SettingsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $SettingsModelCopyWith<SettingsModel> get copyWith => _$SettingsModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsModel&&(identical(other.isSentryEnabled, isSentryEnabled) || other.isSentryEnabled == isSentryEnabled)&&(identical(other.isHideOnStartup, isHideOnStartup) || other.isHideOnStartup == isHideOnStartup)&&(identical(other.isLaunchOnStartup, isLaunchOnStartup) || other.isLaunchOnStartup == isLaunchOnStartup)&&(identical(other.rClonePath, rClonePath) || other.rClonePath == rClonePath)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsModel&&(identical(other.isSentryEnabled, isSentryEnabled) || other.isSentryEnabled == isSentryEnabled)&&(identical(other.isHideOnStartup, isHideOnStartup) || other.isHideOnStartup == isHideOnStartup)&&(identical(other.isLaunchOnStartup, isLaunchOnStartup) || other.isLaunchOnStartup == isLaunchOnStartup)&&(identical(other.rClonePath, rClonePath) || other.rClonePath == rClonePath)&&(identical(other.rCloneConfigPath, rCloneConfigPath) || other.rCloneConfigPath == rCloneConfigPath)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isSentryEnabled,isHideOnStartup,isLaunchOnStartup,rClonePath,themeMode);
+int get hashCode => Object.hash(runtimeType,isSentryEnabled,isHideOnStartup,isLaunchOnStartup,rClonePath,rCloneConfigPath,themeMode);
 
 @override
 String toString() {
-  return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, isLaunchOnStartup: $isLaunchOnStartup, rClonePath: $rClonePath, themeMode: $themeMode)';
+  return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, isLaunchOnStartup: $isLaunchOnStartup, rClonePath: $rClonePath, rCloneConfigPath: $rCloneConfigPath, themeMode: $themeMode)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $SettingsModelCopyWith<$Res>  {
   factory $SettingsModelCopyWith(SettingsModel value, $Res Function(SettingsModel) _then) = _$SettingsModelCopyWithImpl;
 @useResult
 $Res call({
- bool isSentryEnabled, bool isHideOnStartup, bool isLaunchOnStartup, String? rClonePath, ThemeMode themeMode
+ bool isSentryEnabled, bool isHideOnStartup, bool isLaunchOnStartup, String? rClonePath, String? rCloneConfigPath, ThemeMode themeMode
 });
 
 
@@ -66,12 +66,13 @@ class _$SettingsModelCopyWithImpl<$Res>
 
 /// Create a copy of SettingsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isSentryEnabled = null,Object? isHideOnStartup = null,Object? isLaunchOnStartup = null,Object? rClonePath = freezed,Object? themeMode = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isSentryEnabled = null,Object? isHideOnStartup = null,Object? isLaunchOnStartup = null,Object? rClonePath = freezed,Object? rCloneConfigPath = freezed,Object? themeMode = null,}) {
   return _then(_self.copyWith(
 isSentryEnabled: null == isSentryEnabled ? _self.isSentryEnabled : isSentryEnabled // ignore: cast_nullable_to_non_nullable
 as bool,isHideOnStartup: null == isHideOnStartup ? _self.isHideOnStartup : isHideOnStartup // ignore: cast_nullable_to_non_nullable
 as bool,isLaunchOnStartup: null == isLaunchOnStartup ? _self.isLaunchOnStartup : isLaunchOnStartup // ignore: cast_nullable_to_non_nullable
 as bool,rClonePath: freezed == rClonePath ? _self.rClonePath : rClonePath // ignore: cast_nullable_to_non_nullable
+as String?,rCloneConfigPath: freezed == rCloneConfigPath ? _self.rCloneConfigPath : rCloneConfigPath // ignore: cast_nullable_to_non_nullable
 as String?,themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as ThemeMode,
   ));
@@ -84,13 +85,14 @@ as ThemeMode,
 @JsonSerializable()
 
 class _SettingsModel implements SettingsModel {
-  const _SettingsModel({required this.isSentryEnabled, required this.isHideOnStartup, required this.isLaunchOnStartup, required this.rClonePath, required this.themeMode});
+  const _SettingsModel({required this.isSentryEnabled, required this.isHideOnStartup, required this.isLaunchOnStartup, required this.rClonePath, required this.rCloneConfigPath, required this.themeMode});
   factory _SettingsModel.fromJson(Map<String, dynamic> json) => _$SettingsModelFromJson(json);
 
 @override final  bool isSentryEnabled;
 @override final  bool isHideOnStartup;
 @override final  bool isLaunchOnStartup;
 @override final  String? rClonePath;
+@override final  String? rCloneConfigPath;
 @override final  ThemeMode themeMode;
 
 /// Create a copy of SettingsModel
@@ -106,16 +108,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsModel&&(identical(other.isSentryEnabled, isSentryEnabled) || other.isSentryEnabled == isSentryEnabled)&&(identical(other.isHideOnStartup, isHideOnStartup) || other.isHideOnStartup == isHideOnStartup)&&(identical(other.isLaunchOnStartup, isLaunchOnStartup) || other.isLaunchOnStartup == isLaunchOnStartup)&&(identical(other.rClonePath, rClonePath) || other.rClonePath == rClonePath)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsModel&&(identical(other.isSentryEnabled, isSentryEnabled) || other.isSentryEnabled == isSentryEnabled)&&(identical(other.isHideOnStartup, isHideOnStartup) || other.isHideOnStartup == isHideOnStartup)&&(identical(other.isLaunchOnStartup, isLaunchOnStartup) || other.isLaunchOnStartup == isLaunchOnStartup)&&(identical(other.rClonePath, rClonePath) || other.rClonePath == rClonePath)&&(identical(other.rCloneConfigPath, rCloneConfigPath) || other.rCloneConfigPath == rCloneConfigPath)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isSentryEnabled,isHideOnStartup,isLaunchOnStartup,rClonePath,themeMode);
+int get hashCode => Object.hash(runtimeType,isSentryEnabled,isHideOnStartup,isLaunchOnStartup,rClonePath,rCloneConfigPath,themeMode);
 
 @override
 String toString() {
-  return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, isLaunchOnStartup: $isLaunchOnStartup, rClonePath: $rClonePath, themeMode: $themeMode)';
+  return 'SettingsModel(isSentryEnabled: $isSentryEnabled, isHideOnStartup: $isHideOnStartup, isLaunchOnStartup: $isLaunchOnStartup, rClonePath: $rClonePath, rCloneConfigPath: $rCloneConfigPath, themeMode: $themeMode)';
 }
 
 
@@ -126,7 +128,7 @@ abstract mixin class _$SettingsModelCopyWith<$Res> implements $SettingsModelCopy
   factory _$SettingsModelCopyWith(_SettingsModel value, $Res Function(_SettingsModel) _then) = __$SettingsModelCopyWithImpl;
 @override @useResult
 $Res call({
- bool isSentryEnabled, bool isHideOnStartup, bool isLaunchOnStartup, String? rClonePath, ThemeMode themeMode
+ bool isSentryEnabled, bool isHideOnStartup, bool isLaunchOnStartup, String? rClonePath, String? rCloneConfigPath, ThemeMode themeMode
 });
 
 
@@ -143,12 +145,13 @@ class __$SettingsModelCopyWithImpl<$Res>
 
 /// Create a copy of SettingsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isSentryEnabled = null,Object? isHideOnStartup = null,Object? isLaunchOnStartup = null,Object? rClonePath = freezed,Object? themeMode = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isSentryEnabled = null,Object? isHideOnStartup = null,Object? isLaunchOnStartup = null,Object? rClonePath = freezed,Object? rCloneConfigPath = freezed,Object? themeMode = null,}) {
   return _then(_SettingsModel(
 isSentryEnabled: null == isSentryEnabled ? _self.isSentryEnabled : isSentryEnabled // ignore: cast_nullable_to_non_nullable
 as bool,isHideOnStartup: null == isHideOnStartup ? _self.isHideOnStartup : isHideOnStartup // ignore: cast_nullable_to_non_nullable
 as bool,isLaunchOnStartup: null == isLaunchOnStartup ? _self.isLaunchOnStartup : isLaunchOnStartup // ignore: cast_nullable_to_non_nullable
 as bool,rClonePath: freezed == rClonePath ? _self.rClonePath : rClonePath // ignore: cast_nullable_to_non_nullable
+as String?,rCloneConfigPath: freezed == rCloneConfigPath ? _self.rCloneConfigPath : rCloneConfigPath // ignore: cast_nullable_to_non_nullable
 as String?,themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as ThemeMode,
   ));
