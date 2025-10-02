@@ -86,46 +86,23 @@ class ConnectionCardWidget extends HookConsumerWidget {
               color: Theme.of(context).canvasColor,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                if (MediaQuery.of(context).size.width > 800) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: FolderBar(
-                          providerPair: providerPair,
-                          folderPair: folderPair,
-                          connectionModel: connectionModel,
-                        ),
-                      ),
-                      Flexible(
-                        child: ToolBar(
-                          connectionModel: connectionModel,
-                          isLoading: isLoading,
-                          isCentered: false,
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return Column(
-                    spacing: 10,
-                    children: [
-                      FolderBar(
-                        providerPair: providerPair,
-                        folderPair: folderPair,
-                        connectionModel: connectionModel,
-                      ),
-                      ToolBar(
-                        connectionModel: connectionModel,
-                        isLoading: isLoading,
-                        isCentered: true,
-                      ),
-                    ],
-                  );
-                }
-              },
+            child: Column(
+              spacing: 10,
+              children: [
+                FolderBar(
+                  providerPair: providerPair,
+                  folderPair: folderPair,
+                  connectionModel: connectionModel,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: ToolBar(
+              connectionModel: connectionModel,
+              isLoading: isLoading,
+              isCentered: true,
             ),
           ),
           Row(
@@ -187,89 +164,99 @@ class FolderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch ((providerPair, folderPair)) {
-      (Some(value: final providers), Some(value: final folders)) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10.0,
-                horizontal: 16.0,
-              ),
-              child: Row(
-                spacing: 10,
-                children: [
-                  switch (providers.$1) {
-                    LocalProviderModel() => Icon(Icons.folder, size: 42),
-                    RemoteProviderModel(:final provider) => SvgPicture.asset(
-                      provider.providerIcon,
-                      width: 42,
-                      height: 42,
+      (Some(value: final providers), Some(value: final folders)) =>
+        LayoutBuilder(
+          builder: (context, constraints) {
+            // TODO:
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 16.0,
                     ),
-                  },
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      spacing: 10,
                       children: [
-                        Text(folders.$1.folderName),
-                        Text(switch (folders.$1) {
-                          RemoteFolderModel(:final parentPath) =>
-                            parentPath ?? '',
-                          LocalFolderModel(:final folderPath) => folderPath,
-                        }),
+                        switch (providers.$1) {
+                          LocalProviderModel() => Icon(Icons.folder, size: 42),
+                          RemoteProviderModel(:final provider) =>
+                            SvgPicture.asset(
+                              provider.providerIcon,
+                              width: 42,
+                              height: 42,
+                            ),
+                        },
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(folders.$1.folderName),
+                              Text(switch (folders.$1) {
+                                RemoteFolderModel(:final parentPath) =>
+                                  parentPath ?? '',
+                                LocalFolderModel(:final folderPath) =>
+                                  folderPath,
+                              }),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Flexible(
-            child: Icon(switch (connectionModel.direction) {
-              SyncDirection.bidirectional => Icons.sync,
-              SyncDirection.upload => Icons.arrow_forward_rounded,
-              SyncDirection.download => Icons.arrow_back_rounded,
-            }),
-          ),
-          Flexible(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10.0,
-                horizontal: 16.0,
-              ),
-              child: Row(
-                spacing: 10,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                ),
+                Flexible(
+                  child: Icon(switch (connectionModel.direction) {
+                    SyncDirection.bidirectional => Icons.sync,
+                    SyncDirection.upload => Icons.arrow_forward_rounded,
+                    SyncDirection.download => Icons.arrow_back_rounded,
+                  }),
+                ),
+                Flexible(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 16.0,
+                    ),
+                    child: Row(
+                      spacing: 10,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(folders.$2.folderName),
-                        Text(switch (folders.$2) {
-                          RemoteFolderModel(:final parentPath) =>
-                            parentPath ?? '',
-                          LocalFolderModel(:final folderPath) => folderPath,
-                        }),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(folders.$2.folderName),
+                              Text(switch (folders.$2) {
+                                RemoteFolderModel(:final parentPath) =>
+                                  parentPath ?? '',
+                                LocalFolderModel(:final folderPath) =>
+                                  folderPath,
+                              }),
+                            ],
+                          ),
+                        ),
+                        switch (providers.$2) {
+                          LocalProviderModel() => Icon(Icons.folder, size: 42),
+                          RemoteProviderModel(:final provider) =>
+                            SvgPicture.asset(
+                              provider.providerIcon,
+                              width: 42,
+                              height: 42,
+                            ),
+                        },
                       ],
                     ),
                   ),
-                  switch (providers.$2) {
-                    LocalProviderModel() => Icon(Icons.folder, size: 42),
-                    RemoteProviderModel(:final provider) => SvgPicture.asset(
-                      provider.providerIcon,
-                      width: 42,
-                      height: 42,
-                    ),
-                  },
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+                ),
+              ],
+            );
+          },
+        ),
       (_, _) => Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -298,90 +285,85 @@ class ToolBar extends ConsumerWidget {
       mainAxisAlignment: isCentered
           ? MainAxisAlignment.center
           : MainAxisAlignment.end,
+      spacing: 15,
       children: [
         Flexible(
           child: SizedBox(
             width: 50,
-            child: Tooltip(
-              message: 'Sync',
-              child: TextButton(
-                onPressed: isLoading.value
-                    ? null
-                    : () async {
-                        isLoading.value = true;
+            child: IconButton.filled(
+              tooltip: 'Sync',
+              onPressed: isLoading.value
+                  ? null
+                  : () async {
+                      isLoading.value = true;
 
-                        await ref
-                            .read(syncControllerProvider.notifier)
-                            .sync_(connectionModel);
+                      await ref
+                          .read(syncControllerProvider.notifier)
+                          .sync_(connectionModel);
 
-                        if (context.mounted) {
-                          context.showSuccessSnackBar(content: 'Success');
-                        }
+                      if (context.mounted) {
+                        context.showSuccessSnackBar(content: 'Success');
+                      }
 
-                        isLoading.value = false;
-                      },
-                child: const Icon(Icons.sync),
-              ),
+                      isLoading.value = false;
+                    },
+              icon: const Icon(Icons.sync),
             ),
           ),
         ),
         Flexible(
           child: SizedBox(
             width: 50,
-            child: Tooltip(
-              message: 'Edit',
-              child: TextButton(
-                onPressed: () async {
-                  if (context.mounted) {
-                    await showDialog(
-                      context: context,
-                      builder: (ctx) =>
-                          ConnectionEditDialogWidget(model: connectionModel),
-                    );
-                  }
-                },
-                child: Icon(Icons.edit),
-              ),
+            child: IconButton.filled(
+              tooltip: 'Edit',
+              onPressed: () async {
+                if (context.mounted) {
+                  await showDialog(
+                    context: context,
+                    builder: (ctx) =>
+                        ConnectionEditDialogWidget(model: connectionModel),
+                  );
+                }
+              },
+              icon: Icon(Icons.edit),
             ),
           ),
         ),
         Flexible(
           child: SizedBox(
             width: 50,
-            child: Tooltip(
-              message: 'Delete',
-              child: TextButton(
-                child: const Icon(Icons.delete),
-                onPressed: () async {
-                  if (context.mounted) {
-                    await showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: const Text('Are you sure'),
-                        actions: [
-                          OutlinedButton(
-                            onPressed: () async {
-                              await ref
-                                  .read(connectionProvider.notifier)
-                                  .delete(connectionModel);
-                              if (context.mounted) {
-                                Navigator.of(context).pop();
-                              }
-                            },
-                            child: const Text('Yes'),
-                          ),
-                          FilledButton(
-                            onPressed: () {
+            child: IconButton.filled(
+              tooltip: 'Delete',
+              icon: const Icon(Icons.delete),
+              onPressed: () async {
+                if (context.mounted) {
+                  await showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Are you sure'),
+                      actions: [
+                        OutlinedButton(
+                          onPressed: () async {
+                            await ref
+                                .read(connectionProvider.notifier)
+                                .delete(connectionModel);
+                            if (context.mounted) {
                               Navigator.of(context).pop();
-                            },
-                            child: const Text('No'),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                },
-              ),
+                            }
+                          },
+                          child: const Text('Yes'),
+                        ),
+                        FilledButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('No'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
             ),
           ),
         ),

@@ -45,14 +45,14 @@ class HiveStorage<T> {
   Future<void> updateAsyncValue(AsyncValue<Iterable<T>> val) async {
     if (val is AsyncData<Iterable<T>>) {
       final values = val.value;
-      update(values);
+      await update(values);
     }
   }
 
   Future<void> updateSingleAsyncValue(String key, AsyncValue<T> val) async {
     if (val is AsyncData<T>) {
       final value = val.value;
-      updateSingle(key, value);
+      await updateSingle(key, value);
     }
   }
 }
