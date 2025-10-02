@@ -186,7 +186,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                                               .pickFiles();
                                           selectedRClonePath.value =
                                               Option.fromNullable(
-                                                result!.paths.first,
+                                                result?.paths.first,
                                               );
                                         },
                                       ),
@@ -281,7 +281,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                                               .pickFiles();
                                           selectedRCloneConfigPath.value =
                                               Option.fromNullable(
-                                                result!.paths.first,
+                                                result?.paths.first,
                                               );
                                         },
                                       ),
@@ -297,8 +297,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                                       if (path != null) {
                                         final isValid =
                                             await SettingsValidator.isRCloneConfigPathValid(
-                                              // FIXME:
-                                              '',
+                                              settings.value!.rClonePath!,
                                               path,
                                             ).run();
 

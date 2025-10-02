@@ -26,8 +26,21 @@ final class SettingsValidator {
     String path,
   ) {
     return TaskEither.tryCatch(() async {
-      // TODO:
-      return true;
+      final result = await Process.run(rClonePath, [
+        'config',
+        '--config',
+        path,
+      ]);
+
+      final stdout = result.stdout.toString();
+      final stderr = result.stderr.toString();
+
+      debugLogger.i(stdout);
+      debugLogger.e(stderr);
+
+      if (stderr.isNotEmpty) return false;
+
+      return stdout.startsWith('Current') || stdout.startsWith('No remotes');
     }, (err, st) => AppError.general('Invalid RClone config path', err, st));
   }
 }
