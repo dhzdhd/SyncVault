@@ -400,11 +400,11 @@ as StackTrace?,
 
 
 class ValidationError extends AppError with DiagnosticableTreeMixin {
-  const ValidationError(this.reason, this.error, this.stackTrace): super._();
+  const ValidationError(this.reason, this.field, this.error, this.stackTrace): super._();
   
 
-// TODO: Add which field failed
  final  String reason;
+ final  String? field;
 @override final  Object? error;
 @override final  StackTrace? stackTrace;
 
@@ -419,21 +419,21 @@ $ValidationErrorCopyWith<ValidationError> get copyWith => _$ValidationErrorCopyW
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'AppError.validation'))
-    ..add(DiagnosticsProperty('reason', reason))..add(DiagnosticsProperty('error', error))..add(DiagnosticsProperty('stackTrace', stackTrace));
+    ..add(DiagnosticsProperty('reason', reason))..add(DiagnosticsProperty('field', field))..add(DiagnosticsProperty('error', error))..add(DiagnosticsProperty('stackTrace', stackTrace));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ValidationError&&(identical(other.reason, reason) || other.reason == reason)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ValidationError&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.field, field) || other.field == field)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,reason,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode => Object.hash(runtimeType,reason,field,const DeepCollectionEquality().hash(error),stackTrace);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'AppError.validation(reason: $reason, error: $error, stackTrace: $stackTrace)';
+  return 'AppError.validation(reason: $reason, field: $field, error: $error, stackTrace: $stackTrace)';
 }
 
 
@@ -444,7 +444,7 @@ abstract mixin class $ValidationErrorCopyWith<$Res> implements $AppErrorCopyWith
   factory $ValidationErrorCopyWith(ValidationError value, $Res Function(ValidationError) _then) = _$ValidationErrorCopyWithImpl;
 @override @useResult
 $Res call({
- String reason, Object? error, StackTrace? stackTrace
+ String reason, String? field, Object? error, StackTrace? stackTrace
 });
 
 
@@ -461,10 +461,11 @@ class _$ValidationErrorCopyWithImpl<$Res>
 
 /// Create a copy of AppError
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? reason = null,Object? error = freezed,Object? stackTrace = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? reason = null,Object? field = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
   return _then(ValidationError(
 null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
-as String,freezed == error ? _self.error : error ,freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
+as String,freezed == field ? _self.field : field // ignore: cast_nullable_to_non_nullable
+as String?,freezed == error ? _self.error : error ,freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
 as StackTrace?,
   ));
 }
