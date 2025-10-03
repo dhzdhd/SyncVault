@@ -46,7 +46,7 @@ class _NewAccountDialogWidgetState
   }
 
   bool validateControllers(List<TextEditingController> controllers) {
-    return controllers.all((val) => val.text.isNotEmpty);
+    return controllers.all((val) => val.text.trim().isNotEmpty);
   }
 
   bool validateSelectedFolder(Option<String> path) {
@@ -262,22 +262,13 @@ class _NewAccountDialogWidgetState
                       _remoteNameController.text,
                       isRCloneBackend.value,
                     );
-              } else {
-                await ref
-                    .read(authControllerProvider.notifier)
-                    .signIn(
-                      Local(folderPath: selectedFolder.value.toNullable()!),
-                      LocalProvider(),
-                      _remoteNameController.text,
-                      false,
-                    );
-              }
 
-              if (context.mounted && !authController.isLoading) {
-                Navigator.of(context).pop();
+                if (context.mounted && !authController.isLoading) {
+                  Navigator.of(context).pop();
+                }
+              } else {
+                context.showErrorSnackBar('Invalid fields entered');
               }
-            } else {
-              context.showErrorSnackBar('Fields are empty');
             }
           },
           child: authController.isLoading

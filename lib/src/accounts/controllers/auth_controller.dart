@@ -86,7 +86,7 @@ class Auth extends _$Auth {
     bool isRCloneBackend,
   ) async {
     if (!state.hasValue) {
-      return;
+      throw const GeneralError('State is not initialized', null, null);
     }
 
     if (state.requireValue.any((element) => element.remoteName == remoteName)) {
