@@ -100,7 +100,7 @@ class LocalDriveService implements DriveService {
                 size: stat.size.toString(),
                 file: entity,
                 parent: entity.parent,
-                isDirectory: false, // FIXME:
+                isDirectory: isDirectory,
                 children: children,
               );
             }
@@ -152,7 +152,7 @@ class LocalDriveService implements DriveService {
                 size: stat.size.toString(),
                 file: entity,
                 parent: entity.parent,
-                isDirectory: false, // FIXME:
+                isDirectory: isDirectory,
                 children: children,
               );
             }
