@@ -52,8 +52,11 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
           activeColor: Theme.of(context).colorScheme.primary,
         ),
         onDone: () {
-          introSettingsNotifier.setAlreadyViewed(); // TODO: Handle error
-          Navigator.of(context).popAndPushNamed('/home');
+          final result = introSettingsNotifier.setAlreadyViewed();
+          result.match(
+            (error) => error.logError(),
+            (_) => Navigator.of(context).popAndPushNamed('/home'),
+          );
         },
         pages: [
           PageViewModel(
@@ -114,9 +117,11 @@ class _IntroductionViewState extends ConsumerState<IntroductionView> {
                     await Permission.notification
                         .onDeniedCallback(() {})
                         .onGrantedCallback(() {
-                          introSettingsNotifier
-                              .setAlreadyViewed(); // TODO: Handle error
-                          Navigator.of(context).popAndPushNamed('/home');
+                          final result = introSettingsNotifier.setAlreadyViewed();
+                          result.match(
+                            (error) => error.logError(),
+                            (_) => Navigator.of(context).popAndPushNamed('/home'),
+                          );
                         })
                         .request();
                   },

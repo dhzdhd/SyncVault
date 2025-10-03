@@ -18,12 +18,19 @@ import 'package:ini_v2/ini.dart';
 
 final _dio = GetIt.I<Dio>();
 
-// FIXME:
+/// Map of common RClone error messages to user-friendly messages.
+/// This helps translate technical errors into actionable user guidance.
 const errorMsgMap = {
   'No code returned': 'Drive auth servers are not responding',
   r'address already in use': 'Restart the application to proceed',
 };
 
+/// Kills the process running on the specified port.
+/// 
+/// This is used to clean up stale OAuth authorization processes that may
+/// be blocking the port used for the OAuth callback.
+/// 
+/// [port] The port number to check and kill processes on.
 Future<void> killProcessOnPort(int port) async {
   final result = await Process.run('lsof', ['-i', ':$port', '-t']);
   if (result.exitCode != 0 || result.stdout.toString().trim().isEmpty) {
@@ -42,6 +49,11 @@ Future<void> killProcessOnPort(int port) async {
   }
 }
 
+/// Checks if the specified port is available (not in use).
+/// 
+/// Returns `true` if the port is available, `false` if it's in use.
+/// 
+/// [port] The port number to check.
 Future<bool> checkProcessIsNotUsed(int port) async {
   final result = await Process.run('lsof', ['-i', ':$port', '-t']);
 

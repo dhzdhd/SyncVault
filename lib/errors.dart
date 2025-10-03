@@ -50,8 +50,8 @@ sealed class AppError with _$AppError implements Exception {
     StackTrace? stackTrace,
   ) = StorageError;
   const factory AppError.validation(
-    // TODO: Add which field failed
     String reason,
+    String? field,
     Object? error,
     StackTrace? stackTrace,
   ) = ValidationError;
@@ -78,8 +78,8 @@ sealed class AppError with _$AppError implements Exception {
         StorageErrorType.update => 'Error in updating entity',
         StorageErrorType.delete => 'Error in deleting entity',
       }}""",
-    ValidationError(:final reason) =>
-      'ValidationError: The input is invalid due to $reason',
+    ValidationError(:final reason, :final field) =>
+      'ValidationError: The input is invalid due to $reason${field != null ? ' (field: $field)' : ''}',
     GeneralError(:final message) => 'GeneralError: $message',
   };
 
