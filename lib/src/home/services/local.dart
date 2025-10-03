@@ -9,6 +9,33 @@ import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/services/common.dart';
 
+/// Builds a tree structure of FileModel from a FileSystemEntity.
+/// 
+/// Recursively traverses the file system starting from [entity] and creates
+/// a hierarchical FileModel representation with all children.
+Future<FileModel> buildFileTree(FileSystemEntity entity) async {
+  final stat = await entity.stat();
+  final isDirectory = entity is Directory;
+
+  List<FileModel> children = [];
+
+  if (isDirectory) {
+    final contents = await entity.list().toList();
+    children = await Future.wait(
+      contents.map((child) => buildFileTree(child)),
+    );
+  }
+
+  return FileModel(
+    name: entity.path.split('/').last,
+    size: stat.size.toString(),
+    file: entity,
+    parent: entity.parent,
+    isDirectory: isDirectory,
+    children: children,
+  );
+}
+
 @singleton
 class LocalDriveService implements DriveService {
   @override
@@ -82,29 +109,6 @@ class LocalDriveService implements DriveService {
               return none<FileModel>();
             }
 
-            Future<FileModel> buildFileTree(FileSystemEntity entity) async {
-              final stat = await entity.stat();
-              final isDirectory = entity is Directory;
-
-              List<FileModel> children = [];
-
-              if (isDirectory) {
-                final contents = await entity.list().toList();
-                children = await Future.wait(
-                  contents.map((child) => buildFileTree(child)),
-                );
-              }
-
-              return FileModel(
-                name: entity.path.split('/').last,
-                size: stat.size.toString(),
-                file: entity,
-                parent: entity.parent,
-                isDirectory: isDirectory,
-                children: children,
-              );
-            }
-
             final rootTree = await buildFileTree(rootDir);
             return some(rootTree);
           },
@@ -122,8 +126,6 @@ class LocalDriveService implements DriveService {
     required DriveProviderModel providerModel,
     required String path,
   }) {
-    // TODO:
-
     return TaskEither<AppError, List<FileModel>>.Do(($) async {
       final Option<FileModel> _ = await $(
         TaskEither.tryCatch(
@@ -132,29 +134,6 @@ class LocalDriveService implements DriveService {
 
             if (!await rootDir.exists()) {
               return none<FileModel>();
-            }
-
-            Future<FileModel> buildFileTree(FileSystemEntity entity) async {
-              final stat = await entity.stat();
-              final isDirectory = entity is Directory;
-
-              List<FileModel> children = [];
-
-              if (isDirectory) {
-                final contents = await entity.list().toList();
-                children = await Future.wait(
-                  contents.map((child) => buildFileTree(child)),
-                );
-              }
-
-              return FileModel(
-                name: entity.path.split('/').last,
-                size: stat.size.toString(),
-                file: entity,
-                parent: entity.parent,
-                isDirectory: isDirectory,
-                children: children,
-              );
             }
 
             final rootTree = await buildFileTree(rootDir);
