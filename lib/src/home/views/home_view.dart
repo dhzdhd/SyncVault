@@ -113,12 +113,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
           }
 
           watcher.events.listen((event) async {
-            debugLogger.i(event.toString());
-
             switch (event.type) {
               case ChangeType.ADD || ChangeType.MODIFY
                   when connection.isAutoSync:
                 {
+                  debugLogger.i(event.toString());
+
                   try {
                     await notifService.show(
                       23325,
@@ -147,6 +147,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
               case ChangeType.REMOVE
                   when connection.isDeletionEnabled && connection.isAutoSync:
                 {
+                  debugLogger.i(event.toString());
+
                   try {
                     await ref
                         .read(connectionProvider.notifier)

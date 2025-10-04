@@ -213,44 +213,39 @@ void callbackDispatcher() {
                     secondFolder: secondFolder,
                     secondProvider: secondProvider,
                   )
-                  .run();
+                  .toList();
+              final hasFailed = result.any((item) => item.isLeft());
 
-              result.match(
-                (err) => GeneralError(
-                  'Failed to do background sync',
-                  err,
-                  err.stackTrace,
-                ).logError(),
-                (_) async {
-                  debugLogger.i('Background sync completed');
+              if (hasFailed) {
+                for (final item in result) {
+                  item.match((l) => l.logError(), (r) => ());
+                }
+              } else {
+                debugLogger.i('Background sync completed');
 
-                  final files = await Directory(
-                    localFolder.folderPath,
-                  ).list(recursive: true).toList();
-                  final hashResult = await fileComparer
-                      .calcHash(files.whereType<File>().toList())
-                      .run();
-                  hashResult.match(
-                    (err) => GeneralError(
-                      err.message,
-                      err,
-                      err.stackTrace,
-                    ).logError(),
-                    (hash) async {
-                      final hashModels = hashStorage.fetchAll().toList();
-                      final model = FolderHashModel(
-                        hash: hash,
-                        id: localFolder.id,
-                      );
-                      await hashStorage.update(
-                        hashModels
-                          ..removeWhere((hash) => hash.id == localFolder.id)
-                          ..add(model),
-                      );
-                    },
-                  );
-                },
-              );
+                final files = await Directory(
+                  localFolder.folderPath,
+                ).list(recursive: true).toList();
+                final hashResult = await fileComparer
+                    .calcHash(files.whereType<File>().toList())
+                    .run();
+                hashResult.match(
+                  (err) =>
+                      GeneralError(err.message, err, err.stackTrace).logError(),
+                  (hash) async {
+                    final hashModels = hashStorage.fetchAll().toList();
+                    final model = FolderHashModel(
+                      hash: hash,
+                      id: localFolder.id,
+                    );
+                    await hashStorage.update(
+                      hashModels
+                        ..removeWhere((hash) => hash.id == localFolder.id)
+                        ..add(model),
+                    );
+                  },
+                );
+              }
             },
           );
         },

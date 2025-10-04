@@ -6,12 +6,15 @@ part of 'connection_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$syncControllerHash() => r'5b52fed9e6c2b7a3bb1cd8cb7925235a4e3aa9de';
+String _$syncControllerHash() => r'468e1084ac3c1d1f32898297f5a0354f935638b3';
 
 /// See also [SyncController].
 @ProviderFor(SyncController)
 final syncControllerProvider =
-    AutoDisposeAsyncNotifierProvider<SyncController, void>.internal(
+    AutoDisposeAsyncNotifierProvider<
+      SyncController,
+      Either<AppError, Option<ProgressModel>>
+    >.internal(
       SyncController.new,
       name: r'syncControllerProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,8 +24,9 @@ final syncControllerProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$SyncController = AutoDisposeAsyncNotifier<void>;
-String _$connectionHash() => r'7b8ca6739e35442916cae0c9e89b5744974b0a53';
+typedef _$SyncController =
+    AutoDisposeAsyncNotifier<Either<AppError, Option<ProgressModel>>>;
+String _$connectionHash() => r'3e86d308864fbbf59ee3458e1906844ab67a732e';
 
 /// See also [Connection].
 @ProviderFor(Connection)

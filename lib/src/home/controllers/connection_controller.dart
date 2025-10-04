@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hashlib/random.dart';
 import 'package:hive_ce_flutter/adapters.dart';
+import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
@@ -11,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/models/progress_model.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
 
 part 'connection_controller.g.dart';
@@ -23,15 +25,26 @@ final _connectionStorage = HiveStorage<ConnectionModel>(_connectionBox);
 @riverpod
 class SyncController extends _$SyncController {
   @override
-  FutureOr<void> build() {}
+  FutureOr<Either<AppError, Option<ProgressModel>>> build() =>
+      const Right(None());
 
   Future<void> sync_(ConnectionModel connectionModel) async {
     final connectionNotifier = ref.read(connectionProvider.notifier);
+    final progressStream = connectionNotifier.uniSync(connectionModel);
 
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
-      () => connectionNotifier.uniSync(connectionModel),
-    );
+    progressStream.listen((data) {
+      data.match(
+        (l) =>
+            state = AsyncError(l.error ?? l, l.stackTrace ?? StackTrace.empty),
+        (r) => state = switch (r) {
+          Some(:final value) when value.percentage != 100 => AsyncData(
+            Right(r),
+          ),
+          _ => AsyncData(Right(None())),
+        },
+      );
+    });
   }
 }
 
@@ -123,7 +136,9 @@ class Connection extends _$Connection {
     await _connectionStorage.update(state);
   }
 
-  Future<void> uniSync(ConnectionModel connectionModel) async {
+  Stream<Either<AppError, Option<ProgressModel>>> uniSync(
+    ConnectionModel connectionModel,
+  ) async* {
     final providers = ref.read(authProvider).requireValue;
     final folders = ref.read(folderProvider);
 
@@ -179,15 +194,13 @@ class Connection extends _$Connection {
         },
       };
 
-      await service
-          .sync_(
-            connectionModel: connectionModel,
-            firstFolder: firstFolder,
-            firstProvider: firstProvider,
-            secondFolder: secondFolder,
-            secondProvider: secondProvider,
-          )
-          .run();
+      yield* service.sync_(
+        connectionModel: connectionModel,
+        firstFolder: firstFolder,
+        firstProvider: firstProvider,
+        secondFolder: secondFolder,
+        secondProvider: secondProvider,
+      );
     }
 
     // if (PlatformExtension.isMobile) {

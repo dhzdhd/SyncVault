@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
@@ -11,6 +13,7 @@ import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/models/progress_model.dart';
 import 'package:syncvault/src/home/services/common.dart';
 
 @singleton
@@ -348,32 +351,56 @@ class RCloneSyncService implements SyncService {
     rClonePath = Some(path);
   }
 
+  Option<ProgressModel> parseProgress(String input) {
+    return Either.tryCatch(() {
+      final [sizes, percentage, speed, eta] = input.split(',');
+
+      final progress = ProgressModel(
+        percentage: int.parse(percentage.replaceAll('%', '')),
+        // eta: eta.allMatches('ETA\\s(\\d+)\\w').first.group(group),
+        eta: Duration(seconds: 0),
+        speed: 1,
+        completedSize: 1,
+        totalSize: 1,
+      );
+      return progress;
+    }, (err, st) => GeneralError('message', err, st).logError()).toOption();
+  }
+
   @override
-  TaskEither<AppError, ()> sync_({
+  Stream<Either<AppError, Option<ProgressModel>>> sync_({
     required ConnectionModel connectionModel,
     required FolderModel firstFolder,
     required DriveProviderModel firstProvider,
     required FolderModel secondFolder,
     required DriveProviderModel secondProvider,
-  }) {
+  }) async* {
+    final progressStreamController =
+        StreamController<Either<AppError, Option<ProgressModel>>>();
     final utils = RCloneUtils();
 
-    return TaskEither<AppError, ()>.Do(($) async {
+    try {
       final calledExecPath = utils.getRCloneExec();
+      final execPath = await calledExecPath
+          .orElse<AppError>(
+            (err) => TaskEither<AppError, String>.fromOption(
+              rClonePath,
+              () => GeneralError(
+                'RClone path not supplied by background task',
+                err,
+                err.stackTrace,
+              ).logError(),
+            ),
+          )
+          .run();
+      if (execPath.isLeft()) {
+        yield Left(execPath.getLeft().toNullable()!);
+      }
 
-      final execPath = await $(
-        calledExecPath.orElse<AppError>(
-          (err) => TaskEither<AppError, String>.fromOption(
-            rClonePath,
-            () => GeneralError(
-              'RClone path not supplied by background task',
-              err,
-              err.stackTrace,
-            ).logError(),
-          ),
-        ),
-      );
-      final configArgs = await $(utils.getConfigArgs());
+      final configArgs = await utils.getConfigArgs().run();
+      if (configArgs.isLeft()) {
+        yield Left(configArgs.getLeft().toNullable()!);
+      }
 
       final firstPath = switch (firstFolder) {
         LocalFolderModel(:final folderPath) => folderPath,
@@ -394,32 +421,38 @@ class RCloneSyncService implements SyncService {
           '$remoteName:/${Option.fromNullable(parentPath).match(() => '/', (t) => '/$t/')}$folderName',
       };
 
-      final res = await $(
-        TaskEither.tryCatch(() async {
-          final process = await Process.run(execPath, [
-            // Use a 2 way copy to avoid deletion
-            ...configArgs,
-            connectionModel.direction == SyncDirection.bidirectional
-                ? 'bisync'
-                : 'sync',
-            '-u', // Do not delete/update on remote if remote file is newer
-            '-M',
-            '--inplace', // Bisync fails without this
-            if (connectionModel.direction == SyncDirection.bidirectional)
-              '--resync',
-            firstPath,
-            secondPath,
-          ]);
+      final process = await Process.start(execPath.toNullable()!, [
+        // Use a 2 way copy to avoid deletion
+        ...(configArgs.toNullable()!),
+        connectionModel.direction == SyncDirection.bidirectional
+            ? 'bisync'
+            : 'sync',
+        '-u', // Do not delete/update on remote if remote file is newer
+        '-M',
+        '--progress',
+        '--stats-one-line',
+        '--inplace', // Bisync fails without this
+        if (connectionModel.direction == SyncDirection.bidirectional)
+          '--resync',
+        firstPath,
+        secondPath,
+      ]);
 
-          if (process.stderr.toString().trim().isNotEmpty) {
-            debugLogger.e(process.stderr.toString());
-          }
+      process.stderr.transform(utf8.decoder).listen((data) {
+        progressStreamController.add(Right(parseProgress(data)));
+      });
 
-          return ();
-        }, (err, stackTrace) => GeneralError('', err, stackTrace).logError()),
-      );
+      process.stdout
+          .transform(utf8.decoder)
+          .listen(
+            (str) => progressStreamController.add(Right(parseProgress(str))),
+          );
 
-      return res;
-    });
+      yield* progressStreamController.stream;
+    } catch (err) {
+      progressStreamController.add(Left(GeneralError('', null, null)));
+    } finally {
+      progressStreamController.close();
+    }
   }
 }

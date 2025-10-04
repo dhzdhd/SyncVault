@@ -281,6 +281,8 @@ class ToolBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final syncController = ref.watch(syncControllerProvider);
+
     return Row(
       mainAxisAlignment: isCentered
           ? MainAxisAlignment.center
@@ -307,7 +309,23 @@ class ToolBar extends ConsumerWidget {
 
                       isLoading.value = false;
                     },
-              icon: const Icon(Icons.sync),
+              icon: switch (syncController) {
+                AsyncData(:final value) => switch (value) {
+                  Right(value: Some(value: final progress)) => Text(
+                    progress.percentage.toString(),
+                    style: TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).buttonTheme.colorScheme!.primaryContainer,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18,
+                    ),
+                  ),
+                  _ => const Icon(Icons.sync),
+                },
+                _ => const Icon(Icons.sync),
+              },
+              // icon: Text(syncController.valueOrNull.toString()),
             ),
           ),
         ),

@@ -4,6 +4,7 @@ import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/models/progress_model.dart';
 
 abstract interface class DriveService {
   TaskEither<AppError, FolderModel> create({
@@ -26,7 +27,7 @@ abstract interface class DriveService {
 }
 
 abstract interface class SyncService {
-  TaskEither<AppError, ()> sync_({
+  Stream<Either<AppError, Option<ProgressModel>>> sync_({
     required ConnectionModel connectionModel,
     required FolderModel firstFolder,
     required DriveProviderModel firstProvider,

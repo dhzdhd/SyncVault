@@ -79,16 +79,6 @@ class RCloneAuthService implements AuthService {
             () async {
               await killProcessOnPort(53682);
 
-              // if (await checkProcessIsNotUsed(57000)) {
-              //   final server = await Process.run(execPath, [
-              //     'rcd',
-              //     '--rc-addr',
-              //     ':57000',
-              //   ]);
-              //   debugLogger.i(server.stdout);
-              //   debugLogger.i(server.stderr);
-              // }
-
               final process = await Process.start(execPath, [
                 'authorize',
                 '--auth-no-open-browser',
