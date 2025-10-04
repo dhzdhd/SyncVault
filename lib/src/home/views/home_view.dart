@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
@@ -29,6 +30,7 @@ class HomeView extends StatefulHookConsumerWidget {
 
 class _HomeViewState extends ConsumerState<HomeView> {
   final Map<String, DirectoryWatcher> _connWatcherMap = {};
+  late final FlutterLocalNotificationsPlugin notifService;
 
   @override
   void initState() {
@@ -57,6 +59,28 @@ class _HomeViewState extends ConsumerState<HomeView> {
       });
     }
 
+    notifService = FlutterLocalNotificationsPlugin();
+    () async {
+      final DarwinInitializationSettings initializationSettingsDarwin =
+          DarwinInitializationSettings();
+      final LinuxInitializationSettings initializationSettingsLinux =
+          LinuxInitializationSettings(defaultActionName: 'Sync notification');
+      final WindowsInitializationSettings initializationSettingsWindows =
+          WindowsInitializationSettings(
+            appName: 'SyncVault',
+            appUserModelId: 'Dev.Dhzdhd.SyncVault',
+            guid: 'd49b0214-ef7a-4526-bb79-97cdb8a991bb',
+          );
+
+      final initializationSettings = InitializationSettings(
+        macOS: initializationSettingsDarwin,
+        windows: initializationSettingsWindows,
+        linux: initializationSettingsLinux,
+      );
+
+      await notifService.initialize(initializationSettings);
+    }();
+
     super.initState();
   }
 
@@ -74,51 +98,69 @@ class _HomeViewState extends ConsumerState<HomeView> {
       final connections = ref.watch(connectionProvider);
       final folderIds = ref.watch(folderProvider).map((folder) => folder.id);
 
-      for (final entry in _connWatcherMap.entries) {
-        final watcher = entry.value;
-        final connectionId = entry.key;
-        final connection = connections
-            .filter((conn) => conn.id == connectionId)
-            .firstOrNull;
+      () async {
+        for (final entry in _connWatcherMap.entries) {
+          final watcher = entry.value;
+          final connectionId = entry.key;
+          final connection = connections
+              .filter((conn) => conn.id == connectionId)
+              .firstOrNull;
 
-        if (connection == null ||
-            !folderIds.contains(connection.firstFolderId) ||
-            !folderIds.contains(connection.secondFolderId)) {
-          continue;
-        }
-
-        watcher.events.listen((event) async {
-          debugLogger.i(event.toString());
-
-          switch (event.type) {
-            case ChangeType.ADD || ChangeType.MODIFY when connection.isAutoSync:
-              {
-                try {
-                  await ref
-                      .read(connectionProvider.notifier)
-                      .uniSync(connection);
-                  debugLogger.i('Successfully uploaded for ADD | MODIFY');
-                } catch (e, st) {
-                  // TODO:
-                  GeneralError('', e, st).logError();
-                }
-              }
-            case ChangeType.REMOVE
-                when connection.isDeletionEnabled && connection.isAutoSync:
-              {
-                try {
-                  await ref
-                      .read(connectionProvider.notifier)
-                      .uniSync(connection);
-                  debugLogger.i('Successfully uploaded for DELETE');
-                } catch (e, st) {
-                  // TODO:
-                  GeneralError('', e, st).logError();
-                }
-              }
+          if (connection == null ||
+              !folderIds.contains(connection.firstFolderId) ||
+              !folderIds.contains(connection.secondFolderId)) {
+            continue;
           }
-        });
-      }
+
+          watcher.events.listen((event) async {
+            debugLogger.i(event.toString());
+
+            switch (event.type) {
+              case ChangeType.ADD || ChangeType.MODIFY
+                  when connection.isAutoSync:
+                {
+                  try {
+                    await notifService.show(
+                      23325,
+                      'Currently syncing ${connection.title}',
+                      'In progress',
+                      null,
+                    );
+
+                    await ref
+                        .read(connectionProvider.notifier)
+                        .uniSync(connection);
+                    debugLogger.i('Successfully uploaded for ADD | MODIFY');
+                  } catch (e, st) {
+                    await notifService.show(
+                      23326,
+                      'Sync failed for ${connection.title}',
+                      null,
+                      null,
+                    );
+                    GeneralError('', e, st).logError();
+                  } finally {
+                    await notifService.cancel(23325);
+                    await notifService.cancel(23326);
+                  }
+                }
+              case ChangeType.REMOVE
+                  when connection.isDeletionEnabled && connection.isAutoSync:
+                {
+                  try {
+                    await ref
+                        .read(connectionProvider.notifier)
+                        .uniSync(connection);
+                    debugLogger.i('Successfully uploaded for DELETE');
+                  } catch (e, st) {
+                    // TODO:
+                    GeneralError('', e, st).logError();
+                  }
+                }
+            }
+          });
+        }
+      }();
 
       return () => {
         for (DirectoryWatcher i in _connWatcherMap.values) {i.events.drain()},

@@ -77,7 +77,12 @@ class GoogleAuthService implements ManualAuthService {
           remoteName: remoteName,
           provider: GoogleDriveProvider(),
           backend: OAuth2(
-            authJson: {},
+            authJson: {
+              'access_token': accessToken,
+              'token_type': 'Bearer',
+              'refresh_token': refreshToken,
+              'expiry': expiresIn.toString(),
+            },
             accessToken: accessToken,
             refreshToken: refreshToken,
             expiresIn: expiresIn.toString(),
