@@ -118,7 +118,6 @@ class WorkflowsView extends ConsumerWidget {
                                             dimension: 20.0,
                                             child: CircularProgressWidget(
                                               size: 300,
-                                              isInfinite: true,
                                             ),
                                           )
                                         : Icon(Icons.open_in_new),

@@ -31,7 +31,7 @@ class TreeViewSheetWidget extends ConsumerWidget {
             child: Text('Error', style: TextStyle(fontSize: 24)),
           ),
           AsyncLoading() => const Center(
-            child: CircularProgressWidget(size: 300, isInfinite: true),
+            child: CircularProgressWidget(size: 300),
           ),
           AsyncData(:final value) => switch (value) {
             Some(:final value) => Column(

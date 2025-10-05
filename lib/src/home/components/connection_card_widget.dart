@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
@@ -14,6 +13,7 @@ import 'package:syncvault/src/home/components/expandable_card_widget.dart';
 import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/models/progress_model.dart';
 
 class ConnectionCardWidget extends HookConsumerWidget {
   const ConnectionCardWidget({super.key, required this.connectionModel});
@@ -28,8 +28,9 @@ class ConnectionCardWidget extends HookConsumerWidget {
     final folders = ref.watch(folderProvider);
     final providers = ref.watch(authProvider).value;
 
-    final syncController = ref.watch(syncControllerProvider);
-    final isLoading = useState(false);
+    final ValueNotifier<Option<ProgressModel>> progress = useState(
+      const None(),
+    );
 
     final folderPair = Option.Do(($) {
       final (firstFolderOpt, secondFolderOpt) = getFoldersFromConnection(
@@ -56,6 +57,15 @@ class ConnectionCardWidget extends HookConsumerWidget {
       return (firstProvider, secondProvider);
     });
 
+    ref.listen(syncControllerProvider, (prev, next) {
+      progress.value = switch (next) {
+        AsyncData(value: Right(:final value))
+            when value.isSome() && value.toNullable()!.percentage != 100 =>
+          value,
+        _ => const None(),
+      };
+    });
+
     return ExpandableCardWidget(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -70,11 +80,10 @@ class ConnectionCardWidget extends HookConsumerWidget {
       trailing: Padding(
         padding: const EdgeInsets.only(right: 16.0),
         child: Visibility(
-          visible: syncController.isLoading && isLoading.value,
-          child: const SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressWidget(size: 300, isInfinite: true),
+          visible: progress.value.isSome(),
+          child: CircularProgressWidget(
+            size: 20,
+            progress: progress.value.map((val) => val.percentage.toDouble()),
           ),
         ),
       ),
@@ -101,7 +110,7 @@ class ConnectionCardWidget extends HookConsumerWidget {
             padding: const EdgeInsets.only(top: 8.0),
             child: ToolBar(
               connectionModel: connectionModel,
-              isLoading: isLoading,
+              progress: progress,
               isCentered: true,
             ),
           ),
@@ -167,7 +176,7 @@ class FolderBar extends StatelessWidget {
       (Some(value: final providers), Some(value: final folders)) =>
         LayoutBuilder(
           builder: (context, constraints) {
-            // TODO:
+            // TODO: Fix layout
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -260,7 +269,7 @@ class FolderBar extends StatelessWidget {
       (_, _) => Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: CircularProgressWidget(size: 20, isInfinite: true),
+          child: CircularProgressWidget(size: 20),
         ),
       ),
     };
@@ -271,12 +280,12 @@ class ToolBar extends ConsumerWidget {
   const ToolBar({
     super.key,
     required this.connectionModel,
-    required this.isLoading,
+    required this.progress,
     required this.isCentered,
   });
 
   final ConnectionModel connectionModel;
-  final ValueNotifier<bool> isLoading;
+  final ValueNotifier<Option<ProgressModel>> progress;
   final bool isCentered;
 
   @override
@@ -294,38 +303,21 @@ class ToolBar extends ConsumerWidget {
             width: 50,
             child: IconButton.filled(
               tooltip: 'Sync',
-              onPressed: isLoading.value
+              onPressed: progress.value.isSome()
+                  // TODO: Add cancellation instead of disabling button
                   ? null
                   : () async {
-                      isLoading.value = true;
-
                       await ref
                           .read(syncControllerProvider.notifier)
                           .sync_(connectionModel);
-
-                      if (context.mounted) {
-                        context.showSuccessSnackBar(content: 'Success');
-                      }
-
-                      isLoading.value = false;
                     },
               icon: switch (syncController) {
                 AsyncData(:final value) => switch (value) {
-                  Right(value: Some(value: final progress)) => Text(
-                    progress.percentage.toString(),
-                    style: TextStyle(
-                      color: Theme.of(
-                        context,
-                      ).buttonTheme.colorScheme!.primaryContainer,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
-                    ),
-                  ),
+                  Right(value: Some()) => Icon(Icons.cancel),
                   _ => const Icon(Icons.sync),
                 },
                 _ => const Icon(Icons.sync),
               },
-              // icon: Text(syncController.valueOrNull.toString()),
             ),
           ),
         ),

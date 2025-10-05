@@ -259,7 +259,6 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                               ),
                               AsyncLoading() => CircularProgressWidget(
                                 size: 200,
-                                isInfinite: true,
                               ),
                               AsyncError(:final error) => Text(
                                 error.toString(),
@@ -321,7 +320,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
           child: createFolderController.isLoading
               ? const SizedBox.square(
                   dimension: 20.0,
-                  child: CircularProgressWidget(size: 300, isInfinite: true),
+                  child: CircularProgressWidget(size: 300),
                 )
               : const Text('Submit'),
         ),

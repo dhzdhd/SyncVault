@@ -150,9 +150,7 @@ class DriveInfoDialogWidget extends HookConsumerWidget {
             ),
           ),
         ],
-        AsyncLoading() => [
-          const CircularProgressWidget(size: 300, isInfinite: true),
-        ],
+        AsyncLoading() => [const CircularProgressWidget(size: 300)],
         _ => [], // TODO:
       },
     );

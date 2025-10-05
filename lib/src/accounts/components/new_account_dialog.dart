@@ -274,7 +274,7 @@ class _NewAccountDialogWidgetState
           child: authController.isLoading
               ? const SizedBox.square(
                   dimension: 20.0,
-                  child: CircularProgressWidget(size: 300, isInfinite: true),
+                  child: CircularProgressWidget(size: 300),
                 )
               : const Text('Submit'),
         ),

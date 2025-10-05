@@ -1,40 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' hide State;
 
 class CircularProgressWidget extends StatefulWidget {
   const CircularProgressWidget({
     super.key,
     required this.size,
-    required this.isInfinite,
+    this.progress = const None(),
   });
 
   final double size;
-  final bool isInfinite;
+  final Option<double> progress;
 
   @override
   State<CircularProgressWidget> createState() => _CircularProgressWidgetState();
 }
 
-class _CircularProgressWidgetState extends State<CircularProgressWidget>
-    with TickerProviderStateMixin {
-  late final AnimationController controller;
-
-  @override
-  void initState() {
-    controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2))
-          ..addListener(() {
-            setState(() {});
-          });
-    controller.repeat(reverse: true);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
+class _CircularProgressWidgetState extends State<CircularProgressWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -44,14 +25,17 @@ class _CircularProgressWidgetState extends State<CircularProgressWidget>
         alignment: Alignment.center,
         children: [
           CircularProgressIndicator(
-            value: widget.isInfinite ? null : controller.value,
+            value: widget.progress.map((val) => val / 100).toNullable(),
             strokeWidth: 3.0,
           ),
           Visibility(
-            visible: !widget.isInfinite,
+            visible: widget.progress.isSome(),
             child: Text(
-              '${(controller.value * 100).toInt()}%',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              widget.progress.toNullable()!.toInt().toString(),
+              style: TextStyle(
+                fontSize: widget.size / 2,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
