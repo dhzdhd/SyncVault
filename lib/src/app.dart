@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,7 +18,7 @@ import 'home/views/home_view.dart';
 import 'settings/controllers/settings_controller.dart';
 import 'settings/views/settings_view.dart';
 
-class MyApp extends ConsumerStatefulWidget {
+class MyApp extends StatefulHookConsumerWidget {
   const MyApp({super.key});
 
   @override
@@ -25,9 +27,20 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp>
     with WindowListener, TrayListener {
+  late final StreamSubscription<List<ConnectivityResult>> subscription;
+  var isConnected = true;
+
   @override
   void initState() {
     super.initState();
+
+    subscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> result,
+    ) {
+      setState(() {
+        isConnected = !result.contains(ConnectivityResult.none);
+      });
+    });
 
     if (PlatformExtension.isDesktop) {
       String iconPath = Platform.isWindows
@@ -60,6 +73,7 @@ class _MyAppState extends ConsumerState<MyApp>
 
   @override
   void dispose() {
+    subscription.cancel();
     trayManager.removeListener(this);
     super.dispose();
   }
@@ -84,6 +98,42 @@ class _MyAppState extends ConsumerState<MyApp>
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: settings.value?.themeMode,
+      builder: (context, child) {
+        return Column(
+          children: [
+            Visibility(
+              visible: !isConnected,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 16,
+                ),
+                color: Colors.orange,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.signal_wifi_off,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Limited network connectivity',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(child: child!),
+          ],
+        );
+      },
       onGenerateRoute: (RouteSettings routeSettings) {
         return MaterialPageRoute<void>(
           settings: routeSettings,
