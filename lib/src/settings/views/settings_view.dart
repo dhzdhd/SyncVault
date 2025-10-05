@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/extensions.dart';
 import 'package:syncvault/src/common/components/sliver_animated_app_bar.dart';
@@ -32,6 +33,8 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
     final settingsNotifier = ref.read(settingsProvider.notifier);
     final folderNotifier = ref.read(folderProvider.notifier);
     final connectionNotifier = ref.read(connectionProvider.notifier);
+
+    final permissions = ref.watch(permissionsProvider);
 
     ref.listen<AsyncValue>(rCloneDownloadControllerProvider, (prev, state) {
       if (!state.isLoading && state.hasError) {
@@ -129,6 +132,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                             },
                     ),
                   ),
+                Divider(),
                 if (PlatformExtension.isDesktop)
                   ListTile(
                     minTileHeight: 64,
@@ -423,6 +427,36 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                     },
                   ),
                 ),
+                if (Platform.isAndroid) Divider(),
+                if (Platform.isAndroid)
+                  ListTile(
+                    title: Text(
+                      'Notification Permissions',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: switch (permissions) {
+                        AsyncData(:final value) =>
+                          switch (value.notifications) {
+                            PermissionStatus.granted => Icon(Icons.check),
+                            PermissionStatus.limited => Icon(Icons.warning),
+                            PermissionStatus.denied ||
+                            PermissionStatus.permanentlyDenied ||
+                            PermissionStatus.restricted => Icon(Icons.cancel),
+                            PermissionStatus.provisional => Icon(
+                              Icons.timer_sharp,
+                            ),
+                          },
+                        AsyncLoading() => SizedBox(
+                          height: 10,
+                          child: CircularProgressIndicator(),
+                        ),
+                        _ => Icon(Icons.cancel),
+                      },
+                    ),
+                  ),
+                Divider(),
                 ListTile(
                   minTileHeight: 64,
                   title: Text(

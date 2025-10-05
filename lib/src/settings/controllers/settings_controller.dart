@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart'
+    hide PermissionStatus;
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
+import 'package:syncvault/src/settings/models/permissions_model.dart';
 import 'package:syncvault/src/settings/models/settings_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,6 +30,15 @@ final darkTheme = ThemeData(
   ),
   fontFamily: 'Inter',
 );
+
+@riverpod
+Future<PermissionsModel> permissions(Ref ref) async {
+  return PermissionsModel(
+    notifications: await Permission.notification.status,
+    batteryOptimization: await Permission.ignoreBatteryOptimizations.status,
+    fileAccess: await Permission.accessMediaLocation.status,
+  );
+}
 
 @riverpod
 class Settings extends _$Settings {
