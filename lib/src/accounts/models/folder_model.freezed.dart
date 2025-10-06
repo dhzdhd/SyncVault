@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -101,6 +100,136 @@ as DateTime,
 
 }
 
+
+/// Adds pattern-matching-related methods to [FolderModel].
+extension FolderModelPatterns on FolderModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RemoteFolderModel value)?  remote,TResult Function( LocalFolderModel value)?  local,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case RemoteFolderModel() when remote != null:
+return remote(_that);case LocalFolderModel() when local != null:
+return local(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RemoteFolderModel value)  remote,required TResult Function( LocalFolderModel value)  local,}){
+final _that = this;
+switch (_that) {
+case RemoteFolderModel():
+return remote(_that);case LocalFolderModel():
+return local(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RemoteFolderModel value)?  remote,TResult? Function( LocalFolderModel value)?  local,}){
+final _that = this;
+switch (_that) {
+case RemoteFolderModel() when remote != null:
+return remote(_that);case LocalFolderModel() when local != null:
+return local(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id,  String remoteName,  String folderName,  String? parentPath,  String? folderId,  DateTime createdAt,  DateTime updatedAt)?  remote,TResult Function( String id,  String folderName,  String folderPath,  DateTime createdAt,  DateTime updatedAt)?  local,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case RemoteFolderModel() when remote != null:
+return remote(_that.id,_that.remoteName,_that.folderName,_that.parentPath,_that.folderId,_that.createdAt,_that.updatedAt);case LocalFolderModel() when local != null:
+return local(_that.id,_that.folderName,_that.folderPath,_that.createdAt,_that.updatedAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id,  String remoteName,  String folderName,  String? parentPath,  String? folderId,  DateTime createdAt,  DateTime updatedAt)  remote,required TResult Function( String id,  String folderName,  String folderPath,  DateTime createdAt,  DateTime updatedAt)  local,}) {final _that = this;
+switch (_that) {
+case RemoteFolderModel():
+return remote(_that.id,_that.remoteName,_that.folderName,_that.parentPath,_that.folderId,_that.createdAt,_that.updatedAt);case LocalFolderModel():
+return local(_that.id,_that.folderName,_that.folderPath,_that.createdAt,_that.updatedAt);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id,  String remoteName,  String folderName,  String? parentPath,  String? folderId,  DateTime createdAt,  DateTime updatedAt)?  remote,TResult? Function( String id,  String folderName,  String folderPath,  DateTime createdAt,  DateTime updatedAt)?  local,}) {final _that = this;
+switch (_that) {
+case RemoteFolderModel() when remote != null:
+return remote(_that.id,_that.remoteName,_that.folderName,_that.parentPath,_that.folderId,_that.createdAt,_that.updatedAt);case LocalFolderModel() when local != null:
+return local(_that.id,_that.folderName,_that.folderPath,_that.createdAt,_that.updatedAt);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()

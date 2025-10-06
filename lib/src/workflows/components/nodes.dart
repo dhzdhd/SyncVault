@@ -17,29 +17,33 @@ void registerNodes(
   Map<String, Option<DriveProviderModel>> providersMap,
 ) {
   controller.registerNodePrototype(
-    NodePrototype(
+    FlNodePrototype(
       idName: 'folder',
       displayName: (ctx) => 'Folder',
       description: (ctx) => 'Holds a folder.',
       ports: [
-        ControlOutputPortPrototype(
+        FlControlOutputPortPrototype(
           idName: 'completed',
           displayName: (context) => 'Completed',
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.triangle,
+            radius: 6,
+            linkStyleBuilder: (linkState) => FlLinkStyle.basic(),
           ),
         ),
-        DataOutputPortPrototype<FolderModel>(
+        FlDataOutputPortPrototype<FolderModel>(
           idName: 'value',
           displayName: (ctx) => 'Value',
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.circle,
+            radius: 6,
+            linkStyleBuilder: (linkState) => FlLinkStyle.basic(),
           ),
         ),
       ],
-      headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
+      headerStyleBuilder: (state) => FlNodeHeaderStyle.basic().copyWith(
         decoration: BoxDecoration(
           color: Theme.of(context).buttonTheme.colorScheme!.primaryContainer,
           borderRadius: BorderRadius.only(
@@ -58,7 +62,7 @@ void registerNodes(
         ),
       ),
       fields: [
-        FieldPrototype(
+        FlFieldPrototype(
           idName: 'value',
           displayName: (ctx) => 'Value',
           dataType: FolderModel,
@@ -88,7 +92,7 @@ void registerNodes(
                         ],
                       ),
                       onTap: () {
-                        setData(folder, eventType: FieldEventType.submit);
+                        setData(folder, eventType: FlFieldEventType.submit);
                         removeOverlay();
                       },
                     ),
@@ -106,11 +110,11 @@ void registerNodes(
     ),
   );
   controller.registerNodePrototype(
-    NodePrototype(
+    FlNodePrototype(
       idName: 'connector',
       displayName: (ctx) => 'Connector',
       description: (ctx) => 'Applies a chosen operation to two folders.',
-      headerStyleBuilder: (state) => defaultNodeHeaderStyle(state).copyWith(
+      headerStyleBuilder: (state) => FlNodeHeaderStyle.basic().copyWith(
         decoration: BoxDecoration(
           color: Theme.of(context).buttonTheme.colorScheme!.primaryContainer,
           borderRadius: BorderRadius.only(
@@ -129,57 +133,69 @@ void registerNodes(
         ),
       ),
       ports: [
-        ControlInputPortPrototype(
+        FlControlInputPortPrototype(
           idName: 'exec',
           displayName: (ctx) => 'Exec',
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.triangle,
+            radius: 6,
+            linkStyleBuilder: (linkState) => FlLinkStyle.basic(),
           ),
         ),
-        DataInputPortPrototype<FolderModel>(
+        FlDataInputPortPrototype<FolderModel>(
           idName: 'firstFolder',
           displayName: (ctx) => 'First folder',
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.circle,
+            radius: 6,
+            linkStyleBuilder: (linkState) => FlLinkStyle.basic(),
           ),
         ),
-        DataInputPortPrototype<FolderModel>(
+        FlDataInputPortPrototype<FolderModel>(
           idName: 'secondFolder',
           displayName: (ctx) => 'Second folder',
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.circle,
+            radius: 6,
+            linkStyleBuilder: (linkState) => FlLinkStyle.basic(),
           ),
         ),
-        ControlOutputPortPrototype(
+        FlControlOutputPortPrototype(
           idName: 'completed',
           displayName: (ctx) => 'Completed',
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.triangle,
+            radius: 6,
+            linkStyleBuilder: (linkState) => FlLinkStyle.basic(),
           ),
         ),
-        DataOutputPortPrototype<FolderModel>(
+        FlDataOutputPortPrototype<FolderModel>(
           idName: 'firstFolderOut',
           displayName: (ctx) => 'First folder',
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.circle,
+            radius: 6,
+            linkStyleBuilder: (linkState) => FlLinkStyle.basic(),
           ),
         ),
-        DataOutputPortPrototype<FolderModel>(
+        FlDataOutputPortPrototype<FolderModel>(
           idName: 'secondFolderOut',
           displayName: (ctx) => 'Second folder',
           styleBuilder: (state) => FlPortStyle(
             color: Theme.of(context).buttonTheme.colorScheme!.primary,
             shape: FlPortShape.circle,
+            radius: 6,
+            linkStyleBuilder: (linkState) => FlLinkStyle.basic(),
           ),
         ),
       ],
       fields: [
-        FieldPrototype(
+        FlFieldPrototype(
           idName: 'operation',
           displayName: (ctx) => 'Operation',
           dataType: SyncDirection,
@@ -199,7 +215,10 @@ void registerNodes(
                     .toList(),
                 selected: {data as SyncDirection},
                 onSelectionChanged: (newSelection) {
-                  setData(newSelection.first, eventType: FieldEventType.submit);
+                  setData(
+                    newSelection.first,
+                    eventType: FlFieldEventType.submit,
+                  );
                   removeOverlay();
                 },
                 direction: Axis.horizontal,

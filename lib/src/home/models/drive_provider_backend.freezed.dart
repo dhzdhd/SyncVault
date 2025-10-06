@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -79,6 +78,154 @@ class $DriveProviderBackendCopyWith<$Res>  {
 $DriveProviderBackendCopyWith(DriveProviderBackend _, $Res Function(DriveProviderBackend) __);
 }
 
+
+/// Adds pattern-matching-related methods to [DriveProviderBackend].
+extension DriveProviderBackendPatterns on DriveProviderBackend {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( OAuth2 value)?  oauth2,TResult Function( S3 value)?  s3,TResult Function( Webdav value)?  webdav,TResult Function( UserPassword value)?  userPassword,TResult Function( Local value)?  local,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case OAuth2() when oauth2 != null:
+return oauth2(_that);case S3() when s3 != null:
+return s3(_that);case Webdav() when webdav != null:
+return webdav(_that);case UserPassword() when userPassword != null:
+return userPassword(_that);case Local() when local != null:
+return local(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( OAuth2 value)  oauth2,required TResult Function( S3 value)  s3,required TResult Function( Webdav value)  webdav,required TResult Function( UserPassword value)  userPassword,required TResult Function( Local value)  local,}){
+final _that = this;
+switch (_that) {
+case OAuth2():
+return oauth2(_that);case S3():
+return s3(_that);case Webdav():
+return webdav(_that);case UserPassword():
+return userPassword(_that);case Local():
+return local(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( OAuth2 value)?  oauth2,TResult? Function( S3 value)?  s3,TResult? Function( Webdav value)?  webdav,TResult? Function( UserPassword value)?  userPassword,TResult? Function( Local value)?  local,}){
+final _that = this;
+switch (_that) {
+case OAuth2() when oauth2 != null:
+return oauth2(_that);case S3() when s3 != null:
+return s3(_that);case Webdav() when webdav != null:
+return webdav(_that);case UserPassword() when userPassword != null:
+return userPassword(_that);case Local() when local != null:
+return local(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( Map<String, dynamic> authJson,  String accessToken,  String refreshToken,  String expiresIn)?  oauth2,TResult Function( String url,  String accessKeyId,  String secretAccessKey)?  s3,TResult Function( String url,  String user,  String password)?  webdav,TResult Function( String username,  String password)?  userPassword,TResult Function( String folderPath)?  local,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case OAuth2() when oauth2 != null:
+return oauth2(_that.authJson,_that.accessToken,_that.refreshToken,_that.expiresIn);case S3() when s3 != null:
+return s3(_that.url,_that.accessKeyId,_that.secretAccessKey);case Webdav() when webdav != null:
+return webdav(_that.url,_that.user,_that.password);case UserPassword() when userPassword != null:
+return userPassword(_that.username,_that.password);case Local() when local != null:
+return local(_that.folderPath);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( Map<String, dynamic> authJson,  String accessToken,  String refreshToken,  String expiresIn)  oauth2,required TResult Function( String url,  String accessKeyId,  String secretAccessKey)  s3,required TResult Function( String url,  String user,  String password)  webdav,required TResult Function( String username,  String password)  userPassword,required TResult Function( String folderPath)  local,}) {final _that = this;
+switch (_that) {
+case OAuth2():
+return oauth2(_that.authJson,_that.accessToken,_that.refreshToken,_that.expiresIn);case S3():
+return s3(_that.url,_that.accessKeyId,_that.secretAccessKey);case Webdav():
+return webdav(_that.url,_that.user,_that.password);case UserPassword():
+return userPassword(_that.username,_that.password);case Local():
+return local(_that.folderPath);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( Map<String, dynamic> authJson,  String accessToken,  String refreshToken,  String expiresIn)?  oauth2,TResult? Function( String url,  String accessKeyId,  String secretAccessKey)?  s3,TResult? Function( String url,  String user,  String password)?  webdav,TResult? Function( String username,  String password)?  userPassword,TResult? Function( String folderPath)?  local,}) {final _that = this;
+switch (_that) {
+case OAuth2() when oauth2 != null:
+return oauth2(_that.authJson,_that.accessToken,_that.refreshToken,_that.expiresIn);case S3() when s3 != null:
+return s3(_that.url,_that.accessKeyId,_that.secretAccessKey);case Webdav() when webdav != null:
+return webdav(_that.url,_that.user,_that.password);case UserPassword() when userPassword != null:
+return userPassword(_that.username,_that.password);case Local() when local != null:
+return local(_that.folderPath);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()

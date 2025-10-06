@@ -26,9 +26,9 @@ class _HierarchyWidgetState extends State<HierarchyWidget> {
 
   void _subscribeToControllerEvents() {
     widget.controller.eventBus.events.listen((event) {
-      if (event is DragSelectionEvent ||
-          event is AddNodeEvent ||
-          event is RemoveNodeEvent) {
+      if (event is FlDragSelectionEvent ||
+          event is FlAddNodeEvent ||
+          event is FlRemoveNodeEvent) {
         if (mounted) {
           setState(() {});
         }
@@ -36,7 +36,7 @@ class _HierarchyWidgetState extends State<HierarchyWidget> {
     });
   }
 
-  void _onNodeTap(NodeInstance node) {
+  void _onNodeTap(FlNodeDataModel node) {
     widget.controller.selectNodesById({
       node.id,
     }, holdSelection: HardwareKeyboard.instance.isControlPressed);

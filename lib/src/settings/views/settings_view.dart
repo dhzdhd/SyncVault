@@ -428,7 +428,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                   ),
                 ),
                 if (Platform.isAndroid) Divider(),
-                if (Platform.isAndroid)
+                if (Platform.isAndroid) ...[
                   ListTile(
                     title: Text(
                       'Notification Permissions',
@@ -456,6 +456,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                       },
                     ),
                   ),
+                ],
                 Divider(),
                 ListTile(
                   minTileHeight: 64,

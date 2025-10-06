@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -78,6 +77,160 @@ as StackTrace?,
 
 }
 
+
+/// Adds pattern-matching-related methods to [AppError].
+extension AppErrorPatterns on AppError {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( HttpError value)?  http,TResult Function( AuthError value)?  auth,TResult Function( ProviderError value)?  provider,TResult Function( StorageError value)?  storage,TResult Function( ValidationError value)?  validation,TResult Function( GeneralError value)?  general,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case HttpError() when http != null:
+return http(_that);case AuthError() when auth != null:
+return auth(_that);case ProviderError() when provider != null:
+return provider(_that);case StorageError() when storage != null:
+return storage(_that);case ValidationError() when validation != null:
+return validation(_that);case GeneralError() when general != null:
+return general(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( HttpError value)  http,required TResult Function( AuthError value)  auth,required TResult Function( ProviderError value)  provider,required TResult Function( StorageError value)  storage,required TResult Function( ValidationError value)  validation,required TResult Function( GeneralError value)  general,}){
+final _that = this;
+switch (_that) {
+case HttpError():
+return http(_that);case AuthError():
+return auth(_that);case ProviderError():
+return provider(_that);case StorageError():
+return storage(_that);case ValidationError():
+return validation(_that);case GeneralError():
+return general(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( HttpError value)?  http,TResult? Function( AuthError value)?  auth,TResult? Function( ProviderError value)?  provider,TResult? Function( StorageError value)?  storage,TResult? Function( ValidationError value)?  validation,TResult? Function( GeneralError value)?  general,}){
+final _that = this;
+switch (_that) {
+case HttpError() when http != null:
+return http(_that);case AuthError() when auth != null:
+return auth(_that);case ProviderError() when provider != null:
+return provider(_that);case StorageError() when storage != null:
+return storage(_that);case ValidationError() when validation != null:
+return validation(_that);case GeneralError() when general != null:
+return general(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String endpoint,  int status,  dynamic response,  Object? error,  StackTrace? stackTrace)?  http,TResult Function( AuthErrorType type,  Object? error,  StackTrace? stackTrace)?  auth,TResult Function( DriveProvider provider,  ProviderOperationType operation,  Object? error,  StackTrace? stackTrace)?  provider,TResult Function( StorageErrorType type,  StorageProviderType provider,  Object? error,  StackTrace? stackTrace)?  storage,TResult Function( String reason,  Object? error,  StackTrace? stackTrace)?  validation,TResult Function( String message,  Object? error,  StackTrace? stackTrace)?  general,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case HttpError() when http != null:
+return http(_that.endpoint,_that.status,_that.response,_that.error,_that.stackTrace);case AuthError() when auth != null:
+return auth(_that.type,_that.error,_that.stackTrace);case ProviderError() when provider != null:
+return provider(_that.provider,_that.operation,_that.error,_that.stackTrace);case StorageError() when storage != null:
+return storage(_that.type,_that.provider,_that.error,_that.stackTrace);case ValidationError() when validation != null:
+return validation(_that.reason,_that.error,_that.stackTrace);case GeneralError() when general != null:
+return general(_that.message,_that.error,_that.stackTrace);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String endpoint,  int status,  dynamic response,  Object? error,  StackTrace? stackTrace)  http,required TResult Function( AuthErrorType type,  Object? error,  StackTrace? stackTrace)  auth,required TResult Function( DriveProvider provider,  ProviderOperationType operation,  Object? error,  StackTrace? stackTrace)  provider,required TResult Function( StorageErrorType type,  StorageProviderType provider,  Object? error,  StackTrace? stackTrace)  storage,required TResult Function( String reason,  Object? error,  StackTrace? stackTrace)  validation,required TResult Function( String message,  Object? error,  StackTrace? stackTrace)  general,}) {final _that = this;
+switch (_that) {
+case HttpError():
+return http(_that.endpoint,_that.status,_that.response,_that.error,_that.stackTrace);case AuthError():
+return auth(_that.type,_that.error,_that.stackTrace);case ProviderError():
+return provider(_that.provider,_that.operation,_that.error,_that.stackTrace);case StorageError():
+return storage(_that.type,_that.provider,_that.error,_that.stackTrace);case ValidationError():
+return validation(_that.reason,_that.error,_that.stackTrace);case GeneralError():
+return general(_that.message,_that.error,_that.stackTrace);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String endpoint,  int status,  dynamic response,  Object? error,  StackTrace? stackTrace)?  http,TResult? Function( AuthErrorType type,  Object? error,  StackTrace? stackTrace)?  auth,TResult? Function( DriveProvider provider,  ProviderOperationType operation,  Object? error,  StackTrace? stackTrace)?  provider,TResult? Function( StorageErrorType type,  StorageProviderType provider,  Object? error,  StackTrace? stackTrace)?  storage,TResult? Function( String reason,  Object? error,  StackTrace? stackTrace)?  validation,TResult? Function( String message,  Object? error,  StackTrace? stackTrace)?  general,}) {final _that = this;
+switch (_that) {
+case HttpError() when http != null:
+return http(_that.endpoint,_that.status,_that.response,_that.error,_that.stackTrace);case AuthError() when auth != null:
+return auth(_that.type,_that.error,_that.stackTrace);case ProviderError() when provider != null:
+return provider(_that.provider,_that.operation,_that.error,_that.stackTrace);case StorageError() when storage != null:
+return storage(_that.type,_that.provider,_that.error,_that.stackTrace);case ValidationError() when validation != null:
+return validation(_that.reason,_that.error,_that.stackTrace);case GeneralError() when general != null:
+return general(_that.message,_that.error,_that.stackTrace);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 
