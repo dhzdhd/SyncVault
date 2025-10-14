@@ -4,13 +4,17 @@ import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 Option<DriveProviderModel> getProviderFromFolder(
-  Iterable<RemoteProviderModel> providers,
+  Iterable<DriveProviderModel> providers,
   FolderModel folder,
 ) {
   return switch (folder) {
     RemoteFolderModel(:final remoteName) =>
       providers
-          .filter((provider) => provider.remoteName == remoteName)
+          .filter(
+            (provider) =>
+                provider is RemoteProviderModel &&
+                provider.remoteName == remoteName,
+          )
           .firstOption,
     LocalFolderModel() => const Some(LocalProviderModel()),
   };

@@ -231,6 +231,8 @@ void registerNodes(
         final b = ports['secondFolder']! as FolderModel;
         final op = fields['operation']! as SyncDirection;
 
+        final _ = ConnectionModel.forWorkflow(a.id, b.id, op, true);
+
         switch (op) {
           case SyncDirection.upload:
             p({('firstFolderOut', a), ('secondFolderOut', b)});

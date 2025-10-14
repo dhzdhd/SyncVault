@@ -55,12 +55,12 @@ final _box = GetIt.I<Box<RemoteProviderModel>>();
 @riverpod
 class Auth extends _$Auth {
   @override
-  Future<List<RemoteProviderModel>> build() async {
+  Future<List<DriveProviderModel>> build() async {
     state = AsyncData(_box.values.toList());
     return init();
   }
 
-  static Future<List<RemoteProviderModel>> init() async {
+  static Future<List<DriveProviderModel>> init() async {
     final val = await RCloneUtils().parseModelFromConfig().run();
     return val
         .map(
@@ -89,7 +89,10 @@ class Auth extends _$Auth {
       throw const GeneralError('State is not initialized', null, null);
     }
 
-    if (state.requireValue.any((element) => element.remoteName == remoteName)) {
+    if (state.requireValue.any(
+      (element) =>
+          element is RemoteProviderModel && element.remoteName == remoteName,
+    )) {
       throw const GeneralError('The provider already exists', null, null);
     }
 

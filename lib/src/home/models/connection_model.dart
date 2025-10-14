@@ -24,4 +24,21 @@ abstract class ConnectionModel with _$ConnectionModel {
 
   factory ConnectionModel.fromJson(Map<String, Object?> json) =>
       _$ConnectionModelFromJson(json);
+
+  factory ConnectionModel.forWorkflow(
+    String firstFolderId,
+    String secondFolderId,
+    SyncDirection direction,
+    bool isDeletionEnabled,
+  ) => ConnectionModel(
+    id: '',
+    title: '',
+    firstFolderId: firstFolderId,
+    secondFolderId: secondFolderId,
+    direction: direction,
+    isAutoSync: false,
+    isDeletionEnabled: isDeletionEnabled,
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 }

@@ -50,7 +50,6 @@ class AccountCard extends ConsumerWidget {
                             value ? Colors.green : Colors.red,
                           AsyncLoading() => Colors.orange,
                           AsyncError() => Colors.red,
-                          AsyncValue<bool>() => Colors.red,
                         },
                       ),
                       Tooltip(
@@ -61,7 +60,6 @@ class AccountCard extends ConsumerWidget {
                                 value ? ' | Available' : ' | Unavailable',
                               AsyncLoading() => ' | Checking',
                               AsyncError() => ' | Unavailable',
-                              AsyncValue<bool>() => ' | Unavailable',
                             },
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width < 500
@@ -130,7 +128,7 @@ class AccountCard extends ConsumerWidget {
                   itemBuilder: (ctx) => [
                     PopupMenuItem(
                       enabled:
-                          connectionStatus.valueOrNull == true &&
+                          connectionStatus.value == true &&
                           !connectionStatus.hasError,
                       child: const Row(
                         children: [
@@ -160,7 +158,7 @@ class AccountCard extends ConsumerWidget {
                     if (providerModel.backend is! Local)
                       PopupMenuItem(
                         enabled:
-                            connectionStatus.valueOrNull == true &&
+                            connectionStatus.value == true &&
                             !connectionStatus.hasError,
                         child: const Row(
                           children: [

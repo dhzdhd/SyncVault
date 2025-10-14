@@ -263,7 +263,6 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
                               AsyncError(:final error) => Text(
                                 error.toString(),
                               ),
-                              _ => Text('Error'),
                             };
                           },
                         );

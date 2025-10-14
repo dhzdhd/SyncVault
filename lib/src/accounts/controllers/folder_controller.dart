@@ -196,7 +196,9 @@ class Folder extends _$Folder {
           final providerModel = ref
               .read(authProvider)
               .requireValue
-              .filter((t) => t.remoteName == remoteName)
+              .filter(
+                (t) => t is RemoteProviderModel && t.remoteName == remoteName,
+              )
               .firstOption;
 
           if (providerModel.isSome()) {

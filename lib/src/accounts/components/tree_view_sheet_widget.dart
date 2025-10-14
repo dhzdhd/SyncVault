@@ -43,9 +43,6 @@ class TreeViewSheetWidget extends ConsumerWidget {
               child: Text('No data found', style: TextStyle(fontSize: 24)),
             ),
           },
-          _ => const Center(
-            child: Text('Error', style: TextStyle(fontSize: 24)),
-          ), // TODO: Why are 3 states not exhausting AsyncValue?
         },
       ),
     );

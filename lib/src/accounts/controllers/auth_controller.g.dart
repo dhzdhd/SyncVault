@@ -6,180 +6,183 @@ part of 'auth_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$driveInfoControllerHash() =>
-    r'd64cf2eb4fdae981c745650d7bae50e588c15f3c';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(AuthController)
+const authControllerProvider = AuthControllerProvider._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [driveInfoController].
-@ProviderFor(driveInfoController)
-const driveInfoControllerProvider = DriveInfoControllerFamily();
-
-/// See also [driveInfoController].
-class DriveInfoControllerFamily extends Family<AsyncValue<DriveInfoModel>> {
-  /// See also [driveInfoController].
-  const DriveInfoControllerFamily();
-
-  /// See also [driveInfoController].
-  DriveInfoControllerProvider call(DriveProviderModel model) {
-    return DriveInfoControllerProvider(model);
-  }
-
-  @override
-  DriveInfoControllerProvider getProviderOverride(
-    covariant DriveInfoControllerProvider provider,
-  ) {
-    return call(provider.model);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'driveInfoControllerProvider';
-}
-
-/// See also [driveInfoController].
-class DriveInfoControllerProvider
-    extends AutoDisposeFutureProvider<DriveInfoModel> {
-  /// See also [driveInfoController].
-  DriveInfoControllerProvider(DriveProviderModel model)
-    : this._internal(
-        (ref) => driveInfoController(ref as DriveInfoControllerRef, model),
-        from: driveInfoControllerProvider,
-        name: r'driveInfoControllerProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$driveInfoControllerHash,
-        dependencies: DriveInfoControllerFamily._dependencies,
-        allTransitiveDependencies:
-            DriveInfoControllerFamily._allTransitiveDependencies,
-        model: model,
+final class AuthControllerProvider
+    extends $AsyncNotifierProvider<AuthController, void> {
+  const AuthControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
       );
 
-  DriveInfoControllerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.model,
-  }) : super.internal();
-
-  final DriveProviderModel model;
-
   @override
-  Override overrideWith(
-    FutureOr<DriveInfoModel> Function(DriveInfoControllerRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: DriveInfoControllerProvider._internal(
-        (ref) => create(ref as DriveInfoControllerRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        model: model,
-      ),
-    );
-  }
+  String debugGetCreateSourceHash() => _$authControllerHash();
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<DriveInfoModel> createElement() {
-    return _DriveInfoControllerProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is DriveInfoControllerProvider && other.model == model;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, model.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin DriveInfoControllerRef on AutoDisposeFutureProviderRef<DriveInfoModel> {
-  /// The parameter `model` of this provider.
-  DriveProviderModel get model;
-}
-
-class _DriveInfoControllerProviderElement
-    extends AutoDisposeFutureProviderElement<DriveInfoModel>
-    with DriveInfoControllerRef {
-  _DriveInfoControllerProviderElement(super.provider);
-
-  @override
-  DriveProviderModel get model => (origin as DriveInfoControllerProvider).model;
+  AuthController create() => AuthController();
 }
 
 String _$authControllerHash() => r'2729c5e63ac1c6eb326b90bc83d03058a2996ebb';
 
-/// See also [AuthController].
-@ProviderFor(AuthController)
-final authControllerProvider =
-    AutoDisposeAsyncNotifierProvider<AuthController, void>.internal(
-      AuthController.new,
-      name: r'authControllerProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$authControllerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$AuthController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    build();
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, null);
+  }
+}
 
-typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
-String _$authHash() => r'7217ddf7e51ee926d97e58fbd2731df12c8a468c';
+@ProviderFor(driveInfoController)
+const driveInfoControllerProvider = DriveInfoControllerFamily._();
 
-/// See also [Auth].
+final class DriveInfoControllerProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<DriveInfoModel>,
+          DriveInfoModel,
+          FutureOr<DriveInfoModel>
+        >
+    with $FutureModifier<DriveInfoModel>, $FutureProvider<DriveInfoModel> {
+  const DriveInfoControllerProvider._({
+    required DriveInfoControllerFamily super.from,
+    required DriveProviderModel super.argument,
+  }) : super(
+         retry: null,
+         name: r'driveInfoControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$driveInfoControllerHash();
+
+  @override
+  String toString() {
+    return r'driveInfoControllerProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<DriveInfoModel> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<DriveInfoModel> create(Ref ref) {
+    final argument = this.argument as DriveProviderModel;
+    return driveInfoController(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DriveInfoControllerProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$driveInfoControllerHash() =>
+    r'd64cf2eb4fdae981c745650d7bae50e588c15f3c';
+
+final class DriveInfoControllerFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<DriveInfoModel>,
+          DriveProviderModel
+        > {
+  const DriveInfoControllerFamily._()
+    : super(
+        retry: null,
+        name: r'driveInfoControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  DriveInfoControllerProvider call(DriveProviderModel model) =>
+      DriveInfoControllerProvider._(argument: model, from: this);
+
+  @override
+  String toString() => r'driveInfoControllerProvider';
+}
+
 @ProviderFor(Auth)
-final authProvider =
-    AutoDisposeAsyncNotifierProvider<Auth, List<RemoteProviderModel>>.internal(
-      Auth.new,
-      name: r'authProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$authHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+const authProvider = AuthProvider._();
 
-typedef _$Auth = AutoDisposeAsyncNotifier<List<RemoteProviderModel>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class AuthProvider
+    extends $AsyncNotifierProvider<Auth, List<DriveProviderModel>> {
+  const AuthProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authHash();
+
+  @$internal
+  @override
+  Auth create() => Auth();
+}
+
+String _$authHash() => r'5764f404fc3f9def6a7fef296cdca7eb4837c079';
+
+abstract class _$Auth extends $AsyncNotifier<List<DriveProviderModel>> {
+  FutureOr<List<DriveProviderModel>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<DriveProviderModel>>,
+              List<DriveProviderModel>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<DriveProviderModel>>,
+                List<DriveProviderModel>
+              >,
+              AsyncValue<List<DriveProviderModel>>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
