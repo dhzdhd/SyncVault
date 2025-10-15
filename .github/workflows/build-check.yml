@@ -98,5 +98,5 @@ jobs:
         run: |
           flutter config --enable-macos-desktop
           flutter pub get
-          pod install --project-directory=macos
+          pod install --repo-update --project-directory=macos
           flutter build macos --release
