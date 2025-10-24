@@ -74,7 +74,7 @@ class Auth extends _$Auth {
 
   ManualAuthService getManualAuthService(DriveProvider provider) {
     return switch (provider) {
-      DriveProvider.googleDrive => GoogleAuthService(),
+      GoogleDriveProvider() => GoogleAuthService(),
       _ => throw UnimplementedError(),
     };
   }

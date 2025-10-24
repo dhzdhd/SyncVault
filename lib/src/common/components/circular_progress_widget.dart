@@ -31,7 +31,7 @@ class _CircularProgressWidgetState extends State<CircularProgressWidget> {
           Visibility(
             visible: widget.progress.isSome(),
             child: Text(
-              widget.progress.toNullable()!.toInt().toString(),
+              widget.progress.toNullable()?.toInt().toString() ?? '',
               style: TextStyle(
                 fontSize: widget.size / 2,
                 fontWeight: FontWeight.bold,

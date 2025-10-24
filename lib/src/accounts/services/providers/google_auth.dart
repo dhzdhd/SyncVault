@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:crypto/crypto.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
@@ -16,15 +19,35 @@ final _dio = GetIt.I<Dio>();
 
 @singleton
 class GoogleAuthService implements ManualAuthService {
-  final _codeUri = Uri.https(GoogleUtils.authHost, '/o/oauth2/v2/auth', {
-    'client_id': GoogleUtils.clientId,
-    'response_type': 'code',
-    'redirect_uri': GoogleUtils.callbackUrlScheme,
-    'scope': GoogleUtils.scopesString,
-    'state': '12345',
-    'access_type': 'offline',
-    'prompt': 'select_account consent',
-  });
+  String _generateCodeVerifier() {
+    final random = Random.secure();
+    final values = List<int>.generate(32, (i) => random.nextInt(256));
+    return base64Url.encode(values).replaceAll('=', '');
+  }
+
+  String _generateCodeChallenge(String verifier) {
+    final bytes = utf8.encode(verifier);
+    final digest = sha256.convert(bytes);
+    return base64Url.encode(digest.bytes).replaceAll('=', '');
+  }
+
+  (Uri, String) _buildAuthUri() {
+    final codeVerifier = _generateCodeVerifier();
+    final codeChallenge = _generateCodeChallenge(codeVerifier);
+
+    final uri = Uri.https(GoogleUtils.authHost, '/o/oauth2/v2/auth', {
+      'client_id': GoogleUtils.clientId,
+      'response_type': 'code',
+      'redirect_uri': GoogleUtils.callbackUrlScheme,
+      'scope': GoogleUtils.scopesString,
+      'state': '12345',
+      'access_type': 'offline',
+      'prompt': 'select_account consent',
+      'code_challenge': codeChallenge,
+      'code_challenge_method': 'S256',
+    });
+    return (uri, codeVerifier);
+  }
 
   @override
   TaskEither<AppError, RemoteProviderModel> authorize({
@@ -40,8 +63,9 @@ class GoogleAuthService implements ManualAuthService {
 
     return TaskEither.tryCatch(
       () async {
+        final (uri, codeVerifier) = _buildAuthUri();
         final result = await FlutterWebAuth2.authenticate(
-          url: _codeUri.toString(),
+          url: uri.toString(),
           callbackUrlScheme: GoogleUtils.callbackUrlScheme,
           options: const FlutterWebAuth2Options(
             useWebview: false,
@@ -50,21 +74,19 @@ class GoogleAuthService implements ManualAuthService {
         );
 
         final code = Uri.parse(result).queryParameters['code'];
+        final tokenUri = Uri.https('oauth2.googleapis.com', '/token');
+        final options = Options(contentType: Headers.formUrlEncodedContentType);
 
-        final tokenUri = Uri.https(GoogleUtils.apiHost, '/oauth2/v4/token');
-
-        final options = Options(
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        );
         final response = await _dio.postUri<Map<String, dynamic>>(
           tokenUri,
           data: {
             'client_id': GoogleUtils.clientId,
             'code': code,
             'grant_type': 'authorization_code',
+            'redirect_uri': GoogleUtils.callbackUrlScheme,
             if (PlatformExtension.isDesktop)
               'client_secret': GoogleUtils.clientSecret,
-            'redirect_uri': GoogleUtils.callbackUrlScheme,
+            'code_verifier': codeVerifier,
           },
           options: options,
         );
