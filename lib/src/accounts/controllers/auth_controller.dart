@@ -16,6 +16,13 @@ import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
 part 'auth_controller.g.dart';
 
+ManualAuthService getManualAuthService(DriveProvider provider) {
+  return switch (provider) {
+    GoogleDriveProvider() => GoogleAuthService(),
+    _ => throw UnimplementedError(),
+  };
+}
+
 // The AsyncValue controller to provide states to UI
 @riverpod
 class AuthController extends _$AuthController {
@@ -70,13 +77,6 @@ class Auth extends _$Auth {
           ],
         )
         .getOrElse((_) => _box.values.toList());
-  }
-
-  ManualAuthService getManualAuthService(DriveProvider provider) {
-    return switch (provider) {
-      GoogleDriveProvider() => GoogleAuthService(),
-      _ => throw UnimplementedError(),
-    };
   }
 
   Future<void> signIn(

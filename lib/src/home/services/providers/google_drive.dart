@@ -49,11 +49,10 @@ class GoogleDriveService implements DriveService {
         late final String parentFolderId;
         if (fileList.files!.isEmpty) {
           final folderMetadata = drive.File(
-            // name: remoteParentPath.match(
-            //   () => 'SyncVault/',
-            //   (t) => t.replaceAll('/', ''),
-            // ),
-            name: '',
+            name: parentPath.match(
+              () => 'SyncVault/',
+              (t) => t.replaceAll('/', ''),
+            ),
             mimeType: 'application/vnd.google-apps.folder',
           );
           final syncVaultFolder = await api.files.create(folderMetadata);

@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:googleapis_auth/googleapis_auth.dart';
+import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/extensions.dart';
@@ -183,17 +186,15 @@ class GoogleAuthService implements ManualAuthService {
 
         if (diff <= 0) {
           final options = Options(
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            contentType: Headers.formUrlEncodedContentType,
           );
-          final uri = Uri.https(GoogleUtils.apiHost, '/oauth2/v4/token');
+          final uri = Uri.https('oauth2.googleapis.com', '/token');
           final response = await _dio.postUri<Map<String, dynamic>>(
             uri,
             data: {
               'client_id': GoogleUtils.clientId,
               'grant_type': 'refresh_token',
-              if (PlatformExtension.isDesktop)
-                'client_secret': GoogleUtils.clientSecret,
-              'redirect_uri': GoogleUtils.callbackUrlScheme,
+              'client_secret': GoogleUtils.clientSecret,
               'refresh_token': backend.refreshToken,
             },
             options: options,
@@ -247,8 +248,40 @@ class GoogleAuthService implements ManualAuthService {
   }
 
   @override
-  TaskEither<AppError, bool> isHealthy({required DriveProviderModel model}) {
-    // TODO: implement isHealthy
-    throw UnimplementedError();
+  TaskEither<AppError, bool> isHealthy({required RemoteProviderModel model}) {
+    return TaskEither.tryCatch(
+      () async {
+        final backend = model.backend as OAuth2;
+        final httpClient = http.Client();
+
+        final authClient = authenticatedClient(
+          httpClient,
+          AccessCredentials(
+            AccessToken(
+              'Bearer',
+              backend.accessToken,
+              DateTime.now()
+                  .add(Duration(seconds: int.parse(backend.expiresIn)))
+                  .toUtc(),
+            ),
+            backend.refreshToken,
+            GoogleUtils.scopes,
+          ),
+        );
+
+        final api = drive.DriveApi(authClient);
+        final about = await api.about.get($fields: 'user');
+
+        return about.user != null;
+      },
+      (err, st) {
+        return ProviderError(
+          model.provider,
+          ProviderOperationType.getDriveInfo,
+          err,
+          st,
+        );
+      },
+    );
   }
 }
