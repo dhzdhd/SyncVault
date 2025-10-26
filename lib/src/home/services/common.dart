@@ -3,8 +3,19 @@ import 'package:syncvault/src/accounts/models/file_model.dart';
 import 'package:syncvault/src/accounts/models/folder_model.dart';
 import 'package:syncvault/src/home/models/connection_model.dart';
 import 'package:syncvault/errors.dart';
+import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 import 'package:syncvault/src/home/models/progress_model.dart';
+import 'package:syncvault/src/home/services/providers/google_drive.dart';
+
+DriveService getManualDriveService(DriveProvider provider) {
+  return switch (provider) {
+    GoogleDriveProvider() => GoogleDriveService(),
+    _ => throw UnimplementedError(
+      'Drive service for $provider is not implemented',
+    ),
+  };
+}
 
 abstract interface class DriveService {
   TaskEither<AppError, FolderModel> create({

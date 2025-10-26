@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:hashlib/random.dart';
 import 'package:http/http.dart' as http;
@@ -110,7 +112,66 @@ class GoogleDriveService implements DriveService {
     required DriveProviderModel providerModel,
     required String path,
   }) {
-    // TODO: implement listView
-    throw UnimplementedError();
+    return TaskEither.tryCatch(
+      () async {
+        final backend =
+            (providerModel as RemoteProviderModel).backend as OAuth2;
+        final httpClient = http.Client();
+
+        final authClient = authenticatedClient(
+          httpClient,
+          AccessCredentials(
+            AccessToken(
+              'Bearer',
+              backend.accessToken,
+              DateTime.now()
+                  .add(Duration(seconds: int.parse(backend.expiresIn)))
+                  .toUtc(),
+            ),
+            backend.refreshToken,
+            GoogleUtils.scopes,
+          ),
+        );
+
+        final api = drive.DriveApi(authClient);
+
+        final fileList = await api.files.list(
+          q: "name = '$path' and mimeType = 'application/vnd.google-apps.folder'",
+          $fields: 'files(id)',
+        );
+
+        String folderId = 'root';
+        if (fileList.files!.isNotEmpty) {
+          folderId = fileList.files!.first.id!;
+        }
+
+        final files = await api.files.list(
+          q: "'$folderId' in parents",
+          $fields: 'files(id, name, size, mimeType)',
+        );
+
+        final fileModels = files.files!.map((file) {
+          return FileModel(
+            name: file.name!,
+            size: file.size ?? '0',
+            file: File(file.name!),
+            parent: Directory(path),
+            isDirectory: file.mimeType == 'application/vnd.google-apps.folder',
+            children: [],
+          );
+        }).toList();
+
+        httpClient.close();
+
+        return fileModels;
+      },
+      (error, stackTrace) {
+        return GeneralError(
+          'Failed to list files',
+          error,
+          stackTrace,
+        ).logError();
+      },
+    );
   }
 }

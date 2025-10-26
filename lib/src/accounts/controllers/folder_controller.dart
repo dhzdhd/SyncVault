@@ -4,7 +4,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hashlib/random.dart';
 import 'package:hive_ce_flutter/adapters.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/src/accounts/controllers/auth_controller.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
@@ -14,6 +13,7 @@ import 'package:syncvault/src/common/services/hive_storage.dart';
 import 'package:syncvault/src/home/controllers/connection_controller.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
+import 'package:syncvault/src/home/services/common.dart';
 import 'package:syncvault/src/home/services/local.dart';
 import 'package:syncvault/src/home/services/providers/google_drive.dart';
 import 'package:syncvault/src/home/services/rclone.dart';
@@ -89,11 +89,25 @@ class ListView extends _$ListView {
     DriveProviderModel providerModel,
     String path,
   ) => switch (providerModel) {
-    RemoteProviderModel() =>
-      RCloneDriveService()
-          .listView(providerModel: providerModel, path: path)
-          .match((l) => throw l, (r) => r)
-          .run(),
+    RemoteProviderModel(:final isRCloneBackend) => switch (isRCloneBackend) {
+      true =>
+        RCloneDriveService()
+            .listView(providerModel: providerModel, path: path)
+            .match((l) => throw l, (r) => r)
+            .run(),
+      false => TaskEither<AppError, List<FileModel>>.Do(($) async {
+        final authService = getManualAuthService(providerModel.provider);
+        final refreshedModel = await $(
+          authService.refresh(model: providerModel),
+        );
+
+        return await $(
+          getManualDriveService(
+            providerModel.provider,
+          ).listView(providerModel: refreshedModel, path: path),
+        );
+      }).match((l) => throw l, (r) => r).run(),
+    },
     LocalProviderModel() =>
       LocalDriveService()
           .listView(providerModel: providerModel, path: path)
