@@ -16,7 +16,7 @@ class GoogleUtils {
   static const apiHost = 'www.googleapis.com';
   static const basePath = '/drive/v3';
   static const scopes = [
-    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email',
   ];

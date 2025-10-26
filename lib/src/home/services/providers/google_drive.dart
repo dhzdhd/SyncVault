@@ -135,20 +135,17 @@ class GoogleDriveService implements DriveService {
 
         final api = drive.DriveApi(authClient);
 
-        final fileList = await api.files.list(
-          q: "name = '$path' and mimeType = 'application/vnd.google-apps.folder'",
-          $fields: 'files(id)',
-        );
+        String? pageToken;
+        drive.FileList files;
 
-        String folderId = 'root';
-        if (fileList.files!.isNotEmpty) {
-          folderId = fileList.files!.first.id!;
+        while (true) {
+          files = await api.files.list(spaces: 'drive', pageToken: pageToken);
+
+          pageToken = files.nextPageToken;
+          if (pageToken == null) {
+            break;
+          }
         }
-
-        final files = await api.files.list(
-          q: "'$folderId' in parents",
-          $fields: 'files(id, name, size, mimeType)',
-        );
 
         final fileModels = files.files!.map((file) {
           return FileModel(
