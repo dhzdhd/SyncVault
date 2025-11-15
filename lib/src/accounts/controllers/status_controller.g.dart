@@ -58,7 +58,7 @@ final class ConnectionStatusProvider
   }
 }
 
-String _$connectionStatusHash() => r'6bb908e5efdf1c81b85db57ce78cbcf7d1e8df10';
+String _$connectionStatusHash() => r'1ce6a34b6a6f4b62ad5f5e4a1ab1ac4c29228a2a';
 
 final class ConnectionStatusFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<bool>, DriveProviderModel> {

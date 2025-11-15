@@ -1,5 +1,5 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
 import '../src/accounts/services/providers/google_auth.dart' as _i360;
+import '../src/accounts/services/providers/onedrive_auth.dart' as _i268;
 import '../src/accounts/services/rclone.dart' as _i709;
 import '../src/common/services/rclone.dart' as _i867;
 import '../src/home/services/local.dart' as _i930;
@@ -32,10 +33,11 @@ extension GetItInjectableX on _i174.GetIt {
     final registerModule = _$RegisterModule();
     gh.factory<_i361.Dio>(() => registerModule.dio);
     gh.singleton<_i360.GoogleAuthService>(() => _i360.GoogleAuthService());
+    gh.singleton<_i268.OneDriveAuthService>(() => _i268.OneDriveAuthService());
     gh.singleton<_i709.RCloneAuthService>(() => _i709.RCloneAuthService());
     gh.singleton<_i867.RCloneUtils>(() => _i867.RCloneUtils());
-    gh.singleton<_i712.GoogleDriveService>(() => _i712.GoogleDriveService());
     gh.singleton<_i930.LocalDriveService>(() => _i930.LocalDriveService());
+    gh.singleton<_i712.GoogleDriveService>(() => _i712.GoogleDriveService());
     gh.singleton<_i303.RCloneDriveService>(() => _i303.RCloneDriveService());
     gh.singleton<_i303.RCloneSyncService>(() => _i303.RCloneSyncService());
     gh.singleton<_i808.IntroService>(() => _i808.IntroService());

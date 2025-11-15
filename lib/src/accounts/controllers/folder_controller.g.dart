@@ -225,7 +225,7 @@ final class ListViewProvider
   }
 }
 
-String _$listViewHash() => r'76fa236abe97aad2379a0f99044e3fc1954280f2';
+String _$listViewHash() => r'70f3de54df1ed52dc33558b9a5d48b5f1b63bebc';
 
 final class ListViewFamily extends $Family
     with
@@ -310,7 +310,7 @@ final class FolderProvider
   }
 }
 
-String _$folderHash() => r'88e4fcd481a8b06de3c86e93d59326f1cdb55b0b';
+String _$folderHash() => r'0261a35639f67019714899b47b021e3861bacaac';
 
 abstract class _$Folder extends $Notifier<List<FolderModel>> {
   List<FolderModel> build();

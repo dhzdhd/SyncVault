@@ -158,7 +158,7 @@ final class AuthProvider
   Auth create() => Auth();
 }
 
-String _$authHash() => r'5764f404fc3f9def6a7fef296cdca7eb4837c079';
+String _$authHash() => r'700a2d38309135db8a9ee2c133dc45ceb7c220b8';
 
 abstract class _$Auth extends $AsyncNotifier<List<DriveProviderModel>> {
   FutureOr<List<DriveProviderModel>> build();
