@@ -345,6 +345,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -974,6 +982,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+  microsoft_graph_api:
+    dependency: "direct main"
+    description:
+      name: microsoft_graph_api
+      sha256: "9714c79744db4554c08aeb4358a907506f7e310ec33ba523906165fe0010f8cd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.14"
   mime:
     dependency: transitive
     description:

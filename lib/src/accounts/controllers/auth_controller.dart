@@ -8,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncvault/src/accounts/models/drive_info_model.dart';
 import 'package:syncvault/src/accounts/services/common.dart';
 import 'package:syncvault/src/accounts/services/providers/google_auth.dart';
+import 'package:syncvault/src/accounts/services/providers/onedrive_auth.dart';
 import 'package:syncvault/src/accounts/services/rclone.dart';
 import 'package:syncvault/src/common/services/rclone.dart';
 import 'package:syncvault/src/home/models/drive_provider.dart';
@@ -19,6 +20,7 @@ part 'auth_controller.g.dart';
 ManualAuthService getManualAuthService(DriveProvider provider) {
   return switch (provider) {
     GoogleDriveProvider() => GoogleAuthService(),
+    OneDriveProvider() => OneDriveAuthService(),
     _ => throw UnimplementedError(),
   };
 }

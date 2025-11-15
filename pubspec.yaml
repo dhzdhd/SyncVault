@@ -65,6 +65,7 @@ dependencies:
   http: ^1.5.0
   connectivity_plus: ^7.0.0
   crypto: ^3.0.6
+  microsoft_graph_api: ^0.0.14
 
 dev_dependencies:
   flutter_test:

@@ -106,7 +106,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
             ],
           ),
           RemoteProviderModel(:final backend) => (switch (backend) {
-            OAuth2() => TextField(
+            OAuth2() || UserPassword() => TextField(
               controller: _parentPathController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -118,7 +118,8 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
         },
         const SizedBox(height: 16),
         switch (widget.providerModel) {
-          RemoteProviderModel(:final backend) when backend is OAuth2 =>
+          RemoteProviderModel(:final backend)
+              when backend is OAuth2 || backend is UserPassword =>
             ElevatedButton(
               onPressed: () {
                 showModalBottomSheet(
@@ -151,7 +152,7 @@ class _NewFolderDialogWidgetState extends ConsumerState<NewFolderDialogWidget> {
             if (!createFolderController.isLoading) {
               final valid = switch (widget.providerModel) {
                 RemoteProviderModel(:final backend) => switch (backend) {
-                  OAuth2() => validateControllers([
+                  OAuth2() || UserPassword() => validateControllers([
                     _folderNameController,
                     _parentPathController,
                   ]),
