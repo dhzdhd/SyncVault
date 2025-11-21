@@ -71,8 +71,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  mockito: ^5.5.1
   flutter_lints: ^6.0.0
-  build_runner: ^2.10.3
+  build_runner: ^2.10.4
   freezed: ^3.2.3
   json_serializable: ^6.11.1
   riverpod_lint: ^3.0.3
