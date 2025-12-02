@@ -20,10 +20,25 @@ class PickFolderSheet extends HookConsumerWidget {
   final TextEditingController folderNameController;
   final TextEditingController parentPathController;
 
+  Uri getParent(Uri uri) {
+    final parentPath = dirname(uri.path);
+
+    if (parentPath.trim() == '.') {
+      return Uri.file('/');
+    }
+
+    return Uri.file(parentPath);
+  }
+
+  bool isHome(Uri uri) {
+    return uri.pathSegments.length <= 1;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocationUri = useState(Uri.file('/'));
     final files = ref.watch(listViewProvider(providerModel, '/'));
+    print(Uri.file('aa/').pathSegments[1]);
 
     return switch (files) {
       AsyncData(:final value) => ListView(
@@ -35,17 +50,15 @@ class PickFolderSheet extends HookConsumerWidget {
                 child: IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () async {
-                    if (currentLocationUri.value.pathSegments.length <= 1) {
+                    if (isHome(currentLocationUri.value)) {
                       return;
                     }
 
-                    final parent = joinAll(
-                      currentLocationUri.value.pathSegments.dropRight(2),
-                    );
+                    final parent = getParent(currentLocationUri.value);
                     await ref
                         .read(listViewProvider(providerModel, '/').notifier)
-                        .updateList(providerModel, parent);
-                    currentLocationUri.value = Uri.file(parent);
+                        .updateList(providerModel, parent.path);
+                    currentLocationUri.value = Uri.file(parent.path);
                   },
                 ),
               ),
@@ -53,7 +66,7 @@ class PickFolderSheet extends HookConsumerWidget {
                 child: IconButton(
                   icon: Icon(Icons.home),
                   onPressed: () async {
-                    if (currentLocationUri.value.pathSegments.length <= 1) {
+                    if (isHome(currentLocationUri.value)) {
                       return;
                     }
 
@@ -61,6 +74,21 @@ class PickFolderSheet extends HookConsumerWidget {
                         .read(listViewProvider(providerModel, '/').notifier)
                         .updateList(providerModel, '/');
                     currentLocationUri.value = Uri.file('/');
+                  },
+                ),
+              ),
+              Expanded(
+                child: IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: () async {
+                    folderNameController.text = basename(
+                      currentLocationUri.value.path,
+                    );
+                    parentPathController.text = getParent(
+                      currentLocationUri.value,
+                    ).path;
+
+                    Navigator.of(context).pop();
                   },
                 ),
               ),
@@ -92,7 +120,7 @@ class PickFolderSheet extends HookConsumerWidget {
                       currentLocationUri.value = file.file.uri;
                       await ref
                           .read(listViewProvider(providerModel, '/').notifier)
-                          .updateList(providerModel, file.file.path);
+                          .updateList(providerModel, file.file.uri.path);
                     }
                   : null,
             ),

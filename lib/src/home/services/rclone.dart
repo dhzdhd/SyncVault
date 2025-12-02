@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:fpdart/fpdart.dart';
 import 'package:hashlib/random.dart';
 import 'package:injectable/injectable.dart';
+import 'package:path/path.dart';
 import 'package:syncvault/errors.dart';
 import 'package:syncvault/log.dart';
 import 'package:syncvault/src/accounts/models/file_model.dart';
@@ -312,6 +313,7 @@ class RCloneDriveService implements DriveService {
             }
 
             final output = process.stdout.toString();
+            print(output);
             final lines = output.split('\n');
             final files = lines
                 .filter((x) => x.isNotEmpty)
@@ -322,7 +324,7 @@ class RCloneDriveService implements DriveService {
                       l[0],
                     ).pathSegments.lastWhere((x) => x.isNotEmpty),
                     size: l[1],
-                    file: File(l[0]),
+                    file: File(join(path, l[0])),
                     parent: Directory(path),
                     isDirectory: l[2].contains('dir'),
                     children: [],
