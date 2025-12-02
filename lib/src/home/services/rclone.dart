@@ -313,7 +313,6 @@ class RCloneDriveService implements DriveService {
             }
 
             final output = process.stdout.toString();
-            print(output);
             final lines = output.split('\n');
             final files = lines
                 .filter((x) => x.isNotEmpty)
