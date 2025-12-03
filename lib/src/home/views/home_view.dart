@@ -129,7 +129,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
                     await ref
                         .read(connectionProvider.notifier)
-                        .uniSync(connection);
+                        .uniSync(connection)
+                        .toList();
                     debugLogger.i('Successfully uploaded for ADD | MODIFY');
                   } catch (e, st) {
                     await notifService.show(
@@ -152,7 +153,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   try {
                     await ref
                         .read(connectionProvider.notifier)
-                        .uniSync(connection);
+                        .uniSync(connection)
+                        .toList();
                     debugLogger.i('Successfully uploaded for DELETE');
                   } catch (e, st) {
                     // TODO:

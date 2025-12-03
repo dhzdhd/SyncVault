@@ -9,6 +9,7 @@ import 'package:syncvault/src/home/models/drive_provider.dart';
 import 'package:syncvault/src/home/models/drive_provider_backend.dart';
 import 'package:syncvault/src/home/models/drive_provider_model.dart';
 
+// ignore: unused_element
 final _dio = GetIt.I<Dio>();
 
 @singleton

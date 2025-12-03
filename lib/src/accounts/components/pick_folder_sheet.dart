@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart';
 import 'package:syncvault/src/accounts/controllers/folder_controller.dart'
@@ -38,7 +37,6 @@ class PickFolderSheet extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocationUri = useState(Uri.file('/'));
     final files = ref.watch(listViewProvider(providerModel, '/'));
-    print(Uri.file('aa/').pathSegments[1]);
 
     return switch (files) {
       AsyncData(:final value) => ListView(
