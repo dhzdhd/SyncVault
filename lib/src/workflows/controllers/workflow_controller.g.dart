@@ -10,11 +10,11 @@ part of 'workflow_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(WorkflowController)
-const workflowControllerProvider = WorkflowControllerProvider._();
+final workflowControllerProvider = WorkflowControllerProvider._();
 
 final class WorkflowControllerProvider
     extends $AsyncNotifierProvider<WorkflowController, void> {
-  const WorkflowControllerProvider._()
+  WorkflowControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -41,7 +41,6 @@ abstract class _$WorkflowController extends $AsyncNotifier<void> {
   @$mustCallSuper
   @override
   void runBuild() {
-    build();
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -51,16 +50,16 @@ abstract class _$WorkflowController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(Workflow)
-const workflowProvider = WorkflowProvider._();
+final workflowProvider = WorkflowProvider._();
 
 final class WorkflowProvider
     extends $NotifierProvider<Workflow, List<WorkflowModel>> {
-  const WorkflowProvider._()
+  WorkflowProvider._()
     : super(
         from: null,
         argument: null,
@@ -94,7 +93,6 @@ abstract class _$Workflow extends $Notifier<List<WorkflowModel>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<WorkflowModel>, List<WorkflowModel>>;
     final element =
         ref.element
@@ -104,6 +102,6 @@ abstract class _$Workflow extends $Notifier<List<WorkflowModel>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

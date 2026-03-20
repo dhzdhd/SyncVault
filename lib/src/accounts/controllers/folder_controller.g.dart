@@ -10,11 +10,11 @@ part of 'folder_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(CreateFolderController)
-const createFolderControllerProvider = CreateFolderControllerProvider._();
+final createFolderControllerProvider = CreateFolderControllerProvider._();
 
 final class CreateFolderControllerProvider
     extends $AsyncNotifierProvider<CreateFolderController, void> {
-  const CreateFolderControllerProvider._()
+  CreateFolderControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -41,7 +41,6 @@ abstract class _$CreateFolderController extends $AsyncNotifier<void> {
   @$mustCallSuper
   @override
   void runBuild() {
-    build();
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -51,16 +50,16 @@ abstract class _$CreateFolderController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(DeleteFolderController)
-const deleteFolderControllerProvider = DeleteFolderControllerProvider._();
+final deleteFolderControllerProvider = DeleteFolderControllerProvider._();
 
 final class DeleteFolderControllerProvider
     extends $AsyncNotifierProvider<DeleteFolderController, void> {
-  const DeleteFolderControllerProvider._()
+  DeleteFolderControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -87,7 +86,6 @@ abstract class _$DeleteFolderController extends $AsyncNotifier<void> {
   @$mustCallSuper
   @override
   void runBuild() {
-    build();
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -97,12 +95,12 @@ abstract class _$DeleteFolderController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(treeView)
-const treeViewProvider = TreeViewFamily._();
+final treeViewProvider = TreeViewFamily._();
 
 final class TreeViewProvider
     extends
@@ -114,7 +112,7 @@ final class TreeViewProvider
     with
         $FutureModifier<Option<FileModel>>,
         $FutureProvider<Option<FileModel>> {
-  const TreeViewProvider._({
+  TreeViewProvider._({
     required TreeViewFamily super.from,
     required (Option<FolderModel>, DriveProviderModel) super.argument,
   }) : super(
@@ -166,7 +164,7 @@ final class TreeViewFamily extends $Family
           FutureOr<Option<FileModel>>,
           (Option<FolderModel>, DriveProviderModel)
         > {
-  const TreeViewFamily._()
+  TreeViewFamily._()
     : super(
         retry: null,
         name: r'treeViewProvider',
@@ -185,11 +183,11 @@ final class TreeViewFamily extends $Family
 }
 
 @ProviderFor(ListView)
-const listViewProvider = ListViewFamily._();
+final listViewProvider = ListViewFamily._();
 
 final class ListViewProvider
     extends $AsyncNotifierProvider<ListView, List<FileModel>> {
-  const ListViewProvider._({
+  ListViewProvider._({
     required ListViewFamily super.from,
     required (DriveProviderModel, String) super.argument,
   }) : super(
@@ -236,7 +234,7 @@ final class ListViewFamily extends $Family
           FutureOr<List<FileModel>>,
           (DriveProviderModel, String)
         > {
-  const ListViewFamily._()
+  ListViewFamily._()
     : super(
         retry: null,
         name: r'listViewProvider',
@@ -264,7 +262,6 @@ abstract class _$ListView extends $AsyncNotifier<List<FileModel>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args.$1, _$args.$2);
     final ref = this.ref as $Ref<AsyncValue<List<FileModel>>, List<FileModel>>;
     final element =
         ref.element
@@ -274,16 +271,16 @@ abstract class _$ListView extends $AsyncNotifier<List<FileModel>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args.$1, _$args.$2));
   }
 }
 
 @ProviderFor(Folder)
-const folderProvider = FolderProvider._();
+final folderProvider = FolderProvider._();
 
 final class FolderProvider
     extends $NotifierProvider<Folder, List<FolderModel>> {
-  const FolderProvider._()
+  FolderProvider._()
     : super(
         from: null,
         argument: null,
@@ -317,7 +314,6 @@ abstract class _$Folder extends $Notifier<List<FolderModel>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<FolderModel>, List<FolderModel>>;
     final element =
         ref.element
@@ -327,6 +323,6 @@ abstract class _$Folder extends $Notifier<List<FolderModel>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

@@ -10,11 +10,11 @@ part of 'intro_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(RCloneDownloadController)
-const rCloneDownloadControllerProvider = RCloneDownloadControllerProvider._();
+final rCloneDownloadControllerProvider = RCloneDownloadControllerProvider._();
 
 final class RCloneDownloadControllerProvider
     extends $AsyncNotifierProvider<RCloneDownloadController, int> {
-  const RCloneDownloadControllerProvider._()
+  RCloneDownloadControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -41,7 +41,6 @@ abstract class _$RCloneDownloadController extends $AsyncNotifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<int>, int>;
     final element =
         ref.element
@@ -51,16 +50,16 @@ abstract class _$RCloneDownloadController extends $AsyncNotifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(IntroSettings)
-const introSettingsProvider = IntroSettingsProvider._();
+final introSettingsProvider = IntroSettingsProvider._();
 
 final class IntroSettingsProvider
     extends $NotifierProvider<IntroSettings, IntroSettingsModel> {
-  const IntroSettingsProvider._()
+  IntroSettingsProvider._()
     : super(
         from: null,
         argument: null,
@@ -94,7 +93,6 @@ abstract class _$IntroSettings extends $Notifier<IntroSettingsModel> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<IntroSettingsModel, IntroSettingsModel>;
     final element =
         ref.element
@@ -104,6 +102,6 @@ abstract class _$IntroSettings extends $Notifier<IntroSettingsModel> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

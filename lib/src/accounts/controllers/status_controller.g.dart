@@ -10,12 +10,12 @@ part of 'status_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(connectionStatus)
-const connectionStatusProvider = ConnectionStatusFamily._();
+final connectionStatusProvider = ConnectionStatusFamily._();
 
 final class ConnectionStatusProvider
     extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
     with $FutureModifier<bool>, $FutureProvider<bool> {
-  const ConnectionStatusProvider._({
+  ConnectionStatusProvider._({
     required ConnectionStatusFamily super.from,
     required DriveProviderModel super.argument,
   }) : super(
@@ -62,7 +62,7 @@ String _$connectionStatusHash() => r'1ce6a34b6a6f4b62ad5f5e4a1ab1ac4c29228a2a';
 
 final class ConnectionStatusFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<bool>, DriveProviderModel> {
-  const ConnectionStatusFamily._()
+  ConnectionStatusFamily._()
     : super(
         retry: null,
         name: r'connectionStatusProvider',

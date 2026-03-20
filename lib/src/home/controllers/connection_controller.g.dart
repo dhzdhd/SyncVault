@@ -10,7 +10,7 @@ part of 'connection_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(SyncController)
-const syncControllerProvider = SyncControllerProvider._();
+final syncControllerProvider = SyncControllerProvider._();
 
 final class SyncControllerProvider
     extends
@@ -18,7 +18,7 @@ final class SyncControllerProvider
           SyncController,
           Either<AppError, Option<ProgressModel>>
         > {
-  const SyncControllerProvider._()
+  SyncControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -45,7 +45,6 @@ abstract class _$SyncController
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -63,16 +62,16 @@ abstract class _$SyncController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(Connection)
-const connectionProvider = ConnectionProvider._();
+final connectionProvider = ConnectionProvider._();
 
 final class ConnectionProvider
     extends $NotifierProvider<Connection, List<ConnectionModel>> {
-  const ConnectionProvider._()
+  ConnectionProvider._()
     : super(
         from: null,
         argument: null,
@@ -106,7 +105,6 @@ abstract class _$Connection extends $Notifier<List<ConnectionModel>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<ConnectionModel>, List<ConnectionModel>>;
     final element =
         ref.element
@@ -116,6 +114,6 @@ abstract class _$Connection extends $Notifier<List<ConnectionModel>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

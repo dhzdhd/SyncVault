@@ -10,7 +10,7 @@ part of 'settings_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(permissions)
-const permissionsProvider = PermissionsProvider._();
+final permissionsProvider = PermissionsProvider._();
 
 final class PermissionsProvider
     extends
@@ -20,7 +20,7 @@ final class PermissionsProvider
           FutureOr<PermissionsModel>
         >
     with $FutureModifier<PermissionsModel>, $FutureProvider<PermissionsModel> {
-  const PermissionsProvider._()
+  PermissionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -49,11 +49,11 @@ final class PermissionsProvider
 String _$permissionsHash() => r'f0c5bb3a3b4494c6df2cd44c5519f8a9344b0c50';
 
 @ProviderFor(Settings)
-const settingsProvider = SettingsProvider._();
+final settingsProvider = SettingsProvider._();
 
 final class SettingsProvider
     extends $AsyncNotifierProvider<Settings, SettingsModel> {
-  const SettingsProvider._()
+  SettingsProvider._()
     : super(
         from: null,
         argument: null,
@@ -79,7 +79,6 @@ abstract class _$Settings extends $AsyncNotifier<SettingsModel> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<SettingsModel>, SettingsModel>;
     final element =
         ref.element
@@ -89,6 +88,6 @@ abstract class _$Settings extends $AsyncNotifier<SettingsModel> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

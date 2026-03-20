@@ -62,14 +62,14 @@ Future<void> _showBackgroundNotification() async {
   );
 
   await notifService.initialize(
-    initializationSettings,
+    settings: initializationSettings,
     onDidReceiveNotificationResponse: notificationHandler,
   );
   await notifService.show(
-    notifID,
-    'File sync',
-    'Syncing files in the background',
-    notificationDetails,
+    id: notifID,
+    title: 'File sync',
+    body: 'Syncing files in the background',
+    notificationDetails: notificationDetails,
   );
 }
 
@@ -260,7 +260,7 @@ void callbackDispatcher() {
 void notificationHandler(NotificationResponse notificationResponse) async {
   if (notificationResponse.actionId == 'cancel_sync') {
     final notifService = FlutterLocalNotificationsPlugin();
-    await notifService.cancel(notifID);
+    await notifService.cancel(id: notifID);
     await Workmanager().cancelAll();
 
     debugLogger.i('Cancelled all background tasks');

@@ -10,11 +10,11 @@ part of 'auth_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(AuthController)
-const authControllerProvider = AuthControllerProvider._();
+final authControllerProvider = AuthControllerProvider._();
 
 final class AuthControllerProvider
     extends $AsyncNotifierProvider<AuthController, void> {
-  const AuthControllerProvider._()
+  AuthControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -40,7 +40,6 @@ abstract class _$AuthController extends $AsyncNotifier<void> {
   @$mustCallSuper
   @override
   void runBuild() {
-    build();
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -50,12 +49,12 @@ abstract class _$AuthController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(driveInfoController)
-const driveInfoControllerProvider = DriveInfoControllerFamily._();
+final driveInfoControllerProvider = DriveInfoControllerFamily._();
 
 final class DriveInfoControllerProvider
     extends
@@ -65,7 +64,7 @@ final class DriveInfoControllerProvider
           FutureOr<DriveInfoModel>
         >
     with $FutureModifier<DriveInfoModel>, $FutureProvider<DriveInfoModel> {
-  const DriveInfoControllerProvider._({
+  DriveInfoControllerProvider._({
     required DriveInfoControllerFamily super.from,
     required DriveProviderModel super.argument,
   }) : super(
@@ -118,7 +117,7 @@ final class DriveInfoControllerFamily extends $Family
           FutureOr<DriveInfoModel>,
           DriveProviderModel
         > {
-  const DriveInfoControllerFamily._()
+  DriveInfoControllerFamily._()
     : super(
         retry: null,
         name: r'driveInfoControllerProvider',
@@ -135,11 +134,11 @@ final class DriveInfoControllerFamily extends $Family
 }
 
 @ProviderFor(Auth)
-const authProvider = AuthProvider._();
+final authProvider = AuthProvider._();
 
 final class AuthProvider
     extends $AsyncNotifierProvider<Auth, List<DriveProviderModel>> {
-  const AuthProvider._()
+  AuthProvider._()
     : super(
         from: null,
         argument: null,
@@ -165,7 +164,6 @@ abstract class _$Auth extends $AsyncNotifier<List<DriveProviderModel>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -183,6 +181,6 @@ abstract class _$Auth extends $AsyncNotifier<List<DriveProviderModel>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

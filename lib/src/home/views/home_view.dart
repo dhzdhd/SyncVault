@@ -78,7 +78,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         linux: initializationSettingsLinux,
       );
 
-      await notifService.initialize(initializationSettings);
+      await notifService.initialize(settings: initializationSettings);
     }();
 
     super.initState();
@@ -121,10 +121,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
                   try {
                     await notifService.show(
-                      23325,
-                      'Currently syncing ${connection.title}',
-                      'In progress',
-                      null,
+                      id: 23325,
+                      title: 'Currently syncing ${connection.title}',
+                      body: 'In progress',
                     );
 
                     await ref
@@ -134,15 +133,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     debugLogger.i('Successfully uploaded for ADD | MODIFY');
                   } catch (e, st) {
                     await notifService.show(
-                      23326,
-                      'Sync failed for ${connection.title}',
-                      null,
-                      null,
+                      id: 23326,
+                      title: 'Sync failed for ${connection.title}',
                     );
                     GeneralError('', e, st).logError();
                   } finally {
-                    await notifService.cancel(23325);
-                    await notifService.cancel(23326);
+                    await notifService.cancel(id: 23325);
+                    await notifService.cancel(id: 23326);
                   }
                 }
               case ChangeType.REMOVE
