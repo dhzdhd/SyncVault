@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="SyncVault - Cross-platform file sync app for Windows, Android, macOS, and Linux. Sync your local files with cloud storage automatically in the background."
+    />
+    <meta
+      name="keywords"
+      content="file sync, cloud storage, backup, rclone, cross-platform, windows, android, macos, linux"
+    />
+    <title>SyncVault</title>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="title">
+        <span>SyncVault</span>
+      </div>
+      <nav>
+        <ul
+          class="nav-links"
+          x-data="{ nav: [
+            { text: 'Features', link: '#features' },
+            { text: 'Platforms', link: '#platforms' },
+            { text: 'Providers', link: '#providers' },
+            { text: 'Download', link: '#download' },
+            { text: 'GitHub', link: 'https://github.com/dhzdhd/SyncVault' }
+          ] }"
+        >
+          <template x-for="item in nav">
+            <li>
+              <a :href="item.link" x-text="item.text"></a>
+            </li>
+          </template>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Sync Your Files <br /><span class="gradient-text"
+              >Seamlessly Across Clouds</span
+            >
+          </h1>
+          <p class="hero-subtitle">
+            A cross-platform app to sync your local files in the background with
+            the drive of your choice using RClone.
+          </p>
+          <div class="hero-buttons">
+            <a href="#download" class="btn btn-primary">Download Now</a>
+            <a
+              href="https://github.com/dhzdhd/SyncVault"
+              target="_blank"
+              class="btn btn-secondary"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <section id="features" class="features">
+        <h2 class="section-title">Why Choose SyncVault?</h2>
+        <div
+          class="features-grid"
+          x-data="{ cards: [
+              { href: 'images/sync.svg', title: 'Automatic Background Sync', desc: 'Set up folders to sync automatically in the background without interrupting your workflow.' },
+              { href: 'images/cloud.svg', title: 'Multiple Cloud Providers', desc: 'Support for OneDrive, Google Drive, Dropbox, Minio, Nextcloud and Proton Drive.' },
+              { href: 'images/desktop.svg', title: 'Cross-Platform', desc: 'Available on Windows, Android, macOS, and Linux with full feature support.' },
+              { href: 'images/clock.svg', title: 'Real-time Syncing', desc: 'Keep your files up-to-date across all devices with real-time synchronization.' },
+              { href: 'images/folder.svg', title: 'Folder Management', desc: 'Organize and manage which folders to sync with an intuitive tree view.' },
+
+            ] }"
+        >
+          <template x-for="card in cards">
+            <div class="feature-card">
+              <svg>
+                <use :href="card.href" />
+              </svg>
+              <h3 x-text="card.title"></h3>
+              <p x-text="card.desc"></p>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <!-- Platforms Section -->
+      <section id="platforms" class="platforms">
+        <div class="container">
+          <h2 class="section-title">Platform Support</h2>
+          <div class="platforms-grid">
+            <div class="platform-card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path
+                  d="M0 32l214.6 0 0 214.6-214.6 0 0-214.6zm233.4 0l214.6 0 0 214.6-214.6 0 0-214.6zM0 265.4l214.6 0 0 214.6-214.6 0 0-214.6zm233.4 0l214.6 0 0 214.6-214.6 0 0-214.6z"
+                />
+              </svg>
+              <h3>Windows</h3>
+              <div class="status status-complete">✅ Released</div>
+              <p>Full feature support with real-time syncing</p>
+            </div>
+            <div class="platform-card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path
+                  d="M220.9 123.3c1 .5 1.8 1.7 3 1.7 1.1 0 2.8-.4 2.9-1.5 .2-1.4-1.9-2.3-3.2-2.9-1.7-.7-3.9-1-5.5-.1-.4 .2-.8 .7-.6 1.1 .3 1.3 2.3 1.1 3.4 1.7zM199 125c1.2 0 2-1.2 3-1.7 1.1-.6 3.1-.4 3.5-1.6 .2-.4-.2-.9-.6-1.1-1.6-.9-3.8-.6-5.5 .1-1.3 .6-3.4 1.5-3.2 2.9 .1 1 1.8 1.5 2.8 1.4zM420 403.8c-3.6-4-5.3-11.6-7.2-19.7-1.8-8.1-3.9-16.8-10.5-22.4-1.3-1.1-2.6-2.1-4-2.9-1.3-.8-2.7-1.5-4.1-2 9.2-27.3 5.6-54.5-3.7-79.1-11.4-30.1-31.3-56.4-46.5-74.4-17.1-21.5-33.7-41.9-33.4-72 .5-45.9 5.1-131.2-75.8-131.3-102.4-.2-76.8 103.4-77.9 135.2-1.7 23.4-6.4 41.8-22.5 64.7-18.9 22.5-45.5 58.8-58.1 96.7-6 17.9-8.8 36.1-6.2 53.3-6.5 5.8-11.4 14.7-16.6 20.2-4.2 4.3-10.3 5.9-17 8.3s-14 6-18.5 14.5c-2.1 3.9-2.8 8.1-2.8 12.4 0 3.9 .6 7.9 1.2 11.8 1.2 8.1 2.5 15.7 .8 20.8-5.2 14.4-5.9 24.4-2.2 31.7 3.8 7.3 11.4 10.5 20.1 12.3 17.3 3.6 40.8 2.7 59.3 12.5 19.8 10.4 39.9 14.1 55.9 10.4 11.6-2.6 21.1-9.6 25.9-20.2 12.5-.1 26.3-5.4 48.3-6.6 14.9-1.2 33.6 5.3 55.1 4.1 .6 2.3 1.4 4.6 2.5 6.7l0 .1c8.3 16.7 23.8 24.3 40.3 23 16.6-1.3 34.1-11 48.3-27.9 13.6-16.4 36-23.2 50.9-32.2 7.4-4.5 13.4-10.1 13.9-18.3 .4-8.2-4.4-17.3-15.5-29.7zM223.8 87.3c9.8-22.2 34.2-21.8 44-.4 6.5 14.2 3.6 30.9-4.3 40.4-1.6-.8-5.9-2.6-12.6-4.9 1.1-1.2 3.1-2.7 3.9-4.6 4.8-11.8-.2-27-9.1-27.3-7.3-.5-13.9 10.8-11.8 23-4.1-2-9.4-3.5-13-4.4-1-6.9-.3-14.6 2.9-21.8zM183.1 75.8c10.1 0 20.8 14.2 19.1 33.5-3.5 1-7.1 2.5-10.2 4.6 1.2-8.9-3.3-20.1-9.6-19.6-8.4 .7-9.8 21.2-1.8 28.1 1 .8 1.9-.2-5.9 5.5-15.6-14.6-10.5-52.1 8.4-52.1zm-13.6 60.7c6.2-4.6 13.6-10 14.1-10.5 4.7-4.4 13.5-14.2 27.9-14.2 7.1 0 15.6 2.3 25.9 8.9 6.3 4.1 11.3 4.4 22.6 9.3 8.4 3.5 13.7 9.7 10.5 18.2-2.6 7.1-11 14.4-22.7 18.1-11.1 3.6-19.8 16-38.2 14.9-3.9-.2-7-1-9.6-2.1-8-3.5-12.2-10.4-20-15-8.6-4.8-13.2-10.4-14.7-15.3-1.4-4.9 0-9 4.2-12.3zm3.3 334c-2.7 35.1-43.9 34.4-75.3 18-29.9-15.8-68.6-6.5-76.5-21.9-2.4-4.7-2.4-12.7 2.6-26.4l0-.2c2.4-7.6 .6-16-.6-23.9-1.2-7.8-1.8-15 .9-20 3.5-6.7 8.5-9.1 14.8-11.3 10.3-3.7 11.8-3.4 19.6-9.9 5.5-5.7 9.5-12.9 14.3-18 5.1-5.5 10-8.1 17.7-6.9 8.1 1.2 15.1 6.8 21.9 16l19.6 35.6c9.5 19.9 43.1 48.4 41 68.9zm-1.4-25.9c-4.1-6.6-9.6-13.6-14.4-19.6 7.1 0 14.2-2.2 16.7-8.9 2.3-6.2 0-14.9-7.4-24.9-13.5-18.2-38.3-32.5-38.3-32.5-13.5-8.4-21.1-18.7-24.6-29.9s-3-23.3-.3-35.2c5.2-22.9 18.6-45.2 27.2-59.2 2.3-1.7 .8 3.2-8.7 20.8-8.5 16.1-24.4 53.3-2.6 82.4 .6-20.7 5.5-41.8 13.8-61.5 12-27.4 37.3-74.9 39.3-112.7 1.1 .8 4.6 3.2 6.2 4.1 4.6 2.7 8.1 6.7 12.6 10.3 12.4 10 28.5 9.2 42.4 1.2 6.2-3.5 11.2-7.5 15.9-9 9.9-3.1 17.8-8.6 22.3-15 7.7 30.4 25.7 74.3 37.2 95.7 6.1 11.4 18.3 35.5 23.6 64.6 3.3-.1 7 .4 10.9 1.4 13.8-35.7-11.7-74.2-23.3-84.9-4.7-4.6-4.9-6.6-2.6-6.5 12.6 11.2 29.2 33.7 35.2 59 2.8 11.6 3.3 23.7 .4 35.7 16.4 6.8 35.9 17.9 30.7 34.8-2.2-.1-3.2 0-4.2 0 3.2-10.1-3.9-17.6-22.8-26.1-19.6-8.6-36-8.6-38.3 12.5-12.1 4.2-18.3 14.7-21.4 27.3-2.8 11.2-3.6 24.7-4.4 39.9-.5 7.7-3.6 18-6.8 29-32.1 22.9-76.7 32.9-114.3 7.2zm257.4-11.5c-.9 16.8-41.2 19.9-63.2 46.5-13.2 15.7-29.4 24.4-43.6 25.5s-26.5-4.8-33.7-19.3c-4.7-11.1-2.4-23.1 1.1-36.3 3.7-14.2 9.2-28.8 9.9-40.6 .8-15.2 1.7-28.5 4.2-38.7 2.6-10.3 6.6-17.2 13.7-21.1 .3-.2 .7-.3 1-.5 .8 13.2 7.3 26.6 18.8 29.5 12.6 3.3 30.7-7.5 38.4-16.3 9-.3 15.7-.9 22.6 5.1 9.9 8.5 7.1 30.3 17.1 41.6 10.6 11.6 14 19.5 13.7 24.6zM173.4 148.7c2 1.9 4.7 4.5 8 7.1 6.6 5.2 15.8 10.6 27.3 10.6 11.6 0 22.5-5.9 31.8-10.8 4.9-2.6 10.9-7 14.8-10.4s5.9-6.3 3.1-6.6-2.6 2.6-6 5.1c-4.4 3.2-9.7 7.4-13.9 9.8-7.4 4.2-19.5 10.2-29.9 10.2s-18.7-4.8-24.9-9.7c-3.1-2.5-5.7-5-7.7-6.9-1.5-1.4-1.9-4.6-4.3-4.9-1.4-.1-1.8 3.7 1.7 6.5z"
+                />
+              </svg>
+              <h3>Linux</h3>
+              <div class="status status-complete">✅ Released</div>
+              <p>Full feature support with real-time syncing</p>
+            </div>
+            <div class="platform-card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                <path
+                  d="M319.1 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7-55.8 .9-115.1 44.5-115.1 133.2 0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM262.5 104.5c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"
+                />
+              </svg>
+              <h3>macOS</h3>
+              <div class="status status-complete">✅ Released</div>
+              <p>Full feature support with real-time syncing</p>
+            </div>
+            <div class="platform-card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                <path
+                  d="M420.5 253.9a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm-265.1 0a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm273.7-96.5l47.9-83c.8-1.1 1.3-2.4 1.5-3.8s.2-2.7-.1-4.1-.9-2.6-1.7-3.7-1.8-2-3-2.7-2.5-1.1-3.9-1.3-2.7 0-4 .4-2.5 1.1-3.6 1.9-1.9 2-2.5 3.2l-48.5 84.1c-38.8-17.4-80.8-26.4-123.3-26.4s-84.5 9-123.3 26.4L116.2 64.4c-.6-1.2-1.5-2.3-2.5-3.2s-2.3-1.5-3.6-1.9-2.7-.5-4-.4-2.7 .6-3.9 1.3-2.2 1.6-3 2.7-1.4 2.4-1.7 3.7-.3 2.7-.1 4.1 .8 2.6 1.5 3.8l47.9 83C64.5 202.2 8.2 285.5 0 384l576 0c-8.2-98.5-64.5-181.8-146.9-226.6z"
+                />
+              </svg>
+              <h3>Android</h3>
+              <div class="status status-complete">✅ Released</div>
+              <p>Background sync with WorkManager (15-min minimum interval)</p>
+            </div>
+            <div class="platform-card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                  d="M255.9 120.9l9.1-15.7c5.6-9.8 18.1-13.1 27.9-7.5s13.1 18.1 7.5 27.9l-87.5 151.5 63.3 0c20.5 0 32 24.1 23.1 40.8l-185.5 0c-11.3 0-20.4-9.1-20.4-20.4s9.1-20.4 20.4-20.4l52 0 66.6-115.4-20.8-36.1c-5.6-9.8-2.3-22.2 7.5-27.9 9.8-5.6 22.2-2.3 27.9 7.5l8.9 15.7zm-78.7 218l-19.6 34c-5.6 9.8-18.1 13.1-27.9 7.5s-13.1-18.1-7.5-27.9l14.6-25.2c16.4-5.1 29.8-1.2 40.4 11.6zm168.9-61.7l53.1 0c11.3 0 20.4 9.1 20.4 20.4S410.5 318 399.2 318l-29.5 0 19.9 34.5c5.6 9.8 2.3 22.2-7.5 27.9-9.8 5.6-22.2 2.3-27.9-7.5-33.5-58.1-58.7-101.6-75.4-130.6-17.1-29.5-4.9-59.1 7.2-69.1 13.4 23 33.4 57.7 60.1 104zM256 8a248 248 0 1 0 0 496 248 248 0 1 0 0-496zM40 256a216 216 0 1 1 432 0 216 216 0 1 1 -432 0z"
+                />
+              </svg>
+              <h3>iOS</h3>
+              <div class="status status-pending">❌ Planned</div>
+              <p>Coming in a future release</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Providers Section -->
+      <section id="providers" class="providers">
+        <div class="container">
+          <h2 class="section-title">Supported Cloud Providers</h2>
+          <div class="providers-grid">
+            <div class="provider-card">
+              <div class="provider-icon">📦</div>
+              <h3>OneDrive</h3>
+              <div class="provider-status">
+                <span class="badge badge-success">RClone Support</span>
+              </div>
+            </div>
+            <div class="provider-card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                <path
+                  d="M339 314.9L175.4 32 336.6 32 500.2 314.9 339 314.9zM201.5 338.5l-80.6 141.5 310.5 0 80.6-141.5-310.5 0zM154.1 67.4L0 338.5 80.6 480 237 208.8 154.1 67.4z"
+                />
+              </svg>
+              <h3>Google Drive</h3>
+              <div class="provider-status">
+                <span class="badge badge-success">RClone Support</span>
+                <span class="badge badge-success">Manual Support</span>
+              </div>
+            </div>
+            <div class="provider-card">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                <path
+                  d="M288.4 116.3l-132 84.3 132 84.3-132 84.3-132.4-85.1 132.3-84.3-132.3-83.5 132.3-84.3 132.1 84.3zM155.6 395.7l132-84.3 132 84.3-132 84.3-132-84.3zM288.4 284.1l132-84.3-132-83.6 131.3-84.2 132.3 84.3-132.3 84.3 132.3 84.2-132.3 84.3-131.3-85z"
+                />
+              </svg>
+              <h3>Dropbox</h3>
+              <div class="provider-status">
+                <span class="badge badge-success">RClone Support</span>
+              </div>
+            </div>
+            <div class="provider-card">
+              <div class="provider-icon">🗄️</div>
+              <h3>Minio</h3>
+              <div class="provider-status">
+                <span class="badge badge-warning">Limited Support</span>
+              </div>
+            </div>
+            <div class="provider-card">
+              <div class="provider-icon">☁️</div>
+              <h3>Nextcloud</h3>
+              <div class="provider-status">
+                <span class="badge badge-warning">Limited Support</span>
+              </div>
+            </div>
+            <div class="provider-card">
+              <div class="provider-icon">🔒</div>
+              <h3>Proton Drive</h3>
+              <div class="provider-status">
+                <span class="badge badge-warning">Limited Support</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Download Section -->
+      <section id="download" class="download">
+        <div class="container">
+          <h2 class="section-title">Get Started Today</h2>
+          <p class="download-subtitle">
+            Download SyncVault for your platform and start syncing your files
+            effortlessly.
+          </p>
+          <div class="download-buttons">
+            <a
+              href="https://github.com/dhzdhd/SyncVault/releases"
+              target="_blank"
+              class="btn btn-primary btn-large"
+            >
+              Download for Windows
+            </a>
+            <a
+              href="https://github.com/dhzdhd/SyncVault/releases"
+              target="_blank"
+              class="btn btn-secondary btn-large"
+            >
+              View All Releases
+            </a>
+          </div>
+          <div class="download-note">
+            <p>
+              ⚠️ <strong>Alpha Release:</strong> The app is functional but still
+              under active development. Expect regular updates and improvements.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-content">
+            <div class="footer-section">
+              <h4>SyncVault</h4>
+              <p>Cross-platform cloud sync made simple.</p>
+            </div>
+            <div class="footer-section">
+              <h4>Links</h4>
+              <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#platforms">Platforms</a></li>
+                <li><a href="#providers">Providers</a></li>
+                <li><a href="#download">Download</a></li>
+              </ul>
+            </div>
+            <div class="footer-section">
+              <h4>Resources</h4>
+              <ul>
+                <li>
+                  <a href="https://github.com/dhzdhd/SyncVault" target="_blank"
+                    >GitHub</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/dhzdhd/SyncVault/issues"
+                    target="_blank"
+                    >Issues</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/dhzdhd/SyncVault/blob/master/CONTRIBUTING.md"
+                    target="_blank"
+                    >Contributing</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/dhzdhd/SyncVault/blob/master/CHANGELOG.md"
+                    target="_blank"
+                    >Changelog</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="footer-section">
+              <h4>Legal</h4>
+              <ul>
+                <li>
+                  <a
+                    href="https://github.com/dhzdhd/SyncVault/blob/master/LICENSE.md"
+                    target="_blank"
+                    >License</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>&copy; 2026 SyncVault. Built with ❤️ using Flutter & RClone.</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
