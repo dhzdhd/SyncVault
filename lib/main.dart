@@ -268,7 +268,8 @@ void notificationHandler(NotificationResponse notificationResponse) async {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  SentryWidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
 
   // Hive stuff
   await Hive.initFlutter();
@@ -330,6 +331,12 @@ void main() async {
       options.dsn =
           'https://6f9773aae01846168e9cd2b1e62adde3@o4504764245344256.ingest.us.sentry.io/4505318015696896';
       options.tracesSampleRate = 1.0;
+      options.debug = true;
+      options.diagnosticLevel = SentryLevel.debug;
+
+      if (Platform.isLinux) {
+        options.enableNativeCrashHandling = false;
+      }
     }, appRunner: () => runApp(const ProviderScope(child: MyApp())));
   } else {
     runApp(const ProviderScope(child: MyApp()));
