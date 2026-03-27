@@ -13,24 +13,24 @@ The project is currently in the Alpha Release state. The app is functional but s
 
 ## Platform Support
 
-| Platform | Released | RClone Support | Notes |
-|----------|--------|-------|-------|
-| Windows | ✅ | ✅ | Full feature support with real-time syncing |
-| Linux | ✅ | ✅ | Full feature support with real-time syncing |
-| MacOS | ✅ | ✅ | Full feature support with real-time syncing |
-| Android | ✅ | ✅ | Background sync with WorkManager (15-min minimum interval) |
-| iOS | ❌ | ❌ | Planned for future release |
+| Platform | Released | RClone Support | Notes                                                      |
+| -------- | -------- | -------------- | ---------------------------------------------------------- |
+| Windows  | ✅       | ✅             | Full feature support with real-time syncing                |
+| Linux    | ✅       | ✅             | Full feature support with real-time syncing                |
+| MacOS    | ✅       | ✅             | Full feature support with real-time syncing                |
+| Android  | ✅       | ✅             | Background sync with WorkManager (15-min minimum interval) |
+| iOS      | ❌       | ❌             | Planned for future release                                 |
 
 ## Supported Cloud Providers
 
-| Provider | RClone Support | Manual Support |
-|----------|--------|-------|
-| OneDrive | ✅ | ❌ | 
-| Google Drive | ✅ | ✅ |  
-| Dropbox | ✅ | ❌ | 
-| Minio | ⚠️ | ❌ | 
-| Nextcloud | ⚠️ | ❌ | 
-| Proton Drive | ⚠️ | ❌ | 
+| Provider     | RClone Support | Manual Support |
+| ------------ | -------------- | -------------- |
+| OneDrive     | ✅             | ❌             |
+| Google Drive | ✅             | ❌             |
+| Dropbox      | ✅             | ❌             |
+| Minio        | ⚠️             | ❌             |
+| Nextcloud    | ⚠️             | ❌             |
+| Proton Drive | ⚠️             | ❌             |
 
 ## Contributing
 
