@@ -1,9 +1,11 @@
 name: Update CocoaPods
 
 on:
+  push:
+    paths:
+      - "pubspec.yaml"
+      - "pubspec.lock"
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * 0"
 
 jobs:
   update-pods:
