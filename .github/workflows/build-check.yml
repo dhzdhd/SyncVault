@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-android:
+  build-check-android:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +30,7 @@ jobs:
           flutter build apk --split-per-abi
           flutter build appbundle
 
-  build-windows:
+  build-check-windows:
     runs-on: windows-latest
 
     steps:
@@ -48,7 +48,7 @@ jobs:
           flutter pub get
           flutter build windows --release
 
-  build-linux:
+  build-check-linux:
     runs-on: ubuntu-latest
 
     steps:
@@ -75,7 +75,7 @@ jobs:
           flutter pub get
           flutter build linux --release
 
-  build-macos:
+  build-check-macos:
     runs-on: macos-latest
 
     steps:
