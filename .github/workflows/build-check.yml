@@ -2,10 +2,7 @@ name: Platform build check
 
 on:
   push:
-    branches: ["master"]
   pull_request:
-    branches: ["master"]
-
   workflow_dispatch:
 
 jobs:
@@ -15,7 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
